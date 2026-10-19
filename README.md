@@ -18,6 +18,7 @@ scan each repository and open pull requests here.
 | `<repo>/event-catalog/` | Events and commands, their fields and handlers | Event catalogue flow |
 | `<repo>/service-dependencies/` | Outbound dependencies on other services, with source evidence | Service-dependency flow |
 | `<repo>/local-dev-config/` | Local services and configuration keys needed to run the repository | Local-dev-config flow |
+| `<repo>/user-journeys/` | Web repositories only: pages, the links and redirects between them, and named user journeys (`user-journeys.json`), with Mermaid diagrams (`user-journeys.md`) | User-journeys flow |
 | `<repo>/repo-metadata/` | Target frameworks, .NET end-of-support dates and last commit date | Repo-metadata flow |
 | `<repo>/repo-topics/` | GitHub topics | Weekly **Fetch Repository Topics** job |
 | `<repo>/dependency-alerts/` | Open Dependabot alerts | Weekly **Check Dependabot Alerts** job |
@@ -43,8 +44,9 @@ includes:
   them, plus external systems.
 - **Topics**: systems grouped by GitHub topic, with the links between topics.
 - **Per-service views**: database schema, events and commands, dependencies,
-  OpenAPI operations (with Postman collection downloads) and local dev
-  configuration.
+  OpenAPI operations (with Postman collection downloads), local dev
+  configuration and, for web repositories, user journeys (one journey at a
+  time, or every page, each linked to its source on GitHub).
 
 It reads the data at runtime, so regenerated files appear after a page refresh
 without rebuilding the image.
