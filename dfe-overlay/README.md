@@ -16,7 +16,8 @@ das-commitments ──► Courses API, Reservations API, …   (resolved, "via A
    - `gateway.areas`: which calls go into which APIM area, matched by configuration key segment or by dependency name. Add `repo` when a key is too generic to match on its own (for example `OuterApiConfiguration`).
    - `innerApis`: configuration class → display name and repository. Classes not listed here still appear, named from the class, as systems outside the catalogue. `names` and `configurationKeys` also pin *direct* calls to the right repository (for example commitments → "Reservations" is `das-reservations-api`, not `das-reservations`).
    - `additionalCalls`: calls the scan missed (for example `das-reservations → ReservationsOuterApi`).
-3. **`resolve-dependencies.mjs`** writes `<repo>/service-dependencies/resolved-dependencies.json` next to each scanned file. The scanned file is never changed. The visualiser serves the resolved file when it exists, draws routed edges labelled `via APIM (<area>)`, and hides the APIM node in the landscape.
+   It also records the events and commands each area sends: `*Command`/`*Event` types built in files that import a `...Messages...` namespace (for example `SendEmailCommand` from `SFA.DAS.Notifications.Messages.Commands`), leaving out the areas' own MediatR commands and messages they handle.
+3. **`resolve-dependencies.mjs`** writes `<repo>/service-dependencies/resolved-dependencies.json` next to each scanned file. A service calling an area also gets a message dependency for each event/command the area sends, to the catalogued repository whose event catalogue handles it (for example das-recruit → das-notifications for `SendEmailCommand`, "Sends via APIM (Recruit)"). The scanned file is never changed. The visualiser serves the resolved file when it exists, draws routed edges labelled `via APIM (<area>)`, and hides the APIM node in the landscape.
 
 ## Run it locally
 
