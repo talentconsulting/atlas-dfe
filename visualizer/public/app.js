@@ -1902,7 +1902,7 @@ async function loadLandscape() {
   state.landscapePositions = null;
   state.landscapeChecked = null;
   state.landscapeEventFilter = '';
-  state.landscapeHighlights = new Set(['redis', 'sqlServer', 'serviceBus']);
+  state.landscapeHighlights = new Set();   // "Uses …" filters; none ticked shows every system
   try {
     state.landscape = await fetchLandscapeGraph();
     renderLandscape();
@@ -2002,7 +2002,22 @@ function renderLandscape() {
     return;
   }
   if (!state.landscapeChecked) state.landscapeChecked = new Set(allNodes.map((node) => node.id));
-  const isNodeVisible = (node) => state.landscapeChecked.has(node.id);
+  // Ticking "Uses Redis/SQL Server/Service Bus" keeps only systems using at least one ticked technology, plus the
+  // external systems they connect to. The checklist on the left still applies on top.
+  const usage = { redis: 'isRedis', sqlServer: 'isSqlServer', serviceBus: 'isServiceBus' };
+  const usageKeys = [...state.landscapeHighlights];
+  const passesUsage = new Set(graph.systems
+    .filter((node) => !usageKeys.length || usageKeys.some((key) => node[usage[key]]))
+    .map((node) => node.id));
+  if (usageKeys.length) {
+    graph.edges.forEach((edge) => {
+      if (passesUsage.has(edge.from) && graph.externals.some((node) => node.id === edge.to)) passesUsage.add(edge.to);
+      if (passesUsage.has(edge.to) && graph.externals.some((node) => node.id === edge.from)) passesUsage.add(edge.from);
+    });
+  } else {
+    graph.externals.forEach((node) => passesUsage.add(node.id));
+  }
+  const isNodeVisible = (node) => state.landscapeChecked.has(node.id) && passesUsage.has(node.id);
   const visibleNodes = allNodes.filter(isNodeVisible);
   if (!state.selected || !visibleNodes.some((node) => node.id === state.selected)) state.selected = visibleNodes[0]?.id || null;
 
@@ -2015,13 +2030,21 @@ function renderLandscape() {
     ${landscapeChecklistGroup('External systems', graph.externals, splitPascalCase)}
   </aside>`;
 
+  const usageFiltersHtml = `${landscapeHighlightLegendItem('redis', 'cache-outline', 'Uses Redis')}
+        ${landscapeHighlightLegendItem('sqlServer', 'sql-outline', 'Uses SQL Server')}
+        ${landscapeHighlightLegendItem('serviceBus', 'service-outline', 'Uses Service Bus')}`;
+
   if (!visibleNodes.length) {
     destroyCy();
-    const emptyMessage = eventFilter
-      ? `<h2>Nothing selected</h2><p>Check at least one service on the left, or choose a different event/command to reset the selection.</p>`
-      : '<h2>Nothing selected</h2><p>Check at least one service on the left to see it on the diagram.</p>';
-    content.innerHTML = `<div class="landscape-layout">${checklistHtml}<div class="empty-state">${emptyMessage}</div></div>`;
+    const emptyMessage = usageKeys.length
+      ? '<h2>No matching systems</h2><p>None of the checked systems use the ticked technology. Untick a "Uses …" filter or check more services.</p>'
+      : eventFilter
+        ? `<h2>Nothing selected</h2><p>Check at least one service on the left, or choose a different event/command to reset the selection.</p>`
+        : '<h2>Nothing selected</h2><p>Check at least one service on the left to see it on the diagram.</p>';
+    // Keep the "Uses …" filters on screen so a filter that hides everything can be unticked.
+    content.innerHTML = `<div class="landscape-layout">${checklistHtml}<div class="dependency-view"><div class="c4-legend">${usageFiltersHtml}</div><div class="empty-state">${emptyMessage}</div></div></div>`;
     wireLandscapeChecklist(allNodes);
+    wireLandscapeHighlightToggles();
     return;
   }
 
@@ -2034,7 +2057,8 @@ function renderLandscape() {
   const externalScale = 1.4;
   const systemNodes = ringLayout(graph.systems, center, systemsRx, systemsRy, 0).filter(isNodeVisible);
   const externalNodes = ringLayout(graph.externals, center, boundaryRx * externalScale, boundaryRy * externalScale, graph.externals.length ? Math.PI / graph.externals.length : 0).filter(isNodeVisible);
-  const visibleEdges = graph.edges.filter((edge) => state.landscapeChecked.has(edge.from) && state.landscapeChecked.has(edge.to) && edgeMatchesFilter(edge));
+  const visibleIds = new Set(visibleNodes.map((node) => node.id));
+  const visibleEdges = graph.edges.filter((edge) => visibleIds.has(edge.from) && visibleIds.has(edge.to) && edgeMatchesFilter(edge));
   if (!state.landscapePositions) state.landscapePositions = new Map();
   const positions = state.landscapePositions;
   [...systemNodes, ...externalNodes].forEach((node) => positionFor(positions, node.id, node));
@@ -2065,9 +2089,7 @@ function renderLandscape() {
       <div class="c4-legend">
         <span class="c4-legend-item"><span class="c4-swatch internal"></span>Software system (cataloged)</span>
         <span class="c4-legend-item"><span class="c4-swatch external"></span>External system</span>
-        ${landscapeHighlightLegendItem('redis', 'cache-outline', 'Uses Redis')}
-        ${landscapeHighlightLegendItem('sqlServer', 'sql-outline', 'Uses SQL Server')}
-        ${landscapeHighlightLegendItem('serviceBus', 'service-outline', 'Uses Service Bus')}
+        ${usageFiltersHtml}
         <span class="c4-legend-item"><span class="c4-boundary-swatch"></span>${escapeHtml(orgLabel)} system boundary</span>
         <span class="c4-legend-item">Click a relationship line to open its dependency</span>
       </div>
