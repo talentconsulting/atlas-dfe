@@ -4,6 +4,20 @@
   "path": "src",
   "commands": [
     {
+      "name": "SendEmailCommand",
+      "namespace": "SFA.DAS.Notifications.Messages.Commands",
+      "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Api/AppStart/RoutingSettingsExtensions.cs",
+      "description": null,
+      "fields": [],
+      "handlers": [],
+      "senders": [
+        {
+          "name": "RoutingSettingsExtensions",
+          "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Api/AppStart/RoutingSettingsExtensions.cs"
+        }
+      ]
+    },
+    {
       "name": "AcknowledgeProviderResponsesCommand",
       "namespace": "SFA.DAS.RequestApprenticeTraining.Application.Commands.AcknowledgeProviderResponses",
       "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Application/Commands/AcknowledgeProviderResponses/AcknowledgeProviderResponsesCommand.cs",
@@ -26,9 +40,11 @@
         {
           "name": "AcknowledgeProviderResponsesCommandHandler",
           "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Application/Commands/AcknowledgeProviderResponses/AcknowledgeProviderResponsesCommandHandler.cs"
-        },
+        }
+      ],
+      "senders": [
         {
-          "name": "IMediator.Send",
+          "name": "EmployerRequestsController.AcknowledgeProviderResponses",
           "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Api/Controllers/EmployerRequestsController.cs"
         }
       ]
@@ -68,9 +84,11 @@
         {
           "name": "CacheStandardCommandHandler",
           "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Application/Commands/CacheStandard/CacheStandardCommandHandler.cs"
-        },
+        }
+      ],
+      "senders": [
         {
-          "name": "IMediator.Send",
+          "name": "StandardsController.Cache",
           "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Api/Controllers/StandardsController.cs"
         }
       ]
@@ -84,13 +102,13 @@
         {
           "name": "CancelledBy",
           "type": "Guid",
-          "required": null,
+          "required": true,
           "description": null
         },
         {
           "name": "EmployerRequestId",
           "type": "Guid",
-          "required": null,
+          "required": true,
           "description": null
         }
       ],
@@ -98,9 +116,11 @@
         {
           "name": "CancelEmployerRequestCommandHandler",
           "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Application/Commands/CancelEmployerRequest/CancelEmployerRequestCommandHandler.cs"
-        },
+        }
+      ],
+      "senders": [
         {
-          "name": "IMediator.Send",
+          "name": "EmployerRequestsController.CancelEmployerRequest",
           "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Api/Controllers/EmployerRequestsController.cs"
         }
       ]
@@ -128,9 +148,11 @@
         {
           "name": "AcknowledgeEmployerRequestsCommandHandler",
           "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Application/Commands/AcknowledgeEmployerRequests/AcknowledgeEmployerRequestsCommandHandler.cs"
-        },
+        }
+      ],
+      "senders": [
         {
-          "name": "IMediator.Send",
+          "name": "ProvidersController.AcknowledgeEmployerRequests",
           "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Api/Controllers/ProvidersController.cs"
         }
       ]
@@ -145,9 +167,11 @@
         {
           "name": "ExpireEmployerRequestsCommandHandler",
           "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Application/Commands/ExpireEmployerRequests/ExpireEmployerRequestsCommandHandler.cs"
-        },
+        }
+      ],
+      "senders": [
         {
-          "name": "QueueBackgroundRequest",
+          "name": "EmployerRequestsController.ExpireEmployerRequests",
           "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Api/Controllers/EmployerRequestsController.cs"
         }
       ]
@@ -161,18 +185,20 @@
         {
           "name": "Standards",
           "type": "List<StandardsParameter>",
-          "required": null,
+          "required": true,
           "description": null
         }
       ],
       "handlers": [
         {
-          "name": "IMediator.Send",
-          "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Api/Controllers/StandardsController.cs"
-        },
-        {
           "name": "RefreshStandardsCommandHandler",
           "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Application/Commands/RefreshStandards/RefreshStandardsCommandHandler.cs"
+        }
+      ],
+      "senders": [
+        {
+          "name": "StandardsController.RefreshStandards",
+          "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Api/Controllers/StandardsController.cs"
         }
       ]
     },
@@ -185,102 +211,104 @@
         {
           "name": "AccountId",
           "type": "long",
-          "required": null,
+          "required": true,
           "description": null
         },
         {
           "name": "AtApprenticesWorkplace",
           "type": "bool",
-          "required": null,
+          "required": true,
           "description": null
         },
         {
           "name": "BlockRelease",
           "type": "bool",
-          "required": null,
+          "required": true,
           "description": null
         },
         {
           "name": "DayRelease",
           "type": "bool",
-          "required": null,
+          "required": true,
           "description": null
         },
         {
           "name": "ModifiedBy",
           "type": "Guid",
-          "required": null,
+          "required": true,
           "description": null
         },
         {
           "name": "MultipleLocations",
           "type": "string[]",
-          "required": null,
+          "required": true,
           "description": null
         },
         {
           "name": "NumberOfApprentices",
           "type": "int",
-          "required": null,
+          "required": true,
           "description": null
         },
         {
           "name": "OriginalLocation",
           "type": "string",
-          "required": null,
+          "required": true,
           "description": null
         },
         {
           "name": "RequestType",
           "type": "RequestType",
-          "required": null,
+          "required": true,
           "description": null
         },
         {
           "name": "RequestedBy",
           "type": "Guid",
-          "required": null,
+          "required": true,
           "description": null
         },
         {
           "name": "SameLocation",
           "type": "string",
-          "required": null,
+          "required": true,
           "description": null
         },
         {
           "name": "SingleLocation",
           "type": "string",
-          "required": null,
+          "required": true,
           "description": null
         },
         {
           "name": "SingleLocationLatitude",
           "type": "double",
-          "required": null,
+          "required": true,
           "description": null
         },
         {
           "name": "SingleLocationLongitude",
           "type": "double",
-          "required": null,
+          "required": true,
           "description": null
         },
         {
           "name": "StandardReference",
           "type": "string",
-          "required": null,
+          "required": true,
           "description": null
         }
       ],
       "handlers": [
         {
-          "name": "IMediator.Send",
-          "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Api/Controllers/AccountsController.cs"
-        },
-        {
           "name": "SubmitEmployerRequestCommandHandler",
           "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Application/Commands/SubmitEmployerRequest/SubmitEmployerRequestCommandHandler.cs"
+        }
+      ],
+      "senders": [
+        {
+          "name": "AccountsController.SubmitEmployerRequest",
+          "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Api/Controllers/AccountsController.cs"
         }
       ]
     },
@@ -335,109 +363,17 @@
       ],
       "handlers": [
         {
-          "name": "IMediator.Send",
-          "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Api/Controllers/ProvidersController.cs"
-        },
-        {
           "name": "SubmitProviderResponseCommandHandler",
           "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Application/Commands/SubmitProviderResponse/SubmitProviderResponseCommandHandler.cs"
+        }
+      ],
+      "senders": [
+        {
+          "name": "ProvidersController.SubmitProviderResponse",
+          "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Api/Controllers/ProvidersController.cs"
         }
       ]
     }
   ],
-  "events": [
-    {
-      "name": "GetEmployerAggregatedEmployerRequestsQuery",
-      "namespace": "SFA.DAS.RequestApprenticeTraining.Application.Queries.GetEmployerAggregatedEmployerRequests",
-      "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Application/Queries/GetEmployerAggregatedEmployerRequests/GetEmployerAggregatedEmployerRequestsQuery.cs",
-      "description": null,
-      "fields": [
-        {
-          "name": "AccountId",
-          "type": "long",
-          "required": null,
-          "description": null
-        }
-      ],
-      "handlers": [
-        {
-          "name": "GetEmployerAggregatedEmployerRequestsQueryHandler",
-          "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Application/Queries/GetEmployerAggregatedEmployerRequests/GetEmployerAggregatedEmployerRequestsQueryHandler.cs"
-        }
-      ]
-    },
-    {
-      "name": "GetEmployerRequestQuery",
-      "namespace": "SFA.DAS.RequestApprenticeTraining.Application.Queries.GetEmployerRequest",
-      "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Application/Queries/GetEmployerRequest/GetEmployerRequestQuery.cs",
-      "description": null,
-      "fields": [
-        {
-          "name": "EmployerRequestId",
-          "type": "Guid?",
-          "required": null,
-          "description": null
-        }
-      ],
-      "handlers": [
-        {
-          "name": "GetEmployerRequestQueryHandler",
-          "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Application/Queries/GetEmployerRequest/GetEmployerRequestQueryHandler.cs"
-        }
-      ]
-    },
-    {
-      "name": "GetEmployerRequestsByIdsQuery",
-      "namespace": "SFA.DAS.RequestApprenticeTraining.Application.Queries.GetEmployerRequestsByIds",
-      "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Application/Queries/GetEmployerRequestsByIds/GetEmployerRequestsByIdsQuery.cs",
-      "description": null,
-      "fields": [
-        {
-          "name": "EmployerRequestIds",
-          "type": "List<Guid>",
-          "required": null,
-          "description": null
-        }
-      ],
-      "handlers": [
-        {
-          "name": "GetEmployerRequestsByIdsQueryHandler",
-          "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Application/Queries/GetEmployerRequestsByIds/GetEmployerRequestsByIdsQueryHandler.cs"
-        }
-      ]
-    },
-    {
-      "name": "GetEmployerRequestsForResponseNotificationQuery",
-      "namespace": "SFA.DAS.RequestApprenticeTraining.Application.Queries.GetEmployerRequestsForResponseNotification",
-      "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Application/Queries/GetEmployerRequestsForResponseNotification/GetEmployerRequestsForResponseNotificationQuery.cs",
-      "description": null,
-      "fields": [],
-      "handlers": [
-        {
-          "name": "GetEmployerRequestsForResponseNotificationQueryHandler",
-          "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Application/Queries/GetEmployerRequestsForResponseNotification/GetEmployerRequestsForResponseNotificationQueryHandler.cs"
-        }
-      ]
-    },
-    {
-      "name": "GetProviderAggregatedEmployerRequestsQuery",
-      "namespace": "SFA.DAS.RequestApprenticeTraining.Application.Queries.GetProviderAggregatedEmployerRequests",
-      "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Application/Queries/GetProviderAggregatedEmployerRequests/GetProviderAggregatedEmployerRequestsQuery.cs",
-      "description": null,
-      "fields": [
-        {
-          "name": "Ukprn",
-          "type": "long",
-          "required": null,
-          "description": null
-        }
-      ],
-      "handlers": [
-        {
-          "name": "GetProviderAggregatedEmployerRequestsQueryHandler",
-          "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Application/Queries/GetProviderAggregatedEmployerRequests/GetProviderAggregatedEmployerRequestsQueryHandler.cs"
-        }
-      ]
-    }
-  ]
+  "events": []
 }

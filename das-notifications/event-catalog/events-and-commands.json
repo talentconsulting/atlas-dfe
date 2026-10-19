@@ -4,84 +4,6 @@
   "path": "src",
   "commands": [
     {
-      "name": "SendEmailMediatRCommand",
-      "namespace": "SFA.DAS.Notifications.Application.Commands.SendEmail",
-      "sourceFile": "src/SFA.DAS.Notifications.Application/Commands/SendEmail/SendEmailMediatRCommand.cs",
-      "description": null,
-      "fields": [
-        {
-          "name": "TemplateId",
-          "type": "string",
-          "required": null,
-          "description": null
-        },
-        {
-          "name": "RecipientsAddress",
-          "type": "string",
-          "required": null,
-          "description": null
-        },
-        {
-          "name": "Tokens",
-          "type": "Dictionary<string, string>",
-          "required": null,
-          "description": null
-        }
-      ],
-      "handlers": [
-        {
-          "name": "SendEmailMediatRCommandHandler",
-          "sourceFile": "src/SFA.DAS.Notifications.Application/Commands/SendEmail/SendEmailMediatRCommandHandler.cs"
-        },
-        {
-          "name": "SendEmailCommandHandler",
-          "sourceFile": "src/SFA.DAS.Notifications.MessageHandlers/CommandHandlers/SendEmailCommandHandler.cs"
-        }
-      ]
-    },
-    {
-      "name": "SendSmsMediatRCommand",
-      "namespace": "SFA.DAS.Notifications.Application.Commands.SendSms",
-      "sourceFile": "src/SFA.DAS.Notifications.Application/Commands/SendSms/SendSmsMediatRCommand.cs",
-      "description": null,
-      "fields": [
-        {
-          "name": "SystemId",
-          "type": "string",
-          "required": null,
-          "description": null
-        },
-        {
-          "name": "TemplateId",
-          "type": "string",
-          "required": null,
-          "description": null
-        },
-        {
-          "name": "RecipientsNumber",
-          "type": "string",
-          "required": null,
-          "description": null
-        },
-        {
-          "name": "Tokens",
-          "type": "Dictionary<string, string>",
-          "required": null,
-          "description": null
-        }
-      ],
-      "handlers": [
-        {
-          "name": "SendSmsMediatRCommandHandler",
-          "sourceFile": "src/SFA.DAS.Notifications.Application/Commands/SendSms/SendSmsMediatRCommandHandler.cs"
-        },
-        {
-          "name": "SendSmsCommandHandler",
-          "sourceFile": "src/SFA.DAS.Notifications.MessageHandlers/CommandHandlers/SendSmsCommandHandler.cs"
-        }
-      ]
-    },
-    {
       "name": "SendEmailCommand",
       "namespace": "SFA.DAS.Notifications.Messages.Commands",
       "sourceFile": "src/SFA.DAS.Notifications.Messages/Commands/SendEmailCommand.cs",
@@ -90,30 +12,36 @@
         {
           "name": "RecipientsAddress",
           "type": "string",
-          "required": null,
+          "required": true,
           "description": null
         },
         {
           "name": "TemplateId",
           "type": "string",
-          "required": null,
+          "required": true,
           "description": null
         },
         {
           "name": "Tokens",
           "type": "IReadOnlyDictionary<string, string>",
-          "required": null,
+          "required": true,
           "description": null
         }
       ],
       "handlers": [
         {
+          "name": "SendEmailCommandHandler",
+          "sourceFile": "src/SFA.DAS.Notifications.MessageHandlers/CommandHandlers/SendEmailCommandHandler.cs"
+        }
+      ],
+      "senders": [
+        {
           "name": "NotificationOrchestrator",
           "sourceFile": "src/SFA.DAS.Notifications.Api/Orchestrators/NotificationOrchestrator.cs"
         },
         {
-          "name": "SendEmailCommandHandler",
-          "sourceFile": "src/SFA.DAS.Notifications.MessageHandlers/CommandHandlers/SendEmailCommandHandler.cs"
+          "name": "NServiceBusStartUp",
+          "sourceFile": "src/SFA.DAS.Notifications.Api/StartupExtensions/NServiceBusStartUp.cs"
         }
       ]
     },
@@ -126,39 +54,68 @@
         {
           "name": "RecipientsNumber",
           "type": "string",
-          "required": null,
+          "required": true,
           "description": null
         },
         {
           "name": "SystemId",
           "type": "string",
-          "required": null,
+          "required": true,
           "description": null
         },
         {
           "name": "TemplateId",
           "type": "string",
-          "required": null,
+          "required": true,
           "description": null
         },
         {
           "name": "Tokens",
           "type": "Dictionary<string, string>",
-          "required": null,
+          "required": true,
           "description": null
         }
       ],
       "handlers": [
         {
+          "name": "SendSmsCommandHandler",
+          "sourceFile": "src/SFA.DAS.Notifications.MessageHandlers/CommandHandlers/SendSmsCommandHandler.cs"
+        }
+      ],
+      "senders": [
+        {
           "name": "NotificationOrchestrator",
           "sourceFile": "src/SFA.DAS.Notifications.Api/Orchestrators/NotificationOrchestrator.cs"
         },
         {
-          "name": "SendSmsCommandHandler",
-          "sourceFile": "src/SFA.DAS.Notifications.MessageHandlers/CommandHandlers/SendSmsCommandHandler.cs"
+          "name": "NServiceBusStartUp",
+          "sourceFile": "src/SFA.DAS.Notifications.Api/StartupExtensions/NServiceBusStartUp.cs"
         }
       ]
     }
   ],
-  "events": []
+  "events": [
+    {
+      "name": "DispatchNotificationMessage",
+      "namespace": "SFA.DAS.Notifications.Application.Messages",
+      "sourceFile": "src/SFA.DAS.Notifications.Application/Messages/DispatchNotificationMessage.cs",
+      "description": null,
+      "fields": [
+        {
+          "name": "MessageId",
+          "type": "string",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "Format",
+          "type": "NotificationFormat",
+          "required": true,
+          "description": null
+        }
+      ],
+      "handlers": [],
+      "senders": []
+    }
+  ]
 }

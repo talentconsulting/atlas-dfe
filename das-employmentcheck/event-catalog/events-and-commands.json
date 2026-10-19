@@ -10,9 +10,15 @@
       "description": null,
       "fields": [
         {
-          "name": "CorrelationId",
-          "type": "Guid",
+          "name": "ApprenticeshipAccountId",
+          "type": "long",
           "required": true,
+          "description": null
+        },
+        {
+          "name": "ApprenticeshipId",
+          "type": "long?",
+          "required": null,
           "description": null
         },
         {
@@ -22,21 +28,15 @@
           "description": null
         },
         {
-          "name": "Uln",
-          "type": "long",
+          "name": "CorrelationId",
+          "type": "Guid",
           "required": true,
           "description": null
         },
         {
-          "name": "ApprenticeshipAccountId",
-          "type": "long",
+          "name": "MaxDate",
+          "type": "DateTime",
           "required": true,
-          "description": null
-        },
-        {
-          "name": "ApprenticeshipId",
-          "type": "long?",
-          "required": false,
           "description": null
         },
         {
@@ -46,8 +46,8 @@
           "description": null
         },
         {
-          "name": "MaxDate",
-          "type": "DateTime",
+          "name": "Uln",
+          "type": "long",
           "required": true,
           "description": null
         }
@@ -56,6 +56,12 @@
         {
           "name": "RegisterCheckCommandHandler",
           "sourceFile": "src/SFA.DAS.EmploymentCheck.Api/Mediators/Commands/RegisterCheckCommand/RegisterCheckCommandHandler.cs"
+        }
+      ],
+      "senders": [
+        {
+          "name": "EmploymentCheckController",
+          "sourceFile": "src/SFA.DAS.EmploymentCheck.Api/Application/Controllers/EmploymentCheckController.cs"
         }
       ]
     },
@@ -80,12 +86,14 @@
       ],
       "handlers": [
         {
-          "name": "AbandonRelatedRequestsActivity.Create",
-          "sourceFile": "src/SFA.DAS.EmploymentCheck.Functions/AzureFunctions/Activities/AbandonRelatedRequestsActivity.cs"
-        },
-        {
           "name": "AbandonRelatedRequestsCommandHandler",
           "sourceFile": "src/SFA.DAS.EmploymentCheck.Commands/AbandonRelatedRequests/AbandonRelatedRequestsCommandHandler.cs"
+        }
+      ],
+      "senders": [
+        {
+          "name": "AbandonRelatedRequestsActivity",
+          "sourceFile": "src/SFA.DAS.EmploymentCheck.Functions/AzureFunctions/Activities/AbandonRelatedRequestsActivity.cs"
         }
       ]
     },
@@ -110,12 +118,14 @@
       ],
       "handlers": [
         {
-          "name": "CreateEmploymentCheckCacheRequestActivity.Create",
-          "sourceFile": "src/SFA.DAS.EmploymentCheck.Functions/AzureFunctions/Activities/CreateEmploymentCheckCacheRequestActivity.cs"
-        },
-        {
           "name": "CreateEmploymentCheckCacheRequestCommandHandler",
           "sourceFile": "src/SFA.DAS.EmploymentCheck.Commands/CreateEmploymentCheckCacheRequest/CreateEmploymentCheckCacheRequestCommandHandler.cs"
+        }
+      ],
+      "senders": [
+        {
+          "name": "CreateEmploymentCheckCacheRequestActivity",
+          "sourceFile": "src/SFA.DAS.EmploymentCheck.Functions/AzureFunctions/Activities/CreateEmploymentCheckCacheRequestActivity.cs"
         }
       ]
     },
@@ -127,25 +137,27 @@
       "fields": [
         {
           "name": "EmploymentCheck",
-          "type": "Data.Models.EmploymentCheck",
+          "type": "SFA.DAS.EmploymentCheck.Data.Models.EmploymentCheck",
           "required": true,
           "description": null
         },
         {
           "name": "employmentCheck",
-          "type": "Data.Models.EmploymentCheck",
+          "type": "EmploymentCheck",
           "required": true,
           "description": null
         }
       ],
       "handlers": [
         {
-          "name": "OutputEmploymentCheckResultsActivity.Send",
-          "sourceFile": "src/SFA.DAS.EmploymentCheck.Functions/AzureFunctions/Activities/OutputEmploymentCheckResultsActivity.cs"
-        },
-        {
           "name": "PublishEmploymentCheckResultCommandHandler",
           "sourceFile": "src/SFA.DAS.EmploymentCheck.Commands/PublishEmploymentCheckResult/PublishEmploymentCheckResultCommandHandler.cs"
+        }
+      ],
+      "senders": [
+        {
+          "name": "OutputEmploymentCheckResultsActivity",
+          "sourceFile": "src/SFA.DAS.EmploymentCheck.Functions/AzureFunctions/Activities/OutputEmploymentCheckResultsActivity.cs"
         }
       ]
     },
@@ -157,25 +169,27 @@
       "fields": [
         {
           "name": "EmploymentCheck",
-          "type": "Models.EmploymentCheck",
+          "type": "SFA.DAS.EmploymentCheck.Data.Models.EmploymentCheck",
           "required": true,
           "description": null
         },
         {
           "name": "employmentCheck",
-          "type": "Data.Models.EmploymentCheck",
+          "type": "EmploymentCheck",
           "required": true,
           "description": null
         }
       ],
       "handlers": [
         {
-          "name": "StoreCompletedEmploymentCheckActivity.Store",
-          "sourceFile": "src/SFA.DAS.EmploymentCheck.Functions/AzureFunctions/Activities/StoreCompletedEmploymentCheckActivity.cs"
-        },
-        {
           "name": "StoreCompletedEmploymentCheckCommandHandler",
           "sourceFile": "src/SFA.DAS.EmploymentCheck.Commands/StoreCompletedEmploymentCheck/StoreCompletedEmploymentCheckCommandHandler.cs"
+        }
+      ],
+      "senders": [
+        {
+          "name": "StoreCompletedEmploymentCheckActivity",
+          "sourceFile": "src/SFA.DAS.EmploymentCheck.Functions/AzureFunctions/Activities/StoreCompletedEmploymentCheckActivity.cs"
         }
       ]
     }
@@ -196,7 +210,7 @@
         {
           "name": "EmploymentResult",
           "type": "bool?",
-          "required": true,
+          "required": null,
           "description": null
         },
         {
@@ -208,11 +222,17 @@
         {
           "name": "ErrorType",
           "type": "string",
-          "required": true,
+          "required": null,
           "description": null
         }
       ],
-      "handlers": []
+      "handlers": [],
+      "senders": [
+        {
+          "name": "PublishEmploymentCheckResultCommandHandler",
+          "sourceFile": "src/SFA.DAS.EmploymentCheck.Commands/PublishEmploymentCheckResult/PublishEmploymentCheckResultCommandHandler.cs"
+        }
+      ]
     }
   ]
 }
