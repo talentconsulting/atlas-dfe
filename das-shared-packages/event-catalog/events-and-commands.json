@@ -4,16 +4,21 @@
   "path": "",
   "commands": [
     {
-      "name": "PublishMessage",
+      "name": "ProcessClientOutboxMessageCommandV2",
       "namespace": null,
-      "sourceFile": "Messaging/PublishReceiveSample/Program.cs",
+      "sourceFile": "SFA.DAS.NServiceBus/SFA.DAS.NServiceBus.SqlServer/Features/ClientOutbox/StartupTasks/ClientOutboxCleaner.cs",
       "description": null,
       "fields": [],
-      "handlers": [],
+      "handlers": [
+        {
+          "name": "ProcessClientOutboxMessageCommandV2Handler",
+          "sourceFile": "SFA.DAS.NServiceBus/SFA.DAS.NServiceBus/Features/ClientOutbox/MessageHandlers/ProcessClientOutboxMessageCommandV2Handler.cs"
+        }
+      ],
       "senders": [
         {
-          "name": "Publish",
-          "sourceFile": "Messaging/PublishReceiveSample/Program.cs"
+          "name": "ClientOutboxCleaner",
+          "sourceFile": "SFA.DAS.NServiceBus/SFA.DAS.NServiceBus.SqlServer/Features/ClientOutbox/StartupTasks/ClientOutboxCleaner.cs"
         }
       ]
     },
@@ -29,7 +34,12 @@
           "sourceFile": "SFA.DAS.NServiceBus/SFA.DAS.NServiceBus/Features/ClientOutbox/MessageHandlers/ProcessClientOutboxMessageCommandHandler.cs"
         }
       ],
-      "senders": []
+      "senders": [
+        {
+          "name": "ClientOutboxCleaner",
+          "sourceFile": "SFA.DAS.NServiceBus/SFA.DAS.NServiceBus.SqlServer/Features/ClientOutbox/StartupTasks/ClientOutboxCleaner.cs"
+        }
+      ]
     },
     {
       "name": "ProcessClientOutboxMessageCommandV2",
@@ -51,6 +61,10 @@
         {
           "name": "RoutingSettingsExtensions",
           "sourceFile": "SFA.DAS.Apim.Shared/SFA.DAS.Apim.Shared/AppStart/RoutingSettingsExtensions.cs"
+        },
+        {
+          "name": "INotificationService",
+          "sourceFile": "SFA.DAS.Apim.Shared/SFA.DAS.Apim.Shared/Interfaces/INotificationService.cs"
         },
         {
           "name": "NotificationService",
@@ -80,34 +94,6 @@
   ],
   "events": [
     {
-      "name": "SampleEvent",
-      "namespace": null,
-      "sourceFile": "Messaging/PublishReceiveSample/Program.cs",
-      "description": null,
-      "fields": [],
-      "handlers": [],
-      "senders": [
-        {
-          "name": "Publish",
-          "sourceFile": "Messaging/PublishReceiveSample/Program.cs"
-        }
-      ]
-    },
-    {
-      "name": "SampleMessageReceivedEvent",
-      "namespace": null,
-      "sourceFile": "Messaging/PubSubSampleGui/Form1.cs",
-      "description": null,
-      "fields": [],
-      "handlers": [
-        {
-          "name": "System_SampleMessageReceived",
-          "sourceFile": "Messaging/PubSubSampleGui/Form1.cs"
-        }
-      ],
-      "senders": []
-    },
-    {
       "name": "SampleMessageReceivedEventArgs",
       "namespace": "PubSubSampleGui.SubSystems",
       "sourceFile": "Messaging/PubSubSampleGui/SubSystems/SampleMessageReceivedEventArgs.cs",
@@ -123,7 +109,11 @@
       "handlers": [],
       "senders": [
         {
-          "name": "SubSystemBase",
+          "name": "Form1",
+          "sourceFile": "Messaging/PubSubSampleGui/Form1.cs"
+        },
+        {
+          "name": "SubSystemBase.OnSampleMessageReceived",
           "sourceFile": "Messaging/PubSubSampleGui/SubSystems/SubSystemBase.cs"
         }
       ]
@@ -135,20 +125,63 @@
       "description": null,
       "fields": [
         {
-          "name": "Timestamp",
-          "type": "DateTimeOffset",
+          "name": "Id",
+          "type": "string",
           "required": null,
           "description": null
         },
         {
-          "name": "Id",
-          "type": "string",
+          "name": "Timestamp",
+          "type": "DateTimeOffset",
           "required": null,
           "description": null
         }
       ],
       "handlers": [],
-      "senders": []
+      "senders": [
+        {
+          "name": "Program",
+          "sourceFile": "Messaging/PublishReceiveSample/Program.cs"
+        }
+      ]
+    },
+    {
+      "name": "ForceAutoEventSubscription",
+      "namespace": "SFA.DAS.NServiceBus.AzureFunction.Extensions.AutoSubscribe",
+      "sourceFile": "SFA.DAS.NServiceBus/SFA.DAS.NServiceBus.AzureFunction.Extensions/AutoSubscribe/ForceAutoEventSubscription.cs",
+      "description": null,
+      "fields": [],
+      "handlers": [
+        {
+          "name": "ForceAutoEventSubscriptionHandler",
+          "sourceFile": "SFA.DAS.NServiceBus/SFA.DAS.NServiceBus.AzureFunction.Extensions/AutoSubscribe/ForceAutoEventSubscription.cs"
+        }
+      ],
+      "senders": [
+        {
+          "name": "ForceAutoEventSubscriptionFunction",
+          "sourceFile": "SFA.DAS.NServiceBus/SFA.DAS.NServiceBus.AzureFunction.Extensions/AutoSubscribe/ForceAutoEventSubscription.cs"
+        }
+      ]
+    },
+    {
+      "name": "ForceAutoEventSubscription",
+      "namespace": "SFA.DAS.NServiceBus.AzureFunctions.Extensions.Example.AutoSubscribe",
+      "sourceFile": "SFA.DAS.NServiceBus/SFA.DAS.NServiceBus.AzureFunctions.Extensions.Example/AutoSubscribe/ForceAutoEventSubscription.cs",
+      "description": null,
+      "fields": [],
+      "handlers": [
+        {
+          "name": "ForceAutoEventSubscriptionHandler",
+          "sourceFile": "SFA.DAS.NServiceBus/SFA.DAS.NServiceBus.AzureFunctions.Extensions.Example/AutoSubscribe/ForceAutoEventSubscription.cs"
+        }
+      ],
+      "senders": [
+        {
+          "name": "ForceAutoEventSubscriptionFunction",
+          "sourceFile": "SFA.DAS.NServiceBus/SFA.DAS.NServiceBus.AzureFunctions.Extensions.Example/AutoSubscribe/ForceAutoEventSubscription.cs"
+        }
+      ]
     },
     {
       "name": "SampleEvent",
@@ -159,7 +192,7 @@
         {
           "name": "Data",
           "type": "string",
-          "required": true,
+          "required": null,
           "description": null
         }
       ],
@@ -173,12 +206,17 @@
           "sourceFile": "SFA.DAS.NServiceBus/SFA.DAS.NServiceBus.TestEndpoint/SampleEventHandler.cs"
         }
       ],
-      "senders": []
+      "senders": [
+        {
+          "name": "Program",
+          "sourceFile": "SFA.DAS.NServiceBus/SFA.DAS.NServiceBus.TestEndpoint/Program.cs"
+        }
+      ]
     },
     {
       "name": "NewProgressAddedEvent",
       "namespace": "SFA.DAS.TrackProgress.Messages.Events",
-      "sourceFile": "SFA.DAS.NServiceBus/SFA.DAS.NServiceBus.AzureFunctions.Extensions.MessagePublisher/Program.cs",
+      "sourceFile": "SFA.DAS.NServiceBus/SFA.DAS.NServiceBus.AzureFunctions.Extensions.Example/Handlers/NewProgressAddedEventHandler.cs",
       "description": null,
       "fields": [],
       "handlers": [
@@ -201,14 +239,14 @@
       "description": null,
       "fields": [
         {
-          "name": "Id",
-          "type": "int",
+          "name": "Created",
+          "type": "DateTime",
           "required": true,
           "description": null
         },
         {
-          "name": "Created",
-          "type": "DateTime",
+          "name": "Id",
+          "type": "int",
           "required": true,
           "description": null
         }
@@ -219,7 +257,12 @@
           "sourceFile": "SFA.DAS.UnitOfWork/SFA.DAS.UnitOfWork.Sample.MessageHandlers/EventHandlers/FoobarCreatedEventHandler.cs"
         }
       ],
-      "senders": []
+      "senders": [
+        {
+          "name": "Foobar",
+          "sourceFile": "SFA.DAS.UnitOfWork/SFA.DAS.UnitOfWork.Sample/Models/Foobar.cs"
+        }
+      ]
     }
   ]
 }
