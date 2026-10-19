@@ -50,11 +50,11 @@
     },
     {
       "sourceId": "provider-feedback",
-      "name": "Provider Feedback Outer",
+      "name": "Apprentice Feedback API",
       "kind": "http-api",
       "classification": "internal",
       "direction": "outbound",
-      "client": "IApiClient",
+      "client": "IApprenticeFeedbackApiClient",
       "technology": "HttpClient",
       "configurationKeys": [
         "ProviderFeedbackOuterApi:ApiBaseUrl",
@@ -66,28 +66,8 @@
           "ProviderFeedbackOuterApi:SubscriptionKey"
         ]
       },
-      "operations": [
-        {
-          "method": "GET",
-          "methodName": "Get",
-          "path": "{GetUrl}",
-          "sourceFile": "src/SFA.DAS.ProviderFeedback.Infrastructure/Api/ApiClient.cs"
-        },
-        {
-          "method": "POST",
-          "methodName": "Post",
-          "path": "{PostUrl}",
-          "sourceFile": "src/SFA.DAS.ProviderFeedback.Infrastructure/Api/ApiClient.cs"
-        }
-      ],
-      "resources": [
-        {
-          "type": "http-api",
-          "name": "ProviderFeedbackOuterApi",
-          "direction": "outbound",
-          "sourceFile": "src/SFA.DAS.ProviderFeedback.Infrastructure/Api/ApiClient.cs"
-        }
-      ],
+      "operations": [],
+      "resources": [],
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.ProviderFeedback.Infrastructure/Api/ApiClient.cs",
@@ -96,11 +76,176 @@
         {
           "sourceFile": "src/SFA.DAS.ProviderFeedback.Web/AppStart/AddServiceRegistrationExtensions.cs",
           "reason": "HttpClient client 'IApiClient' registered."
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/ProviderFeedback/SFA.DAS.ProviderFeedback/Application/Queries/GetProviderFeedback/GetProviderFeedbackQueryHandler.cs",
+          "reason": "ProviderFeedback APIM area calls Apprentice Feedback API through IApprenticeFeedbackApiClient"
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/ProviderFeedback/SFA.DAS.ProviderFeedback/Application/Queries/GetProviderFeedbackAnnual/GetProviderFeedbackAnnualQueryHandler.cs",
+          "reason": "ProviderFeedback APIM area calls Apprentice Feedback API through IApprenticeFeedbackApiClient"
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/ProviderFeedback/SFA.DAS.ProviderFeedback/Application/Queries/GetProviderFeedbackForAcademicYear/GetProviderFeedbackForAcademicYearQueryHandler.cs",
+          "reason": "ProviderFeedback APIM area calls Apprentice Feedback API through IApprenticeFeedbackApiClient"
         }
       ],
-      "confidence": "high",
-      "targetId": "http-api-provider-feedback-outer",
-      "description": "Calls the API of"
+      "confidence": "medium",
+      "targetId": "http-api-apprentice-feedback-api",
+      "description": "Calls via APIM (ProviderFeedback)",
+      "via": {
+        "repo": "das-apim-endpoints",
+        "label": "APIM",
+        "area": "ProviderFeedback",
+        "dependencyName": "Provider Feedback Outer",
+        "operations": [
+          {
+            "method": "GET",
+            "methodName": "Get",
+            "path": "{GetUrl}",
+            "sourceFile": "src/SFA.DAS.ProviderFeedback.Infrastructure/Api/ApiClient.cs"
+          },
+          {
+            "method": "POST",
+            "methodName": "Post",
+            "path": "{PostUrl}",
+            "sourceFile": "src/SFA.DAS.ProviderFeedback.Infrastructure/Api/ApiClient.cs"
+          }
+        ],
+        "areas": [
+          "ProviderFeedback"
+        ]
+      }
+    },
+    {
+      "sourceId": "provider-feedback",
+      "name": "Employer Feedback API",
+      "kind": "http-api",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "IEmployerFeedbackApiClient",
+      "technology": "HttpClient",
+      "configurationKeys": [
+        "ProviderFeedbackOuterApi:ApiBaseUrl",
+        "ProviderFeedbackOuterApi:SubscriptionKey"
+      ],
+      "authentication": {
+        "type": "key",
+        "configurationKeys": [
+          "ProviderFeedbackOuterApi:SubscriptionKey"
+        ]
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.ProviderFeedback.Infrastructure/Api/ApiClient.cs",
+          "reason": "Custom HttpClient API client defined."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.ProviderFeedback.Web/AppStart/AddServiceRegistrationExtensions.cs",
+          "reason": "HttpClient client 'IApiClient' registered."
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/ProviderFeedback/SFA.DAS.ProviderFeedback/Application/Queries/GetProviderFeedback/GetProviderFeedbackQueryHandler.cs",
+          "reason": "ProviderFeedback APIM area calls Employer Feedback API through IEmployerFeedbackApiClient"
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/ProviderFeedback/SFA.DAS.ProviderFeedback/Application/Queries/GetProviderFeedbackAnnual/GetProviderFeedbackAnnualQueryHandler.cs",
+          "reason": "ProviderFeedback APIM area calls Employer Feedback API through IEmployerFeedbackApiClient"
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/ProviderFeedback/SFA.DAS.ProviderFeedback/Application/Queries/GetProviderFeedbackForAcademicYear/GetProviderFeedbackForAcademicYearQueryHandler.cs",
+          "reason": "ProviderFeedback APIM area calls Employer Feedback API through IEmployerFeedbackApiClient"
+        }
+      ],
+      "confidence": "medium",
+      "targetId": "http-api-employer-feedback-api",
+      "description": "Calls via APIM (ProviderFeedback)",
+      "via": {
+        "repo": "das-apim-endpoints",
+        "label": "APIM",
+        "area": "ProviderFeedback",
+        "dependencyName": "Provider Feedback Outer",
+        "operations": [
+          {
+            "method": "GET",
+            "methodName": "Get",
+            "path": "{GetUrl}",
+            "sourceFile": "src/SFA.DAS.ProviderFeedback.Infrastructure/Api/ApiClient.cs"
+          },
+          {
+            "method": "POST",
+            "methodName": "Post",
+            "path": "{PostUrl}",
+            "sourceFile": "src/SFA.DAS.ProviderFeedback.Infrastructure/Api/ApiClient.cs"
+          }
+        ],
+        "areas": [
+          "ProviderFeedback"
+        ]
+      }
+    },
+    {
+      "sourceId": "provider-feedback",
+      "name": "Roatp V2 API",
+      "kind": "http-api",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "IRoatpCourseManagementApiClient",
+      "technology": "HttpClient",
+      "configurationKeys": [
+        "ProviderFeedbackOuterApi:ApiBaseUrl",
+        "ProviderFeedbackOuterApi:SubscriptionKey"
+      ],
+      "authentication": {
+        "type": "key",
+        "configurationKeys": [
+          "ProviderFeedbackOuterApi:SubscriptionKey"
+        ]
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.ProviderFeedback.Infrastructure/Api/ApiClient.cs",
+          "reason": "Custom HttpClient API client defined."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.ProviderFeedback.Web/AppStart/AddServiceRegistrationExtensions.cs",
+          "reason": "HttpClient client 'IApiClient' registered."
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/ProviderFeedback/SFA.DAS.ProviderFeedback.Api/AppStart/AddServiceRegistrationExtensions.cs",
+          "reason": "ProviderFeedback APIM area calls Roatp V2 API through IRoatpCourseManagementApiClient"
+        }
+      ],
+      "confidence": "medium",
+      "targetId": "http-api-roatp-v2-api",
+      "description": "Calls via APIM (ProviderFeedback)",
+      "via": {
+        "repo": "das-apim-endpoints",
+        "label": "APIM",
+        "area": "ProviderFeedback",
+        "dependencyName": "Provider Feedback Outer",
+        "operations": [
+          {
+            "method": "GET",
+            "methodName": "Get",
+            "path": "{GetUrl}",
+            "sourceFile": "src/SFA.DAS.ProviderFeedback.Infrastructure/Api/ApiClient.cs"
+          },
+          {
+            "method": "POST",
+            "methodName": "Post",
+            "path": "{PostUrl}",
+            "sourceFile": "src/SFA.DAS.ProviderFeedback.Infrastructure/Api/ApiClient.cs"
+          }
+        ],
+        "areas": [
+          "ProviderFeedback"
+        ]
+      }
     }
   ],
   "resolution": {
