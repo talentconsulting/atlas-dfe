@@ -280,7 +280,7 @@ function renderDatabase(resetToolbar = true) {
 }
 
 function renderDatabaseGrid(filtered, tables) {
-  content.innerHTML = `<div class="schema-grid">${filtered.map((table) => {
+  content.innerHTML = `<div class="schema-grid">${alphabetical(filtered, (table) => `${table.schema}.${table.name}`).map((table) => {
     const outbound = table.relationships || [];
     return `<button class="schema-card" type="button" data-table="${escapeHtml(table.name)}">
       <h2>${escapeHtml(table.schema)}.${escapeHtml(table.name)}</h2>
@@ -1004,7 +1004,7 @@ function renderDependencies(resetToolbar = true) {
     if (!dependencyGroups.has(key)) dependencyGroups.set(key, []);
     dependencyGroups.get(key).push(dependency);
   });
-  const dependencies = [...dependencyGroups.entries()].map(([id, members]) => mergeDependencyGroup(id, members));
+  const dependencies = alphabetical([...dependencyGroups.entries()].map(([id, members]) => mergeDependencyGroup(id, members)));
   const operations = dependencies.reduce((sum, dependency) => sum + (dependency.operations?.length || 0), 0);
   const internalCount = dependencies.filter((dependency) => dependency.classification === 'internal').length;
   const messageCount = dependencies.filter((dependency) => dependency.kind === 'message').length;
@@ -1275,6 +1275,11 @@ function compareMissing(a, b) {
   if (aMissing) return 1;
   if (bMissing) return -1;
   return null;
+}
+
+// Lists in the viewer are alphabetical by what is displayed, ignoring case.
+function alphabetical(items, label = (item) => item.name) {
+  return [...items].sort((a, b) => String(label(a) ?? '').localeCompare(String(label(b) ?? ''), undefined, { sensitivity: 'base', numeric: true }));
 }
 
 function compareText(a, b, dir = 1) {
@@ -1910,7 +1915,7 @@ function landscapeChecklistGroup(title, nodes, formatLabel) {
   const checkedCount = nodes.filter((node) => state.landscapeChecked.has(node.id)).length;
   return `<div class="checklist-group">
     <h4>${escapeHtml(title)} <span class="count">${checkedCount}/${nodes.length}</span></h4>
-    <ul class="checklist">${nodes.map((node) => `
+    <ul class="checklist">${alphabetical(nodes, (node) => formatLabel(node.name)).map((node) => `
       <li><label><input type="checkbox" data-landscape-toggle="${escapeHtml(node.id)}" ${state.landscapeChecked.has(node.id) ? 'checked' : ''}><span>${escapeHtml(formatLabel(node.name))}</span></label></li>`).join('') || '<li class="muted">None recorded.</li>'}</ul>
   </div>`;
 }
@@ -2589,7 +2594,8 @@ function landscapeTooltipContent(node, graph) {
 
 function operations(spec) {
   const methods = ['get', 'post', 'put', 'patch', 'delete', 'options', 'head'];
-  return Object.entries(spec.paths || {}).flatMap(([path, value]) => methods.filter((method) => value[method]).map((method) => ({ path, method, ...value[method] })));
+  return alphabetical(Object.entries(spec.paths || {}), ([path]) => path)
+    .flatMap(([path, value]) => methods.filter((method) => value[method]).map((method) => ({ path, method, ...value[method] })));
 }
 
 function apiInfo() {
@@ -2754,8 +2760,8 @@ function localServiceCard(service) {
 }
 
 function renderLocalDev(resetToolbar = true) {
-  const services = state.data.localServices || [];
-  const keys = state.data.configurationKeys || [];
+  const services = alphabetical(state.data.localServices || []);
+  const keys = alphabetical(state.data.configurationKeys || [], (entry) => entry.key);
   if (resetToolbar) toolbar.innerHTML = `${searchControl('Filter services or configuration keys')}<span class="spacer"></span><span class="toolbar-meta">${services.length} local service${services.length === 1 ? '' : 's'} · ${keys.length} configuration keys</span>`;
   const filteredServices = services.filter((service) => `${service.name} ${service.kind} ${service.technology}`.toLowerCase().includes(state.filter));
   const filteredKeys = keys.filter((entry) => `${entry.key} ${entry.sourceFile} ${entry.reason}`.toLowerCase().includes(state.filter));
@@ -2871,10 +2877,12 @@ function renderJourneys(resetToolbar = true) {
     content.innerHTML = '<div class="empty-state"><span class="empty-icon" aria-hidden="true">◇</span><h2>No web pages found</h2><p>This repository has no ASP.NET web project with pages or views.</p></div>';
     return;
   }
-  if (state.journey == null || (state.journey !== 'all' && !journeys[state.journey])) state.journey = journeys.length ? 0 : 'all';
+  if (state.journey == null || (state.journey !== 'all' && !journeys[state.journey])) {
+    state.journey = journeys.length ? journeys.indexOf(alphabetical(journeys)[0]) : 'all';   // the first journey alphabetically
+  }
   if (resetToolbar) {
     toolbar.innerHTML = `<label class="source-picker" for="journey-picker"><span>Journey</span><select id="journey-picker">
-      ${journeys.map((journey, i) => `<option value="${i}" ${state.journey === i ? 'selected' : ''}>${escapeHtml(journey.name)}</option>`).join('')}
+      ${alphabetical(journeys.map((journey, i) => ({ journey, i })), ({ journey }) => journey.name).map(({ journey, i }) => `<option value="${i}" ${state.journey === i ? 'selected' : ''}>${escapeHtml(journey.name)}</option>`).join('')}
       <option value="all" ${state.journey === 'all' ? 'selected' : ''}>All pages</option></select></label>
       ${state.journey === 'all' ? searchControl('Filter pages') : ''}
       <span class="spacer"></span><span class="toolbar-meta">${pages.length} pages · ${data.transitions.length} transitions · ${journeys.length} journeys</span>`;
@@ -3069,7 +3077,7 @@ window.addEventListener('popstate', async () => {
 async function init() {
   try {
     const catalog = await getJson('/api/catalog');
-    state.catalog = catalog.sources;
+    state.catalog = alphabetical(catalog.sources, (source) => titleCase(source.name));
     state.catalogueRepository = catalog.catalogueRepository || null;
     if (!state.catalog.length) throw new Error('The manifest does not contain any sources.');
     sourceSelect.innerHTML = state.catalog.map((source) => `<option value="${source.id}">${escapeHtml(titleCase(source.name))}</option>`).join('');
