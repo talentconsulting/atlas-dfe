@@ -1,13 +1,529 @@
 {
   "database": {
-    "name": null,
+    "name": "das-funding-apprenticeship-earnings",
     "engine": null
   },
   "tables": [
     {
       "name": "ApprenticeshipAdditionalPayment",
       "schema": "Domain",
-      "entity": "ApprenticeshipAdditionalPayment",
+      "entity": null,
+      "columns": [
+        {
+          "name": "Key",
+          "type": "UNIQUEIDENTIFIER",
+          "nullable": false,
+          "primaryKey": true,
+          "generated": false,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "EarningsProfileId",
+          "type": "UNIQUEIDENTIFIER",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "AcademicYear",
+          "type": "SMALLINT",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "DeliveryPeriod",
+          "type": "TINYINT",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "Amount",
+          "type": "DECIMAL(15,5)",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "AdditionalPaymentType",
+          "type": "NVARCHAR(20)",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "DueDate",
+          "type": "DATETIME",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": null
+        }
+      ],
+      "relationships": [
+        {
+          "name": "FK_ApprenticeshipAdditionalPayment_ApprenticeshipEarningsProfile",
+          "type": "many-to-one",
+          "fromColumns": [
+            "EarningsProfileId"
+          ],
+          "targetTable": "ApprenticeshipEarningsProfile",
+          "targetColumns": [
+            "EarningsProfileId"
+          ],
+          "onDelete": null
+        }
+      ],
+      "indexes": [
+        {
+          "name": "IX_ApprenticeshipAdditionalPayment_EarningsProfileId",
+          "type": null,
+          "columns": [
+            "EarningsProfileId"
+          ],
+          "unique": false,
+          "filter": null
+        }
+      ],
+      "hasPii": false
+    },
+    {
+      "name": "ApprenticeshipEarningsProfile",
+      "schema": "Domain",
+      "entity": null,
+      "columns": [
+        {
+          "name": "EarningsProfileId",
+          "type": "UNIQUEIDENTIFIER",
+          "nullable": false,
+          "primaryKey": true,
+          "generated": false,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "EpisodeKey",
+          "type": "UNIQUEIDENTIFIER",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "OnProgramTotal",
+          "type": "DECIMAL(15,5)",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "CompletionPayment",
+          "type": "DECIMAL(15,5)",
+          "nullable": true,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "Version",
+          "type": "UNIQUEIDENTIFIER",
+          "nullable": true,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "IsApproved",
+          "type": "BIT",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "CalculationData",
+          "type": "NVARCHAR(MAX)",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": null
+        }
+      ],
+      "relationships": [
+        {
+          "name": "FK_ApprenticeshipEarningsProfile_ApprenticeshipEpisode",
+          "type": "many-to-one",
+          "fromColumns": [
+            "EpisodeKey"
+          ],
+          "targetTable": "ApprenticeshipEpisode",
+          "targetColumns": [
+            "Key"
+          ],
+          "onDelete": null
+        }
+      ],
+      "indexes": [
+        {
+          "name": "IX_EpisodeKey",
+          "type": null,
+          "columns": [
+            "EpisodeKey"
+          ],
+          "unique": false,
+          "filter": null
+        }
+      ],
+      "hasPii": false
+    },
+    {
+      "name": "ApprenticeshipEarningsProfileHistory",
+      "schema": "History",
+      "entity": null,
+      "columns": [
+        {
+          "name": "Key",
+          "type": "UNIQUEIDENTIFIER",
+          "nullable": false,
+          "primaryKey": true,
+          "generated": false,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "EarningsProfileId",
+          "type": "UNIQUEIDENTIFIER",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "Version",
+          "type": "UNIQUEIDENTIFIER",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "CreatedOn",
+          "type": "DATETIME",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": false,
+          "default": "GETDATE()",
+          "ordinal": null
+        },
+        {
+          "name": "State",
+          "type": "NVARCHAR(MAX)",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": null
+        }
+      ],
+      "relationships": [
+        {
+          "name": "FK_ApprenticeshipEarningsProfileHistory_ApprenticeshipEarningsProfile",
+          "type": "many-to-one",
+          "fromColumns": [
+            "EarningsProfileId"
+          ],
+          "targetTable": "ApprenticeshipEarningsProfile",
+          "targetColumns": [
+            "EarningsProfileId"
+          ],
+          "onDelete": null
+        }
+      ],
+      "indexes": [
+        {
+          "name": "IX_ApprenticeshipEarningsProfileHistory_Version",
+          "type": null,
+          "columns": [
+            "Version"
+          ],
+          "unique": false,
+          "filter": null
+        }
+      ],
+      "hasPii": false
+    },
+    {
+      "name": "ApprenticeshipEpisode",
+      "schema": "Domain",
+      "entity": null,
+      "columns": [
+        {
+          "name": "Key",
+          "type": "UNIQUEIDENTIFIER",
+          "nullable": false,
+          "primaryKey": true,
+          "generated": false,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "LearningKey",
+          "type": "UNIQUEIDENTIFIER",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "Ukprn",
+          "type": "BIGINT",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "EmployerAccountId",
+          "type": "BIGINT",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "EmployerType",
+          "type": "INT",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": false,
+          "default": "0",
+          "ordinal": null
+        },
+        {
+          "name": "FundingEmployerAccountId",
+          "type": "BIGINT",
+          "nullable": true,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "LegalEntityName",
+          "type": "NVARCHAR(255)",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "TrainingCode",
+          "type": "NCHAR(50)",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "CompletionDate",
+          "type": "DATETIME",
+          "nullable": true,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "AchievementDate",
+          "type": "DATETIME",
+          "nullable": true,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "WithdrawalDate",
+          "type": "DATETIME",
+          "nullable": true,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "PauseDate",
+          "type": "DATETIME",
+          "nullable": true,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "FundingBandMaximum",
+          "type": "DECIMAL(15,5)",
+          "nullable": true,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "IsRemoved",
+          "type": "BIT",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": false,
+          "default": "0",
+          "ordinal": null
+        },
+        {
+          "name": "FundingPlatform",
+          "type": "INT",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": false,
+          "default": "2",
+          "ordinal": null
+        }
+      ],
+      "relationships": [
+        {
+          "name": "FK_ApprenticeshipEpisode_Learning",
+          "type": "many-to-one",
+          "fromColumns": [
+            "LearningKey"
+          ],
+          "targetTable": "ApprenticeshipLearning",
+          "targetColumns": [
+            "LearningKey"
+          ],
+          "onDelete": null
+        }
+      ],
+      "indexes": [
+        {
+          "name": "IX_learningKey",
+          "type": null,
+          "columns": [
+            "LearningKey"
+          ],
+          "unique": false,
+          "filter": null
+        }
+      ],
+      "hasPii": true
+    },
+    {
+      "name": "ApprenticeshipEpisodePrice",
+      "schema": "Domain",
+      "entity": null,
+      "columns": [
+        {
+          "name": "Key",
+          "type": "UNIQUEIDENTIFIER",
+          "nullable": false,
+          "primaryKey": true,
+          "generated": false,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "EpisodeKey",
+          "type": "UNIQUEIDENTIFIER",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "StartDate",
+          "type": "DATETIME",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "EndDate",
+          "type": "DATETIME",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "AgreedPrice",
+          "type": "DECIMAL(15,5)",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": null
+        }
+      ],
+      "relationships": [
+        {
+          "name": "FK_ApprenticeshipEpisodePrice_ApprenticeshipEpisode",
+          "type": "many-to-one",
+          "fromColumns": [
+            "EpisodeKey"
+          ],
+          "targetTable": "ApprenticeshipEpisode",
+          "targetColumns": [
+            "Key"
+          ],
+          "onDelete": null
+        }
+      ],
+      "indexes": [
+        {
+          "name": "IX_EpisodeKey",
+          "type": null,
+          "columns": [
+            "EpisodeKey"
+          ],
+          "unique": false,
+          "filter": null
+        }
+      ],
+      "hasPii": false
+    },
+    {
+      "name": "ApprenticeshipInstalment",
+      "schema": "Domain",
+      "entity": null,
       "columns": [
         {
           "name": "Key",
@@ -20,6 +536,394 @@
         },
         {
           "name": "EarningsProfileId",
+          "type": "UNIQUEIDENTIFIER",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": 2
+        },
+        {
+          "name": "AcademicYear",
+          "type": "SMALLINT",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": 3
+        },
+        {
+          "name": "DeliveryPeriod",
+          "type": "TINYINT",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": 4
+        },
+        {
+          "name": "Amount",
+          "type": "DECIMAL(15,5)",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": 5
+        },
+        {
+          "name": "EpisodePriceKey",
+          "type": "UNIQUEIDENTIFIER",
+          "nullable": true,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": 6
+        },
+        {
+          "name": "Type",
+          "type": "NVARCHAR(50)",
+          "nullable": true,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": 7
+        }
+      ],
+      "relationships": [
+        {
+          "name": "FK_ApprenticeshipInstalment_ApprenticeshipEarningsProfile",
+          "type": "many-to-one",
+          "fromColumns": [
+            "EarningsProfileId"
+          ],
+          "targetTable": "ApprenticeshipEarningsProfile",
+          "targetColumns": [
+            "EarningsProfileId"
+          ],
+          "onDelete": null
+        }
+      ],
+      "indexes": [
+        {
+          "name": "IX_EarningsProfileId",
+          "type": null,
+          "columns": [
+            "EarningsProfileId"
+          ],
+          "unique": false,
+          "filter": null
+        }
+      ],
+      "hasPii": false
+    },
+    {
+      "name": "ApprenticeshipLearning",
+      "schema": "Domain",
+      "entity": null,
+      "columns": [
+        {
+          "name": "LearningKey",
+          "type": "UNIQUEIDENTIFIER",
+          "nullable": false,
+          "primaryKey": true,
+          "generated": false,
+          "default": null,
+          "ordinal": 1
+        },
+        {
+          "name": "ApprovalsApprenticeshipId",
+          "type": "BIGINT",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": 2
+        },
+        {
+          "name": "Uln",
+          "type": "NVARCHAR(10)",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": 3
+        },
+        {
+          "name": "HasEHCP",
+          "type": "BIT",
+          "nullable": true,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": 4
+        },
+        {
+          "name": "IsCareLeaver",
+          "type": "BIT",
+          "nullable": true,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": 5
+        },
+        {
+          "name": "CareLeaverEmployerConsentGiven",
+          "type": "BIT",
+          "nullable": true,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": 6
+        },
+        {
+          "name": "DateOfBirth",
+          "type": "DATETIME",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": false,
+          "default": "'2002-01-01'",
+          "ordinal": 7
+        }
+      ],
+      "relationships": [],
+      "indexes": [],
+      "hasPii": true
+    },
+    {
+      "name": "ApprenticeshipPeriodInLearning",
+      "schema": "Domain",
+      "entity": null,
+      "columns": [
+        {
+          "name": "Key",
+          "type": "UNIQUEIDENTIFIER",
+          "nullable": false,
+          "primaryKey": true,
+          "generated": false,
+          "default": null,
+          "ordinal": 1
+        },
+        {
+          "name": "EpisodeKey",
+          "type": "UNIQUEIDENTIFIER",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": 2
+        },
+        {
+          "name": "StartDate",
+          "type": "DATETIME",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": 3
+        },
+        {
+          "name": "EndDate",
+          "type": "DATETIME",
+          "nullable": true,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": 4
+        },
+        {
+          "name": "OriginalExpectedEndDate",
+          "type": "DATETIME",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": 5
+        }
+      ],
+      "relationships": [
+        {
+          "name": "FK_ApprenticeshipPeriodInLearning_ApprenticeshipEpisode",
+          "type": "many-to-one",
+          "fromColumns": [
+            "EpisodeKey"
+          ],
+          "targetTable": "ApprenticeshipEpisode",
+          "targetColumns": [
+            "Key"
+          ],
+          "onDelete": null
+        }
+      ],
+      "indexes": [
+        {
+          "name": "IX_EpisodeKey",
+          "type": null,
+          "columns": [
+            "EpisodeKey"
+          ],
+          "unique": false,
+          "filter": null
+        }
+      ],
+      "hasPii": false
+    },
+    {
+      "name": "EnglishAndMaths",
+      "schema": "Domain",
+      "entity": null,
+      "columns": [
+        {
+          "name": "Key",
+          "type": "UNIQUEIDENTIFIER",
+          "nullable": false,
+          "primaryKey": true,
+          "generated": false,
+          "default": null,
+          "ordinal": 1
+        },
+        {
+          "name": "EarningsProfileId",
+          "type": "UNIQUEIDENTIFIER",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": 2
+        },
+        {
+          "name": "StartDate",
+          "type": "DATETIME",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": 3
+        },
+        {
+          "name": "EndDate",
+          "type": "DATETIME",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": 4
+        },
+        {
+          "name": "Course",
+          "type": "NVARCHAR(50)",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": 5
+        },
+        {
+          "name": "Amount",
+          "type": "DECIMAL(15,5)",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": 6
+        },
+        {
+          "name": "WithdrawalDate",
+          "type": "DATETIME",
+          "nullable": true,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": 7
+        },
+        {
+          "name": "PauseDate",
+          "type": "DATETIME",
+          "nullable": true,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": 8
+        },
+        {
+          "name": "CompletionDate",
+          "type": "DATETIME",
+          "nullable": true,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": 9
+        },
+        {
+          "name": "LearnAimRef",
+          "type": "VARCHAR(8)",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": false,
+          "default": "''",
+          "ordinal": 10
+        },
+        {
+          "name": "CombinedFundingAdjustmentPercentage",
+          "type": "DECIMAL(18,6)",
+          "nullable": true,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": 11
+        }
+      ],
+      "relationships": [
+        {
+          "name": "FK_EnglishAndMaths_ApprenticeshipEarningsProfile",
+          "type": "many-to-one",
+          "fromColumns": [
+            "EarningsProfileId"
+          ],
+          "targetTable": "ApprenticeshipEarningsProfile",
+          "targetColumns": [
+            "EarningsProfileId"
+          ],
+          "onDelete": null
+        }
+      ],
+      "indexes": [
+        {
+          "name": "IX_EarningsProfileId",
+          "type": null,
+          "columns": [
+            "EarningsProfileId"
+          ],
+          "unique": false,
+          "filter": null
+        },
+        {
+          "name": "IX_EnglishAndMaths_EarningsProfileId",
+          "type": null,
+          "columns": [
+            "EarningsProfileId"
+          ],
+          "unique": false,
+          "filter": null
+        }
+      ],
+      "hasPii": false
+    },
+    {
+      "name": "EnglishAndMathsAdditionalPayment",
+      "schema": "Domain",
+      "entity": null,
+      "columns": [
+        {
+          "name": "Key",
+          "type": "UNIQUEIDENTIFIER",
+          "nullable": false,
+          "primaryKey": true,
+          "generated": false,
+          "default": null,
+          "ordinal": 1
+        },
+        {
+          "name": "EnglishAndMathsKey",
           "type": "UNIQUEIDENTIFIER",
           "nullable": false,
           "primaryKey": false,
@@ -75,108 +979,12 @@
       ],
       "relationships": [
         {
-          "name": "FK_ApprenticeshipAdditionalPayment_ApprenticeshipEarningsProfile",
+          "name": "FK_EnglishAndMathsAdditionalPayment_EnglishAndMaths",
           "type": "many-to-one",
           "fromColumns": [
-            "EarningsProfileId"
+            "EnglishAndMathsKey"
           ],
-          "targetTable": "ApprenticeshipEarningsProfile",
-          "targetColumns": [
-            "EarningsProfileId"
-          ],
-          "onDelete": null
-        }
-      ],
-      "indexes": [
-        {
-          "name": "IX_ApprenticeshipAdditionalPayment_EarningsProfileId",
-          "type": "btree",
-          "columns": [
-            "EarningsProfileId"
-          ],
-          "unique": false,
-          "filter": null
-        }
-      ],
-      "hasPii": false
-    },
-    {
-      "name": "ApprenticeshipEarningsProfile",
-      "schema": "Domain",
-      "entity": "ApprenticeshipEarningsProfile",
-      "columns": [
-        {
-          "name": "EarningsProfileId",
-          "type": "UNIQUEIDENTIFIER",
-          "nullable": false,
-          "primaryKey": true,
-          "generated": false,
-          "default": null,
-          "ordinal": 1
-        },
-        {
-          "name": "EpisodeKey",
-          "type": "UNIQUEIDENTIFIER",
-          "nullable": false,
-          "primaryKey": false,
-          "generated": false,
-          "default": null,
-          "ordinal": 2
-        },
-        {
-          "name": "OnProgramTotal",
-          "type": "DECIMAL(15,5)",
-          "nullable": false,
-          "primaryKey": false,
-          "generated": false,
-          "default": null,
-          "ordinal": 3
-        },
-        {
-          "name": "CompletionPayment",
-          "type": "DECIMAL(15,5)",
-          "nullable": true,
-          "primaryKey": false,
-          "generated": false,
-          "default": null,
-          "ordinal": 4
-        },
-        {
-          "name": "Version",
-          "type": "UNIQUEIDENTIFIER",
-          "nullable": true,
-          "primaryKey": false,
-          "generated": false,
-          "default": null,
-          "ordinal": 5
-        },
-        {
-          "name": "IsApproved",
-          "type": "BIT",
-          "nullable": false,
-          "primaryKey": false,
-          "generated": false,
-          "default": null,
-          "ordinal": 6
-        },
-        {
-          "name": "CalculationData",
-          "type": "NVARCHAR(MAX)",
-          "nullable": false,
-          "primaryKey": false,
-          "generated": false,
-          "default": null,
-          "ordinal": 7
-        }
-      ],
-      "relationships": [
-        {
-          "name": "FK_ApprenticeshipEarningsProfile_ApprenticeshipEpisode",
-          "type": "many-to-one",
-          "fromColumns": [
-            "EpisodeKey"
-          ],
-          "targetTable": "ApprenticeshipEpisode",
+          "targetTable": "EnglishAndMaths",
           "targetColumns": [
             "Key"
           ],
@@ -185,722 +993,10 @@
       ],
       "indexes": [
         {
-          "name": "IX_EpisodeKey",
-          "type": "btree",
+          "name": "IX_EnglishAndMathsAdditionalPayment_EnglishAndMathsKey",
+          "type": null,
           "columns": [
-            "EpisodeKey"
-          ],
-          "unique": false,
-          "filter": null
-        }
-      ],
-      "hasPii": false
-    },
-    {
-      "name": "ApprenticeshipEarningsProfileHistory",
-      "schema": "History",
-      "entity": "ApprenticeshipEarningsProfileHistory",
-      "columns": [
-        {
-          "name": "Key",
-          "type": "UNIQUEIDENTIFIER",
-          "nullable": false,
-          "primaryKey": true,
-          "generated": false,
-          "default": null,
-          "ordinal": 1
-        },
-        {
-          "name": "EarningsProfileId",
-          "type": "UNIQUEIDENTIFIER",
-          "nullable": false,
-          "primaryKey": false,
-          "generated": false,
-          "default": null,
-          "ordinal": 2
-        },
-        {
-          "name": "Version",
-          "type": "UNIQUEIDENTIFIER",
-          "nullable": false,
-          "primaryKey": false,
-          "generated": false,
-          "default": null,
-          "ordinal": 3
-        },
-        {
-          "name": "CreatedOn",
-          "type": "DATETIME",
-          "nullable": false,
-          "primaryKey": false,
-          "generated": false,
-          "default": "GETDATE()",
-          "ordinal": 4
-        },
-        {
-          "name": "State",
-          "type": "NVARCHAR(MAX)",
-          "nullable": false,
-          "primaryKey": false,
-          "generated": false,
-          "default": null,
-          "ordinal": 5
-        }
-      ],
-      "relationships": [
-        {
-          "name": "FK_ApprenticeshipEarningsProfileHistory_ApprenticeshipEarningsProfile",
-          "type": "many-to-one",
-          "fromColumns": [
-            "EarningsProfileId"
-          ],
-          "targetTable": "ApprenticeshipEarningsProfile",
-          "targetColumns": [
-            "EarningsProfileId"
-          ],
-          "onDelete": null
-        }
-      ],
-      "indexes": [
-        {
-          "name": "IX_ApprenticeshipEarningsProfileHistory_Version",
-          "type": "btree",
-          "columns": [
-            "Version"
-          ],
-          "unique": false,
-          "filter": null
-        }
-      ],
-      "hasPii": false
-    },
-    {
-      "name": "ApprenticeshipEpisode",
-      "schema": "Domain",
-      "entity": "ApprenticeshipEpisode",
-      "columns": [
-        {
-          "name": "Key",
-          "type": "UNIQUEIDENTIFIER",
-          "nullable": false,
-          "primaryKey": true,
-          "generated": false,
-          "default": null,
-          "ordinal": 1
-        },
-        {
-          "name": "LearningKey",
-          "type": "UNIQUEIDENTIFIER",
-          "nullable": false,
-          "primaryKey": false,
-          "generated": false,
-          "default": null,
-          "ordinal": 2
-        },
-        {
-          "name": "Ukprn",
-          "type": "BIGINT",
-          "nullable": false,
-          "primaryKey": false,
-          "generated": false,
-          "default": null,
-          "ordinal": 3
-        },
-        {
-          "name": "EmployerAccountId",
-          "type": "BIGINT",
-          "nullable": false,
-          "primaryKey": false,
-          "generated": false,
-          "default": null,
-          "ordinal": 4
-        },
-        {
-          "name": "EmployerType",
-          "type": "INT",
-          "nullable": false,
-          "primaryKey": false,
-          "generated": false,
-          "default": "0",
-          "ordinal": 5
-        },
-        {
-          "name": "FundingEmployerAccountId",
-          "type": "BIGINT",
-          "nullable": true,
-          "primaryKey": false,
-          "generated": false,
-          "default": null,
-          "ordinal": 6
-        },
-        {
-          "name": "LegalEntityName",
-          "type": "NVARCHAR(255)",
-          "nullable": false,
-          "primaryKey": false,
-          "generated": false,
-          "default": null,
-          "ordinal": 7
-        },
-        {
-          "name": "TrainingCode",
-          "type": "NCHAR(50)",
-          "nullable": false,
-          "primaryKey": false,
-          "generated": false,
-          "default": null,
-          "ordinal": 8
-        },
-        {
-          "name": "CompletionDate",
-          "type": "DATETIME",
-          "nullable": true,
-          "primaryKey": false,
-          "generated": false,
-          "default": null,
-          "ordinal": 9
-        },
-        {
-          "name": "AchievementDate",
-          "type": "DATETIME",
-          "nullable": true,
-          "primaryKey": false,
-          "generated": false,
-          "default": null,
-          "ordinal": 10
-        },
-        {
-          "name": "WithdrawalDate",
-          "type": "DATETIME",
-          "nullable": true,
-          "primaryKey": false,
-          "generated": false,
-          "default": null,
-          "ordinal": 11
-        },
-        {
-          "name": "PauseDate",
-          "type": "DATETIME",
-          "nullable": true,
-          "primaryKey": false,
-          "generated": false,
-          "default": null,
-          "ordinal": 12
-        },
-        {
-          "name": "FundingBandMaximum",
-          "type": "DECIMAL(15,5)",
-          "nullable": true,
-          "primaryKey": false,
-          "generated": false,
-          "default": null,
-          "ordinal": 13
-        },
-        {
-          "name": "IsRemoved",
-          "type": "BIT",
-          "nullable": false,
-          "primaryKey": false,
-          "generated": false,
-          "default": "0",
-          "ordinal": 14
-        },
-        {
-          "name": "FundingPlatform",
-          "type": "INT",
-          "nullable": false,
-          "primaryKey": false,
-          "generated": false,
-          "default": "2",
-          "ordinal": 15
-        }
-      ],
-      "relationships": [
-        {
-          "name": "FK_ApprenticeshipEpisode_Learning",
-          "type": "many-to-one",
-          "fromColumns": [
-            "LearningKey"
-          ],
-          "targetTable": "ApprenticeshipLearning",
-          "targetColumns": [
-            "LearningKey"
-          ],
-          "onDelete": null
-        }
-      ],
-      "indexes": [
-        {
-          "name": "IX_learningKey",
-          "type": "btree",
-          "columns": [
-            "LearningKey"
-          ],
-          "unique": false,
-          "filter": null
-        }
-      ],
-      "hasPii": false
-    },
-    {
-      "name": "ApprenticeshipEpisodePrice",
-      "schema": "Domain",
-      "entity": "ApprenticeshipEpisodePrice",
-      "columns": [
-        {
-          "name": "Key",
-          "type": "UNIQUEIDENTIFIER",
-          "nullable": false,
-          "primaryKey": true,
-          "generated": false,
-          "default": null,
-          "ordinal": 1
-        },
-        {
-          "name": "EpisodeKey",
-          "type": "UNIQUEIDENTIFIER",
-          "nullable": false,
-          "primaryKey": false,
-          "generated": false,
-          "default": null,
-          "ordinal": 2
-        },
-        {
-          "name": "StartDate",
-          "type": "DATETIME",
-          "nullable": false,
-          "primaryKey": false,
-          "generated": false,
-          "default": null,
-          "ordinal": 3
-        },
-        {
-          "name": "EndDate",
-          "type": "DATETIME",
-          "nullable": false,
-          "primaryKey": false,
-          "generated": false,
-          "default": null,
-          "ordinal": 4
-        },
-        {
-          "name": "AgreedPrice",
-          "type": "DECIMAL(15,5)",
-          "nullable": false,
-          "primaryKey": false,
-          "generated": false,
-          "default": null,
-          "ordinal": 5
-        }
-      ],
-      "relationships": [
-        {
-          "name": "FK_ApprenticeshipEpisodePrice_ApprenticeshipEpisode",
-          "type": "many-to-one",
-          "fromColumns": [
-            "EpisodeKey"
-          ],
-          "targetTable": "ApprenticeshipEpisode",
-          "targetColumns": [
-            "Key"
-          ],
-          "onDelete": null
-        }
-      ],
-      "indexes": [
-        {
-          "name": "IX_EpisodeKey",
-          "type": "btree",
-          "columns": [
-            "EpisodeKey"
-          ],
-          "unique": false,
-          "filter": null
-        }
-      ],
-      "hasPii": false
-    },
-    {
-      "name": "ApprenticeshipInstalment",
-      "schema": "Domain",
-      "entity": "ApprenticeshipInstalment",
-      "columns": [
-        {
-          "name": "Key",
-          "type": "UNIQUEIDENTIFIER",
-          "nullable": false,
-          "primaryKey": true,
-          "generated": false,
-          "default": null,
-          "ordinal": null
-        },
-        {
-          "name": "EarningsProfileId",
-          "type": "UNIQUEIDENTIFIER",
-          "nullable": false,
-          "primaryKey": false,
-          "generated": false,
-          "default": null,
-          "ordinal": null
-        },
-        {
-          "name": "AcademicYear",
-          "type": "SMALLINT",
-          "nullable": false,
-          "primaryKey": false,
-          "generated": false,
-          "default": null,
-          "ordinal": null
-        },
-        {
-          "name": "DeliveryPeriod",
-          "type": "TINYINT",
-          "nullable": false,
-          "primaryKey": false,
-          "generated": false,
-          "default": null,
-          "ordinal": null
-        },
-        {
-          "name": "Amount",
-          "type": "DECIMAL(15,5)",
-          "nullable": false,
-          "primaryKey": false,
-          "generated": false,
-          "default": null,
-          "ordinal": null
-        },
-        {
-          "name": "EpisodePriceKey",
-          "type": "UNIQUEIDENTIFIER",
-          "nullable": true,
-          "primaryKey": false,
-          "generated": false,
-          "default": null,
-          "ordinal": null
-        },
-        {
-          "name": "Type",
-          "type": "NVARCHAR(50)",
-          "nullable": true,
-          "primaryKey": false,
-          "generated": false,
-          "default": null,
-          "ordinal": null
-        }
-      ],
-      "relationships": [
-        {
-          "name": "FK_ApprenticeshipInstalment_ApprenticeshipEarningsProfile",
-          "type": "many-to-one",
-          "fromColumns": [
-            "EarningsProfileId"
-          ],
-          "targetTable": "ApprenticeshipEarningsProfile",
-          "targetColumns": [
-            "EarningsProfileId"
-          ],
-          "onDelete": null
-        }
-      ],
-      "indexes": [
-        {
-          "name": "IX_EarningsProfileId",
-          "type": "btree",
-          "columns": [
-            "EarningsProfileId"
-          ],
-          "unique": false,
-          "filter": null
-        }
-      ],
-      "hasPii": false
-    },
-    {
-      "name": "ApprenticeshipLearning",
-      "schema": "Domain",
-      "entity": "ApprenticeshipLearning",
-      "columns": [
-        {
-          "name": "LearningKey",
-          "type": "UNIQUEIDENTIFIER",
-          "nullable": false,
-          "primaryKey": true,
-          "generated": false,
-          "default": null,
-          "ordinal": null
-        },
-        {
-          "name": "ApprovalsApprenticeshipId",
-          "type": "BIGINT",
-          "nullable": false,
-          "primaryKey": false,
-          "generated": false,
-          "default": null,
-          "ordinal": null
-        },
-        {
-          "name": "Uln",
-          "type": "NVARCHAR(10)",
-          "nullable": false,
-          "primaryKey": false,
-          "generated": false,
-          "default": null,
-          "ordinal": null
-        },
-        {
-          "name": "HasEHCP",
-          "type": "BIT",
-          "nullable": true,
-          "primaryKey": false,
-          "generated": false,
-          "default": null,
-          "ordinal": null
-        },
-        {
-          "name": "IsCareLeaver",
-          "type": "BIT",
-          "nullable": true,
-          "primaryKey": false,
-          "generated": false,
-          "default": null,
-          "ordinal": null
-        },
-        {
-          "name": "CareLeaverEmployerConsentGiven",
-          "type": "BIT",
-          "nullable": true,
-          "primaryKey": false,
-          "generated": false,
-          "default": null,
-          "ordinal": null
-        },
-        {
-          "name": "DateOfBirth",
-          "type": "DATETIME",
-          "nullable": false,
-          "primaryKey": false,
-          "generated": false,
-          "default": "'2002-01-01'",
-          "ordinal": null
-        }
-      ],
-      "relationships": [],
-      "indexes": [],
-      "hasPii": true
-    },
-    {
-      "name": "ApprenticeshipPeriodInLearning",
-      "schema": "Domain",
-      "entity": "ApprenticeshipPeriodInLearning",
-      "columns": [
-        {
-          "name": "Key",
-          "type": "UNIQUEIDENTIFIER",
-          "nullable": false,
-          "primaryKey": true,
-          "generated": false,
-          "default": null,
-          "ordinal": null
-        },
-        {
-          "name": "EpisodeKey",
-          "type": "UNIQUEIDENTIFIER",
-          "nullable": false,
-          "primaryKey": false,
-          "generated": false,
-          "default": null,
-          "ordinal": null
-        },
-        {
-          "name": "StartDate",
-          "type": "DATETIME",
-          "nullable": false,
-          "primaryKey": false,
-          "generated": false,
-          "default": null,
-          "ordinal": null
-        },
-        {
-          "name": "EndDate",
-          "type": "DATETIME",
-          "nullable": true,
-          "primaryKey": false,
-          "generated": false,
-          "default": null,
-          "ordinal": null
-        },
-        {
-          "name": "OriginalExpectedEndDate",
-          "type": "DATETIME",
-          "nullable": false,
-          "primaryKey": false,
-          "generated": false,
-          "default": null,
-          "ordinal": null
-        }
-      ],
-      "relationships": [
-        {
-          "name": "FK_ApprenticeshipPeriodInLearning_ApprenticeshipEpisode",
-          "type": "many-to-one",
-          "fromColumns": [
-            "EpisodeKey"
-          ],
-          "targetTable": "ApprenticeshipEpisode",
-          "targetColumns": [
-            "Key"
-          ],
-          "onDelete": null
-        }
-      ],
-      "indexes": [
-        {
-          "name": "IX_EpisodeKey",
-          "type": "btree",
-          "columns": [
-            "EpisodeKey"
-          ],
-          "unique": false,
-          "filter": null
-        }
-      ],
-      "hasPii": false
-    },
-    {
-      "name": "EnglishAndMaths",
-      "schema": "Domain",
-      "entity": "EnglishAndMaths",
-      "columns": [
-        {
-          "name": "Key",
-          "type": "UNIQUEIDENTIFIER",
-          "nullable": false,
-          "primaryKey": true,
-          "generated": false,
-          "default": null,
-          "ordinal": null
-        },
-        {
-          "name": "EarningsProfileId",
-          "type": "UNIQUEIDENTIFIER",
-          "nullable": false,
-          "primaryKey": false,
-          "generated": false,
-          "default": null,
-          "ordinal": null
-        },
-        {
-          "name": "StartDate",
-          "type": "DATETIME",
-          "nullable": false,
-          "primaryKey": false,
-          "generated": false,
-          "default": null,
-          "ordinal": null
-        },
-        {
-          "name": "EndDate",
-          "type": "DATETIME",
-          "nullable": false,
-          "primaryKey": false,
-          "generated": false,
-          "default": null,
-          "ordinal": null
-        },
-        {
-          "name": "Course",
-          "type": "NVARCHAR(50)",
-          "nullable": false,
-          "primaryKey": false,
-          "generated": false,
-          "default": null,
-          "ordinal": null
-        },
-        {
-          "name": "Amount",
-          "type": "DECIMAL(15,5)",
-          "nullable": false,
-          "primaryKey": false,
-          "generated": false,
-          "default": null,
-          "ordinal": null
-        },
-        {
-          "name": "WithdrawalDate",
-          "type": "DATETIME",
-          "nullable": true,
-          "primaryKey": false,
-          "generated": false,
-          "default": null,
-          "ordinal": null
-        },
-        {
-          "name": "PauseDate",
-          "type": "DATETIME",
-          "nullable": true,
-          "primaryKey": false,
-          "generated": false,
-          "default": null,
-          "ordinal": null
-        },
-        {
-          "name": "CompletionDate",
-          "type": "DATETIME",
-          "nullable": true,
-          "primaryKey": false,
-          "generated": false,
-          "default": null,
-          "ordinal": null
-        },
-        {
-          "name": "LearnAimRef",
-          "type": "VARCHAR(8)",
-          "nullable": false,
-          "primaryKey": false,
-          "generated": false,
-          "default": "''",
-          "ordinal": null
-        },
-        {
-          "name": "CombinedFundingAdjustmentPercentage",
-          "type": "DECIMAL(18,6)",
-          "nullable": true,
-          "primaryKey": false,
-          "generated": false,
-          "default": null,
-          "ordinal": null
-        }
-      ],
-      "relationships": [
-        {
-          "name": "FK_EnglishAndMaths_ApprenticeshipEarningsProfile",
-          "type": "many-to-one",
-          "fromColumns": [
-            "EarningsProfileId"
-          ],
-          "targetTable": "ApprenticeshipEarningsProfile",
-          "targetColumns": [
-            "EarningsProfileId"
-          ],
-          "onDelete": null
-        }
-      ],
-      "indexes": [
-        {
-          "name": "IX_EarningsProfileId",
-          "type": "btree",
-          "columns": [
-            "EarningsProfileId"
-          ],
-          "unique": false,
-          "filter": null
-        },
-        {
-          "name": "IX_EnglishAndMaths_EarningsProfileId",
-          "type": "btree",
-          "columns": [
-            "EarningsProfileId"
+            "EnglishAndMathsKey"
           ],
           "unique": false,
           "filter": null
@@ -911,7 +1007,7 @@
     {
       "name": "EnglishAndMathsInstalment",
       "schema": "Domain",
-      "entity": "EnglishAndMathsInstalment",
+      "entity": null,
       "columns": [
         {
           "name": "Key",
@@ -1390,12 +1486,12 @@
           "filter": null
         }
       ],
-      "hasPii": false
+      "hasPii": true
     },
     {
       "name": "ShortCourseInstalment",
       "schema": "Domain",
-      "entity": null,
+      "entity": "Domain.ShortCourseInstalment",
       "columns": [
         {
           "name": "Key",
@@ -1478,7 +1574,7 @@
       "indexes": [
         {
           "name": "IX_EarningsProfileId",
-          "type": "btree",
+          "type": null,
           "columns": [
             "EarningsProfileId"
           ],
@@ -1491,7 +1587,7 @@
     {
       "name": "ShortCourseLearning",
       "schema": "Domain",
-      "entity": null,
+      "entity": "Domain.ShortCourseLearning",
       "columns": [
         {
           "name": "LearningKey",
@@ -1500,7 +1596,7 @@
           "primaryKey": true,
           "generated": false,
           "default": null,
-          "ordinal": 1
+          "ordinal": null
         },
         {
           "name": "ApprovalsApprenticeshipId",
@@ -1509,7 +1605,7 @@
           "primaryKey": false,
           "generated": false,
           "default": null,
-          "ordinal": 2
+          "ordinal": null
         },
         {
           "name": "Uln",
@@ -1518,7 +1614,7 @@
           "primaryKey": false,
           "generated": false,
           "default": null,
-          "ordinal": 3
+          "ordinal": null
         },
         {
           "name": "HasEHCP",
@@ -1527,7 +1623,7 @@
           "primaryKey": false,
           "generated": false,
           "default": null,
-          "ordinal": 4
+          "ordinal": null
         },
         {
           "name": "IsCareLeaver",
@@ -1536,7 +1632,7 @@
           "primaryKey": false,
           "generated": false,
           "default": null,
-          "ordinal": 5
+          "ordinal": null
         },
         {
           "name": "CareLeaverEmployerConsentGiven",
@@ -1545,7 +1641,7 @@
           "primaryKey": false,
           "generated": false,
           "default": null,
-          "ordinal": 6
+          "ordinal": null
         },
         {
           "name": "DateOfBirth",
@@ -1554,7 +1650,7 @@
           "primaryKey": false,
           "generated": false,
           "default": "'2002-01-01'",
-          "ordinal": 7
+          "ordinal": null
         },
         {
           "name": "TrainingCode",
@@ -1563,7 +1659,7 @@
           "primaryKey": false,
           "generated": false,
           "default": "''",
-          "ordinal": 8
+          "ordinal": null
         }
       ],
       "relationships": [],
