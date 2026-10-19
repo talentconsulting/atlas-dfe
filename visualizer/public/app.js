@@ -686,9 +686,12 @@ function edgeLabel(edge, isOutboundFromNode = true) {
   return `${verb}${technology ? ` [${technology}]` : ''}${via}${edge.count > 1 ? ` ×${edge.count}` : ''}`;
 }
 
-function buildLandscape(sources, dependencySets) {
+// With proxy on, a dependency routed through an APIM area (dependency.via, from the DfE overlay) is drawn as
+// caller -> APIM area -> target instead of one caller -> target line labelled "via APIM (area)".
+function buildLandscape(sources, dependencySets, { proxy = false } = {}) {
   const systemTokenMap = new Map(sources.map((s) => [s.id, new Set(tokenize(s.name))]));
   const edgeMap = new Map();
+  const gateways = new Map();
 
   function addEdge(from, to, dependency, reference) {
     const key = `${from}|${to}`;
@@ -702,6 +705,21 @@ function buildLandscape(sources, dependencySets) {
     if (dependency.kind) edge.kinds.add(dependency.kind);
     if (dependency.via) edge.via.add(`${dependency.via.label} (${dependency.via.area})`);
     if (reference) edge.references.push(reference);
+  }
+
+  function routeEdge(from, to, dependency, reference) {
+    const via = dependency.via;
+    if (!proxy || !via || via.unresolved) {
+      addEdge(from, to, dependency, reference);
+      return;
+    }
+    const areas = via.areas || String(via.area).split(', ');
+    for (const area of areas) {
+      const id = `apim:${area}`;
+      if (!gateways.has(id)) gateways.set(id, { id, name: `${via.label} ${area}`, area, label: via.label, repo: via.repo });
+      addEdge(from, id, { name: `${via.label} ${area}`, kind: 'http-api', technology: null, operations: via.operations || [] }, reference);
+      addEdge(id, to, { ...dependency, via: undefined }, reference);
+    }
   }
 
   // Redis, SQL Server, and Service Bus are used by nearly every system and clutter the diagram
@@ -749,7 +767,7 @@ function buildLandscape(sources, dependencySets) {
         || bestMatchingSystem(depTokens, sources.filter((candidate) => candidate.id !== source.id), (candidate) => systemTokenMap.get(candidate.id));
       if (matchedSystem) {
         const [from, to] = dependency.direction === 'inbound' ? [`sys:${matchedSystem.id}`, `sys:${source.id}`] : [`sys:${source.id}`, `sys:${matchedSystem.id}`];
-        addEdge(from, to, dependency, { sourceId: source.id, dependencyIndex });
+        routeEdge(from, to, dependency, { sourceId: source.id, dependencyIndex });
         continue;
       }
       if (depTokens.size === 0) continue;
@@ -779,7 +797,7 @@ function buildLandscape(sources, dependencySets) {
     const name = members.reduce((best, member) => (member.dependency.name.length > best.length ? member.dependency.name : best), members[0].dependency.name);
     members.forEach((member) => {
       const [from, to] = member.dependency.direction === 'inbound' ? [id, `sys:${member.source.id}`] : [`sys:${member.source.id}`, id];
-      addEdge(from, to, member.dependency, { sourceId: member.source.id, dependencyIndex: member.dependencyIndex });
+      routeEdge(from, to, member.dependency, { sourceId: member.source.id, dependencyIndex: member.dependencyIndex });
     });
     externals.push({ id, name, members });
   }
@@ -791,7 +809,7 @@ function buildLandscape(sources, dependencySets) {
     isServiceBus: infraSourceIds.get('serviceBus').has(s.id)
   }));
   const edges = [...edgeMap.values()].map((edge) => ({ ...edge, technologies: [...edge.technologies], names: [...edge.names], kinds: [...edge.kinds], via: [...edge.via] }));
-  return { systems, externals, edges };
+  return { systems, externals, gateways: alphabetical([...gateways.values()], (gateway) => gateway.area), edges };
 }
 
 function ringLayout(group, center, radiusX, radiusY, angleOffset = 0) {
@@ -1896,6 +1914,7 @@ async function fetchLandscapeGraph() {
     const data = combineDependencies(source, entry?.dependencies, entry?.messages);
     return data.dependencies?.length ? { source, ref: data.ref, dependencies: data.dependencies } : null;
   }).filter(Boolean);
+  state.landscapeInputs = [landscapeCatalog, state.landscapeSources];
   return buildLandscape(landscapeCatalog, state.landscapeSources);
 }
 
@@ -1908,8 +1927,10 @@ async function loadLandscape() {
   state.landscapeChecked = null;
   state.landscapeEventFilter = '';
   state.landscapeHighlights = new Set();   // "Uses …" filters; none ticked shows every system
+  if (state.landscapeProxy === undefined) state.landscapeProxy = true;   // draw APIM areas as proxies
   try {
-    state.landscape = await fetchLandscapeGraph();
+    await fetchLandscapeGraph();
+    state.landscape = buildLandscape(...state.landscapeInputs, { proxy: state.landscapeProxy });
     renderLandscape();
   } catch (error) {
     content.innerHTML = `<div class="error">${escapeHtml(error.message)}</div>`;
@@ -1963,6 +1984,18 @@ function landscapeHighlightLegendItem(key, swatchClass, label) {
   return `<label class="c4-legend-item toggleable"><input type="checkbox" data-landscape-highlight="${escapeHtml(key)}" ${checked ? 'checked' : ''}><span class="c4-swatch ${swatchClass}"></span>${escapeHtml(label)}</label>`;
 }
 
+function wireLandscapeProxyToggle() {
+  const toggle = $('#landscape-proxy');
+  if (!toggle) return;
+  toggle.onchange = () => {
+    state.landscapeProxy = toggle.checked;
+    state.landscape = buildLandscape(...state.landscapeInputs, { proxy: state.landscapeProxy });
+    state.landscapeChecked = null;     // the set of nodes changed; start with everything shown again
+    state.landscapePositions = null;
+    renderLandscape();
+  };
+}
+
 function wireLandscapeHighlightToggles() {
   document.querySelectorAll('[data-landscape-highlight]').forEach((checkbox) => {
     checkbox.onchange = () => {
@@ -1975,7 +2008,8 @@ function wireLandscapeHighlightToggles() {
 
 function renderLandscape() {
   const graph = state.landscape;
-  const allNodes = [...graph.systems, ...graph.externals];
+  const gatewayNodes = graph.gateways || [];
+  const allNodes = [...graph.systems, ...gatewayNodes, ...graph.externals];
   const redisSystemCount = graph.systems.filter((node) => node.isRedis).length;
   const sqlServerSystemCount = graph.systems.filter((node) => node.isSqlServer).length;
   const serviceBusSystemCount = graph.systems.filter((node) => node.isServiceBus).length;
@@ -1986,6 +2020,7 @@ function renderLandscape() {
 
   $('#source-stats').innerHTML = `
     <div class="stat"><dt>Systems</dt><dd>${graph.systems.length}</dd></div>
+    ${gatewayNodes.length ? `<div class="stat"><dt>APIM areas</dt><dd>${gatewayNodes.length}</dd></div>` : ''}
     <div class="stat"><dt>External</dt><dd>${graph.externals.length}</dd></div>
     <div class="stat"><dt>Relationships</dt><dd>${graph.edges.length}</dd></div>`;
   toolbar.innerHTML = `${diagramControlsHtml()}${eventNames.length ? eventFilterControlHtml(eventNames, eventFilter) : ''}<span class="spacer"></span><span class="toolbar-meta">Inferred by matching each repository's outbound service dependencies and handled events/commands against the catalogue, clustering the rest as external systems${redisSystemCount ? ` · ${redisSystemCount} using Redis` : ''}${sqlServerSystemCount ? ` · ${sqlServerSystemCount} using SQL Server` : ''}${serviceBusSystemCount ? ` · ${serviceBusSystemCount} using Service Bus` : ''}${eventFilter ? ` · Showing only containers that publish or consume “${escapeHtml(eventFilter)}”` : ''}</span>`;
@@ -2015,12 +2050,15 @@ function renderLandscape() {
     .filter((node) => !usageKeys.length || usageKeys.some((key) => node[usage[key]]))
     .map((node) => node.id));
   if (usageKeys.length) {
-    graph.edges.forEach((edge) => {
-      if (passesUsage.has(edge.from) && graph.externals.some((node) => node.id === edge.to)) passesUsage.add(edge.to);
-      if (passesUsage.has(edge.to) && graph.externals.some((node) => node.id === edge.from)) passesUsage.add(edge.from);
-    });
+    const nonSystems = new Set([...graph.externals, ...gatewayNodes].map((node) => node.id));
+    for (let pass = 0; pass < 2; pass++) {   // a kept system's APIM areas, then what those areas reach
+      graph.edges.forEach((edge) => {
+        if (passesUsage.has(edge.from) && nonSystems.has(edge.to)) passesUsage.add(edge.to);
+        if (passesUsage.has(edge.to) && nonSystems.has(edge.from)) passesUsage.add(edge.from);
+      });
+    }
   } else {
-    graph.externals.forEach((node) => passesUsage.add(node.id));
+    [...graph.externals, ...gatewayNodes].forEach((node) => passesUsage.add(node.id));
   }
   const isNodeVisible = (node) => state.landscapeChecked.has(node.id) && passesUsage.has(node.id);
   const visibleNodes = allNodes.filter(isNodeVisible);
@@ -2032,6 +2070,7 @@ function renderLandscape() {
       <button id="landscape-deselect-all" type="button" class="plain-button">Deselect all</button>
     </div>
     ${landscapeChecklistGroup('Systems', graph.systems, titleCase)}
+    ${gatewayNodes.length ? landscapeChecklistGroup('APIM areas', gatewayNodes, (name) => name) : ''}
     ${landscapeChecklistGroup('External systems', graph.externals, splitPascalCase)}
   </aside>`;
 
@@ -2059,20 +2098,29 @@ function renderLandscape() {
   const systemsRx = 300, systemsRy = 190;
   const boundaryRx = systemsRx + nodeHalfW + pad;
   const boundaryRy = systemsRy + nodeHalfH + pad;
-  const externalScale = 1.4;
+  // With APIM areas drawn, they take their own ring just outside the systems (still inside the boundary) and the
+  // external systems move further out.
+  const gatewayScale = 1.3;
+  const externalScale = gatewayNodes.length ? 1.85 : 1.4;
   const systemNodes = ringLayout(graph.systems, center, systemsRx, systemsRy, 0).filter(isNodeVisible);
   const externalNodes = ringLayout(graph.externals, center, boundaryRx * externalScale, boundaryRy * externalScale, graph.externals.length ? Math.PI / graph.externals.length : 0).filter(isNodeVisible);
+  const gatewayRing = ringLayout(gatewayNodes, center, boundaryRx * gatewayScale, boundaryRy * gatewayScale, gatewayNodes.length ? Math.PI / gatewayNodes.length : 0).filter(isNodeVisible);
   const visibleIds = new Set(visibleNodes.map((node) => node.id));
   const visibleEdges = graph.edges.filter((edge) => visibleIds.has(edge.from) && visibleIds.has(edge.to) && edgeMatchesFilter(edge));
   if (!state.landscapePositions) state.landscapePositions = new Map();
   const positions = state.landscapePositions;
-  [...systemNodes, ...externalNodes].forEach((node) => positionFor(positions, node.id, node));
+  [...systemNodes, ...gatewayRing, ...externalNodes].forEach((node) => positionFor(positions, node.id, node));
   const orgLabel = orgFromRepoUrl(graph.systems[0]?.repository);
 
   const elements = [
     { data: { id: 'boundary', label: orgLabel.toUpperCase() } },
     ...systemNodes.map((node) => ({
       data: { id: node.id, parent: 'boundary', isLeaf: true, width: 210, height: 98, name: node.name, relCount: visibleEdges.filter((edge) => edge.from === node.id || edge.to === node.id).length, isRedis: node.isRedis, isSqlServer: node.isSqlServer, isServiceBus: node.isServiceBus },
+      position: positions.get(node.id)
+    })),
+    ...gatewayRing.map((node) => ({
+      data: { id: node.id, parent: 'boundary', isLeaf: true, isGateway: true, width: 170, height: 78, name: node.name, area: node.area,
+              relCount: visibleEdges.filter((edge) => edge.from === node.id || edge.to === node.id).length },
       position: positions.get(node.id)
     })),
     ...externalNodes.map((node) => {
@@ -2094,6 +2142,7 @@ function renderLandscape() {
       <div class="c4-legend">
         <span class="c4-legend-item"><span class="c4-swatch internal"></span>Software system (cataloged)</span>
         <span class="c4-legend-item"><span class="c4-swatch external"></span>External system</span>
+        <label class="c4-legend-item toggleable"><input type="checkbox" id="landscape-proxy" ${state.landscapeProxy ? 'checked' : ''}><span class="c4-swatch gateway"></span>Show APIM as a proxy</label>
         ${usageFiltersHtml}
         <span class="c4-legend-item"><span class="c4-boundary-swatch"></span>${escapeHtml(orgLabel)} system boundary</span>
         <span class="c4-legend-item">Click a relationship line to open its dependency</span>
@@ -2111,6 +2160,9 @@ function renderLandscape() {
       query: 'node[?isLeaf]',
       halign: 'center', valign: 'center', halignBox: 'center', valignBox: 'center',
       tpl: (data) => {
+        if (data.isGateway) {
+          return `<div class="cy-node gateway" data-node-id="${escapeHtml(data.id)}"><span class="c4-type">APIM area · proxy</span><strong>${escapeHtml(data.area)}</strong><span class="c4-meta">${data.relCount} relationship(s)</span></div>`;
+        }
         if (data.parent === 'boundary') {
           const showRedis = data.isRedis && state.landscapeHighlights.has('redis');
           const showSql = data.isSqlServer && state.landscapeHighlights.has('sqlServer');
@@ -2146,6 +2198,7 @@ function renderLandscape() {
   wireDiagramControls(() => { positions.clear(); renderLandscape(); });
   wireLandscapeChecklist(allNodes);
   wireLandscapeHighlightToggles();
+  wireLandscapeProxyToggle();
 }
 
 function wireLandscapeChecklist(allNodes) {
@@ -2201,9 +2254,10 @@ function wireLandscapeRefToggles() {
 
 function landscapeDetail(node, graph) {
   if (!node) return '';
-  const isSystem = node.id.startsWith('sys:');
+  const isGateway = node.id.startsWith('apim:');
+  const isSystem = node.id.startsWith('sys:') || isGateway;
   const eventFilter = state.landscapeEventFilter || '';
-  const lookup = (id) => graph.systems.find((item) => item.id === id) || graph.externals.find((item) => item.id === id);
+  const lookup = (id) => graph.systems.find((item) => item.id === id) || (graph.gateways || []).find((item) => item.id === id) || graph.externals.find((item) => item.id === id);
   if (isSystem) {
     const outbound = graph.edges.filter((edge) => edge.from === node.id && edgeMatchesEventFilter(edge, eventFilter));
     const inbound = graph.edges.filter((edge) => edge.to === node.id && edgeMatchesEventFilter(edge, eventFilter));
@@ -2217,11 +2271,11 @@ function landscapeDetail(node, graph) {
       return `<tr><td>${escapeHtml(other ? titleCase(other.name) : 'Unknown')}</td><td>${escapeHtml(edgeLabel(edge, isOutbound))}</td><td>${dependenciesCell}</td></tr>${landscapeRefDetailRow(rowId, resolved, 3)}`;
     }).join('');
     return `<article class="dependency-detail">
-      <p class="eyebrow">Software system</p>
-      <h2>${escapeHtml(titleCase(node.name))}</h2>
-      <p class="detail-subtitle">${escapeHtml((node.repository || '').replace('https://github.com/', 'github.com/'))}</p>
-      <div class="badges"><button class="badge blue as-link" type="button" data-jump="${escapeHtml(node.sourceId)}">View full dependencies →</button></div>
-      <h3>Calls out to</h3>${outbound.length ? `<table class="data-table"><thead><tr><th>Target</th><th>Relationship</th><th>Dependencies</th></tr></thead><tbody>${rows(outbound, 'to', 'out', true)}</tbody></table>` : '<p class="muted">No outbound relationships recorded.</p>'}
+      <p class="eyebrow">${isGateway ? 'APIM area (proxy)' : 'Software system'}</p>
+      <h2>${escapeHtml(isGateway ? node.area : titleCase(node.name))}</h2>
+      <p class="detail-subtitle">${isGateway ? `src/${escapeHtml(node.area)} in ${escapeHtml(node.repo || 'das-apim-endpoints')}: calls these APIs and sends these messages for the services that call it.` : escapeHtml((node.repository || '').replace('https://github.com/', 'github.com/'))}</p>
+      ${isGateway ? '' : `<div class="badges"><button class="badge blue as-link" type="button" data-jump="${escapeHtml(node.sourceId)}">View full dependencies →</button></div>`}
+      <h3>${isGateway ? 'Reaches' : 'Calls out to'}</h3>${outbound.length ? `<table class="data-table"><thead><tr><th>Target</th><th>Relationship</th><th>Dependencies</th></tr></thead><tbody>${rows(outbound, 'to', 'out', true)}</tbody></table>` : '<p class="muted">No outbound relationships recorded.</p>'}
       <h3>Called by</h3>${inbound.length ? `<table class="data-table"><thead><tr><th>Source</th><th>Relationship</th><th>Dependencies</th></tr></thead><tbody>${rows(inbound, 'from', 'in', false)}</tbody></table>` : '<p class="muted">No inbound relationships recorded.</p>'}
     </article>`;
   }
@@ -2596,9 +2650,10 @@ function edgeDetailSuffix(edge) {
 }
 
 function landscapeTooltipContent(node, graph) {
-  const isSystem = node.id.startsWith('sys:');
+  const isGateway = node.id.startsWith('apim:');
+  const isSystem = node.id.startsWith('sys:') || isGateway;
   const eventFilter = state.landscapeEventFilter || '';
-  const lookup = (id) => graph.systems.find((item) => item.id === id) || graph.externals.find((item) => item.id === id);
+  const lookup = (id) => graph.systems.find((item) => item.id === id) || (graph.gateways || []).find((item) => item.id === id) || graph.externals.find((item) => item.id === id);
   if (isSystem) {
     const title = `<div class="node-tooltip-title">${escapeHtml(titleCase(node.name))}${node.isRedis ? ' <span class="badge danger">Redis</span>' : ''}${node.isSqlServer ? ' <span class="badge success">SQL Server</span>' : ''}${node.isServiceBus ? ' <span class="badge amber">Service Bus</span>' : ''}</div>`;
     const rows = [
