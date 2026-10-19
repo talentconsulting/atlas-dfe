@@ -1,0 +1,218 @@
+{
+  "repository": "SkillsFundingAgency/das-employmentcheck",
+  "ref": "master",
+  "path": "src",
+  "commands": [
+    {
+      "name": "RegisterCheckCommand",
+      "namespace": "SFA.DAS.EmploymentCheck.Api.Mediators.Commands.RegisterCheckCommand",
+      "sourceFile": "src/SFA.DAS.EmploymentCheck.Api/Mediators/Commands/RegisterCheckCommand/RegisterCheckCommand.cs",
+      "description": null,
+      "fields": [
+        {
+          "name": "CorrelationId",
+          "type": "Guid",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "CheckType",
+          "type": "string",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "Uln",
+          "type": "long",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "ApprenticeshipAccountId",
+          "type": "long",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "ApprenticeshipId",
+          "type": "long?",
+          "required": false,
+          "description": null
+        },
+        {
+          "name": "MinDate",
+          "type": "DateTime",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "MaxDate",
+          "type": "DateTime",
+          "required": true,
+          "description": null
+        }
+      ],
+      "handlers": [
+        {
+          "name": "RegisterCheckCommandHandler",
+          "sourceFile": "src/SFA.DAS.EmploymentCheck.Api/Mediators/Commands/RegisterCheckCommand/RegisterCheckCommandHandler.cs"
+        }
+      ]
+    },
+    {
+      "name": "AbandonRelatedRequestsCommand",
+      "namespace": "SFA.DAS.EmploymentCheck.Commands.AbandonRelatedRequests",
+      "sourceFile": "src/SFA.DAS.EmploymentCheck.Commands/AbandonRelatedRequests/AbandonRelatedRequestsCommand.cs",
+      "description": null,
+      "fields": [
+        {
+          "name": "EmploymentCheckCacheRequests",
+          "type": "EmploymentCheckCacheRequest[]",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "employmentCheckCacheRequests",
+          "type": "EmploymentCheckCacheRequest[]",
+          "required": true,
+          "description": null
+        }
+      ],
+      "handlers": [
+        {
+          "name": "AbandonRelatedRequestsActivity.Create",
+          "sourceFile": "src/SFA.DAS.EmploymentCheck.Functions/AzureFunctions/Activities/AbandonRelatedRequestsActivity.cs"
+        },
+        {
+          "name": "AbandonRelatedRequestsCommandHandler",
+          "sourceFile": "src/SFA.DAS.EmploymentCheck.Commands/AbandonRelatedRequests/AbandonRelatedRequestsCommandHandler.cs"
+        }
+      ]
+    },
+    {
+      "name": "CreateEmploymentCheckCacheRequestCommand",
+      "namespace": "SFA.DAS.EmploymentCheck.Commands.CreateEmploymentCheckCacheRequest",
+      "sourceFile": "src/SFA.DAS.EmploymentCheck.Commands/CreateEmploymentCheckCacheRequest/CreateEmploymentCheckCacheRequestCommand.cs",
+      "description": null,
+      "fields": [
+        {
+          "name": "EmploymentCheckData",
+          "type": "EmploymentCheckData",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "employmentCheckData",
+          "type": "EmploymentCheckData",
+          "required": true,
+          "description": null
+        }
+      ],
+      "handlers": [
+        {
+          "name": "CreateEmploymentCheckCacheRequestActivity.Create",
+          "sourceFile": "src/SFA.DAS.EmploymentCheck.Functions/AzureFunctions/Activities/CreateEmploymentCheckCacheRequestActivity.cs"
+        },
+        {
+          "name": "CreateEmploymentCheckCacheRequestCommandHandler",
+          "sourceFile": "src/SFA.DAS.EmploymentCheck.Commands/CreateEmploymentCheckCacheRequest/CreateEmploymentCheckCacheRequestCommandHandler.cs"
+        }
+      ]
+    },
+    {
+      "name": "PublishEmploymentCheckResultCommand",
+      "namespace": "SFA.DAS.EmploymentCheck.Commands.PublishEmploymentCheckResult",
+      "sourceFile": "src/SFA.DAS.EmploymentCheck.Commands/PublishEmploymentCheckResult/PublishEmploymentCheckResultCommand.cs",
+      "description": null,
+      "fields": [
+        {
+          "name": "EmploymentCheck",
+          "type": "Data.Models.EmploymentCheck",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "employmentCheck",
+          "type": "Data.Models.EmploymentCheck",
+          "required": true,
+          "description": null
+        }
+      ],
+      "handlers": [
+        {
+          "name": "OutputEmploymentCheckResultsActivity.Send",
+          "sourceFile": "src/SFA.DAS.EmploymentCheck.Functions/AzureFunctions/Activities/OutputEmploymentCheckResultsActivity.cs"
+        },
+        {
+          "name": "PublishEmploymentCheckResultCommandHandler",
+          "sourceFile": "src/SFA.DAS.EmploymentCheck.Commands/PublishEmploymentCheckResult/PublishEmploymentCheckResultCommandHandler.cs"
+        }
+      ]
+    },
+    {
+      "name": "StoreCompletedEmploymentCheckCommand",
+      "namespace": "SFA.DAS.EmploymentCheck.Commands.StoreCompletedEmploymentCheck",
+      "sourceFile": "src/SFA.DAS.EmploymentCheck.Commands/StoreCompletedEmploymentCheck/StoreCompletedEmploymentCheckCommand.cs",
+      "description": null,
+      "fields": [
+        {
+          "name": "EmploymentCheck",
+          "type": "Models.EmploymentCheck",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "employmentCheck",
+          "type": "Data.Models.EmploymentCheck",
+          "required": true,
+          "description": null
+        }
+      ],
+      "handlers": [
+        {
+          "name": "StoreCompletedEmploymentCheckActivity.Store",
+          "sourceFile": "src/SFA.DAS.EmploymentCheck.Functions/AzureFunctions/Activities/StoreCompletedEmploymentCheckActivity.cs"
+        },
+        {
+          "name": "StoreCompletedEmploymentCheckCommandHandler",
+          "sourceFile": "src/SFA.DAS.EmploymentCheck.Commands/StoreCompletedEmploymentCheck/StoreCompletedEmploymentCheckCommandHandler.cs"
+        }
+      ]
+    }
+  ],
+  "events": [
+    {
+      "name": "EmploymentCheckCompletedEvent",
+      "namespace": "SFA.DAS.EmploymentCheck.Types",
+      "sourceFile": "src/SFA.DAS.EmploymentCheck.Types/EmploymentCheckCompletedEvent.cs",
+      "description": null,
+      "fields": [
+        {
+          "name": "CorrelationId",
+          "type": "Guid",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "EmploymentResult",
+          "type": "bool?",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "CheckDate",
+          "type": "DateTime",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "ErrorType",
+          "type": "string",
+          "required": true,
+          "description": null
+        }
+      ],
+      "handlers": []
+    }
+  ]
+}
