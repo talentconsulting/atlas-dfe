@@ -1,0 +1,587 @@
+{
+  "repository": "SkillsFundingAgency/das-employer-incentives",
+  "ref": "master",
+  "path": "src",
+  "systemName": "Employer Incentives",
+  "containers": [
+    {
+      "id": "employer-incentives",
+      "name": "Employer Incentives",
+      "type": "other",
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Data/Models/EmployerIncentivesDbContext.cs",
+          "reason": "Evidence of database context construction for dependency injection in the system."
+        }
+      ]
+    },
+    {
+      "id": "employer-incentives-2",
+      "name": "Employer Incentives",
+      "type": "api",
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Api/Startup.cs",
+          "reason": "Configures services, middleware, and HTTP request pipeline for the API."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Api/Program.cs",
+          "reason": "Contains API entry point with WebHost configuration."
+        }
+      ]
+    },
+    {
+      "id": "employer-incentives-functions-domainmessagehandlers",
+      "name": "Employer Incentives Functions DomainMessageHandlers",
+      "type": "job",
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Functions.DomainMessageHandlers/SFA.DAS.EmployerIncentives.Functions.DomainMessageHandlers.csproj",
+          "reason": "Azure Functions project detected."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Functions.DomainMessageHandlers/StartUp.cs",
+          "reason": "FunctionsStartup class found in source."
+        }
+      ]
+    },
+    {
+      "id": "employer-incentives-functions-earningsresiliencecheck",
+      "name": "Employer Incentives Functions EarningsResilienceCheck",
+      "type": "job",
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Functions.EarningsResilienceCheck/SFA.DAS.EmployerIncentives.Functions.EarningsResilienceCheck.csproj",
+          "reason": "Azure Functions project detected."
+        }
+      ]
+    },
+    {
+      "id": "employer-incentives-functions-paymentsprocess",
+      "name": "Employer Incentives Functions PaymentsProcess",
+      "type": "job",
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Functions.PaymentsProcess/SFA.DAS.EmployerIncentives.Functions.PaymentsProcess.csproj",
+          "reason": "Azure Functions project detected."
+        }
+      ]
+    },
+    {
+      "id": "employer-incentives-payments-process",
+      "name": "Employer Incentives Payments Process",
+      "type": "job",
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Functions.PaymentsProcess/StartUp.cs",
+          "reason": "Recognized Azure Function startup class."
+        }
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "sourceId": "employer-incentives-functions-domainmessagehandlers",
+      "name": "Azure Table Storage",
+      "kind": "cloud-service",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": "Azure Table Storage",
+      "configurationKeys": [
+        "ConfigNames",
+        "ConfigurationStorageConnectionString",
+        "EnvironmentName"
+      ],
+      "authentication": {
+        "type": "configuration",
+        "configurationKeys": [
+          "ConfigurationStorageConnectionString"
+        ]
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Functions.DomainMessageHandlers/StartUp.cs",
+          "reason": "Azure Table Storage configuration is added via 'AddAzureTableStorage' and references 'ConfigurationStorageConnectionString'."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "cloud-service-azure-table-storage",
+      "description": "Uses"
+    },
+    {
+      "sourceId": "employer-incentives-2",
+      "name": "Azure Table Storage",
+      "kind": "cloud-service",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": null,
+      "technology": "Azure Table Storage",
+      "configurationKeys": [
+        "ConfigNames",
+        "ConfigurationStorageConnectionString",
+        "EnvironmentName"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Api/Startup.cs",
+          "reason": "AddAzureTableStorage configured for application configuration source."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "cloud-service-azure-table-storage",
+      "description": "Uses"
+    },
+    {
+      "sourceId": "employer-incentives-payments-process",
+      "name": "Azure Table Storage Configuration",
+      "kind": "cloud-service",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": "ConfigurationBuilder",
+      "technology": "Azure Table Storage",
+      "configurationKeys": [
+        "ConfigNames",
+        "ConfigurationStorageConnectionString",
+        "EnvironmentName"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Functions.PaymentsProcess/StartUp.cs",
+          "reason": "Configures Azure Table Storage for configuration."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "cloud-service-azure-table-storage-configuration",
+      "description": "Uses"
+    },
+    {
+      "sourceId": "employer-incentives",
+      "name": "Employer Incentives Database",
+      "kind": "database",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "EmployerIncentivesDbContext",
+      "technology": "Entity Framework Core",
+      "configurationKeys": [],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [
+        {
+          "type": "database",
+          "name": "EmployerIncentivesDbContext",
+          "direction": "outbound",
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Data/Models/EmployerIncentivesDbContext.cs"
+        }
+      ],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Data/ApprenticeshipIncentives/ApprenticeshipIncentiveDataRepository.cs",
+          "reason": "Database entity interactions using EF Core DbContext."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Data/Models/EmployerIncentivesDbContext.cs",
+          "reason": "DbContext options constructor found, indicating a dependency on relational database."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Data/Reports/ReportsConnectionProvider.cs",
+          "reason": "Raw SQL database connection established using SqlConnection for reporting."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "database-employer-incentives-database",
+      "description": "Reads from and writes to"
+    },
+    {
+      "sourceId": "employer-incentives-functions-paymentsprocess",
+      "name": "Employer Incentives Database",
+      "kind": "database",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": null,
+      "technology": "SQL Server",
+      "configurationKeys": [
+        "ApplicationSettings:DbConnectionString"
+      ],
+      "authentication": {
+        "type": "connection-string",
+        "configurationKeys": [
+          "ApplicationSettings:DbConnectionString"
+        ]
+      },
+      "operations": [],
+      "resources": [
+        {
+          "type": "database",
+          "name": "ApplicationSettings:DbConnectionString",
+          "direction": "outbound",
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Functions.PaymentsProcess/ServiceCollectionExtensions.cs"
+        }
+      ],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Functions.PaymentsProcess/ServiceCollectionExtensions.cs",
+          "reason": "UseSqlServerPersistence configuration specifies connection to SQL Server."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "database-employer-incentives-database",
+      "description": "Reads from and writes to"
+    },
+    {
+      "sourceId": "employer-incentives-payments-process",
+      "name": "Employer Incentives Database",
+      "kind": "database",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "EmployerIncentivesDbContext",
+      "technology": "Entity Framework Core with SQL Server",
+      "configurationKeys": [],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Functions.PaymentsProcess/StartUp.cs",
+          "reason": "Registers DbContext for Employer Incentives database."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "database-employer-incentives-database",
+      "description": "Reads from and writes to"
+    },
+    {
+      "sourceId": "employer-incentives-2",
+      "name": "Employer Incentives Database",
+      "kind": "database",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "EmployerIncentivesDbContext",
+      "technology": "Entity Framework Core / SQL Server",
+      "configurationKeys": [
+        "ApplicationSettings:DbConnectionString"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Data/ApprenticeshipIncentives/AcademicYearDataRepository.cs",
+          "reason": "Accessing EmployerIncentivesDbContext for academic year data evidences database usage."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Data/AccountDataRepository.cs",
+          "reason": "References EmployerIncentivesDbContext and performs operations related to database access."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Commands/ServiceCollectionExtensions.cs",
+          "reason": "UseSqlServer configuration for EmployerIncentivesDbContext evidences SQL Server usage."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "database-employer-incentives-database",
+      "description": "Reads from and writes to"
+    },
+    {
+      "sourceId": "employer-incentives-2",
+      "name": "Business Central",
+      "kind": "http-api",
+      "classification": "unknown",
+      "direction": "outbound",
+      "client": "IBusinessCentralFinancePaymentsService",
+      "technology": "HttpClient",
+      "configurationKeys": [
+        "BusinessCentralApi"
+      ],
+      "authentication": {
+        "type": "apim",
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [
+        {
+          "type": "url",
+          "name": null,
+          "direction": "outbound",
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Commands/ServiceCollectionExtensions.cs"
+        }
+      ],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Commands/ServiceCollectionExtensions.cs",
+          "reason": "HttpClient configured with BusinessCentralApi settings and registered for IBusinessCentralFinancePaymentsService."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "http-api-business-central",
+      "description": "Calls the API of"
+    },
+    {
+      "sourceId": "employer-incentives-functions-domainmessagehandlers",
+      "name": "Command Services",
+      "kind": "http-api",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "CommandService",
+      "technology": "HttpClient",
+      "configurationKeys": [
+        "ApplicationSettings:ApiBaseUrl"
+      ],
+      "authentication": {
+        "type": "managed-identity",
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Functions.DomainMessageHandlers/ServiceCollectionExtensions.cs",
+          "reason": "HttpClientBuilder constructed for outbound HTTP to Command Service API."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "http-api-command-services",
+      "description": "Calls the API of"
+    },
+    {
+      "sourceId": "employer-incentives-2",
+      "name": "Employer Incentives Outer",
+      "kind": "http-api",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "IEmploymentCheckService",
+      "technology": "HttpClient",
+      "configurationKeys": [
+        "EmployerIncentivesOuterApi"
+      ],
+      "authentication": {
+        "type": "apim",
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [
+        {
+          "type": "url",
+          "name": null,
+          "direction": "outbound",
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Commands/ServiceCollectionExtensions.cs"
+        }
+      ],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Commands/ServiceCollectionExtensions.cs",
+          "reason": "HttpClientBuilder with baseUrl configured using EmployerIncentivesOuterApi settings."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "http-api-employer-incentives-outer",
+      "description": "Calls the API of"
+    },
+    {
+      "sourceId": "employer-incentives-2",
+      "name": "Matched Learner",
+      "kind": "http-api",
+      "classification": "unknown",
+      "direction": "outbound",
+      "client": "ILearnerSubmissionService",
+      "technology": "HttpClient",
+      "configurationKeys": [
+        "MatchedLearnerApi"
+      ],
+      "authentication": {
+        "type": "managed-identity",
+        "configurationKeys": [
+          "MatchedLearnerApi:Identifier"
+        ]
+      },
+      "operations": [],
+      "resources": [
+        {
+          "type": "url",
+          "name": null,
+          "direction": "outbound",
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Commands/ServiceCollectionExtensions.cs"
+        }
+      ],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Commands/ServiceCollectionExtensions.cs",
+          "reason": "HttpClientBuilder with baseUrl configured using MatchedLearnerApi settings."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "http-api-matched-learner",
+      "description": "Calls the API of"
+    },
+    {
+      "sourceId": "employer-incentives-functions-paymentsprocess",
+      "name": "Azure Service Bus",
+      "kind": "message-broker",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": "Azure Service Bus",
+      "configurationKeys": [
+        "ApplicationSettings:NServiceBusConnectionString"
+      ],
+      "authentication": {
+        "type": "configuration",
+        "configurationKeys": [
+          "ApplicationSettings:NServiceBusConnectionString"
+        ]
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Functions.PaymentsProcess/ServiceCollectionExtensions.cs",
+          "reason": "Azure Service Bus configured as NServiceBus transport."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "message-broker-azure-service-bus",
+      "description": "Publishes messages to and consumes messages from"
+    },
+    {
+      "sourceId": "employer-incentives-2",
+      "name": "Azure Service Bus Transport",
+      "kind": "message-broker",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": null,
+      "technology": "Azure Service Bus",
+      "configurationKeys": [
+        "ApplicationSettings:NServiceBusConnectionString"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Commands/ServiceCollectionExtensions.cs",
+          "reason": "NServiceBus configured to use Azure Service Bus transport for message brokering."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "message-broker-azure-service-bus-transport",
+      "description": "Publishes messages to and consumes messages from"
+    },
+    {
+      "sourceId": "employer-incentives-functions-paymentsprocess",
+      "name": "Learning Transport",
+      "kind": "message-broker",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": null,
+      "technology": "NServiceBus Learning Transport",
+      "configurationKeys": [
+        "ApplicationSettings:UseLearningEndpointStorageDirectory"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Functions.PaymentsProcess/ServiceCollectionExtensions.cs",
+          "reason": "Learning Transport is configured in NServiceBus for local development."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "message-broker-learning-transport",
+      "description": "Publishes messages to and consumes messages from"
+    },
+    {
+      "sourceId": "employer-incentives-functions-domainmessagehandlers",
+      "name": "NServiceBus",
+      "kind": "message-broker",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": "NServiceBus",
+      "configurationKeys": [],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Functions.DomainMessageHandlers/StartUp.cs",
+          "reason": "NServiceBus configuration provided in AddNServiceBus extension method."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Functions.DomainMessageHandlers/ServiceCollectionExtensions.cs",
+          "reason": "NServiceBus is registered via 'AddNServiceBus' method."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "message-broker-nservicebus",
+      "description": "Publishes messages to and consumes messages from"
+    },
+    {
+      "sourceId": "employer-incentives-payments-process",
+      "name": "Azure Blob Storage",
+      "kind": "object-storage",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": "BlobServiceClient",
+      "technology": "Azure Blob Storage",
+      "configurationKeys": [
+        "ApplicationSettings.ReportsConnectionString",
+        "ApplicationSettings.ReportsContainerName"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [
+        {
+          "type": "blob-container",
+          "name": "reports",
+          "direction": "outbound",
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Reports/Repositories/AzureBlobRepository.cs"
+        }
+      ],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Reports/Repositories/AzureBlobRepository.cs",
+          "reason": "Azure Blob Storage interaction for reports storage."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "object-storage-azure-blob-storage",
+      "description": "Stores objects in"
+    }
+  ]
+}

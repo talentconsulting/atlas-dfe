@@ -1,0 +1,120 @@
+{
+  "repository": "SkillsFundingAgency/das-aan-hub-jobs",
+  "ref": "main",
+  "path": "src",
+  "systemName": "Aan Hub",
+  "containers": [
+    {
+      "id": "aan-hub-jobs",
+      "name": "Aan Hub Jobs",
+      "type": "job",
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.AAN.Hub.Jobs/Program.cs",
+          "reason": "Azure Function worker entry point initializes the application."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.AAN.Hub.Jobs/SFA.DAS.AAN.Hub.Jobs.csproj",
+          "reason": "Project file declares Azure Functions version and worker library dependencies."
+        }
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "sourceId": "aan-hub-jobs",
+      "name": "Aan SQL Database",
+      "kind": "database",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "AanDataContext",
+      "technology": "SQL Server",
+      "configurationKeys": [
+        "SqlConnectionString"
+      ],
+      "authentication": {
+        "type": "Azure AD",
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [
+        {
+          "type": "database",
+          "name": "Aan SQL Database",
+          "direction": "outbound",
+          "sourceFile": "src/SFA.DAS.AAN.Hub.Data/Extensions/AddAanDataContextExtension.cs"
+        }
+      ],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.AAN.Hub.Data/AanDataContext.cs",
+          "reason": "AanDataContext evidences interaction with SQL Server database via Entity Framework Core setup."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.AAN.Hub.Data/Extensions/AddAanDataContextExtension.cs",
+          "reason": "AanDataContext registered as a DbContext with SQL Server provider using a connection string and optional Azure token-based authentication."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "database-aan-sql-database",
+      "description": "Reads from and writes to"
+    },
+    {
+      "sourceId": "aan-hub-jobs",
+      "name": "Aan Outer",
+      "kind": "http-api",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "IOuterApiClient",
+      "technology": "RestEase",
+      "configurationKeys": [
+        "ApplicationConfiguration:AanOuterApiConfiguration:ApiBaseUrl"
+      ],
+      "authentication": {
+        "type": "Azure AD",
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.AAN.Hub.Jobs/HttpClientConfiguration/HttpClientConfigurationExtension.cs",
+          "reason": "IOuterApiClient registered as a RestEase client with custom HTTP handlers and configuration."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "http-api-aan-outer",
+      "description": "Calls the API of"
+    },
+    {
+      "sourceId": "aan-hub-jobs",
+      "name": "Apprentice Accounts",
+      "kind": "http-api",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "IApprenticeAccountsApiClient",
+      "technology": "RestEase",
+      "configurationKeys": [
+        "ApplicationConfiguration:ApprenticeAccountsApiConfiguration:Identifier",
+        "ApplicationConfiguration:ApprenticeAccountsApiConfiguration:Url"
+      ],
+      "authentication": {
+        "type": "Azure AD",
+        "configurationKeys": [
+          "ApplicationConfiguration:ApprenticeAccountsApiConfiguration:Identifier"
+        ]
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.AAN.Hub.Jobs/HttpClientConfiguration/HttpClientConfigurationExtension.cs",
+          "reason": "IApprenticeAccountsApiClient registered as a RestEase client with HTTP message handler pipeline and configuration."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "http-api-apprentice-accounts",
+      "description": "Calls the API of"
+    }
+  ]
+}

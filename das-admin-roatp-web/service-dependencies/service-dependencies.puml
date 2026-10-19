@@ -2,14 +2,16 @@
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
 LAYOUT_WITH_LEGEND()
 
-System_Boundary(sys_SkillsFundingAgency_das_admin_roatp_web, "Admin Roatp") {
-  Container(c_admin_roatp, "Admin Roatp", "Web Application")
+System_Boundary(sys_SkillsFundingAgency_das_admin_roatp_web, "SFA DAS Admin Roatp") {
+  Container(c_sfa_das_admin_roatp, "SFA DAS Admin Roatp", "Web Application")
 }
 
-SystemDb_Ext(d_cache_redis, "Redis", "StackExchange.Redis")
-System_Ext(d_http_api_outer_api, "Outer API", "HTTP/REST")
+SystemDb_Ext(d_cache_redis_data_protection_keys, "Redis (Data Protection Keys)", "StackExchange.Redis")
+SystemDb_Ext(d_cache_redis_session_cache, "Redis (Session Cache)", "StackExchange.Redis")
+System_Ext(d_http_api_outer_api, "Outer API", "Refit")
 
-Rel(c_admin_roatp, d_cache_redis, "Caches data in", "StackExchange.Redis")
-Rel(c_admin_roatp, d_http_api_outer_api, "Calls the API of", "HTTP/REST")
+Rel(c_sfa_das_admin_roatp, d_cache_redis_data_protection_keys, "Caches data in", "StackExchange.Redis")
+Rel(c_sfa_das_admin_roatp, d_cache_redis_session_cache, "Caches data in", "StackExchange.Redis")
+Rel(c_sfa_das_admin_roatp, d_http_api_outer_api, "Calls the API of", "Refit")
 
 @enduml
