@@ -23,11 +23,13 @@ test('catalog is derived from the manifest, keyed by repo slug', async () => {
   assert.equal(response.status, 200);
   const manifest = JSON.parse(await readFile(new URL('../../manifest.json', import.meta.url), 'utf8'));
   assert.equal(body.sources.length, manifest.length);
-  assert.equal(body.sources[0].name, 'das-learning');
-  assert.equal(body.sources[0].id, 'das-learning');
-  assert.equal(body.sources[1].name, 'das-courses-api');
-  assert.equal(body.sources[1].capabilities.messages, false);
-  assert.equal(body.sources[1].capabilities.dependencies, true);
+  // Looked up by slug, not position, so adding repositories to the manifest does not break the test.
+  assert.deepEqual(body.sources.map((source) => source.id), manifest.map((entry) => entry['github-repo'].split('/').pop()));
+  const learning = body.sources.find((source) => source.id === 'das-learning');
+  assert.equal(learning.name, 'das-learning');
+  const courses = body.sources.find((source) => source.id === 'das-courses-api');
+  assert.equal(courses.capabilities.messages, false);
+  assert.equal(courses.capabilities.dependencies, true);
 });
 
 test('unknown source id returns 404', async () => {
