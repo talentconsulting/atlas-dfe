@@ -206,38 +206,43 @@ function wrappedMessageNames(message) {
     .filter((type) => typeof type === 'string' && /(Event|Command)$/.test(type) && type !== message.name);
 }
 
+// Another service's messages in this repo's catalogue: handled ones mean that service sends them here (inbound);
+// ones with no handler here mean this repo sends them to that service (outbound), e.g. a job sending
+// SFA.DAS.Notifications.Messages.Commands.SendEmailCommand to das-notifications.
 function messageDependencies(source, messages) {
   const events = (messages.events || []).map((m) => ({ ...m, messageKind: 'event' }));
   const commands = (messages.commands || []).map((m) => ({ ...m, messageKind: 'command' }));
-  const withHandlers = [...events, ...commands].filter((m) => m.namespace && m.handlers?.length);
   const ownTokens = new Set(tokenize(source.name));
   const groups = new Map();
-  for (const message of withHandlers) {
+  for (const message of [...events, ...commands].filter((m) => m.namespace)) {
     const segment = namespaceServiceSegment(message.namespace);
     if (!segment) continue;
     const segmentTokens = new Set(tokenize(segment));
     if (canRelate(segmentTokens, ownTokens)) continue;
-    const key = segment.toLowerCase();
-    if (!groups.has(key)) groups.set(key, { label: segment, tokens: segmentTokens, messages: [] });
+    const direction = message.handlers?.length ? 'inbound' : 'outbound';
+    const key = `${direction}:${segment.toLowerCase()}`;
+    if (!groups.has(key)) groups.set(key, { label: segment, tokens: segmentTokens, direction, messages: [] });
     groups.get(key).messages.push(message);
   }
   return [...groups.values()].map((group) => {
     const matchedSystem = bestMatchingSystem(group.tokens, state.catalog.filter((candidate) => candidate.id !== source.id), (candidate) => new Set(tokenize(candidate.name)));
+    const sends = group.direction === 'outbound';
     return {
       name: matchedSystem ? titleCase(matchedSystem.name) : splitPascalCase(group.label),
       kind: 'message',
       classification: matchedSystem ? 'internal' : 'unknown',
-      direction: 'inbound',
-      description: 'Consumes events from',
+      direction: group.direction,
+      description: sends ? 'Sends messages to' : 'Consumes events from',
       client: null,
       technology: 'Event',
       configurationKeys: [],
       authentication: { type: null, configurationKeys: [] },
-      operations: group.messages.flatMap((message) => [message.name, ...wrappedMessageNames(message)].map((name) => ({ method: message.messageKind === 'command' ? 'COMMAND' : 'EVENT', path: name, sourceFile: message.handlers[0]?.sourceFile }))),
+      operations: group.messages.flatMap((message) => [message.name, ...wrappedMessageNames(message)].map((name) => ({ method: message.messageKind === 'command' ? 'COMMAND' : 'EVENT', path: name, sourceFile: message.handlers?.[0]?.sourceFile || message.sourceFile }))),
       resources: [],
       evidence: group.messages.flatMap((message) => {
         const wrapped = wrappedMessageNames(message);
         const suffix = wrapped.length ? ` (wrapping ${wrapped.join(', ')})` : '';
+        if (sends) return [{ sourceFile: message.sourceFile, reason: `Sends ${message.messageKind} '${message.name}' from namespace '${message.namespace}' without handling it here.` }];
         return message.handlers.map((handler) => ({ sourceFile: handler.sourceFile, reason: `Handles ${message.messageKind} '${message.name}'${suffix} published under namespace '${message.namespace}'.` }));
       }),
       confidence: 'medium'
