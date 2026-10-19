@@ -2812,9 +2812,25 @@ function journeyPageDetail(pageId) {
     <p>${escapeHtml(page.purpose || 'No purpose recorded.')}</p>
     <div class="badges">${signIn}${page.isEntryPoint ? '<span class="badge blue">Entry point</span>' : ''}${(page.routes || []).map((route) => `<span class="badge"><code>${escapeHtml(route)}</code></span>`).join('')}</div>
     <p class="muted"><code>${escapeHtml(page.id)}</code> · ${journeyEvidenceLink(`${page.sourceFile}:${page.line}`)}</p>
+    ${journeyFieldsTable(page)}
     <h3>Goes to</h3>${table(outgoing, 'to', 'Nothing in this repository links onward from here.')}
     <h3>Reached from</h3>${table(incoming, 'from', 'Nothing in this repository links here; users arrive from elsewhere.')}
   </article>`;
+}
+
+// Field definitions only (name, type, label, rules, options); the catalogue never holds values users enter.
+function journeyFieldsTable(page) {
+  const fields = page.fields || [];
+  if (!fields.length) return '';
+  // [Required] on the view model, or a validator rule summarised as "required...".
+  const required = (field) => (field.required || /^required\b/i.test(field.validation || '')) ? 'Yes' : field.required === false ? 'No' : '—';
+  const rules = (field) => [...(field.constraints || []), ...(field.validation ? [field.validation] : [])].join('; ') || '—';
+  const options = (field) => (field.options || []).map((option) => escapeHtml(option.label || option.value)).join(', ') || '—';
+  return `<h3>Form fields</h3><div class="table-wrap"><table class="data-table"><thead><tr><th>Field</th><th>Type</th><th>Label</th><th>Required</th><th>Rules</th><th>Options</th><th>Source</th></tr></thead><tbody>
+    ${fields.map((field) => `<tr><td><code>${escapeHtml(field.name)}</code></td><td>${escapeHtml(field.control || '')}</td>
+      <td>${escapeHtml(field.label || '—')}</td><td>${required(field)}</td><td class="muted">${escapeHtml(rules(field))}</td>
+      <td class="muted">${options(field)}</td><td>${field.sourceFile ? journeyEvidenceLink(`${field.sourceFile}:${field.line}`) : '—'}</td></tr>`).join('')}
+  </tbody></table></div>`;
 }
 
 function journeyLayout(journey) {
@@ -2920,10 +2936,11 @@ function renderJourneyPages(pages) {
   const filtered = pages.filter((page) => `${page.id} ${(page.routes || []).join(' ')} ${page.purpose || ''}`.toLowerCase().includes(state.filter));
   if (!state.selected || !pages.some((page) => page.id === state.selected)) state.selected = filtered[0]?.id || null;
   const signIn = (page) => ({ true: 'Yes', false: 'No' })[page.requiresAuthentication] || 'Unknown';
-  content.innerHTML = `<div class="table-wrap"><table class="data-table"><thead><tr><th>Page</th><th>Route</th><th>Sign-in</th><th>Purpose</th></tr></thead><tbody>
+  const fieldCount = (page) => (page.fields || []).length;
+  content.innerHTML = `<div class="table-wrap"><table class="data-table"><thead><tr><th>Page</th><th>Route</th><th>Sign-in</th><th>Form fields</th><th>Purpose</th></tr></thead><tbody>
     ${filtered.map((page) => `<tr><td><button class="as-link" type="button" data-journey-page="${escapeHtml(page.id)}">${escapeHtml(journeyPageLabel(page))}</button>${page.isEntryPoint ? ' <span class="badge blue">Entry</span>' : ''}</td>
-      <td>${(page.routes || []).map((route) => `<code>${escapeHtml(route)}</code>`).join('<br>') || '—'}</td><td>${signIn(page)}</td><td class="muted">${escapeHtml(page.purpose || '—')}</td></tr>`).join('')
-      || '<tr><td colspan="4" class="muted">No matching pages.</td></tr>'}
+      <td>${(page.routes || []).map((route) => `<code>${escapeHtml(route)}</code>`).join('<br>') || '—'}</td><td>${signIn(page)}</td><td>${fieldCount(page) || '—'}</td><td class="muted">${escapeHtml(page.purpose || '—')}</td></tr>`).join('')
+      || '<tr><td colspan="5" class="muted">No matching pages.</td></tr>'}
   </tbody></table></div><div id="journey-detail">${journeyPageDetail(state.selected)}</div>`;
   wireJourneyPageLinks();
 }
