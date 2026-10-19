@@ -1,0 +1,216 @@
+{
+  "repository": "SkillsFundingAgency/das-pr-jobs",
+  "ref": "main",
+  "path": "src",
+  "systemName": "PR Jobs",
+  "containers": [
+    {
+      "id": "pr-jobs",
+      "name": "PR Jobs",
+      "type": "job",
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.PR.Jobs/Program.cs",
+          "reason": "Azure Functions Worker entry point"
+        }
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "sourceId": "pr-jobs",
+      "name": "PR Database",
+      "kind": "database",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "ProviderRelationshipsDataContext",
+      "technology": "SQL Server",
+      "configurationKeys": [
+        "SqlConnectionString"
+      ],
+      "authentication": {
+        "type": "Azure AD Token",
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [
+        {
+          "type": "database",
+          "name": "SqlConnectionString",
+          "direction": "outbound",
+          "sourceFile": "src/SFA.DAS.PR.Data/Extensions/AddPrDataContextExtension.cs"
+        }
+      ],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.PR.Data/ProviderRelationshipsDataContext.cs",
+          "reason": "ProviderRelationshipsDataContext defined as DbContext"
+        },
+        {
+          "sourceFile": "src/SFA.DAS.PR.Data/Extensions/AddPrDataContextExtension.cs",
+          "reason": "ProviderRelationshipsDataContext registered with DbContext and SQL Server"
+        }
+      ],
+      "confidence": "high",
+      "targetId": "database-pr-database",
+      "description": "Reads from and writes to"
+    },
+    {
+      "sourceId": "pr-jobs",
+      "name": "Commitments V2",
+      "kind": "http-api",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "ICommitmentsV2ApiClient",
+      "technology": "HTTP",
+      "configurationKeys": [
+        "CommitmentsV2ApiConfiguration:Identifier",
+        "CommitmentsV2ApiConfiguration:Url"
+      ],
+      "authentication": {
+        "type": "Azure AD",
+        "configurationKeys": [
+          "CommitmentsV2ApiConfiguration:Identifier"
+        ]
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.PR.Jobs/Extensions/AddServiceRegistrationsExtension.cs",
+          "reason": "ICommitmentsV2ApiClient registered with Refit"
+        }
+      ],
+      "confidence": "high",
+      "targetId": "http-api-commitments-v2",
+      "description": "Calls the API of",
+      "targetRepo": "das-commitments"
+    },
+    {
+      "sourceId": "pr-jobs",
+      "name": "Employer Accounts",
+      "kind": "http-api",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "IEmployerAccountsApiClient",
+      "technology": "HTTP",
+      "configurationKeys": [
+        "EmployerAccountsApiConfiguration:Identifier",
+        "EmployerAccountsApiConfiguration:Url"
+      ],
+      "authentication": {
+        "type": "Azure AD",
+        "configurationKeys": [
+          "EmployerAccountsApiConfiguration:Identifier"
+        ]
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.PR.Jobs/Extensions/AddServiceRegistrationsExtension.cs",
+          "reason": "IEmployerAccountsApiClient registered with Refit"
+        }
+      ],
+      "confidence": "high",
+      "targetId": "http-api-employer-accounts",
+      "description": "Calls the API of",
+      "targetRepo": "das-employer-accounts"
+    },
+    {
+      "sourceId": "pr-jobs",
+      "name": "PAS Account",
+      "kind": "http-api",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "IPasAccountApiClient",
+      "technology": "HTTP",
+      "configurationKeys": [
+        "PasAccountApiConfiguration:Identifier",
+        "PasAccountApiConfiguration:Url"
+      ],
+      "authentication": {
+        "type": "Azure AD",
+        "configurationKeys": [
+          "PasAccountApiConfiguration:Identifier"
+        ]
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.PR.Jobs/Extensions/AddServiceRegistrationsExtension.cs",
+          "reason": "IPasAccountApiClient registered with Refit"
+        }
+      ],
+      "confidence": "high",
+      "targetId": "http-api-pas-account",
+      "description": "Calls the API of"
+    },
+    {
+      "sourceId": "pr-jobs",
+      "name": "Provider Relationships",
+      "kind": "http-api",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "IProviderRelationshipsApiClient",
+      "technology": "HTTP",
+      "configurationKeys": [
+        "ProviderRelationshipsApiConfiguration:Identifier",
+        "ProviderRelationshipsApiConfiguration:Url"
+      ],
+      "authentication": {
+        "type": "Azure AD",
+        "configurationKeys": [
+          "ProviderRelationshipsApiConfiguration:Identifier"
+        ]
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.PR.Jobs/Extensions/AddServiceRegistrationsExtension.cs",
+          "reason": "IProviderRelationshipsApiClient registered with Refit"
+        }
+      ],
+      "confidence": "high",
+      "targetId": "http-api-provider-relationships",
+      "description": "Calls the API of"
+    },
+    {
+      "sourceId": "pr-jobs",
+      "name": "RoATP Service",
+      "kind": "http-api",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "IRoatpServiceApiClient",
+      "technology": "HTTP",
+      "configurationKeys": [
+        "RoatpServiceApiConfiguration:Identifier",
+        "RoatpServiceApiConfiguration:Url"
+      ],
+      "authentication": {
+        "type": "Azure AD",
+        "configurationKeys": [
+          "RoatpServiceApiConfiguration:Identifier"
+        ]
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.PR.Jobs/Extensions/AddServiceRegistrationsExtension.cs",
+          "reason": "IRoatpServiceApiClient registered with Refit"
+        }
+      ],
+      "confidence": "high",
+      "targetId": "http-api-roatp-service",
+      "description": "Calls the API of"
+    }
+  ],
+  "resolution": {
+    "overlay": "dfe-overlay/apim-routing.json",
+    "apimCommit": "2741b3f0d208f1080829bb57a3b72facc12371d4",
+    "precision": "area"
+  }
+}

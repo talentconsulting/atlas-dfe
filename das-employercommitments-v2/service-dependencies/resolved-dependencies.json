@@ -11,11 +11,11 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2.Web/Program.cs",
-          "reason": "Entry point for web application detected via WebHost creation."
+          "reason": "ASP.NET web application entry point with CreateWebHostBuilder and UseStartup."
         },
         {
           "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2.Web/SFA.DAS.EmployerCommitmentsV2.Web.csproj",
-          "reason": "Project file indicating an ASP.NET Core web application."
+          "reason": "Project file defining a web application with Microsoft.NET.Sdk.Web."
         }
       ]
     }
@@ -23,12 +23,12 @@
   "dependencies": [
     {
       "sourceId": "employer-commitments",
-      "name": "Redis Cache",
+      "name": "Redis",
       "kind": "cache",
-      "classification": "internal",
+      "classification": "third-party",
       "direction": "outbound",
-      "client": "StackExchangeRedis",
-      "technology": "Redis",
+      "client": null,
+      "technology": "StackExchange.Redis",
       "configurationKeys": [
         "ConnectionStrings:RedisConnectionString"
       ],
@@ -40,16 +40,12 @@
       "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2.Web/Startup.cs",
-          "reason": "Cache setup included in Startup class."
-        },
-        {
           "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2.Web/Extensions/CacheStartupExtensions.cs",
-          "reason": "Redis cache configured with an AddStackExchangeRedisCache call using ConnectionStrings:RedisConnectionString."
+          "reason": "AddStackExchangeRedisCache registration indicating outbound dependency on Redis for caching."
         }
       ],
       "confidence": "high",
-      "targetId": "cache-redis-cache",
+      "targetId": "cache-redis",
       "description": "Caches data in"
     },
     {
@@ -59,35 +55,33 @@
       "classification": "internal",
       "direction": "outbound",
       "client": "ICommitmentsV2ApiClient, IInternalApiClient, InternalApiClient",
-      "technology": "HttpClient",
+      "technology": "custom HTTP client",
       "configurationKeys": [
         "ApprovalsApiClientConfiguration:ApiBaseUrl"
       ],
       "authentication": {
-        "type": "ApimAuthorisationHeader",
-        "configurationKeys": []
+        "type": "APIM header",
+        "configurationKeys": [
+          "ApprovalsApiClientConfiguration:ApiKey"
+        ]
       },
       "operations": [],
       "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2.Web/Startup.cs",
-          "reason": "ApprovalsApiClient registered in ConfigureServices."
-        },
-        {
           "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2/Client/ApprovalsApiClientFactory.cs",
-          "reason": "HttpClient configured with a base address from ApprovalsApiClientConfiguration:ApiBaseUrl."
+          "reason": "Custom HTTP client creation with base URL and API authentication configuration."
         },
         {
           "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals/Application/AccountLegalEntity/Queries/GetAccountLegalEntityQueryHandler.cs",
           "reason": "Approvals APIM area calls Commitments API through ICommitmentsV2ApiClient, IInternalApiClient, InternalApiClient"
         },
         {
-          "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals/Application/Apprentices/Commands/ChangeEmployer/Confirm/CreateChangeOfEmployerCommandHandler.cs",
+          "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals/Application/Apprentices/Commands/AcknowledgeApprovalRequestAlerts/UpdateApprovalRequestAlertAcknowledgeCommandHandler.cs",
           "reason": "Approvals APIM area calls Commitments API through ICommitmentsV2ApiClient, IInternalApiClient, InternalApiClient"
         },
         {
-          "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals/Application/Apprentices/Commands/ChangePayments/ChangePaymentsCommandHandler.cs",
+          "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals/Application/Apprentices/Commands/ChangeEmployer/Confirm/CreateChangeOfEmployerCommandHandler.cs",
           "reason": "Approvals APIM area calls Commitments API through ICommitmentsV2ApiClient, IInternalApiClient, InternalApiClient"
         }
       ],
@@ -99,7 +93,7 @@
         "repo": "das-apim-endpoints",
         "label": "APIM",
         "area": "Approvals",
-        "dependencyName": "Approvals API",
+        "dependencyName": "Approvals",
         "operations": [],
         "areas": [
           "Approvals"
@@ -113,24 +107,22 @@
       "classification": "internal",
       "direction": "outbound",
       "client": "IAccountsApiClient",
-      "technology": "HttpClient",
+      "technology": "custom HTTP client",
       "configurationKeys": [
         "ApprovalsApiClientConfiguration:ApiBaseUrl"
       ],
       "authentication": {
-        "type": "ApimAuthorisationHeader",
-        "configurationKeys": []
+        "type": "APIM header",
+        "configurationKeys": [
+          "ApprovalsApiClientConfiguration:ApiKey"
+        ]
       },
       "operations": [],
       "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2.Web/Startup.cs",
-          "reason": "ApprovalsApiClient registered in ConfigureServices."
-        },
-        {
           "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2/Client/ApprovalsApiClientFactory.cs",
-          "reason": "HttpClient configured with a base address from ApprovalsApiClientConfiguration:ApiBaseUrl."
+          "reason": "Custom HTTP client creation with base URL and API authentication configuration."
         },
         {
           "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals/Application/Accounts/Queries/GetAccountQuery/GetAccountQueryHandler.cs",
@@ -153,7 +145,7 @@
         "repo": "das-apim-endpoints",
         "label": "APIM",
         "area": "Approvals",
-        "dependencyName": "Approvals API",
+        "dependencyName": "Approvals",
         "operations": [],
         "areas": [
           "Approvals"
@@ -167,24 +159,22 @@
       "classification": "internal",
       "direction": "outbound",
       "client": "ICoursesApiClient",
-      "technology": "HttpClient",
+      "technology": "custom HTTP client",
       "configurationKeys": [
         "ApprovalsApiClientConfiguration:ApiBaseUrl"
       ],
       "authentication": {
-        "type": "ApimAuthorisationHeader",
-        "configurationKeys": []
+        "type": "APIM header",
+        "configurationKeys": [
+          "ApprovalsApiClientConfiguration:ApiKey"
+        ]
       },
       "operations": [],
       "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2.Web/Startup.cs",
-          "reason": "ApprovalsApiClient registered in ConfigureServices."
-        },
-        {
           "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2/Client/ApprovalsApiClientFactory.cs",
-          "reason": "HttpClient configured with a base address from ApprovalsApiClientConfiguration:ApiBaseUrl."
+          "reason": "Custom HTTP client creation with base URL and API authentication configuration."
         },
         {
           "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals/Application/Cohorts/Queries/GetCohortDetails/GetCohortDetailsQuery.cs",
@@ -207,7 +197,7 @@
         "repo": "das-apim-endpoints",
         "label": "APIM",
         "area": "Approvals",
-        "dependencyName": "Approvals API",
+        "dependencyName": "Approvals",
         "operations": [],
         "areas": [
           "Approvals"
@@ -221,24 +211,22 @@
       "classification": "internal",
       "direction": "outbound",
       "client": "IReservationApiClient",
-      "technology": "HttpClient",
+      "technology": "custom HTTP client",
       "configurationKeys": [
         "ApprovalsApiClientConfiguration:ApiBaseUrl"
       ],
       "authentication": {
-        "type": "ApimAuthorisationHeader",
-        "configurationKeys": []
+        "type": "APIM header",
+        "configurationKeys": [
+          "ApprovalsApiClientConfiguration:ApiKey"
+        ]
       },
       "operations": [],
       "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2.Web/Startup.cs",
-          "reason": "ApprovalsApiClient registered in ConfigureServices."
-        },
-        {
           "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2/Client/ApprovalsApiClientFactory.cs",
-          "reason": "HttpClient configured with a base address from ApprovalsApiClientConfiguration:ApiBaseUrl."
+          "reason": "Custom HTTP client creation with base URL and API authentication configuration."
         },
         {
           "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals/Application/BulkUpload/Commands/BulkUploadAddAndApproveDraftApprenticeshipsCommandHandler.cs",
@@ -261,7 +249,7 @@
         "repo": "das-apim-endpoints",
         "label": "APIM",
         "area": "Approvals",
-        "dependencyName": "Approvals API",
+        "dependencyName": "Approvals",
         "operations": [],
         "areas": [
           "Approvals"
@@ -275,24 +263,22 @@
       "classification": "internal",
       "direction": "outbound",
       "client": "ILevyTransferMatchingApiClient",
-      "technology": "HttpClient",
+      "technology": "custom HTTP client",
       "configurationKeys": [
         "ApprovalsApiClientConfiguration:ApiBaseUrl"
       ],
       "authentication": {
-        "type": "ApimAuthorisationHeader",
-        "configurationKeys": []
+        "type": "APIM header",
+        "configurationKeys": [
+          "ApprovalsApiClientConfiguration:ApiKey"
+        ]
       },
       "operations": [],
       "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2.Web/Startup.cs",
-          "reason": "ApprovalsApiClient registered in ConfigureServices."
-        },
-        {
           "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2/Client/ApprovalsApiClientFactory.cs",
-          "reason": "HttpClient configured with a base address from ApprovalsApiClientConfiguration:ApiBaseUrl."
+          "reason": "Custom HTTP client creation with base URL and API authentication configuration."
         },
         {
           "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals/Application/LevyTransferMatching/Queries/GetApprovedAccountApplication/GetAcceptedEmployerAccountApplicationsQueryHandler.cs",
@@ -314,7 +300,7 @@
         "repo": "das-apim-endpoints",
         "label": "APIM",
         "area": "Approvals",
-        "dependencyName": "Approvals API",
+        "dependencyName": "Approvals",
         "operations": [],
         "areas": [
           "Approvals"
@@ -328,24 +314,22 @@
       "classification": "internal",
       "direction": "outbound",
       "client": "IProviderCoursesApiClient",
-      "technology": "HttpClient",
+      "technology": "custom HTTP client",
       "configurationKeys": [
         "ApprovalsApiClientConfiguration:ApiBaseUrl"
       ],
       "authentication": {
-        "type": "ApimAuthorisationHeader",
-        "configurationKeys": []
+        "type": "APIM header",
+        "configurationKeys": [
+          "ApprovalsApiClientConfiguration:ApiKey"
+        ]
       },
       "operations": [],
       "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2.Web/Startup.cs",
-          "reason": "ApprovalsApiClient registered in ConfigureServices."
-        },
-        {
           "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2/Client/ApprovalsApiClientFactory.cs",
-          "reason": "HttpClient configured with a base address from ApprovalsApiClientConfiguration:ApiBaseUrl."
+          "reason": "Custom HTTP client creation with base URL and API authentication configuration."
         },
         {
           "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals/Application/Providers/Queries/GetProvidersQueryHandler.cs",
@@ -367,7 +351,7 @@
         "repo": "das-apim-endpoints",
         "label": "APIM",
         "area": "Approvals",
-        "dependencyName": "Approvals API",
+        "dependencyName": "Approvals",
         "operations": [],
         "areas": [
           "Approvals"
@@ -381,24 +365,22 @@
       "classification": "internal",
       "direction": "outbound",
       "client": "IProviderRelationshipsApiClient",
-      "technology": "HttpClient",
+      "technology": "custom HTTP client",
       "configurationKeys": [
         "ApprovalsApiClientConfiguration:ApiBaseUrl"
       ],
       "authentication": {
-        "type": "ApimAuthorisationHeader",
-        "configurationKeys": []
+        "type": "APIM header",
+        "configurationKeys": [
+          "ApprovalsApiClientConfiguration:ApiKey"
+        ]
       },
       "operations": [],
       "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2.Web/Startup.cs",
-          "reason": "ApprovalsApiClient registered in ConfigureServices."
-        },
-        {
           "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2/Client/ApprovalsApiClientFactory.cs",
-          "reason": "HttpClient configured with a base address from ApprovalsApiClientConfiguration:ApiBaseUrl."
+          "reason": "Custom HTTP client creation with base URL and API authentication configuration."
         },
         {
           "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals/Application/Apprentices/Queries/Apprenticeship/GetSelectNewEmployer/GetSelectNewEmployerQueryHandler.cs",
@@ -420,7 +402,7 @@
         "repo": "das-apim-endpoints",
         "label": "APIM",
         "area": "Approvals",
-        "dependencyName": "Approvals API",
+        "dependencyName": "Approvals",
         "operations": [],
         "areas": [
           "Approvals"
@@ -434,24 +416,22 @@
       "classification": "internal",
       "direction": "outbound",
       "client": "IProviderAccountApiClient",
-      "technology": "HttpClient",
+      "technology": "custom HTTP client",
       "configurationKeys": [
         "ApprovalsApiClientConfiguration:ApiBaseUrl"
       ],
       "authentication": {
-        "type": "ApimAuthorisationHeader",
-        "configurationKeys": []
+        "type": "APIM header",
+        "configurationKeys": [
+          "ApprovalsApiClientConfiguration:ApiKey"
+        ]
       },
       "operations": [],
       "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2.Web/Startup.cs",
-          "reason": "ApprovalsApiClient registered in ConfigureServices."
-        },
-        {
           "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2/Client/ApprovalsApiClientFactory.cs",
-          "reason": "HttpClient configured with a base address from ApprovalsApiClientConfiguration:ApiBaseUrl."
+          "reason": "Custom HTTP client creation with base URL and API authentication configuration."
         },
         {
           "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals/Application/ProviderUsers/Commands/ProviderEmailCommandHandler.cs",
@@ -473,7 +453,7 @@
         "repo": "das-apim-endpoints",
         "label": "APIM",
         "area": "Approvals",
-        "dependencyName": "Approvals API",
+        "dependencyName": "Approvals",
         "operations": [],
         "areas": [
           "Approvals"
@@ -487,24 +467,22 @@
       "classification": "internal",
       "direction": "outbound",
       "client": "IProviderPaymentEventsApiClient",
-      "technology": "HttpClient",
+      "technology": "custom HTTP client",
       "configurationKeys": [
         "ApprovalsApiClientConfiguration:ApiBaseUrl"
       ],
       "authentication": {
-        "type": "ApimAuthorisationHeader",
-        "configurationKeys": []
+        "type": "APIM header",
+        "configurationKeys": [
+          "ApprovalsApiClientConfiguration:ApiKey"
+        ]
       },
       "operations": [],
       "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2.Web/Startup.cs",
-          "reason": "ApprovalsApiClient registered in ConfigureServices."
-        },
-        {
           "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2/Client/ApprovalsApiClientFactory.cs",
-          "reason": "HttpClient configured with a base address from ApprovalsApiClientConfiguration:ApiBaseUrl."
+          "reason": "Custom HTTP client creation with base URL and API authentication configuration."
         },
         {
           "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals/Application/CommitmentPayment/Queries/GetDataLockEvents/GetDataLockStatusesQueryHandler.cs",
@@ -526,7 +504,7 @@
         "repo": "das-apim-endpoints",
         "label": "APIM",
         "area": "Approvals",
-        "dependencyName": "Approvals API",
+        "dependencyName": "Approvals",
         "operations": [],
         "areas": [
           "Approvals"
@@ -540,24 +518,22 @@
       "classification": "internal",
       "direction": "outbound",
       "client": "IFinanceApiClient",
-      "technology": "HttpClient",
+      "technology": "custom HTTP client",
       "configurationKeys": [
         "ApprovalsApiClientConfiguration:ApiBaseUrl"
       ],
       "authentication": {
-        "type": "ApimAuthorisationHeader",
-        "configurationKeys": []
+        "type": "APIM header",
+        "configurationKeys": [
+          "ApprovalsApiClientConfiguration:ApiKey"
+        ]
       },
       "operations": [],
       "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2.Web/Startup.cs",
-          "reason": "ApprovalsApiClient registered in ConfigureServices."
-        },
-        {
           "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2/Client/ApprovalsApiClientFactory.cs",
-          "reason": "HttpClient configured with a base address from ApprovalsApiClientConfiguration:ApiBaseUrl."
+          "reason": "Custom HTTP client creation with base URL and API authentication configuration."
         },
         {
           "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals/Application/SelectDirectTransferConnection/Queries/GetSelectDirectTransferConnectionQueryHandler.cs",
@@ -580,7 +556,7 @@
         "repo": "das-apim-endpoints",
         "label": "APIM",
         "area": "Approvals",
-        "dependencyName": "Approvals API",
+        "dependencyName": "Approvals",
         "operations": [],
         "areas": [
           "Approvals"
@@ -594,24 +570,22 @@
       "classification": "internal",
       "direction": "outbound",
       "client": "IApprenticeAccountsApiClient",
-      "technology": "HttpClient",
+      "technology": "custom HTTP client",
       "configurationKeys": [
         "ApprovalsApiClientConfiguration:ApiBaseUrl"
       ],
       "authentication": {
-        "type": "ApimAuthorisationHeader",
-        "configurationKeys": []
+        "type": "APIM header",
+        "configurationKeys": [
+          "ApprovalsApiClientConfiguration:ApiKey"
+        ]
       },
       "operations": [],
       "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2.Web/Startup.cs",
-          "reason": "ApprovalsApiClient registered in ConfigureServices."
-        },
-        {
           "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2/Client/ApprovalsApiClientFactory.cs",
-          "reason": "HttpClient configured with a base address from ApprovalsApiClientConfiguration:ApiBaseUrl."
+          "reason": "Custom HTTP client creation with base URL and API authentication configuration."
         },
         {
           "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals/Application/Apprentices/Queries/GetApprenticeQueryHandler.cs",
@@ -629,7 +603,7 @@
         "repo": "das-apim-endpoints",
         "label": "APIM",
         "area": "Approvals",
-        "dependencyName": "Approvals API",
+        "dependencyName": "Approvals",
         "operations": [],
         "areas": [
           "Approvals"
@@ -643,24 +617,22 @@
       "classification": "internal",
       "direction": "outbound",
       "client": "IAssessorsApiClient",
-      "technology": "HttpClient",
+      "technology": "custom HTTP client",
       "configurationKeys": [
         "ApprovalsApiClientConfiguration:ApiBaseUrl"
       ],
       "authentication": {
-        "type": "ApimAuthorisationHeader",
-        "configurationKeys": []
+        "type": "APIM header",
+        "configurationKeys": [
+          "ApprovalsApiClientConfiguration:ApiKey"
+        ]
       },
       "operations": [],
       "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2.Web/Startup.cs",
-          "reason": "ApprovalsApiClient registered in ConfigureServices."
-        },
-        {
           "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2/Client/ApprovalsApiClientFactory.cs",
-          "reason": "HttpClient configured with a base address from ApprovalsApiClientConfiguration:ApiBaseUrl."
+          "reason": "Custom HTTP client creation with base URL and API authentication configuration."
         },
         {
           "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals/Application/Epaos/Queries/GetEpaosQueryHandler.cs",
@@ -678,7 +650,7 @@
         "repo": "das-apim-endpoints",
         "label": "APIM",
         "area": "Approvals",
-        "dependencyName": "Approvals API",
+        "dependencyName": "Approvals",
         "operations": [],
         "areas": [
           "Approvals"
@@ -692,24 +664,22 @@
       "classification": "internal",
       "direction": "outbound",
       "client": "IFjaaApiClient",
-      "technology": "HttpClient",
+      "technology": "custom HTTP client",
       "configurationKeys": [
         "ApprovalsApiClientConfiguration:ApiBaseUrl"
       ],
       "authentication": {
-        "type": "ApimAuthorisationHeader",
-        "configurationKeys": []
+        "type": "APIM header",
+        "configurationKeys": [
+          "ApprovalsApiClientConfiguration:ApiKey"
+        ]
       },
       "operations": [],
       "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2.Web/Startup.cs",
-          "reason": "ApprovalsApiClient registered in ConfigureServices."
-        },
-        {
           "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2/Client/ApprovalsApiClientFactory.cs",
-          "reason": "HttpClient configured with a base address from ApprovalsApiClientConfiguration:ApiBaseUrl."
+          "reason": "Custom HTTP client creation with base URL and API authentication configuration."
         },
         {
           "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals/Services/FjaaService.cs",
@@ -727,7 +697,7 @@
         "repo": "das-apim-endpoints",
         "label": "APIM",
         "area": "Approvals",
-        "dependencyName": "Approvals API",
+        "dependencyName": "Approvals",
         "operations": [],
         "areas": [
           "Approvals"
@@ -741,24 +711,22 @@
       "classification": "internal",
       "direction": "outbound",
       "client": "IInternalApiClient",
-      "technology": "HttpClient",
+      "technology": "custom HTTP client",
       "configurationKeys": [
         "ApprovalsApiClientConfiguration:ApiBaseUrl"
       ],
       "authentication": {
-        "type": "ApimAuthorisationHeader",
-        "configurationKeys": []
+        "type": "APIM header",
+        "configurationKeys": [
+          "ApprovalsApiClientConfiguration:ApiKey"
+        ]
       },
       "operations": [],
       "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2.Web/Startup.cs",
-          "reason": "ApprovalsApiClient registered in ConfigureServices."
-        },
-        {
           "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2/Client/ApprovalsApiClientFactory.cs",
-          "reason": "HttpClient configured with a base address from ApprovalsApiClientConfiguration:ApiBaseUrl."
+          "reason": "Custom HTTP client creation with base URL and API authentication configuration."
         },
         {
           "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals/Application/DraftApprenticeships/Commands/SyncLearnerData/SyncLearnerDataCommandHandler.cs",
@@ -780,7 +748,7 @@
         "repo": "das-apim-endpoints",
         "label": "APIM",
         "area": "Approvals",
-        "dependencyName": "Approvals API",
+        "dependencyName": "Approvals",
         "operations": [],
         "areas": [
           "Approvals"
@@ -794,24 +762,22 @@
       "classification": "internal",
       "direction": "outbound",
       "client": "ICollectionCalendarApiClient",
-      "technology": "HttpClient",
+      "technology": "custom HTTP client",
       "configurationKeys": [
         "ApprovalsApiClientConfiguration:ApiBaseUrl"
       ],
       "authentication": {
-        "type": "ApimAuthorisationHeader",
-        "configurationKeys": []
+        "type": "APIM header",
+        "configurationKeys": [
+          "ApprovalsApiClientConfiguration:ApiKey"
+        ]
       },
       "operations": [],
       "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2.Web/Startup.cs",
-          "reason": "ApprovalsApiClient registered in ConfigureServices."
-        },
-        {
           "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2/Client/ApprovalsApiClientFactory.cs",
-          "reason": "HttpClient configured with a base address from ApprovalsApiClientConfiguration:ApiBaseUrl."
+          "reason": "Custom HTTP client creation with base URL and API authentication configuration."
         },
         {
           "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals/Application/Apprentices/Queries/Apprenticeship/GetManageApprenticeshipDetails/GetManageApprenticeshipDetailsQueryHandler.cs",
@@ -829,7 +795,7 @@
         "repo": "das-apim-endpoints",
         "label": "APIM",
         "area": "Approvals",
-        "dependencyName": "Approvals API",
+        "dependencyName": "Approvals",
         "operations": [],
         "areas": [
           "Approvals"
@@ -843,24 +809,22 @@
       "classification": "internal",
       "direction": "outbound",
       "client": "IInternalApiClient",
-      "technology": "HttpClient",
+      "technology": "custom HTTP client",
       "configurationKeys": [
         "ApprovalsApiClientConfiguration:ApiBaseUrl"
       ],
       "authentication": {
-        "type": "ApimAuthorisationHeader",
-        "configurationKeys": []
+        "type": "APIM header",
+        "configurationKeys": [
+          "ApprovalsApiClientConfiguration:ApiKey"
+        ]
       },
       "operations": [],
       "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2.Web/Startup.cs",
-          "reason": "ApprovalsApiClient registered in ConfigureServices."
-        },
-        {
           "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2/Client/ApprovalsApiClientFactory.cs",
-          "reason": "HttpClient configured with a base address from ApprovalsApiClientConfiguration:ApiBaseUrl."
+          "reason": "Custom HTTP client creation with base URL and API authentication configuration."
         },
         {
           "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals/Services/ICourseTypesApiClient.cs",
@@ -878,7 +842,7 @@
         "repo": "das-apim-endpoints",
         "label": "APIM",
         "area": "Approvals",
-        "dependencyName": "Approvals API",
+        "dependencyName": "Approvals",
         "operations": [],
         "areas": [
           "Approvals"
@@ -892,24 +856,22 @@
       "classification": "internal",
       "direction": "outbound",
       "client": "IEmploymentCheckApiClient",
-      "technology": "HttpClient",
+      "technology": "custom HTTP client",
       "configurationKeys": [
         "ApprovalsApiClientConfiguration:ApiBaseUrl"
       ],
       "authentication": {
-        "type": "ApimAuthorisationHeader",
-        "configurationKeys": []
+        "type": "APIM header",
+        "configurationKeys": [
+          "ApprovalsApiClientConfiguration:ApiKey"
+        ]
       },
       "operations": [],
       "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2.Web/Startup.cs",
-          "reason": "ApprovalsApiClient registered in ConfigureServices."
-        },
-        {
           "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2/Client/ApprovalsApiClientFactory.cs",
-          "reason": "HttpClient configured with a base address from ApprovalsApiClientConfiguration:ApiBaseUrl."
+          "reason": "Custom HTTP client creation with base URL and API authentication configuration."
         },
         {
           "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals/Application/EmploymentChecks/Queries/GetEmploymentChecksQuery/GetEmploymentChecksQueryHandler.cs",
@@ -927,7 +889,7 @@
         "repo": "das-apim-endpoints",
         "label": "APIM",
         "area": "Approvals",
-        "dependencyName": "Approvals API",
+        "dependencyName": "Approvals",
         "operations": [],
         "areas": [
           "Approvals"
@@ -941,24 +903,22 @@
       "classification": "internal",
       "direction": "outbound",
       "client": "IApprenticeCommitmentsApiClient",
-      "technology": "HttpClient",
+      "technology": "custom HTTP client",
       "configurationKeys": [
         "ApprovalsApiClientConfiguration:ApiBaseUrl"
       ],
       "authentication": {
-        "type": "ApimAuthorisationHeader",
-        "configurationKeys": []
+        "type": "APIM header",
+        "configurationKeys": [
+          "ApprovalsApiClientConfiguration:ApiKey"
+        ]
       },
       "operations": [],
       "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2.Web/Startup.cs",
-          "reason": "ApprovalsApiClient registered in ConfigureServices."
-        },
-        {
           "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2/Client/ApprovalsApiClientFactory.cs",
-          "reason": "HttpClient configured with a base address from ApprovalsApiClientConfiguration:ApiBaseUrl."
+          "reason": "Custom HTTP client creation with base URL and API authentication configuration."
         },
         {
           "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals.Api/AppStart/AddServiceRegistrationExtensions.cs",
@@ -973,7 +933,7 @@
         "repo": "das-apim-endpoints",
         "label": "APIM",
         "area": "Approvals",
-        "dependencyName": "Approvals API",
+        "dependencyName": "Approvals",
         "operations": [],
         "areas": [
           "Approvals"
@@ -987,24 +947,22 @@
       "classification": "internal",
       "direction": "outbound",
       "client": "IEmployerProfilesApiClient",
-      "technology": "HttpClient",
+      "technology": "custom HTTP client",
       "configurationKeys": [
         "ApprovalsApiClientConfiguration:ApiBaseUrl"
       ],
       "authentication": {
-        "type": "ApimAuthorisationHeader",
-        "configurationKeys": []
+        "type": "APIM header",
+        "configurationKeys": [
+          "ApprovalsApiClientConfiguration:ApiKey"
+        ]
       },
       "operations": [],
       "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2.Web/Startup.cs",
-          "reason": "ApprovalsApiClient registered in ConfigureServices."
-        },
-        {
           "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2/Client/ApprovalsApiClientFactory.cs",
-          "reason": "HttpClient configured with a base address from ApprovalsApiClientConfiguration:ApiBaseUrl."
+          "reason": "Custom HTTP client creation with base URL and API authentication configuration."
         },
         {
           "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals.Api/AppStart/AddServiceRegistrationExtensions.cs",
@@ -1018,7 +976,7 @@
         "repo": "das-apim-endpoints",
         "label": "APIM",
         "area": "Approvals",
-        "dependencyName": "Approvals API",
+        "dependencyName": "Approvals",
         "operations": [],
         "areas": [
           "Approvals"
@@ -1032,24 +990,22 @@
       "classification": "internal",
       "direction": "outbound",
       "client": "ILearningApiClient",
-      "technology": "HttpClient",
+      "technology": "custom HTTP client",
       "configurationKeys": [
         "ApprovalsApiClientConfiguration:ApiBaseUrl"
       ],
       "authentication": {
-        "type": "ApimAuthorisationHeader",
-        "configurationKeys": []
+        "type": "APIM header",
+        "configurationKeys": [
+          "ApprovalsApiClientConfiguration:ApiKey"
+        ]
       },
       "operations": [],
       "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2.Web/Startup.cs",
-          "reason": "ApprovalsApiClient registered in ConfigureServices."
-        },
-        {
           "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2/Client/ApprovalsApiClientFactory.cs",
-          "reason": "HttpClient configured with a base address from ApprovalsApiClientConfiguration:ApiBaseUrl."
+          "reason": "Custom HTTP client creation with base URL and API authentication configuration."
         },
         {
           "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals.Api/AppStart/AddServiceRegistrationExtensions.cs",
@@ -1064,7 +1020,7 @@
         "repo": "das-apim-endpoints",
         "label": "APIM",
         "area": "Approvals",
-        "dependencyName": "Approvals API",
+        "dependencyName": "Approvals",
         "operations": [],
         "areas": [
           "Approvals"
@@ -1078,24 +1034,22 @@
       "classification": "internal",
       "direction": "outbound",
       "client": "IRoatpServiceApiClient",
-      "technology": "HttpClient",
+      "technology": "custom HTTP client",
       "configurationKeys": [
         "ApprovalsApiClientConfiguration:ApiBaseUrl"
       ],
       "authentication": {
-        "type": "ApimAuthorisationHeader",
-        "configurationKeys": []
+        "type": "APIM header",
+        "configurationKeys": [
+          "ApprovalsApiClientConfiguration:ApiKey"
+        ]
       },
       "operations": [],
       "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2.Web/Startup.cs",
-          "reason": "ApprovalsApiClient registered in ConfigureServices."
-        },
-        {
           "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2/Client/ApprovalsApiClientFactory.cs",
-          "reason": "HttpClient configured with a base address from ApprovalsApiClientConfiguration:ApiBaseUrl."
+          "reason": "Custom HTTP client creation with base URL and API authentication configuration."
         },
         {
           "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals.Api/AppStart/AddServiceRegistrationExtensions.cs",
@@ -1109,7 +1063,7 @@
         "repo": "das-apim-endpoints",
         "label": "APIM",
         "area": "Approvals",
-        "dependencyName": "Approvals API",
+        "dependencyName": "Approvals",
         "operations": [],
         "areas": [
           "Approvals"
@@ -1123,24 +1077,22 @@
       "classification": "internal",
       "direction": "outbound",
       "client": "IRoatpCourseManagementApiClient",
-      "technology": "HttpClient",
+      "technology": "custom HTTP client",
       "configurationKeys": [
         "ApprovalsApiClientConfiguration:ApiBaseUrl"
       ],
       "authentication": {
-        "type": "ApimAuthorisationHeader",
-        "configurationKeys": []
+        "type": "APIM header",
+        "configurationKeys": [
+          "ApprovalsApiClientConfiguration:ApiKey"
+        ]
       },
       "operations": [],
       "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2.Web/Startup.cs",
-          "reason": "ApprovalsApiClient registered in ConfigureServices."
-        },
-        {
           "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2/Client/ApprovalsApiClientFactory.cs",
-          "reason": "HttpClient configured with a base address from ApprovalsApiClientConfiguration:ApiBaseUrl."
+          "reason": "Custom HTTP client creation with base URL and API authentication configuration."
         },
         {
           "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals.Api/AppStart/AddServiceRegistrationExtensions.cs",
@@ -1154,7 +1106,7 @@
         "repo": "das-apim-endpoints",
         "label": "APIM",
         "area": "Approvals",
-        "dependencyName": "Approvals API",
+        "dependencyName": "Approvals",
         "operations": [],
         "areas": [
           "Approvals"
@@ -1163,50 +1115,39 @@
     },
     {
       "sourceId": "employer-commitments",
-      "name": "Commitment Permissions API",
+      "name": "Commitment Permissions",
       "kind": "http-api",
       "classification": "internal",
       "direction": "outbound",
-      "client": "CommitmentPermissionsApiClient",
-      "technology": "HttpClient",
+      "client": "ICommitmentPermissionsApiClient",
+      "technology": "custom HTTP client",
       "configurationKeys": [
         "CommitmentPermissionsApiClientConfiguration:ApiBaseUrl"
       ],
       "authentication": {
-        "type": "unknown",
+        "type": null,
         "configurationKeys": []
       },
       "operations": [],
-      "resources": [
-        {
-          "type": "endpoint",
-          "name": "CommitmentPermissionsApiClientConfiguration:ApiBaseUrl",
-          "direction": "outbound",
-          "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2/Client/CommitmentPermissionsApiClientFactory.cs"
-        }
-      ],
+      "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2.Web/Startup.cs",
-          "reason": "CommitmentPermissionsApiClient registered in ConfigureServices."
-        },
-        {
           "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2/Client/CommitmentPermissionsApiClientFactory.cs",
-          "reason": "HttpClient configured with a base address from CommitmentPermissionsApiClientConfiguration:ApiBaseUrl."
+          "reason": "Creation of HTTP client for Commitment Permissions API."
         }
       ],
       "confidence": "high",
-      "targetId": "http-api-commitment-permissions-api",
+      "targetId": "http-api-commitment-permissions",
       "description": "Calls the API of"
     },
     {
       "sourceId": "employer-commitments",
-      "name": "Commitments API",
+      "name": "Commitments",
       "kind": "http-api",
       "classification": "internal",
       "direction": "outbound",
-      "client": "CommitmentsApiClient",
-      "technology": "HttpClient",
+      "client": "ICommitmentsApiClient",
+      "technology": "custom HTTP client",
       "configurationKeys": [
         "CommitmentsClientApiConfiguration:ApiBaseUrl"
       ],
@@ -1215,33 +1156,22 @@
         "configurationKeys": []
       },
       "operations": [],
-      "resources": [
-        {
-          "type": "endpoint",
-          "name": "CommitmentsClientApiConfiguration:ApiBaseUrl",
-          "direction": "outbound",
-          "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2/Client/CommitmentApiClientFactory.cs"
-        }
-      ],
+      "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2.Web/Startup.cs",
-          "reason": "CommitmentsApiClient registered in ConfigureServices."
-        },
-        {
           "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2/Client/CommitmentApiClientFactory.cs",
-          "reason": "HttpClient configured with a base address from CommitmentsClientApiConfiguration:ApiBaseUrl and Basic Authentication."
+          "reason": "Custom HTTP client with basic authentication for Commitments API."
         }
       ],
       "confidence": "high",
-      "targetId": "http-api-commitments-api",
+      "targetId": "http-api-commitments",
       "description": "Calls the API of",
       "targetRepo": "das-commitments"
     }
   ],
   "resolution": {
     "overlay": "dfe-overlay/apim-routing.json",
-    "apimCommit": "d1abc8e74ee8a1b8b58af7b7093268450310b87b",
+    "apimCommit": "2741b3f0d208f1080829bb57a3b72facc12371d4",
     "precision": "area"
   }
 }

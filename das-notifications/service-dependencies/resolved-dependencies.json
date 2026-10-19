@@ -1,0 +1,183 @@
+{
+  "repository": "SkillsFundingAgency/das-notifications",
+  "ref": "master",
+  "path": "src",
+  "systemName": "Notifications",
+  "containers": [
+    {
+      "id": "notifications",
+      "name": "Notifications",
+      "type": "api",
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Notifications.Api/Program.cs",
+          "reason": "ASP.NET Core web API entry point evidenced by IWebHostBuilder with UseStartup."
+        }
+      ]
+    },
+    {
+      "id": "notifications-messagehandlers",
+      "name": "Notifications MessageHandlers",
+      "type": "job",
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Notifications.MessageHandlers/Program.cs",
+          "reason": "Worker entry point evidenced by HostBuilder configuration for a continuous WebJob."
+        }
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "sourceId": "notifications",
+      "name": "Application Insights",
+      "kind": "cloud-service",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "APPLICATIONINSIGHTS_CONNECTION_STRING"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Notifications.Api/Startup.cs",
+          "reason": "AddApplicationInsightsTelemetry invoked for telemetry integration."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "cloud-service-application-insights",
+      "description": "Uses"
+    },
+    {
+      "sourceId": "notifications-messagehandlers",
+      "name": "Application Insights",
+      "kind": "cloud-service",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "APPINSIGHTS_INSTRUMENTATIONKEY"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Notifications.MessageHandlers/Program.cs",
+          "reason": "Application Insights instrumentation key configured for logging."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "cloud-service-application-insights",
+      "description": "Uses"
+    },
+    {
+      "sourceId": "notifications-messagehandlers",
+      "name": "Azure Table Storage Configuration",
+      "kind": "cloud-service",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": "Azure Table Storage",
+      "configurationKeys": [
+        "APPSETTING_ConfigurationStorageConnectionString"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Notifications.Api/Startup.cs",
+          "reason": "AddAzureTableStorage invoked for configuration loading."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "cloud-service-azure-table-storage-configuration",
+      "description": "Uses"
+    },
+    {
+      "sourceId": "notifications",
+      "name": "SQL Server Notifications Database",
+      "kind": "database",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": null,
+      "technology": "SQL Server",
+      "configurationKeys": [
+        "DatabaseConnectionString"
+      ],
+      "authentication": {
+        "type": "Azure Active Directory",
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [
+        {
+          "type": "database",
+          "name": null,
+          "direction": "outbound",
+          "sourceFile": "src/SFA.DAS.Notifications.Infrastructure/DependencyResolution/DataRegistry.cs"
+        }
+      ],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Notifications.Infrastructure/DependencyResolution/DataRegistry.cs",
+          "reason": "DbConnection for SQL Server using Azure Service Token Provider."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.Notifications.Api/StartupExtensions/NServiceBusStartUp.cs",
+          "reason": "UseSqlServerPersistence with a SQL connection string."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "database-sql-server-notifications-database",
+      "description": "Reads from and writes to"
+    },
+    {
+      "sourceId": "notifications",
+      "name": "Azure Service Bus",
+      "kind": "message-broker",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": "Azure Service Bus",
+      "configurationKeys": [
+        "NServiceBusConfiguration:ServiceBusConnectionString"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Notifications.Api/StartupExtensions/NServiceBusStartUp.cs",
+          "reason": "EndpointConfiguration uses Azure Service Bus transport."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "message-broker-azure-service-bus",
+      "description": "Publishes messages to and consumes messages from"
+    }
+  ],
+  "resolution": {
+    "overlay": "dfe-overlay/apim-routing.json",
+    "apimCommit": "2741b3f0d208f1080829bb57a3b72facc12371d4",
+    "precision": "area"
+  }
+}
