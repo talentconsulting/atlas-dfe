@@ -19,7 +19,8 @@
       "line": 90,
       "requiresAuthentication": null,
       "isEntryPoint": true,
-      "purpose": "Redirects employers after requesting an email change."
+      "purpose": "Handles the process for the employer to change their email address.",
+      "fields": []
     },
     {
       "id": "EmployerChangePassword",
@@ -34,7 +35,8 @@
       "line": 85,
       "requiresAuthentication": null,
       "isEntryPoint": true,
-      "purpose": "Redirects employers after requesting a password change."
+      "purpose": "Handles the process for the employer to change their password.",
+      "fields": []
     },
     {
       "id": "EmployerCourseGuidance",
@@ -49,7 +51,8 @@
       "line": 280,
       "requiresAuthentication": true,
       "isEntryPoint": false,
-      "purpose": "Provides guidance to employers about apprenticeship courses."
+      "purpose": "Provides guidance to the employer about selecting a course for their apprentice.",
+      "fields": []
     },
     {
       "id": "EmployerIndex",
@@ -64,7 +67,8 @@
       "line": 60,
       "requiresAuthentication": true,
       "isEntryPoint": false,
-      "purpose": "Shows the main employer reservations page listing options for reservation management."
+      "purpose": "Shows the employer's reservation dashboard and checks global funding rules.",
+      "fields": []
     },
     {
       "id": "EmployerManage",
@@ -79,7 +83,8 @@
       "line": 53,
       "requiresAuthentication": true,
       "isEntryPoint": false,
-      "purpose": "Lets employers manage their reservations, view details, and access further actions."
+      "purpose": "Lets the employer manage their existing reservations.",
+      "fields": []
     },
     {
       "id": "EmployerOwnerSignAgreement",
@@ -94,7 +99,8 @@
       "line": 301,
       "requiresAuthentication": true,
       "isEntryPoint": true,
-      "purpose": "Allows employer owners to sign the necessary agreement for reservations."
+      "purpose": "Lets the employer with owner role sign the employer agreement so reservations can be made.",
+      "fields": []
     },
     {
       "id": "EmployerSaveRuleNotificationChoiceNoReservation",
@@ -109,7 +115,8 @@
       "line": 79,
       "requiresAuthentication": true,
       "isEntryPoint": true,
-      "purpose": "Allows an employer to record their notification choice for funding rules without creating a reservation."
+      "purpose": "Processes employer choices for rule notifications without a reservation.",
+      "fields": []
     },
     {
       "id": "EmployerSelectCourse",
@@ -125,7 +132,42 @@
       "line": 209,
       "requiresAuthentication": true,
       "isEntryPoint": false,
-      "purpose": "Lets employers choose an apprenticeship course for a reservation."
+      "purpose": "Lets the employer select which course their apprentice will take, or indicate if they don't know.",
+      "fields": [
+        {
+          "name": "ApprenticeTrainingKnown",
+          "control": "radios",
+          "label": "Do you know which training course your learner will take?",
+          "options": [
+            {
+              "value": "true",
+              "label": "Yes"
+            },
+            {
+              "value": "false",
+              "label": "No"
+            }
+          ],
+          "dataType": "bool?",
+          "required": null,
+          "constraints": [],
+          "validation": "required; must indicate whether the training course is known",
+          "line": 43,
+          "sourceFile": "src/SFA.DAS.Reservations.Web/Views/EmployerReservations/SelectCourse.cshtml"
+        },
+        {
+          "name": "SelectedCourseId",
+          "control": "select",
+          "label": null,
+          "options": [],
+          "dataType": null,
+          "required": null,
+          "constraints": [],
+          "validation": "required when 'ApprenticeTrainingKnown' is true; must be a valid course identifier",
+          "line": 9,
+          "sourceFile": "src/SFA.DAS.Reservations.Web/Views/Shared/_CourseSearch.cshtml"
+        }
+      ]
     },
     {
       "id": "EmployerSelectCourseRuleCheck",
@@ -140,7 +182,8 @@
       "line": 52,
       "requiresAuthentication": true,
       "isEntryPoint": true,
-      "purpose": "Checks for any funding rules before the employer selects a course for a reservation."
+      "purpose": "Checks rule eligibility before an employer selects a course.",
+      "fields": []
     },
     {
       "id": "EmployerSelectLegalEntity",
@@ -156,7 +199,21 @@
       "line": 115,
       "requiresAuthentication": true,
       "isEntryPoint": false,
-      "purpose": "Enables employers to select a legal entity associated with their account for reservations."
+      "purpose": "Lets the employer select which legal entity will be used for the reservation.",
+      "fields": [
+        {
+          "name": "LegalEntity",
+          "control": "radios",
+          "label": null,
+          "options": [],
+          "dataType": null,
+          "required": null,
+          "constraints": [],
+          "validation": "required; must select a legal entity",
+          "line": 42,
+          "sourceFile": "src/SFA.DAS.Reservations.Web/Views/EmployerReservations/SelectLegalEntity.cshtml"
+        }
+      ]
     },
     {
       "id": "EmployerStart",
@@ -171,7 +228,8 @@
       "line": 74,
       "requiresAuthentication": true,
       "isEntryPoint": false,
-      "purpose": "Displays the employer reservation start page and informs about applicable funding/global rules."
+      "purpose": "Starts a new reservation process for the employer.",
+      "fields": []
     },
     {
       "id": "EmployerTransactorSignAgreement",
@@ -186,7 +244,8 @@
       "line": 314,
       "requiresAuthentication": true,
       "isEntryPoint": true,
-      "purpose": "Allows employer transactors to sign the agreement when required for making a reservation."
+      "purpose": "Displays information to the transactor user and allows them to sign the employer agreement.",
+      "fields": []
     },
     {
       "id": "Home.Dashboard",
@@ -201,7 +260,8 @@
       "line": 104,
       "requiresAuthentication": null,
       "isEntryPoint": true,
-      "purpose": "Redirects to the main dashboard page for users."
+      "purpose": "Redirects the user to the main dashboard.",
+      "fields": []
     },
     {
       "id": "ProviderApprenticeshipTraining",
@@ -216,7 +276,33 @@
       "line": 104,
       "requiresAuthentication": true,
       "isEntryPoint": false,
-      "purpose": "Lets the provider select apprenticeship training details for a reservation."
+      "purpose": "Lets the provider select apprenticeship training course and start date.",
+      "fields": [
+        {
+          "name": "StartDate",
+          "control": "radios",
+          "label": "When will the training start?",
+          "options": [],
+          "dataType": null,
+          "required": null,
+          "constraints": [],
+          "validation": "required; cannot select a past date for some apprenticeship types",
+          "line": 133,
+          "sourceFile": "src/SFA.DAS.Reservations.Web/Views/Reservations/ApprenticeshipTraining.cshtml"
+        },
+        {
+          "name": "SelectedCourseId",
+          "control": "select",
+          "label": null,
+          "options": [],
+          "dataType": null,
+          "required": null,
+          "constraints": [],
+          "validation": "required",
+          "line": 9,
+          "sourceFile": "src/SFA.DAS.Reservations.Web/Views/Shared/_CourseSearch.cshtml"
+        }
+      ]
     },
     {
       "id": "ProviderChooseEmployer",
@@ -231,7 +317,21 @@
       "line": 104,
       "requiresAuthentication": true,
       "isEntryPoint": false,
-      "purpose": "Lets the provider choose an employer for whom to create a reservation."
+      "purpose": "Lets the provider choose an employer for a reservation.",
+      "fields": [
+        {
+          "name": "searchTerm",
+          "control": "text",
+          "label": null,
+          "options": [],
+          "dataType": null,
+          "required": null,
+          "constraints": [],
+          "validation": null,
+          "line": 27,
+          "sourceFile": "src/SFA.DAS.Reservations.Web/Views/ProviderReservations/ChooseEmployer.cshtml"
+        }
+      ]
     },
     {
       "id": "ProviderCompleted",
@@ -246,7 +346,8 @@
       "line": 343,
       "requiresAuthentication": true,
       "isEntryPoint": false,
-      "purpose": "Shows confirmation that the provider's reservation is completed and next steps."
+      "purpose": "Shows that the reservation has been completed by the provider.",
+      "fields": []
     },
     {
       "id": "ProviderConfirmEmployer",
@@ -262,7 +363,30 @@
       "line": 170,
       "requiresAuthentication": true,
       "isEntryPoint": false,
-      "purpose": "Allows the provider to confirm the selected employer for a new reservation."
+      "purpose": "Lets the provider confirm if they want to reserve funds for a specific employer.",
+      "fields": [
+        {
+          "name": "Confirm",
+          "control": "radios",
+          "label": "Are you sure you want to reserve funds for this employer?",
+          "options": [
+            {
+              "value": "True",
+              "label": "Yes, use"
+            },
+            {
+              "value": "False",
+              "label": "No, choose a different employer"
+            }
+          ],
+          "dataType": "bool?",
+          "required": null,
+          "constraints": [],
+          "validation": "required; must be selected",
+          "line": 49,
+          "sourceFile": "src/SFA.DAS.Reservations.Web/Views/ProviderReservations/ConfirmEmployer.cshtml"
+        }
+      ]
     },
     {
       "id": "ProviderCreateApprenticeshipTraining",
@@ -277,7 +401,33 @@
       "line": 139,
       "requiresAuthentication": true,
       "isEntryPoint": true,
-      "purpose": "Processes provider input for creating apprenticeship training and advances the reservation."
+      "purpose": "Processes the provider's selection of apprenticeship training course and start date.",
+      "fields": [
+        {
+          "name": "StartDate",
+          "control": "radios",
+          "label": "When will the training start?",
+          "options": [],
+          "dataType": null,
+          "required": null,
+          "constraints": [],
+          "validation": "required; cannot select a past date for some apprenticeship types",
+          "line": 133,
+          "sourceFile": "src/SFA.DAS.Reservations.Web/Views/Reservations/ApprenticeshipTraining.cshtml"
+        },
+        {
+          "name": "SelectedCourseId",
+          "control": "select",
+          "label": null,
+          "options": [],
+          "dataType": null,
+          "required": null,
+          "constraints": [],
+          "validation": "required",
+          "line": 9,
+          "sourceFile": "src/SFA.DAS.Reservations.Web/Views/Shared/_CourseSearch.cshtml"
+        }
+      ]
     },
     {
       "id": "ProviderDelete",
@@ -293,7 +443,8 @@
       "line": 183,
       "requiresAuthentication": true,
       "isEntryPoint": true,
-      "purpose": "Allows providers to delete a reservation."
+      "purpose": "Lets a provider delete a reservation.",
+      "fields": []
     },
     {
       "id": "ProviderDeleteCompleted",
@@ -309,7 +460,8 @@
       "line": 265,
       "requiresAuthentication": true,
       "isEntryPoint": true,
-      "purpose": "Shows a confirmation that a reservation has been deleted by a provider."
+      "purpose": "Confirms that a reservation has been deleted by the provider.",
+      "fields": []
     },
     {
       "id": "ProviderEmployerAgreementNotSigned",
@@ -324,7 +476,8 @@
       "line": 254,
       "requiresAuthentication": true,
       "isEntryPoint": false,
-      "purpose": "Informs the provider that the employer's agreement is not signed and displays relevant details."
+      "purpose": "Notifies the provider when the employer agreement is not signed.",
+      "fields": []
     },
     {
       "id": "ProviderFeatureNotAvailable",
@@ -339,7 +492,8 @@
       "line": 97,
       "requiresAuthentication": null,
       "isEntryPoint": true,
-      "purpose": "Shows a page indicating a feature is not available for the provider."
+      "purpose": "Informs the provider that a feature is not available.",
+      "fields": []
     },
     {
       "id": "ProviderIndex",
@@ -354,7 +508,8 @@
       "line": 47,
       "requiresAuthentication": true,
       "isEntryPoint": false,
-      "purpose": "Provides the provider's main reservations page with links to start or manage reservations."
+      "purpose": "Provider homepage for managing reservations.",
+      "fields": []
     },
     {
       "id": "ProviderManage",
@@ -369,7 +524,69 @@
       "line": 90,
       "requiresAuthentication": true,
       "isEntryPoint": false,
-      "purpose": "Displays a list of reservations managed by a provider, allowing filtering and navigation."
+      "purpose": "Lets the provider view and filter their reservations.",
+      "fields": [
+        {
+          "name": "searchTerm",
+          "control": "text",
+          "label": "Search employer name or course",
+          "options": [],
+          "dataType": null,
+          "required": null,
+          "constraints": [],
+          "validation": null,
+          "line": 45,
+          "sourceFile": "src/SFA.DAS.Reservations.Web/Views/ManageReservations/ProviderManage.cshtml"
+        },
+        {
+          "name": "selectedEmployer",
+          "control": "select",
+          "label": "Employer",
+          "options": [],
+          "dataType": null,
+          "required": null,
+          "constraints": [],
+          "validation": null,
+          "line": 60,
+          "sourceFile": "src/SFA.DAS.Reservations.Web/Views/ManageReservations/ProviderManage.cshtml"
+        },
+        {
+          "name": "selectedCourse",
+          "control": "select",
+          "label": "Training course",
+          "options": [],
+          "dataType": null,
+          "required": null,
+          "constraints": [],
+          "validation": null,
+          "line": 79,
+          "sourceFile": "src/SFA.DAS.Reservations.Web/Views/ManageReservations/ProviderManage.cshtml"
+        },
+        {
+          "name": "FilterModel.SelectedLearningType",
+          "control": "select",
+          "label": null,
+          "options": [],
+          "dataType": null,
+          "required": null,
+          "constraints": [],
+          "validation": null,
+          "line": 98,
+          "sourceFile": "src/SFA.DAS.Reservations.Web/Views/ManageReservations/ProviderManage.cshtml"
+        },
+        {
+          "name": "selectedStartDate",
+          "control": "select",
+          "label": "Start date",
+          "options": [],
+          "dataType": null,
+          "required": null,
+          "constraints": [],
+          "validation": null,
+          "line": 110,
+          "sourceFile": "src/SFA.DAS.Reservations.Web/Views/ManageReservations/ProviderManage.cshtml"
+        }
+      ]
     },
     {
       "id": "ProviderPostCompleted",
@@ -384,7 +601,8 @@
       "line": 411,
       "requiresAuthentication": true,
       "isEntryPoint": true,
-      "purpose": "Processes provider selections on the completed reservation page and redirects based on choices."
+      "purpose": "Handles post-completion actions after the provider completes a reservation.",
+      "fields": []
     },
     {
       "id": "ProviderPostReview",
@@ -399,7 +617,8 @@
       "line": 286,
       "requiresAuthentication": true,
       "isEntryPoint": true,
-      "purpose": "Processes provider input after reviewing a reservation and creates the reservation."
+      "purpose": "Handles actions after the provider reviews the reservation.",
+      "fields": []
     },
     {
       "id": "ProviderReview",
@@ -414,7 +633,8 @@
       "line": 238,
       "requiresAuthentication": true,
       "isEntryPoint": true,
-      "purpose": "Allows the provider to review reservation details before completion."
+      "purpose": "Lets the provider review the reservation before finalising.",
+      "fields": []
     },
     {
       "id": "ProviderSelect",
@@ -430,7 +650,8 @@
       "line": 43,
       "requiresAuthentication": true,
       "isEntryPoint": true,
-      "purpose": "Lets the provider select from available reservations or reserve new funding for a legal entity."
+      "purpose": "Lets the provider select a reservation from available options.",
+      "fields": []
     },
     {
       "id": "ProviderStart",
@@ -445,7 +666,8 @@
       "line": 64,
       "requiresAuthentication": true,
       "isEntryPoint": false,
-      "purpose": "Guides the provider through starting the reservation creation process."
+      "purpose": "Initial provider landing page to start managing reservations.",
+      "fields": []
     },
     {
       "id": "p-signed-out",
@@ -460,7 +682,8 @@
       "line": 69,
       "requiresAuthentication": false,
       "isEntryPoint": true,
-      "purpose": "Displays the signed out page for providers."
+      "purpose": "Shows the 'provider signed out' screen or redirects to provider dashboard.",
+      "fields": []
     }
   ],
   "transitions": [
@@ -477,7 +700,7 @@
       "from": "EmployerIndex",
       "to": "EmployerStart",
       "trigger": "redirect",
-      "condition": "if global funding rule requires starting new reservation",
+      "condition": "when no global rule blocks and CheckNextGlobalRule returns null",
       "evidence": [
         "src/SFA.DAS.Reservations.Web/Controllers/EmployerReservationsController.cs:66"
       ]
@@ -486,7 +709,7 @@
       "from": "EmployerSelectLegalEntity",
       "to": "EmployerSelectCourse",
       "trigger": "redirect",
-      "condition": "if employer has one legal entity and agreement is signed",
+      "condition": "if the user has selected and signed a legal entity agreement",
       "evidence": [
         "src/SFA.DAS.Reservations.Web/Controllers/EmployerReservationsController.cs:137",
         "src/SFA.DAS.Reservations.Web/Controllers/EmployerReservationsController.cs:184"
@@ -496,7 +719,7 @@
       "from": "EmployerSelectCourse",
       "to": "EmployerCourseGuidance",
       "trigger": "redirect",
-      "condition": "if apprentice training is not known",
+      "condition": "if 'ApprenticeTrainingKnown' is false",
       "evidence": [
         "src/SFA.DAS.Reservations.Web/Controllers/EmployerReservationsController.cs:241"
       ]
@@ -532,7 +755,7 @@
       "from": "ProviderIndex",
       "to": "ProviderStart",
       "trigger": "redirect",
-      "condition": "if global rule check is passed",
+      "condition": "when next global rule requires action",
       "evidence": [
         "src/SFA.DAS.Reservations.Web/Controllers/ProviderReservationsController.cs:57"
       ]
@@ -551,7 +774,7 @@
       "from": "ProviderConfirmEmployer",
       "to": "ProviderChooseEmployer",
       "trigger": "redirect",
-      "condition": "if employer is not confirmed",
+      "condition": "if 'Confirm' is not selected or is false",
       "evidence": [
         "src/SFA.DAS.Reservations.Web/Controllers/ProviderReservationsController.cs:207"
       ]
@@ -560,7 +783,7 @@
       "from": "ProviderConfirmEmployer",
       "to": "ProviderApprenticeshipTraining",
       "trigger": "redirect",
-      "condition": "if employer is confirmed",
+      "condition": "if 'Confirm' is selected and true",
       "evidence": [
         "src/SFA.DAS.Reservations.Web/Controllers/ProviderReservationsController.cs:229"
       ]
@@ -569,7 +792,7 @@
       "from": "ProviderCreateApprenticeshipTraining",
       "to": "ProviderIndex",
       "trigger": "redirect",
-      "condition": "if reservation not found or validation fails",
+      "condition": "when cached reservation not found or validation error",
       "evidence": [
         "src/SFA.DAS.Reservations.Web/Controllers/ReservationsController.cs:228"
       ]
@@ -578,7 +801,7 @@
       "from": "ProviderCreateApprenticeshipTraining",
       "to": "EmployerIndex",
       "trigger": "redirect",
-      "condition": "if reservation not found or validation fails, for employer context",
+      "condition": "when cached reservation not found or validation error",
       "evidence": [
         "src/SFA.DAS.Reservations.Web/Controllers/ReservationsController.cs:228"
       ]
@@ -587,7 +810,7 @@
       "from": "ProviderPostReview",
       "to": "ProviderIndex",
       "trigger": "redirect",
-      "condition": "if validation fails",
+      "condition": "when validation or cache error while creating reservation",
       "evidence": [
         "src/SFA.DAS.Reservations.Web/Controllers/ReservationsController.cs:329",
         "src/SFA.DAS.Reservations.Web/Controllers/ReservationsController.cs:334"
@@ -597,7 +820,7 @@
       "from": "ProviderPostReview",
       "to": "EmployerIndex",
       "trigger": "redirect",
-      "condition": "if validation fails, for employer context",
+      "condition": "when validation or cache error while creating reservation",
       "evidence": [
         "src/SFA.DAS.Reservations.Web/Controllers/ReservationsController.cs:329",
         "src/SFA.DAS.Reservations.Web/Controllers/ReservationsController.cs:334"
@@ -607,13 +830,13 @@
       "from": "ProviderPostReview",
       "to": "ProviderCompleted",
       "trigger": "redirect",
-      "condition": "after successfully creating and reviewing the reservation",
+      "condition": "after creating the reservation",
       "evidence": [
         "src/SFA.DAS.Reservations.Web/Controllers/ReservationsController.cs:337"
       ]
     },
     {
-      "from": "EmployerSelectCourse",
+      "from": "EmployerStart",
       "to": "EmployerManage",
       "trigger": "link",
       "condition": null,
@@ -622,7 +845,7 @@
       ]
     },
     {
-      "from": "EmployerSelectCourse",
+      "from": "EmployerStart",
       "to": "EmployerSelectLegalEntity",
       "trigger": "link",
       "condition": null,
@@ -631,7 +854,7 @@
       ]
     },
     {
-      "from": "EmployerStart",
+      "from": "EmployerSelectCourse",
       "to": "EmployerManage",
       "trigger": "link",
       "condition": null,
@@ -640,7 +863,7 @@
       ]
     },
     {
-      "from": "EmployerStart",
+      "from": "EmployerSelectCourse",
       "to": "EmployerSelectLegalEntity",
       "trigger": "link",
       "condition": null,
@@ -801,37 +1024,37 @@
       "line": 27
     },
     {
-      "from": "ProviderCreateApprenticeshipTraining",
+      "from": "ProviderApprenticeshipTraining",
       "reference": "Model.BackLink",
       "sourceFile": "src/SFA.DAS.Reservations.Web/Views/Reservations/ApprenticeshipTraining.cshtml",
       "line": 49
     },
     {
-      "from": "ProviderCreateApprenticeshipTraining",
+      "from": "ProviderApprenticeshipTraining",
       "reference": "Model.BackLink",
       "sourceFile": "src/SFA.DAS.Reservations.Web/Views/Reservations/ApprenticeshipTraining.cshtml",
       "line": 55
     },
     {
-      "from": "ProviderCreateApprenticeshipTraining",
+      "from": "ProviderApprenticeshipTraining",
       "reference": "Model.RouteName",
       "sourceFile": "src/SFA.DAS.Reservations.Web/Views/Reservations/ApprenticeshipTraining.cshtml",
       "line": 82
     },
     {
-      "from": "ProviderApprenticeshipTraining",
+      "from": "ProviderCreateApprenticeshipTraining",
       "reference": "Model.BackLink",
       "sourceFile": "src/SFA.DAS.Reservations.Web/Views/Reservations/ApprenticeshipTraining.cshtml",
       "line": 49
     },
     {
-      "from": "ProviderApprenticeshipTraining",
+      "from": "ProviderCreateApprenticeshipTraining",
       "reference": "Model.BackLink",
       "sourceFile": "src/SFA.DAS.Reservations.Web/Views/Reservations/ApprenticeshipTraining.cshtml",
       "line": 55
     },
     {
-      "from": "ProviderApprenticeshipTraining",
+      "from": "ProviderCreateApprenticeshipTraining",
       "reference": "Model.RouteName",
       "sourceFile": "src/SFA.DAS.Reservations.Web/Views/Reservations/ApprenticeshipTraining.cshtml",
       "line": 82
@@ -840,91 +1063,50 @@
   "selfLinkCount": 9,
   "journeys": [
     {
-      "name": "Employer: Create a New Reservation",
-      "description": "Employers begin a new apprenticeship reservation, selecting the legal entity and course as required.",
-      "kind": "linear",
+      "name": "Manage Reservations as Employer",
+      "description": "Employers view and manage their existing reservations through the employer dashboard.",
+      "kind": "hub",
       "steps": [
-        "EmployerIndex",
-        "EmployerStart",
-        "EmployerSelectLegalEntity",
-        "EmployerSelectCourse"
-      ],
-      "hub": null,
-      "sections": [],
-      "then": []
-    },
-    {
-      "name": "Provider: Create Reservation for Employer",
-      "description": "Providers create a new apprenticeship reservation by selecting and confirming an employer, then supplying training details.",
-      "kind": "linear",
-      "steps": [
-        "ProviderIndex",
-        "ProviderStart",
-        "ProviderChooseEmployer",
-        "ProviderConfirmEmployer",
-        "ProviderApprenticeshipTraining"
-      ],
-      "hub": null,
-      "sections": [],
-      "then": []
-    },
-    {
-      "name": "Employer: Start a New Reservation",
-      "description": "Employers begin the process of making a new reservation, selecting a legal entity before appointing a course.",
-      "kind": "linear",
-      "steps": [
-        "EmployerIndex",
-        "EmployerStart",
-        "EmployerSelectLegalEntity",
-        "EmployerSelectCourse"
-      ],
-      "hub": null,
-      "sections": [],
-      "then": []
-    },
-    {
-      "name": "Provider: Create a Reservation for an Employer",
-      "description": "Providers initiate the reservation process, selecting and confirming the employer before entering apprenticeship training details.",
-      "kind": "linear",
-      "steps": [
-        "ProviderStart",
-        "ProviderChooseEmployer",
-        "ProviderConfirmEmployer",
-        "ProviderApprenticeshipTraining"
-      ],
-      "hub": null,
-      "sections": [],
-      "then": []
-    },
-    {
-      "name": "Employer: Navigation Between Manage and Home",
-      "description": "Employers navigate back and forth between the manage reservations page and their reservation home page.",
-      "kind": "linear",
-      "steps": [
-        "EmployerIndex",
-        "EmployerManage",
         "EmployerIndex"
       ],
-      "hub": null,
-      "sections": [],
+      "hub": "EmployerIndex",
+      "sections": [
+        "EmployerManage",
+        "EmployerStart"
+      ],
       "then": []
     },
     {
-      "name": "Provider: Navigation Between Manage and Main Reservations",
-      "description": "Providers switch between their reservations management dashboard and the provider main reservations page.",
+      "name": "Create a New Employer Reservation",
+      "description": "Employers start the process of creating a new reservation, selecting legal entity and course.",
       "kind": "linear",
       "steps": [
-        "ProviderIndex",
-        "ProviderManage",
-        "ProviderIndex"
+        "EmployerIndex",
+        "EmployerStart",
+        "EmployerSelectLegalEntity",
+        "EmployerSelectCourse"
       ],
       "hub": null,
       "sections": [],
       "then": []
     },
     {
-      "name": "Provider: Handle Employer Agreement Not Signed",
-      "description": "Providers attempting to reserve for an employer with an unsigned agreement are shown an information page, then returned.",
+      "name": "Manage Reservations as Provider",
+      "description": "Providers access their reservation dashboard and manage their existing reservations.",
+      "kind": "hub",
+      "steps": [
+        "ProviderIndex"
+      ],
+      "hub": "ProviderIndex",
+      "sections": [
+        "ProviderManage",
+        "ProviderStart"
+      ],
+      "then": []
+    },
+    {
+      "name": "Handle Provider Employer Agreement Not Signed",
+      "description": "Providers are notified if the employer agreement is not signed and can return to employer selection.",
       "kind": "linear",
       "steps": [
         "ProviderChooseEmployer",
@@ -934,16 +1116,43 @@
       "hub": null,
       "sections": [],
       "then": []
+    },
+    {
+      "name": "Provider Makes a Reservation",
+      "description": "A provider starts, selects an employer, confirms, and chooses apprenticeship training for a new reservation.",
+      "kind": "linear",
+      "steps": [
+        "ProviderStart",
+        "ProviderChooseEmployer",
+        "ProviderConfirmEmployer",
+        "ProviderApprenticeshipTraining"
+      ],
+      "hub": null,
+      "sections": [],
+      "then": []
+    },
+    {
+      "name": "Employer Creates a Reservation",
+      "description": "An employer starts the reservation process, selects a legal entity, and then selects a course.",
+      "kind": "linear",
+      "steps": [
+        "EmployerStart",
+        "EmployerSelectLegalEntity",
+        "EmployerSelectCourse"
+      ],
+      "hub": null,
+      "sections": [],
+      "then": []
     }
   ],
   "journeyWarnings": [
-    "Journey 'Employer: Manage Reservations' was dropped: a hub needs at least 2 sections.",
-    "Journey 'Employer: Select Course Guidance' was dropped: a linear journey needs at least 3 steps and no hub, sections or then.",
-    "Journey 'Provider: Manage Reservations' was dropped: a hub needs at least 2 sections.",
-    "Journey 'Provider: Agreement Not Signed' was dropped: a linear journey needs at least 3 steps and no hub, sections or then.",
-    "Journey 'Provider: Review and Complete Reservation' was dropped: there is no transition ProviderReview -> ProviderPostReview.",
-    "Journey 'Employer: Owner Sign Agreement' was dropped: a linear journey needs at least 3 steps and no hub, sections or then.",
-    "Journey 'Employer: Transactor Sign Agreement' was dropped: a linear journey needs at least 3 steps and no hub, sections or then.",
-    "Journey 'Provider: Complete Reservation Review and Submit' was dropped: a linear journey needs at least 3 steps and no hub, sections or then."
+    "Journey 'Change Employer Account Email' was dropped: a linear journey needs at least 3 steps and no hub, sections or then.",
+    "Journey 'Change Employer Account Password' was dropped: a linear journey needs at least 3 steps and no hub, sections or then.",
+    "Journey 'Employer Agreement Signing (Owner)' was dropped: a linear journey needs at least 3 steps and no hub, sections or then.",
+    "Journey 'Employer Agreement Signing (Transactor)' was dropped: a linear journey needs at least 3 steps and no hub, sections or then.",
+    "Journey 'Respond to Rule Notifications (Employer)' was dropped: a linear journey needs at least 3 steps and no hub, sections or then.",
+    "Journey 'Complete Provider Reservation' was dropped: there is no transition ProviderApprenticeshipTraining -> ProviderCompleted.",
+    "Journey 'Delete a Provider Reservation' was dropped: a linear journey needs at least 3 steps and no hub, sections or then.",
+    "Journey 'Provider Reviews and Completes a Reservation' was dropped: a linear journey needs at least 3 steps and no hub, sections or then."
   ]
 }

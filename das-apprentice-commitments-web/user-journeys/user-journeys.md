@@ -1,121 +1,145 @@
 # User journeys: SkillsFundingAgency/das-apprentice-commitments-web
 
-Generated from `main/src`: 19 pages, 11 transitions, 9 journeys. 🔒 means sign-in is required. Dotted arrows return to a hub.
+Generated from `main/src`: 19 pages, 11 transitions, 7 journeys. 🔒 means sign-in is required. Dotted arrows return to a hub.
 
-## Review and Confirm Apprenticeship Details
+## Accept terms and access dashboard
 
-A signed-in apprentice views an overview of their account, reviews, and confirms their apprenticeship details.
+After being prompted to accept the service terms, the apprentice accesses their dashboard.
 
 ```mermaid
 flowchart LR
-  p0["Index 🔒"] --> p1["Apprenticeships/Index 🔒"]
-  p1["Apprenticeships/Index 🔒"] -->|"after generating a confirmation model for the apprentice successfully"| p2["ConfirmYourApprenticeship 🔒"]
+  p0["Apprenticeships/Index 🔒"] -->|"when terms of use have not been accepted"| p1["Apprenticeships/Terms"]
+  p1["Apprenticeships/Terms"] -->|"after accepting the terms and conditions"| p0["Apprenticeships/Index 🔒"]
 ```
 
-## Accept Terms and Set Up Account
+## Find and confirm your apprenticeship
 
-A newly signed-in apprentice accepts terms and conditions before accessing their apprenticeship overview.
+A registered apprentice finds and confirms their apprenticeship using their details, unique learner number, and confirmation steps.
 
 ```mermaid
 flowchart LR
-  p0["Index 🔒"] --> p1["Apprenticeships/Index 🔒"]
-  p1["Apprenticeships/Index 🔒"] -->|"if the apprentice has not accepted the terms of use"| p2["Apprenticeships/Terms"]
-  p2["Apprenticeships/Terms"] -->|"after confirming acceptance of the terms and conditions"| p1["Apprenticeships/Index 🔒"]
+  p0["Apprenticeships/Index 🔒"] -->|"when registration information is incomplete or email does not match any registration record"| p1["CheckYourDetails 🔒"]
+  p1["CheckYourDetails 🔒"] -->|"when multiple matching registrations found"| p2["CheckUln 🔒"]
+  p2["CheckUln 🔒"] -->|"when the ULN matches an active apprenticeship"| p3["ConfirmYourApprenticeship 🔒"]
 ```
 
-## Find and Confirm Apprenticeship by Personal Details
+## Find and confirm your apprenticeship (direct path)
 
-An apprentice enters their details to locate their apprenticeship, resolves ambiguity by providing a ULN if needed, and confirms the details.
+An apprentice with just one matching registration can confirm their apprenticeship without providing ULN.
 
 ```mermaid
 flowchart LR
-  p0["Apprenticeships/Index 🔒"] -->|"if the apprentice's details such as first or last name are missing, or if registration by email fails"| p1["CheckYourDetails 🔒"]
-  p1["CheckYourDetails 🔒"] -->|"if exactly one registration is found for the details entered"| p2["ConfirmYourApprenticeship 🔒"]
+  p0["Apprenticeships/Index 🔒"] -->|"when registration information is incomplete or email does not match any registration record"| p1["CheckYourDetails 🔒"]
+  p1["CheckYourDetails 🔒"] -->|"when exactly one matching registration found"| p2["ConfirmYourApprenticeship 🔒"]
 ```
 
-## Find and Confirm Apprenticeship with Multiple Matches
+## Apprentice finds and confirms their apprenticeship
 
-An apprentice enters personal details, uses their ULN to resolve multiple matches, and confirms their apprenticeship.
+An apprentice accesses their account, is prompted to accept terms, confirms details, and completes their registration.
 
 ```mermaid
 flowchart LR
-  p0["Apprenticeships/Index 🔒"] -->|"if the apprentice's details such as first or last name are missing, or if registration by email fails"| p1["CheckYourDetails 🔒"]
-  p1["CheckYourDetails 🔒"] -->|"if multiple registrations are found for the details entered"| p2["CheckUln 🔒"]
-  p2["CheckUln 🔒"] -->|"if the entered ULN matches an active apprenticeship"| p3["ConfirmYourApprenticeship 🔒"]
+  p0["Index 🔒"] -->|"always when this page loads"| p1["Apprenticeships/Index 🔒"]
+  p1["Apprenticeships/Index 🔒"] -->|"when terms of use have not been accepted"| p2["Apprenticeships/Terms"]
+  p2["Apprenticeships/Terms"] -->|"after accepting the terms and conditions"| p1["Apprenticeships/Index 🔒"]
+  p1["Apprenticeships/Index 🔒"] -->|"when registration information is incomplete or email does not match any registration record"| p3["CheckYourDetails 🔒"]
+  p3["CheckYourDetails 🔒"] -->|"when exactly one matching registration found"| p4["ConfirmYourApprenticeship 🔒"]
 ```
 
-## Onboard and Confirm Apprenticeship Details
+## Find apprenticeship via personal details or unique learner number
 
-A user enters their details, locates their apprenticeship, and confirms their apprenticeship information.
+An apprentice who is prompted for further details can try both personal details and unique learner number to find their apprenticeship.
 
 ```mermaid
 flowchart LR
-  p0["Apprenticeships/Index 🔒"] -->|"if the apprentice's details such as first or last name are missing, or if registration by email fails"| p1["CheckYourDetails 🔒"]
-  p1["CheckYourDetails 🔒"] -->|"if exactly one registration is found for the details entered"| p2["ConfirmYourApprenticeship 🔒"]
+  p0["Index 🔒"] -->|"always when this page loads"| p1["Apprenticeships/Index 🔒"]
+  p1["Apprenticeships/Index 🔒"] -->|"when registration information is incomplete or email does not match any registration record"| p2["CheckYourDetails 🔒"]
+  p2["CheckYourDetails 🔒"] -->|"when multiple matching registrations found"| p3["CheckUln 🔒"]
+  p3["CheckUln 🔒"] -->|"when the ULN matches an active apprenticeship"| p4["ConfirmYourApprenticeship 🔒"]
 ```
 
-## Onboard with Multiple Registrations
+## Handle account not found after details entry
 
-A user enters their details, is asked for their ULN due to multiple records, and confirms their apprenticeship.
+If an apprentice cannot be matched via details or ULN, they are shown guidance that no account was found.
 
 ```mermaid
 flowchart LR
-  p0["Apprenticeships/Index 🔒"] -->|"if the apprentice's details such as first or last name are missing, or if registration by email fails"| p1["CheckYourDetails 🔒"]
-  p1["CheckYourDetails 🔒"] -->|"if multiple registrations are found for the details entered"| p2["CheckUln 🔒"]
-  p2["CheckUln 🔒"] -->|"if the entered ULN matches an active apprenticeship"| p3["ConfirmYourApprenticeship 🔒"]
+  p0["Index 🔒"] -->|"always when this page loads"| p1["Apprenticeships/Index 🔒"]
+  p1["Apprenticeships/Index 🔒"] -->|"when registration information is incomplete or email does not match any registration record"| p2["CheckYourDetails 🔒"]
+  p2["CheckYourDetails 🔒"] -->|"when no matching registrations found or on error"| p3["AccountNotFound 🔒"]
 ```
 
-## Account Not Found After Details Entry
+## Handle account not found after ULN entry
 
-A user begins onboarding but is shown an account not found message after entering their details.
-
-```mermaid
-flowchart LR
-  p0["Apprenticeships/Index 🔒"] -->|"if the apprentice's details such as first or last name are missing, or if registration by email fails"| p1["CheckYourDetails 🔒"]
-  p1["CheckYourDetails 🔒"] -->|"if no registrations are found for provided details or an error occurs"| p2["AccountNotFound 🔒"]
-```
-
-## Account Not Found After ULN Entry
-
-A user enters their details and ULN but is shown an account not found message.
+If multiple registrations are found, apprentice can enter a ULN and, if not found, is informed the account cannot be found.
 
 ```mermaid
 flowchart LR
-  p0["Apprenticeships/Index 🔒"] -->|"if the apprentice's details such as first or last name are missing, or if registration by email fails"| p1["CheckYourDetails 🔒"]
-  p1["CheckYourDetails 🔒"] -->|"if multiple registrations are found for the details entered"| p2["CheckUln 🔒"]
-  p2["CheckUln 🔒"] -->|"if no matching apprenticeship is found with the given ULN"| p3["AccountNotFound 🔒"]
-```
-
-## Accept Terms to Access Apprenticeship Overview
-
-A user who has not accepted the terms completes this step before accessing their apprenticeship overview.
-
-```mermaid
-flowchart LR
-  p0["Apprenticeships/Index 🔒"] -->|"if the apprentice has not accepted the terms of use"| p1["Apprenticeships/Terms"]
-  p1["Apprenticeships/Terms"] -->|"after confirming acceptance of the terms and conditions"| p0["Apprenticeships/Index 🔒"]
+  p0["Index 🔒"] -->|"always when this page loads"| p1["Apprenticeships/Index 🔒"]
+  p1["Apprenticeships/Index 🔒"] -->|"when registration information is incomplete or email does not match any registration record"| p2["CheckYourDetails 🔒"]
+  p2["CheckYourDetails 🔒"] -->|"when multiple matching registrations found"| p3["CheckUln 🔒"]
+  p3["CheckUln 🔒"] -->|"when the ULN does not match any active apprenticeship"| p4["AccountNotFound 🔒"]
 ```
 
 ## Pages
 
 | Page | Route | Sign-in | Purpose |
 | --- | --- | --- | --- |
-| `/AccountNotFound` | `/AccountNotFound` | Yes | Informs the user that their apprenticeship account was not found and provides guidance. |
-| `/Apprenticeships/CannotConfirm` | `/apprenticeships/{apprenticeshipId}/cannotconfirm/{entity?}` | Yes | Shows the apprentice why they cannot confirm their apprenticeship details and advises what to do next depending on which details are incorrect. |
-| `/Apprenticeships/ConfirmYourApprenticeshipDetails` | `/apprenticeships/{apprenticeshipId}/checkyourapprenticeshipdetails` | Yes | Allows the apprentice to review and confirm that their apprenticeship details are correct. |
-| `/Apprenticeships/Index` | `/apprenticeships` | Yes | Displays an overview of the apprentice's account and initiates onboarding or redirects based on their status. |
+| `/AccountNotFound` | `/AccountNotFound` | Yes | Informs the user that their apprenticeship account could not be found and provides guidance. |
+| `/Apprenticeships/CannotConfirm` | `/apprenticeships/{apprenticeshipId}/cannotconfirm/{entity?}` | Yes | Informs the apprentice they cannot confirm their apprenticeship because their employer, provider, apprenticeship details, or other information are incorrect. |
+| `/Apprenticeships/ConfirmYourApprenticeshipDetails` | `/apprenticeships/{apprenticeshipId}/checkyourapprenticeshipdetails` | Yes | Lets the apprentice review their apprenticeship details and confirm they are correct before proceeding. |
+| `/Apprenticeships/Index` | `/apprenticeships` | Yes | Provides an overview or starting point for the apprentice’s account, handling redirections based on account and apprenticeship status. |
 | `/Apprenticeships/Terms` | `/Apprenticeships/Terms` | No | Lets the apprentice accept the terms and conditions to use the service. |
 | `/Apprenticeships/TransactionComplete` | `/apprenticeships/{apprenticeshipId}/transactioncomplete` | Yes | Shows confirmation that the apprentice has confirmed their apprenticeship details. |
-| `/Apprenticeships/View` | `/apprenticeships/{apprenticeshipId}/{handler?}` | Yes | Displays the apprentice's detailed apprenticeship information. |
-| `/ChangeYourEmailAddress` | `/ChangeYourEmailAddress` | Yes | Redirects the apprentice to a service where they can change their email address. |
-| `/CheckUln` | `/CheckUln` | Yes | Asks the apprentice for their Unique Learner Number (ULN) to help find their apprenticeship. |
-| `/CheckYourDetails` | `/CheckYourDetails` | Yes | Lets the apprentice enter their personal details to help locate their apprenticeship account. |
-| `/ConfirmYourApprenticeship` | `/ConfirmYourApprenticeship` | Yes | Lets the apprentice review and confirm the details of their apprenticeship. |
-| `/ConfirmYourIdentityNew` | `/ConfirmYourIdentityNew` | Yes | Processes user authentication to ensure the current identity is correct before continuing. |
-| `/Index` | `/Index` | Yes | Provides the home page and redirects users to the apprenticeships overview. |
-| `/Privacy` | `/Privacy` | Yes | Displays the site's privacy policy to the user. |
+| `/Apprenticeships/View` | `/apprenticeships/{apprenticeshipId}/{handler?}` | Yes | Displays details of the apprentice's apprenticeship. |
+| `/ChangeYourEmailAddress` | `/ChangeYourEmailAddress` | Yes | Redirects the user to the email change service. |
+| `/CheckUln` | `/CheckUln` | Yes | Lets the user submit their unique learner number (ULN) to find their apprenticeship. |
+| `/CheckYourDetails` | `/CheckYourDetails` | Yes | Lets the user confirm their personal details to help find their apprenticeship. |
+| `/ConfirmYourApprenticeship` | `/ConfirmYourApprenticeship` | Yes | Lets the apprentice review their apprenticeship details and confirm they are correct. |
+| `/ConfirmYourIdentityNew` | `/ConfirmYourIdentityNew` | Yes | Ensures any already logged-in user is signed out after entering a password as a new user. |
+| `/Index` | `/Index` | Yes | Home page for the application; currently redirects to the apprenticeships list. |
+| `/Privacy` | `/Privacy` | Yes | Shows the site's privacy policy. |
 | `/SignOut` | `/SignOut` | Yes | Signs the user out of the application. |
-| `Legacy.Account` | `/account` | No | Redirects the user to their personal details section. |
-| `Legacy.Register` | `/termsofuse` | No | Redirects the user to the terms of use section. |
-| `Profile.Confirm` | `/profile/{clientId}/changeemail/confirm` | Yes | Redirects the user to confirm their email change for their profile. |
-| `Registration.Register` | `/register` | Yes | Matches the apprentice to their apprenticeship registration and redirects based on success or failure. |
+| `Legacy.Account` | `/account` | No | Redirects the user to the Personal Details section. |
+| `Legacy.Register` | `/termsofuse` | No | Redirects the user to the Terms of Use section. |
+| `Profile.Confirm` | `/profile/{clientId}/changeemail/confirm` | Yes | Redirects the user to confirm a change of email address for their profile. |
+| `Registration.Register` | `/register` | Yes | Matches the apprentice to an apprenticeship using a registration code, or redirects to appropriate pages based on account status. |
+
+## Form fields
+
+Field definitions only: no values a user enters are recorded.
+
+### `/Apprenticeships/ConfirmYourApprenticeshipDetails`
+
+| Field | Type | Label | Required | Rules | Options |
+| --- | --- | --- | --- | --- | --- |
+| `accept-terms` | checkboxes | — | — | must be checked to enable form submission | I confirm that my apprenticeship details are correct |
+
+### `/Apprenticeships/Terms`
+
+| Field | Type | Label | Required | Rules | Options |
+| --- | --- | --- | --- | --- | --- |
+| `TermsOfUseAccepted` | checkboxes | — | Yes | required; must be checked | I accept the terms and conditions and consent to the use of cookies |
+
+### `/CheckUln`
+
+| Field | Type | Label | Required | Rules | Options |
+| --- | --- | --- | --- | --- | --- |
+| `Uln` | text | Your ULN | — | required | — |
+
+### `/CheckYourDetails`
+
+| Field | Type | Label | Required | Rules | Options |
+| --- | --- | --- | --- | --- | --- |
+| `FirstName` | text | First name | — | required; must not be empty | — |
+| `LastName` | text | Last name | — | required; must not be empty | — |
+| `DateOfBirth.Day` | text | Day | — | required; must be a valid day | — |
+| `DateOfBirth.Month` | text | Month | — | required; must be a valid month | — |
+| `DateOfBirth.Year` | text | Year | — | required; must be a valid year | — |
+
+### `/ConfirmYourApprenticeship`
+
+| Field | Type | Label | Required | Rules | Options |
+| --- | --- | --- | --- | --- | --- |
+| `accept-terms` | checkboxes | — | — | must be checked; apprentice cannot continue unless confirmed | I confirm that my apprenticeship details are correct |
+

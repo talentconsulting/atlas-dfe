@@ -19,7 +19,8 @@
       "line": 269,
       "requiresAuthentication": false,
       "isEntryPoint": true,
-      "purpose": "Notifies the user that their information could not be matched to any results and provides a reference number."
+      "purpose": "Shows a message when the system cannot match the user's information to any results.",
+      "fields": []
     },
     {
       "id": "AuthoriseController.CheckAnswers",
@@ -35,7 +36,8 @@
       "line": 191,
       "requiresAuthentication": true,
       "isEntryPoint": false,
-      "purpose": "Lets the user review and confirm their entered details for matching."
+      "purpose": "Allows the user to review the information they have entered before submitting.",
+      "fields": []
     },
     {
       "id": "AuthoriseController.KnowYear",
@@ -51,7 +53,42 @@
       "line": 321,
       "requiresAuthentication": true,
       "isEntryPoint": false,
-      "purpose": "Allows the user to specify the year of their qualification or result."
+      "purpose": "Asks the user if they know the year they completed their apprenticeship and to enter the year if so.",
+      "fields": [
+        {
+          "name": "KnowYear",
+          "control": "radios",
+          "label": "Do you know the year you completed your apprenticeship?",
+          "options": [
+            {
+              "value": "true",
+              "label": "Yes"
+            },
+            {
+              "value": "false",
+              "label": "No"
+            }
+          ],
+          "dataType": "bool?",
+          "required": null,
+          "constraints": [],
+          "validation": "required",
+          "line": 38,
+          "sourceFile": "src/SFA.DAS.DigitalCertificates.Web/Views/Authorise/KnowYear.cshtml"
+        },
+        {
+          "name": "YearCompleted",
+          "control": "text",
+          "label": "Year you completed your apprenticeship, for example 2017",
+          "options": [],
+          "dataType": "int?",
+          "required": null,
+          "constraints": [],
+          "validation": "required when KnowYear is true; must be a 4-digit number between 2012 and the current year",
+          "line": 46,
+          "sourceFile": "src/SFA.DAS.DigitalCertificates.Web/Views/Authorise/KnowYear.cshtml"
+        }
+      ]
     },
     {
       "id": "AuthoriseController.KnowYourUln",
@@ -67,7 +104,42 @@
       "line": 72,
       "requiresAuthentication": true,
       "isEntryPoint": false,
-      "purpose": "Allows the user to enter their Unique Learner Number (ULN) to try to match their results."
+      "purpose": "Asks the user if they know their unique learner number (ULN) and to enter it if so.",
+      "fields": [
+        {
+          "name": "KnowUln",
+          "control": "radios",
+          "label": "Do you know your unique learner number?",
+          "options": [
+            {
+              "value": "true",
+              "label": "Yes"
+            },
+            {
+              "value": "false",
+              "label": "No, I'll answer more questions"
+            }
+          ],
+          "dataType": "bool?",
+          "required": null,
+          "constraints": [],
+          "validation": "required",
+          "line": 51,
+          "sourceFile": "src/SFA.DAS.DigitalCertificates.Web/Views/Authorise/KnowYourUln.cshtml"
+        },
+        {
+          "name": "Uln",
+          "control": "text",
+          "label": "Unique learner number",
+          "options": [],
+          "dataType": "long?",
+          "required": null,
+          "constraints": [],
+          "validation": "required when KnowUln is true; must be a 10-digit number",
+          "line": 62,
+          "sourceFile": "src/SFA.DAS.DigitalCertificates.Web/Views/Authorise/KnowYourUln.cshtml"
+        }
+      ]
     },
     {
       "id": "AuthoriseController.NeedMoreInformation",
@@ -82,7 +154,8 @@
       "line": 49,
       "requiresAuthentication": true,
       "isEntryPoint": false,
-      "purpose": "Informs the user that more information is needed to attempt a match with their results."
+      "purpose": "Informs the user that more information is needed to try to match them with their apprenticeship results.",
+      "fields": []
     },
     {
       "id": "AuthoriseController.NeedMoreInformationContinue",
@@ -97,7 +170,8 @@
       "line": 63,
       "requiresAuthentication": true,
       "isEntryPoint": false,
-      "purpose": "Processes the user's action to continue after being informed more information is needed."
+      "purpose": "Clears previous answers and starts the identification process again.",
+      "fields": []
     },
     {
       "id": "AuthoriseController.NotFound",
@@ -112,7 +186,8 @@
       "line": 296,
       "requiresAuthentication": false,
       "isEntryPoint": true,
-      "purpose": "Informs the user that no relevant results were found for their information."
+      "purpose": "Shows a message when the system cannot find any user data for the provided details.",
+      "fields": []
     },
     {
       "id": "AuthoriseController.SelectCourse",
@@ -128,7 +203,21 @@
       "line": 112,
       "requiresAuthentication": true,
       "isEntryPoint": false,
-      "purpose": "Lets the user select their course from a list to help match their results."
+      "purpose": "Lets the user select their course from a list.",
+      "fields": [
+        {
+          "name": "SelectedCourseCode",
+          "control": "radios",
+          "label": "Select your course",
+          "options": [],
+          "dataType": "string?",
+          "required": null,
+          "constraints": [],
+          "validation": "required",
+          "line": 45,
+          "sourceFile": "src/SFA.DAS.DigitalCertificates.Web/Views/Authorise/SelectCourse.cshtml"
+        }
+      ]
     },
     {
       "id": "AuthoriseController.SelectProvider",
@@ -144,7 +233,21 @@
       "line": 158,
       "requiresAuthentication": true,
       "isEntryPoint": false,
-      "purpose": "Lets the user select their training provider to assist with matching."
+      "purpose": "Lets the user select their training provider from a list.",
+      "fields": [
+        {
+          "name": "SelectedProviderName",
+          "control": "radios",
+          "label": "Who was your training provider?",
+          "options": [],
+          "dataType": "string?",
+          "required": null,
+          "constraints": [],
+          "validation": "required unless SelectedProviderUnknown is true",
+          "line": 43,
+          "sourceFile": "src/SFA.DAS.DigitalCertificates.Web/Views/Authorise/SelectProvider.cshtml"
+        }
+      ]
     },
     {
       "id": "CertificatesController.AddAddress",
@@ -160,7 +263,81 @@
       "line": 75,
       "requiresAuthentication": true,
       "isEntryPoint": false,
-      "purpose": "Allows the user to add a delivery address for their certificate."
+      "purpose": "Lets the user manually add a delivery address for a certificate.",
+      "fields": [
+        {
+          "name": "Organisation",
+          "control": "text",
+          "label": "Organisation (optional)",
+          "options": [],
+          "dataType": "string?",
+          "required": null,
+          "constraints": [],
+          "validation": "optional; at most 200 characters; must not contain HTML tags",
+          "line": 37,
+          "sourceFile": "src/SFA.DAS.DigitalCertificates.Web/Views/Certificates/AddAddress.cshtml"
+        },
+        {
+          "name": "AddressLine1",
+          "control": "text",
+          "label": "Address line 1",
+          "options": [],
+          "dataType": "string?",
+          "required": null,
+          "constraints": [],
+          "validation": "required; at most 200 characters; must not contain HTML tags",
+          "line": 45,
+          "sourceFile": "src/SFA.DAS.DigitalCertificates.Web/Views/Certificates/AddAddress.cshtml"
+        },
+        {
+          "name": "AddressLine2",
+          "control": "text",
+          "label": "Address line 2 (optional)",
+          "options": [],
+          "dataType": "string?",
+          "required": null,
+          "constraints": [],
+          "validation": "optional; at most 200 characters; must not contain HTML tags",
+          "line": 53,
+          "sourceFile": "src/SFA.DAS.DigitalCertificates.Web/Views/Certificates/AddAddress.cshtml"
+        },
+        {
+          "name": "TownOrCity",
+          "control": "text",
+          "label": "Town or city",
+          "options": [],
+          "dataType": "string?",
+          "required": null,
+          "constraints": [],
+          "validation": "required; at most 200 characters; must not contain HTML tags",
+          "line": 61,
+          "sourceFile": "src/SFA.DAS.DigitalCertificates.Web/Views/Certificates/AddAddress.cshtml"
+        },
+        {
+          "name": "County",
+          "control": "text",
+          "label": "County (optional)",
+          "options": [],
+          "dataType": "string?",
+          "required": null,
+          "constraints": [],
+          "validation": "optional; at most 200 characters; must not contain HTML tags",
+          "line": 69,
+          "sourceFile": "src/SFA.DAS.DigitalCertificates.Web/Views/Certificates/AddAddress.cshtml"
+        },
+        {
+          "name": "Postcode",
+          "control": "text",
+          "label": "Postcode",
+          "options": [],
+          "dataType": "string?",
+          "required": null,
+          "constraints": [],
+          "validation": "required; must not contain HTML tags; must match full UK postcode format; must exist in the postcode lookup",
+          "line": 77,
+          "sourceFile": "src/SFA.DAS.DigitalCertificates.Web/Views/Certificates/AddAddress.cshtml"
+        }
+      ]
     },
     {
       "id": "CertificatesController.CertificateFramework",
@@ -175,7 +352,8 @@
       "line": 229,
       "requiresAuthentication": true,
       "isEntryPoint": false,
-      "purpose": "Displays details of a framework certificate to the user."
+      "purpose": "Displays the user's framework certificate.",
+      "fields": []
     },
     {
       "id": "CertificatesController.CertificateSharingLink",
@@ -190,7 +368,33 @@
       "line": 370,
       "requiresAuthentication": true,
       "isEntryPoint": false,
-      "purpose": "Shows the sharing link for a certificate and options for sharing."
+      "purpose": "Displays a sharing link for a certificate and allows input of an email address to share by email.",
+      "fields": [
+        {
+          "name": "secureWebLink",
+          "control": "text",
+          "label": null,
+          "options": [],
+          "dataType": null,
+          "required": null,
+          "constraints": [],
+          "validation": null,
+          "line": 47,
+          "sourceFile": "src/SFA.DAS.DigitalCertificates.Web/Views/Certificates/CertificateSharingLink.cshtml"
+        },
+        {
+          "name": "EmailAddress",
+          "control": "email",
+          "label": "Share by email",
+          "options": [],
+          "dataType": "string",
+          "required": null,
+          "constraints": [],
+          "validation": null,
+          "line": 73,
+          "sourceFile": "src/SFA.DAS.DigitalCertificates.Web/Views/Certificates/CertificateSharingLink.cshtml"
+        }
+      ]
     },
     {
       "id": "CertificatesController.CertificateStandard",
@@ -205,7 +409,8 @@
       "line": 218,
       "requiresAuthentication": true,
       "isEntryPoint": false,
-      "purpose": "Displays details of a standard certificate to the user."
+      "purpose": "Displays the user's standard certificate.",
+      "fields": []
     },
     {
       "id": "CertificatesController.CertificatesList",
@@ -220,7 +425,8 @@
       "line": 191,
       "requiresAuthentication": true,
       "isEntryPoint": false,
-      "purpose": "Shows a list of certificates available to the user."
+      "purpose": "Shows a list of certificates available for the user.",
+      "fields": []
     },
     {
       "id": "CertificatesController.CheckAndSubmit",
@@ -236,7 +442,8 @@
       "line": 160,
       "requiresAuthentication": true,
       "isEntryPoint": false,
-      "purpose": "Lets the user check and confirm their certificate delivery request before submission."
+      "purpose": "Lets the user check and confirm their delivery address before requesting certificate delivery.",
+      "fields": []
     },
     {
       "id": "CertificatesController.CheckQualification",
@@ -252,7 +459,8 @@
       "line": 487,
       "requiresAuthentication": false,
       "isEntryPoint": true,
-      "purpose": "Lets users check the qualification linked to a certificate sharing link."
+      "purpose": "Lets a visitor check a certificate's details using a sharing code.",
+      "fields": []
     },
     {
       "id": "CertificatesController.CheckQualificationExpired",
@@ -267,7 +475,8 @@
       "line": 593,
       "requiresAuthentication": false,
       "isEntryPoint": false,
-      "purpose": "Shows that the certificate sharing link has expired or cannot be used."
+      "purpose": "Informs the user that the certificate sharing link or qualification has expired.",
+      "fields": []
     },
     {
       "id": "CertificatesController.ConfirmShareByEmail",
@@ -283,7 +492,8 @@
       "line": 441,
       "requiresAuthentication": true,
       "isEntryPoint": false,
-      "purpose": "Allows users to confirm sharing a certificate by email."
+      "purpose": "Lets the user confirm sharing their certificate by email before sending.",
+      "fields": []
     },
     {
       "id": "CertificatesController.ContactUs",
@@ -298,7 +508,8 @@
       "line": 283,
       "requiresAuthentication": true,
       "isEntryPoint": false,
-      "purpose": "Lets users contact support or request help."
+      "purpose": "Lets the user view or interact with a contact/support page related to certificates.",
+      "fields": []
     },
     {
       "id": "CertificatesController.ContactUsCreate",
@@ -313,7 +524,8 @@
       "line": 321,
       "requiresAuthentication": true,
       "isEntryPoint": false,
-      "purpose": "Creates a new contact request for non-specific help."
+      "purpose": "Initiates a new contact/support request related to certificates.",
+      "fields": []
     },
     {
       "id": "CertificatesController.ContactUsForCertificate",
@@ -328,7 +540,8 @@
       "line": 302,
       "requiresAuthentication": true,
       "isEntryPoint": false,
-      "purpose": "Lets users contact support about a specific certificate."
+      "purpose": "Lets the user contact support about a specific certificate.",
+      "fields": []
     },
     {
       "id": "CertificatesController.ContactUsForCertificateCreate",
@@ -343,7 +556,8 @@
       "line": 332,
       "requiresAuthentication": true,
       "isEntryPoint": false,
-      "purpose": "Creates a new contact request related to a specific certificate."
+      "purpose": "Initiates a new contact/support request about a specific certificate.",
+      "fields": []
     },
     {
       "id": "CertificatesController.CreateCertificateSharing",
@@ -359,7 +573,8 @@
       "line": 351,
       "requiresAuthentication": true,
       "isEntryPoint": false,
-      "purpose": "Allows users to create and manage certificate sharing links."
+      "purpose": "Allows the user to manage sharing options and links for a certificate.",
+      "fields": []
     },
     {
       "id": "CertificatesController.DeleteSharing",
@@ -375,7 +590,8 @@
       "line": 388,
       "requiresAuthentication": true,
       "isEntryPoint": false,
-      "purpose": "Lets users delete a certificate sharing link."
+      "purpose": "Lets the user confirm or view the deletion of a certificate sharing link.",
+      "fields": []
     },
     {
       "id": "CertificatesController.DownloadCertificateFrameworkPdf",
@@ -390,7 +606,8 @@
       "line": 240,
       "requiresAuthentication": true,
       "isEntryPoint": false,
-      "purpose": "Lets users download the PDF version of a framework certificate."
+      "purpose": "Enables the user to download the framework version of their certificate as a PDF.",
+      "fields": []
     },
     {
       "id": "CertificatesController.DownloadCertificateStandardPdf",
@@ -405,7 +622,8 @@
       "line": 261,
       "requiresAuthentication": true,
       "isEntryPoint": true,
-      "purpose": "Lets users download the PDF version of a standard certificate."
+      "purpose": "Enables the user to download the standard version of their certificate as a PDF.",
+      "fields": []
     },
     {
       "id": "CertificatesController.DownloadSharedCertificateFrameworkPdf",
@@ -420,7 +638,8 @@
       "line": 551,
       "requiresAuthentication": false,
       "isEntryPoint": false,
-      "purpose": "Allows download of a shared framework certificate PDF via a sharing link."
+      "purpose": "Allows an external user with a sharing link to download a shared framework certificate as a PDF.",
+      "fields": []
     },
     {
       "id": "CertificatesController.DownloadSharedCertificateStandardPdf",
@@ -435,7 +654,8 @@
       "line": 572,
       "requiresAuthentication": false,
       "isEntryPoint": true,
-      "purpose": "Allows download of a shared standard certificate PDF via a sharing link."
+      "purpose": "Allows an external user with a sharing link to download a shared standard certificate as a PDF.",
+      "fields": []
     },
     {
       "id": "CertificatesController.EmailSent",
@@ -450,7 +670,8 @@
       "line": 473,
       "requiresAuthentication": true,
       "isEntryPoint": false,
-      "purpose": "Displays confirmation that the certificate sharing email has been sent."
+      "purpose": "Shows the user confirmation and details after a certificate sharing email has been sent.",
+      "fields": []
     },
     {
       "id": "CertificatesController.PrintRequestConfirmation",
@@ -465,7 +686,8 @@
       "line": 182,
       "requiresAuthentication": true,
       "isEntryPoint": false,
-      "purpose": "Shows confirmation that a print request for a certificate has been made."
+      "purpose": "Provides confirmation that a print (delivery) request for a certificate has been made.",
+      "fields": []
     },
     {
       "id": "CertificatesController.SelectAddress",
@@ -481,7 +703,21 @@
       "line": 94,
       "requiresAuthentication": true,
       "isEntryPoint": true,
-      "purpose": "Lets the user select an address for certificate delivery."
+      "purpose": "Lets the user search for and select an existing address for delivery of a certificate.",
+      "fields": [
+        {
+          "name": "SearchTerm",
+          "control": "text",
+          "label": "Select the address that you\u2019d like us to send your certificate to",
+          "options": [],
+          "dataType": "string?",
+          "required": null,
+          "constraints": [],
+          "validation": "required; at least 3 characters; must not contain HTML tags; must match a valid address from postcode lookup",
+          "line": 33,
+          "sourceFile": "src/SFA.DAS.DigitalCertificates.Web/Views/Certificates/SelectAddress.cshtml"
+        }
+      ]
     },
     {
       "id": "CertificatesController.ShareByEmail",
@@ -496,7 +732,8 @@
       "line": 420,
       "requiresAuthentication": true,
       "isEntryPoint": false,
-      "purpose": "Lets the user send a certificate sharing link to someone's email address."
+      "purpose": "Lets the user submit an email address to share their certificate.",
+      "fields": []
     },
     {
       "id": "CertificatesController.SharedCertificateFramework",
@@ -511,7 +748,8 @@
       "line": 538,
       "requiresAuthentication": false,
       "isEntryPoint": false,
-      "purpose": "Shows a shared certificate for a framework once a sharing link is used."
+      "purpose": "Displays a shared copy of a framework apprenticeship certificate to users with a sharing link.",
+      "fields": []
     },
     {
       "id": "CertificatesController.SharedCertificateStandard",
@@ -526,7 +764,8 @@
       "line": 525,
       "requiresAuthentication": false,
       "isEntryPoint": false,
-      "purpose": "Shows a shared certificate for a standard once a sharing link is used."
+      "purpose": "Displays a shared copy of a standard apprenticeship certificate to users with a sharing link.",
+      "fields": []
     },
     {
       "id": "Home.AccessDenied",
@@ -541,7 +780,8 @@
       "line": 150,
       "requiresAuthentication": false,
       "isEntryPoint": true,
-      "purpose": "Informs the user they do not have access to the requested resource."
+      "purpose": "Informs the user that they do not have permission to access this resource.",
+      "fields": []
     },
     {
       "id": "HomeController.AccessibilityStatement",
@@ -556,7 +796,8 @@
       "line": 138,
       "requiresAuthentication": false,
       "isEntryPoint": true,
-      "purpose": "Displays the accessibility statement for the service."
+      "purpose": "Displays the accessibility statement for the service.",
+      "fields": []
     },
     {
       "id": "HomeController.Check",
@@ -572,7 +813,8 @@
       "line": 67,
       "requiresAuthentication": true,
       "isEntryPoint": true,
-      "purpose": "Lets the user check their identity before accessing digital certificates."
+      "purpose": "Lets the user confirm they wish to continue and checks account status before proceeding.",
+      "fields": []
     },
     {
       "id": "HomeController.CookieDetails",
@@ -587,7 +829,8 @@
       "line": 131,
       "requiresAuthentication": false,
       "isEntryPoint": true,
-      "purpose": "Shows details about cookies used by the website."
+      "purpose": "Shows details about the service's use of cookies.",
+      "fields": []
     },
     {
       "id": "HomeController.Cookies",
@@ -602,7 +845,30 @@
       "line": 103,
       "requiresAuthentication": false,
       "isEntryPoint": true,
-      "purpose": "Lets the user view and manage their cookie settings."
+      "purpose": "Lets the user select their preferences for analytics cookies.",
+      "fields": [
+        {
+          "name": "ConsentAnalyticsCookie",
+          "control": "radios",
+          "label": "Do you want to accept analytics cookies?",
+          "options": [
+            {
+              "value": "true",
+              "label": "Yes"
+            },
+            {
+              "value": "false",
+              "label": "No"
+            }
+          ],
+          "dataType": null,
+          "required": null,
+          "constraints": [],
+          "validation": "optional",
+          "line": 148,
+          "sourceFile": "src/SFA.DAS.DigitalCertificates.Web/Views/Home/Cookies.cshtml"
+        }
+      ]
     },
     {
       "id": "HomeController.Help",
@@ -617,7 +883,8 @@
       "line": 119,
       "requiresAuthentication": false,
       "isEntryPoint": true,
-      "purpose": "Provides help and information about digital certificates."
+      "purpose": "Provides help information for using the service.",
+      "fields": []
     },
     {
       "id": "HomeController.StartPage",
@@ -632,7 +899,8 @@
       "line": 55,
       "requiresAuthentication": false,
       "isEntryPoint": true,
-      "purpose": "Serves as the starting page for digital certificates."
+      "purpose": "The start page for the digital certificates service.",
+      "fields": []
     },
     {
       "id": "HomeController.Verified",
@@ -647,7 +915,8 @@
       "line": 94,
       "requiresAuthentication": true,
       "isEntryPoint": true,
-      "purpose": "Redirects the user after their account has been verified."
+      "purpose": "Redirects the user to their certificates list after verification.",
+      "fields": []
     },
     {
       "id": "Locations.Get",
@@ -662,7 +931,8 @@
       "line": 22,
       "requiresAuthentication": true,
       "isEntryPoint": true,
-      "purpose": "Lets the user search for locations, usually for address entry."
+      "purpose": "Returns locations matching the search term for address selection via JSON.",
+      "fields": []
     },
     {
       "id": "Service.ServiceSignOut",
@@ -677,7 +947,8 @@
       "line": 45,
       "requiresAuthentication": true,
       "isEntryPoint": true,
-      "purpose": "Signs the user out of the digital certificates service."
+      "purpose": "Signs the user out of the service and clears session data.",
+      "fields": []
     },
     {
       "id": "ServiceController.SignedOut",
@@ -692,7 +963,8 @@
       "line": 82,
       "requiresAuthentication": null,
       "isEntryPoint": true,
-      "purpose": "Shows confirmation that the user has signed out."
+      "purpose": "Informs the user they have signed out of the service.",
+      "fields": []
     }
   ],
   "transitions": [
@@ -700,7 +972,7 @@
       "from": "AuthoriseController.NeedMoreInformationContinue",
       "to": "AuthoriseController.KnowYourUln",
       "trigger": "redirect",
-      "condition": "always after posting",
+      "condition": null,
       "evidence": [
         "src/SFA.DAS.DigitalCertificates.Web/Controllers/AuthoriseController.cs:67"
       ]
@@ -709,7 +981,7 @@
       "from": "AuthoriseController.KnowYourUln",
       "to": "AuthoriseController.CheckAnswers",
       "trigger": "redirect",
-      "condition": "if returning to check and not short journey and match outcome is NoMatch",
+      "condition": "if match outcome is MultipleMatches or SingleMatch, or the user is returning to check (non-short journey) and match outcome is NoMatch",
       "evidence": [
         "src/SFA.DAS.DigitalCertificates.Web/Controllers/AuthoriseController.cs:94",
         "src/SFA.DAS.DigitalCertificates.Web/Controllers/AuthoriseController.cs:104"
@@ -728,7 +1000,7 @@
       "from": "AuthoriseController.SelectCourse",
       "to": "AuthoriseController.CheckAnswers",
       "trigger": "redirect",
-      "condition": "if returning to check and not short journey and match outcome is NoMatch, or if match outcome is MultipleMatches or SingleMatch",
+      "condition": "if match outcome is MultipleMatches or SingleMatch, or the user is returning to check (non-short journey) and match outcome is NoMatch",
       "evidence": [
         "src/SFA.DAS.DigitalCertificates.Web/Controllers/AuthoriseController.cs:139",
         "src/SFA.DAS.DigitalCertificates.Web/Controllers/AuthoriseController.cs:150"
@@ -747,7 +1019,7 @@
       "from": "AuthoriseController.SelectProvider",
       "to": "AuthoriseController.CheckAnswers",
       "trigger": "redirect",
-      "condition": "after saving selected provider",
+      "condition": null,
       "evidence": [
         "src/SFA.DAS.DigitalCertificates.Web/Controllers/AuthoriseController.cs:186"
       ]
@@ -756,7 +1028,7 @@
       "from": "AuthoriseController.CheckAnswers",
       "to": "AuthoriseController.NeedMoreInformation",
       "trigger": "redirect",
-      "condition": "if review model is null",
+      "condition": "if no answers are available for review",
       "evidence": [
         "src/SFA.DAS.DigitalCertificates.Web/Controllers/AuthoriseController.cs:197"
       ]
@@ -765,7 +1037,7 @@
       "from": "AuthoriseController.CheckAnswers",
       "to": "CertificatesController.CertificatesList",
       "trigger": "redirect",
-      "condition": "after successful match submission",
+      "condition": "when answers are matched to one or more certificates",
       "evidence": [
         "src/SFA.DAS.DigitalCertificates.Web/Controllers/AuthoriseController.cs:225"
       ]
@@ -774,7 +1046,7 @@
       "from": "AuthoriseController.CannotMatch",
       "to": "CertificatesController.CertificatesList",
       "trigger": "redirect",
-      "condition": "if the user is authenticated and has a ULN authorisation",
+      "condition": "if the user is authenticated and has ULN authorisation",
       "evidence": [
         "src/SFA.DAS.DigitalCertificates.Web/Controllers/AuthoriseController.cs:281"
       ]
@@ -783,7 +1055,7 @@
       "from": "AuthoriseController.NotFound",
       "to": "CertificatesController.CertificatesList",
       "trigger": "redirect",
-      "condition": "if the user is authenticated and has a ULN authorisation",
+      "condition": "if the user is authenticated and has ULN authorisation",
       "evidence": [
         "src/SFA.DAS.DigitalCertificates.Web/Controllers/AuthoriseController.cs:308"
       ]
@@ -792,7 +1064,7 @@
       "from": "AuthoriseController.KnowYear",
       "to": "AuthoriseController.NeedMoreInformation",
       "trigger": "redirect",
-      "condition": "if qualification year model is null",
+      "condition": "if the year model is not present",
       "evidence": [
         "src/SFA.DAS.DigitalCertificates.Web/Controllers/AuthoriseController.cs:327"
       ]
@@ -801,7 +1073,7 @@
       "from": "AuthoriseController.KnowYear",
       "to": "AuthoriseController.CheckAnswers",
       "trigger": "redirect",
-      "condition": "if returning to check and provider is selected",
+      "condition": "if IsReturningToCheck is true and ProviderSelected is true",
       "evidence": [
         "src/SFA.DAS.DigitalCertificates.Web/Controllers/AuthoriseController.cs:344"
       ]
@@ -810,7 +1082,7 @@
       "from": "AuthoriseController.KnowYear",
       "to": "AuthoriseController.SelectProvider",
       "trigger": "redirect",
-      "condition": "otherwise",
+      "condition": "in all other cases after saving the year",
       "evidence": [
         "src/SFA.DAS.DigitalCertificates.Web/Controllers/AuthoriseController.cs:344"
       ]
@@ -819,7 +1091,7 @@
       "from": "CertificatesController.AddAddress",
       "to": "CertificatesController.CertificateStandard",
       "trigger": "redirect",
-      "condition": "if AddAddress model is null",
+      "condition": "if the certificate model cannot be loaded",
       "evidence": [
         "src/SFA.DAS.DigitalCertificates.Web/Controllers/CertificatesController.cs:81"
       ]
@@ -828,7 +1100,7 @@
       "from": "CertificatesController.SelectAddress",
       "to": "CertificatesController.CertificateStandard",
       "trigger": "redirect",
-      "condition": "if no address view model was found",
+      "condition": "if the certificate model cannot be loaded",
       "evidence": [
         "src/SFA.DAS.DigitalCertificates.Web/Controllers/CertificatesController.cs:100"
       ]
@@ -837,7 +1109,7 @@
       "from": "CertificatesController.SelectAddress",
       "to": "CertificatesController.CheckAndSubmit",
       "trigger": "redirect",
-      "condition": "after successfully selecting an address",
+      "condition": "after a valid address is selected and saved",
       "evidence": [
         "src/SFA.DAS.DigitalCertificates.Web/Controllers/CertificatesController.cs:126"
       ]
@@ -846,7 +1118,7 @@
       "from": "CertificatesController.AddAddress",
       "to": "CertificatesController.CheckAndSubmit",
       "trigger": "redirect",
-      "condition": "after validating and storing address",
+      "condition": "after a valid address is entered and saved",
       "evidence": [
         "src/SFA.DAS.DigitalCertificates.Web/Controllers/CertificatesController.cs:155"
       ]
@@ -855,7 +1127,7 @@
       "from": "CertificatesController.CheckAndSubmit",
       "to": "CertificatesController.CertificateStandard",
       "trigger": "redirect",
-      "condition": "if CheckAndSubmit view model is null",
+      "condition": "if delivery model is not found or there is an error",
       "evidence": [
         "src/SFA.DAS.DigitalCertificates.Web/Controllers/CertificatesController.cs:165"
       ]
@@ -864,7 +1136,7 @@
       "from": "CertificatesController.CheckAndSubmit",
       "to": "CertificatesController.PrintRequestConfirmation",
       "trigger": "redirect",
-      "condition": "after creating print request",
+      "condition": "after creating a print request",
       "evidence": [
         "src/SFA.DAS.DigitalCertificates.Web/Controllers/CertificatesController.cs:177"
       ]
@@ -873,7 +1145,7 @@
       "from": "CertificatesController.CertificatesList",
       "to": "CertificatesController.CertificateStandard",
       "trigger": "redirect",
-      "condition": "if there is only one standard certificate and no frameworks",
+      "condition": "if the user has exactly one standard certificate and no frameworks",
       "evidence": [
         "src/SFA.DAS.DigitalCertificates.Web/Controllers/CertificatesController.cs:208"
       ]
@@ -882,7 +1154,7 @@
       "from": "CertificatesController.CertificatesList",
       "to": "CertificatesController.CertificateFramework",
       "trigger": "redirect",
-      "condition": "if there is only one framework certificate and no standards",
+      "condition": "if the user has exactly one framework certificate and no standards",
       "evidence": [
         "src/SFA.DAS.DigitalCertificates.Web/Controllers/CertificatesController.cs:211"
       ]
@@ -891,7 +1163,7 @@
       "from": "CertificatesController.ContactUs",
       "to": "CertificatesController.CertificatesList",
       "trigger": "redirect",
-      "condition": "if referenceNumber is missing or model is null",
+      "condition": null,
       "evidence": [
         "src/SFA.DAS.DigitalCertificates.Web/Controllers/CertificatesController.cs:288",
         "src/SFA.DAS.DigitalCertificates.Web/Controllers/CertificatesController.cs:294"
@@ -901,7 +1173,7 @@
       "from": "CertificatesController.ContactUsForCertificate",
       "to": "CertificatesController.CertificateStandard",
       "trigger": "redirect",
-      "condition": "if referenceNumber is missing or model is null",
+      "condition": null,
       "evidence": [
         "src/SFA.DAS.DigitalCertificates.Web/Controllers/CertificatesController.cs:307",
         "src/SFA.DAS.DigitalCertificates.Web/Controllers/CertificatesController.cs:313"
@@ -911,7 +1183,7 @@
       "from": "CertificatesController.ContactUsCreate",
       "to": "CertificatesController.CertificatesList",
       "trigger": "redirect",
-      "condition": "if referenceNumber is missing",
+      "condition": null,
       "evidence": [
         "src/SFA.DAS.DigitalCertificates.Web/Controllers/CertificatesController.cs:325"
       ]
@@ -920,7 +1192,7 @@
       "from": "CertificatesController.ContactUsCreate",
       "to": "CertificatesController.ContactUs",
       "trigger": "redirect",
-      "condition": "after creating the contact request",
+      "condition": null,
       "evidence": [
         "src/SFA.DAS.DigitalCertificates.Web/Controllers/CertificatesController.cs:327"
       ]
@@ -929,7 +1201,7 @@
       "from": "CertificatesController.ContactUsForCertificateCreate",
       "to": "CertificatesController.CertificateStandard",
       "trigger": "redirect",
-      "condition": "if result.ReferenceNumber is missing and certificate type is Standard",
+      "condition": null,
       "evidence": [
         "src/SFA.DAS.DigitalCertificates.Web/Controllers/CertificatesController.cs:340"
       ]
@@ -938,7 +1210,7 @@
       "from": "CertificatesController.ContactUsForCertificateCreate",
       "to": "CertificatesController.CertificateFramework",
       "trigger": "redirect",
-      "condition": "if result.ReferenceNumber is missing and certificate type is Framework",
+      "condition": null,
       "evidence": [
         "src/SFA.DAS.DigitalCertificates.Web/Controllers/CertificatesController.cs:341"
       ]
@@ -947,7 +1219,7 @@
       "from": "CertificatesController.ContactUsForCertificateCreate",
       "to": "CertificatesController.CertificatesList",
       "trigger": "redirect",
-      "condition": "if result.ReferenceNumber is missing and certificate type is neither Standard nor Framework",
+      "condition": null,
       "evidence": [
         "src/SFA.DAS.DigitalCertificates.Web/Controllers/CertificatesController.cs:342"
       ]
@@ -956,7 +1228,7 @@
       "from": "CertificatesController.ContactUsForCertificateCreate",
       "to": "CertificatesController.ContactUsForCertificate",
       "trigger": "redirect",
-      "condition": "after creating the contact request for certificate",
+      "condition": null,
       "evidence": [
         "src/SFA.DAS.DigitalCertificates.Web/Controllers/CertificatesController.cs:346"
       ]
@@ -965,7 +1237,7 @@
       "from": "CertificatesController.CreateCertificateSharing",
       "to": "CertificatesController.CertificateSharingLink",
       "trigger": "redirect",
-      "condition": "after creating a sharing link",
+      "condition": null,
       "evidence": [
         "src/SFA.DAS.DigitalCertificates.Web/Controllers/CertificatesController.cs:365"
       ]
@@ -974,7 +1246,7 @@
       "from": "CertificatesController.CertificateSharingLink",
       "to": "CertificatesController.CreateCertificateSharing",
       "trigger": "redirect",
-      "condition": "if sharing link model is null",
+      "condition": "if the sharing link model is not found",
       "evidence": [
         "src/SFA.DAS.DigitalCertificates.Web/Controllers/CertificatesController.cs:376"
       ]
@@ -983,7 +1255,7 @@
       "from": "CertificatesController.DeleteSharing",
       "to": "CertificatesController.CreateCertificateSharing",
       "trigger": "redirect",
-      "condition": "if model is null or after successful deletion",
+      "condition": null,
       "evidence": [
         "src/SFA.DAS.DigitalCertificates.Web/Controllers/CertificatesController.cs:394",
         "src/SFA.DAS.DigitalCertificates.Web/Controllers/CertificatesController.cs:408",
@@ -994,7 +1266,7 @@
       "from": "CertificatesController.ShareByEmail",
       "to": "CertificatesController.CreateCertificateSharing",
       "trigger": "redirect",
-      "condition": "if no sharing link model was found",
+      "condition": null,
       "evidence": [
         "src/SFA.DAS.DigitalCertificates.Web/Controllers/CertificatesController.cs:426"
       ]
@@ -1003,7 +1275,7 @@
       "from": "CertificatesController.ShareByEmail",
       "to": "CertificatesController.CertificateSharingLink",
       "trigger": "redirect",
-      "condition": "if model validation fails",
+      "condition": null,
       "evidence": [
         "src/SFA.DAS.DigitalCertificates.Web/Controllers/CertificatesController.cs:431"
       ]
@@ -1012,7 +1284,7 @@
       "from": "CertificatesController.ShareByEmail",
       "to": "CertificatesController.ConfirmShareByEmail",
       "trigger": "redirect",
-      "condition": "after email address is set successfully",
+      "condition": null,
       "evidence": [
         "src/SFA.DAS.DigitalCertificates.Web/Controllers/CertificatesController.cs:436"
       ]
@@ -1021,7 +1293,7 @@
       "from": "CertificatesController.ConfirmShareByEmail",
       "to": "CertificatesController.CreateCertificateSharing",
       "trigger": "redirect",
-      "condition": "if model is null",
+      "condition": null,
       "evidence": [
         "src/SFA.DAS.DigitalCertificates.Web/Controllers/CertificatesController.cs:449",
         "src/SFA.DAS.DigitalCertificates.Web/Controllers/CertificatesController.cs:465"
@@ -1031,7 +1303,7 @@
       "from": "CertificatesController.ConfirmShareByEmail",
       "to": "CertificatesController.EmailSent",
       "trigger": "redirect",
-      "condition": "after creating the sharing email",
+      "condition": null,
       "evidence": [
         "src/SFA.DAS.DigitalCertificates.Web/Controllers/CertificatesController.cs:468"
       ]
@@ -1040,7 +1312,7 @@
       "from": "CertificatesController.EmailSent",
       "to": "CertificatesController.CreateCertificateSharing",
       "trigger": "redirect",
-      "condition": "if model is null",
+      "condition": null,
       "evidence": [
         "src/SFA.DAS.DigitalCertificates.Web/Controllers/CertificatesController.cs:479"
       ]
@@ -1049,7 +1321,7 @@
       "from": "CertificatesController.CheckQualification",
       "to": "CertificatesController.CheckQualificationExpired",
       "trigger": "redirect",
-      "condition": "if sharingInfo is null",
+      "condition": "if sharing information is not found",
       "evidence": [
         "src/SFA.DAS.DigitalCertificates.Web/Controllers/CertificatesController.cs:493",
         "src/SFA.DAS.DigitalCertificates.Web/Controllers/CertificatesController.cs:507",
@@ -1078,7 +1350,7 @@
       "from": "CertificatesController.SharedCertificateStandard",
       "to": "CertificatesController.CheckQualificationExpired",
       "trigger": "redirect",
-      "condition": "if no shared standard certificate view model was found",
+      "condition": "if the shared standard certificate cannot be found",
       "evidence": [
         "src/SFA.DAS.DigitalCertificates.Web/Controllers/CertificatesController.cs:530"
       ]
@@ -1087,7 +1359,7 @@
       "from": "CertificatesController.SharedCertificateFramework",
       "to": "CertificatesController.CheckQualificationExpired",
       "trigger": "redirect",
-      "condition": "if no shared framework certificate view model was found",
+      "condition": "if the shared framework certificate cannot be found",
       "evidence": [
         "src/SFA.DAS.DigitalCertificates.Web/Controllers/CertificatesController.cs:543"
       ]
@@ -1096,7 +1368,7 @@
       "from": "HomeController.Verified",
       "to": "CertificatesController.CertificatesList",
       "trigger": "redirect",
-      "condition": "always after verification",
+      "condition": null,
       "evidence": [
         "src/SFA.DAS.DigitalCertificates.Web/Controllers/HomeController.cs:96"
       ]
@@ -1248,7 +1520,7 @@
       ]
     },
     {
-      "from": "CertificatesController.ContactUsForCertificate",
+      "from": "CertificatesController.ContactUs",
       "to": "CertificatesController.CertificateFramework",
       "trigger": "link",
       "condition": null,
@@ -1257,7 +1529,7 @@
       ]
     },
     {
-      "from": "CertificatesController.ContactUsForCertificate",
+      "from": "CertificatesController.ContactUs",
       "to": "CertificatesController.CertificateStandard",
       "trigger": "link",
       "condition": null,
@@ -1266,7 +1538,7 @@
       ]
     },
     {
-      "from": "CertificatesController.ContactUsForCertificate",
+      "from": "CertificatesController.ContactUs",
       "to": "CertificatesController.CertificatesList",
       "trigger": "link",
       "condition": null,
@@ -1275,7 +1547,7 @@
       ]
     },
     {
-      "from": "CertificatesController.ContactUs",
+      "from": "CertificatesController.ContactUsForCertificate",
       "to": "CertificatesController.CertificateFramework",
       "trigger": "link",
       "condition": null,
@@ -1284,7 +1556,7 @@
       ]
     },
     {
-      "from": "CertificatesController.ContactUs",
+      "from": "CertificatesController.ContactUsForCertificate",
       "to": "CertificatesController.CertificateStandard",
       "trigger": "link",
       "condition": null,
@@ -1293,7 +1565,7 @@
       ]
     },
     {
-      "from": "CertificatesController.ContactUs",
+      "from": "CertificatesController.ContactUsForCertificate",
       "to": "CertificatesController.CertificatesList",
       "trigger": "link",
       "condition": null,
@@ -1450,8 +1722,8 @@
   "selfLinkCount": 20,
   "journeys": [
     {
-      "name": "View and Manage Your Certificates",
-      "description": "The user enters the service and views their available certificates, with options to contact support or select a certificate to manage.",
+      "name": "Access My Certificates",
+      "description": "The user enters the system and accesses their available certificates.",
       "kind": "hub",
       "steps": [
         "HomeController.StartPage",
@@ -1466,34 +1738,8 @@
       "then": []
     },
     {
-      "name": "Download a Shared Framework Certificate PDF",
-      "description": "A third party downloads the PDF of a shared framework certificate after accessing the sharing link.",
-      "kind": "linear",
-      "steps": [
-        "CertificatesController.CheckQualification",
-        "CertificatesController.SharedCertificateFramework",
-        "CertificatesController.DownloadSharedCertificateFrameworkPdf"
-      ],
-      "hub": null,
-      "sections": [],
-      "then": []
-    },
-    {
-      "name": "Contact Support",
-      "description": "The user starts from the certificates list or a specific certificate and submits a support request.",
-      "kind": "linear",
-      "steps": [
-        "CertificatesController.CertificatesList",
-        "CertificatesController.ContactUsCreate",
-        "CertificatesController.ContactUs"
-      ],
-      "hub": null,
-      "sections": [],
-      "then": []
-    },
-    {
-      "name": "Authorise and Match to Results",
-      "description": "The user enters personal details to try to match their records and, if successful, sees their certificates.",
+      "name": "Verify Identity to Access Certificates",
+      "description": "The user completes an identity and apprenticeship matching process to gain access to certificates.",
       "kind": "linear",
       "steps": [
         "AuthoriseController.KnowYourUln",
@@ -1508,21 +1754,22 @@
       "then": []
     },
     {
-      "name": "Initiate Print Request for a Certificate",
-      "description": "The user selects an address, reviews the delivery request, and confirms the print request for their certificate.",
+      "name": "Request Delivery of a Certificate",
+      "description": "A user requests postal delivery of a certificate, including address selection and confirmation.",
       "kind": "linear",
       "steps": [
         "CertificatesController.SelectAddress",
         "CertificatesController.CheckAndSubmit",
-        "CertificatesController.PrintRequestConfirmation"
+        "CertificatesController.PrintRequestConfirmation",
+        "CertificatesController.CertificateStandard"
       ],
       "hub": null,
       "sections": [],
       "then": []
     },
     {
-      "name": "Create and Share a Certificate Digitally",
-      "description": "The user creates a sharing link for a certificate, proceeds to share it by email, and receives email confirmation.",
+      "name": "Share a Certificate with Others",
+      "description": "The user creates or manages sharing links for their certificate and shares it by email.",
       "kind": "linear",
       "steps": [
         "CertificatesController.CreateCertificateSharing",
@@ -1536,13 +1783,13 @@
       "then": []
     },
     {
-      "name": "Contact Support About a Specific Framework Certificate",
-      "description": "The user contacts support regarding a specific framework certificate and submits a help request.",
+      "name": "Download a Shared Framework Certificate",
+      "description": "An external user views a shared framework certificate and downloads a PDF copy.",
       "kind": "linear",
       "steps": [
-        "CertificatesController.CertificateFramework",
-        "CertificatesController.ContactUsForCertificateCreate",
-        "CertificatesController.ContactUsForCertificate"
+        "CertificatesController.CheckQualification",
+        "CertificatesController.SharedCertificateFramework",
+        "CertificatesController.DownloadSharedCertificateFrameworkPdf"
       ],
       "hub": null,
       "sections": [],
@@ -1550,17 +1797,9 @@
     }
   ],
   "journeyWarnings": [
-    "Journey 'Request Certificate Delivery' was dropped: there is no transition CertificatesController.CertificateStandard -> CertificatesController.SelectAddress.",
-    "Journey 'Share a Certificate Digitally' was dropped: there is no transition CertificatesController.CertificateStandard -> CertificatesController.CreateCertificateSharing.",
     "Journey 'View a Shared Certificate' was dropped: a linear journey needs at least 3 steps and no hub, sections or then.",
-    "Journey 'View a Shared Framework Certificate' was dropped: a linear journey needs at least 3 steps and no hub, sections or then.",
-    "Journey 'Download a Shared Standard Certificate PDF' was dropped: there is no transition CertificatesController.SharedCertificateStandard -> CertificatesController.DownloadSharedCertificateStandardPdf.",
-    "Journey 'Contact Support for a Specific Certificate' was dropped: there is no transition CertificatesController.CertificateStandard -> CertificatesController.ContactUsForCertificateCreate.",
-    "Journey 'Verify Identity and Access Certificates' was dropped: there is no transition HomeController.Check -> HomeController.Verified.",
-    "Journey 'Address Not Matched Journey' was dropped: a linear journey needs at least 3 steps and no hub, sections or then.",
-    "Journey 'No Results Found Journey' was dropped: a linear journey needs at least 3 steps and no hub, sections or then.",
-    "Journey 'View a Shared Standard Certificate' was dropped: a linear journey needs at least 3 steps and no hub, sections or then.",
-    "Journey 'View a Shared Framework Certificate' was dropped: a linear journey needs at least 3 steps and no hub, sections or then.",
-    "journeys[4] (Download a Shared Framework Certificate PDF) is missing a unique name, a valid kind or step lists, and was dropped."
+    "Journey 'Download My Certificate' was dropped: a linear journey needs at least 3 steps and no hub, sections or then.",
+    "Journey 'Download a Shared Certificate' was dropped: a linear journey needs at least 3 steps and no hub, sections or then.",
+    "Journey 'View a Shared Certificate' was dropped: a linear journey needs at least 3 steps and no hub, sections or then."
   ]
 }

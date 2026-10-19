@@ -6,11 +6,22 @@ Generated from `main/src`: 8 pages, 0 transitions, 0 journeys. 🔒 means sign-i
 
 | Page | Route | Sign-in | Purpose |
 | --- | --- | --- | --- |
-| `SFA.DAS.ApprenticePortal.Web:/Accessibility` | `/Accessibility` | Unknown | Provides information about the accessibility of the website and how users can request accessible formats or report accessibility issues. |
-| `SFA.DAS.ApprenticePortal.Web:/Cookies/Index` | `/Cookies/Index` | Unknown | Explains what cookies are used on the service, their purpose, and provides information about managing cookies. |
-| `SFA.DAS.ApprenticePortal.Web:/Cookies/Settings` | `/Cookies/Settings` | Unknown | Lets users review and change their cookie consent preferences for the website. |
-| `SFA.DAS.ApprenticePortal.Web:/HelpAndSupport` | `/HelpAndSupport` | Unknown | Offers guidance on how apprentices can get help or support, including contact information for employers, training providers, and the Department for Education. |
-| `SFA.DAS.ApprenticePortal.Web:/Home` | `/Home` | Yes | Shows the apprentice a summary of their apprenticeship details, including employer, training provider, and course information. |
-| `SFA.DAS.ApprenticePortal.Web:/Index` | `/Index` | Unknown | Introduces apprentices to the service and allows them to start the process of accessing their apprenticeship information. |
-| `SFA.DAS.ApprenticePortal.Web:/Privacy` | `/Privacy` | Unknown | Informs users about how their personal information is collected and used by the apprenticeship service. |
-| `SFA.DAS.ApprenticePortal.Web:SignedOut` | `apprentice-signed-out` | Unknown | Displays a message indicating the apprentice has signed out. |
+| `SFA.DAS.ApprenticePortal.Web:/Accessibility` | `/Accessibility` | Unknown | Provides information about the accessibility of the web application and how users can request support. |
+| `SFA.DAS.ApprenticePortal.Web:/Cookies/Index` | `/Cookies/Index` | Unknown | Explains what cookies are used on the service and their purpose. |
+| `SFA.DAS.ApprenticePortal.Web:/Cookies/Settings` | `/Cookies/Settings` | Unknown | Lets the apprentice choose preferences for cookies that measure website use. |
+| `SFA.DAS.ApprenticePortal.Web:/HelpAndSupport` | `/HelpAndSupport` | Unknown | Provides information about how to get help and support during the apprenticeship. |
+| `SFA.DAS.ApprenticePortal.Web:/Home` | `/Home` | Yes | Shows the apprentice their apprenticeship details and useful links. |
+| `SFA.DAS.ApprenticePortal.Web:/Index` | `/Index` | Unknown | Informs apprentices about the service, what it offers, and provides a starting point to access their apprenticeship details. |
+| `SFA.DAS.ApprenticePortal.Web:/Privacy` | `/Privacy` | Unknown | Explains how personal information is collected, used, and protected by the service. |
+| `SFA.DAS.ApprenticePortal.Web:SignedOut` | `apprentice-signed-out` | Unknown | Shows the apprentice a confirmation that they have signed out. |
+
+## Form fields
+
+Field definitions only: no values a user enters are recorded.
+
+### `SFA.DAS.ApprenticePortal.Web:/Cookies/Settings`
+
+| Field | Type | Label | Required | Rules | Options |
+| --- | --- | --- | --- | --- | --- |
+| `cookies-AnalyticsConsent` | radios | Cookies that measure website use | — | — | Use cookies that measure my service use, Do not use cookies that measure my service use |
+
