@@ -1,0 +1,27 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+LAYOUT_WITH_LEGEND()
+
+System_Boundary(sys_SkillsFundingAgency_das_tools_servicebus_support, "Tools Servicebus Support") {
+  Container(c_tools_servicebus_support_functions, "Tools Servicebus Support Functions", "API")
+  Container(c_tools_servicebus_support_web, "Tools Servicebus Support Web", "Web Application")
+  Container(c_tools_servicebus_support_web_2, "Tools Servicebus Support", "Web Application")
+}
+
+SystemDb_Ext(d_cache_redis, "Redis", "Redis")
+System_Ext(d_cloud_service_application_insights, "Application Insights", "Application Insights")
+System_Ext(d_cloud_service_azure_table_storage, "Azure Table Storage", "Azure Table Storage")
+SystemDb_Ext(d_database_cosmos, "Cosmos", "Azure CosmosDB")
+System_Ext(d_http_api_audit, "Audit")
+SystemQueue_Ext(d_message_broker_service_bus, "Service Bus", "Azure Service Bus")
+
+Rel(c_tools_servicebus_support_web, d_cache_redis, "Caches data in", "Redis")
+Rel(c_tools_servicebus_support_web_2, d_cache_redis, "Caches data in", "Redis")
+Rel(c_tools_servicebus_support_web_2, d_cloud_service_application_insights, "Uses", "Application Insights")
+Rel(c_tools_servicebus_support_web_2, d_cloud_service_azure_table_storage, "Uses", "Azure Table Storage")
+Rel(c_tools_servicebus_support_functions, d_database_cosmos, "Reads from and writes to", "Azure CosmosDB")
+Rel(c_tools_servicebus_support_web, d_database_cosmos, "Reads from and writes to", "Azure CosmosDB")
+Rel(c_tools_servicebus_support_functions, d_http_api_audit, "Calls the API of")
+Rel(c_tools_servicebus_support_functions, d_message_broker_service_bus, "Publishes messages to and consumes messages from", "Azure Service Bus")
+
+@enduml

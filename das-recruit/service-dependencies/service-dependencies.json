@@ -1,0 +1,153 @@
+{
+  "repository": "SkillsFundingAgency/das-recruit",
+  "ref": "master",
+  "path": "src",
+  "systemName": "Recruit",
+  "containers": [
+    {
+      "id": "recruit-employer-web",
+      "name": "Recruit",
+      "type": "web",
+      "evidence": [
+        {
+          "sourceFile": "src/Employer/Employer.Web/Program.cs",
+          "reason": "ASP.NET Core application entry point with WebHost.CreateDefaultBuilder."
+        },
+        {
+          "sourceFile": "src/Employer/Employer.Web/Employer.Web.csproj",
+          "reason": "Project type detected as ASP.NET Core Web SDK."
+        }
+      ]
+    },
+    {
+      "id": "recruit-provider-web",
+      "name": "Recruit Provider Web",
+      "type": "web",
+      "evidence": [
+        {
+          "sourceFile": "src/Provider/Provider.Web/Program.cs",
+          "reason": "ASP.NET Core application entry point with WebHost.CreateDefaultBuilder."
+        },
+        {
+          "sourceFile": "src/Provider/Provider.Web/Provider.Web.csproj",
+          "reason": "Project type detected as ASP.NET Core Web SDK."
+        }
+      ]
+    },
+    {
+      "id": "recruit-vacancies-jobs",
+      "name": "Recruit Vacancies Jobs",
+      "type": "job",
+      "evidence": [
+        {
+          "sourceFile": "src/Jobs/Recruit.Vacancies.Jobs/Program.cs",
+          "reason": "Job-style entry point using HostBuilder and Azure WebJobs integration."
+        },
+        {
+          "sourceFile": "src/Jobs/Recruit.Vacancies.Jobs/Recruit.Vacancies.Jobs.csproj",
+          "reason": "Project configuration suggests a background job setup targeting console execution."
+        }
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "sourceId": "recruit-employer-web",
+      "name": "Redis",
+      "kind": "cache",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": "StackExchange.Redis",
+      "configurationKeys": [],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/Shared/Recruit.Shared.Web/Recruit.Shared.Web.csproj",
+          "reason": "Detected usage of package StackExchange.Redis."
+        },
+        {
+          "sourceFile": "src/Employer/Employer.Web/Employer.Web.csproj",
+          "reason": "Detected usage of the package Microsoft.AspNetCore.DataProtection.StackExchangeRedis."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "cache-redis",
+      "description": "Caches data in"
+    },
+    {
+      "sourceId": "recruit-employer-web",
+      "name": "Outer Api",
+      "kind": "http-api",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "OuterApiClient",
+      "technology": "HttpClient",
+      "configurationKeys": [
+        "OuterApiConfiguration:BaseUrl"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [
+        {
+          "method": "GET",
+          "methodName": "Get",
+          "path": "{GetUrl}",
+          "sourceFile": "src/Shared/Recruit.Vacancies.Client/Infrastructure/OuterApi/OuterApiClient.cs"
+        },
+        {
+          "method": "POST",
+          "methodName": "Post",
+          "path": "{PostUrl}",
+          "sourceFile": "src/Shared/Recruit.Vacancies.Client/Infrastructure/OuterApi/OuterApiClient.cs"
+        }
+      ],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/Shared/Recruit.Vacancies.Client/Infrastructure/OuterApi/OuterApiClient.cs",
+          "reason": "HttpClient configured with base URL from OuterApiConfiguration."
+        },
+        {
+          "sourceFile": "src/Shared/Recruit.Vacancies.Client/Ioc/ServiceCollectionExtensions.cs",
+          "reason": "OuterApiClient registered with HttpClientFactory."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "http-api-outer-api",
+      "description": "Calls the API of"
+    },
+    {
+      "sourceId": "recruit-provider-web",
+      "name": "Azure Service Bus",
+      "kind": "message-broker",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": "Azure.Messaging.ServiceBus",
+      "configurationKeys": [],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/Provider/Provider.Web/Provider.Web.csproj",
+          "reason": "Detected usage of package Azure.Messaging.ServiceBus."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "message-broker-azure-service-bus",
+      "description": "Publishes messages to and consumes messages from"
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+LAYOUT_WITH_LEGEND()
+
+System_Boundary(sys_SkillsFundingAgency_das_recruit, "Recruit") {
+  Container(c_recruit_employer_web, "Recruit", "Web Application")
+  Container(c_recruit_provider_web, "Recruit Provider Web", "Web Application")
+  Container(c_recruit_vacancies_jobs, "Recruit Vacancies Jobs", "Background Job")
+}
+
+SystemDb_Ext(d_cache_redis, "Redis", "StackExchange.Redis")
+System_Ext(d_http_api_outer_api, "Outer Api", "HttpClient")
+SystemQueue_Ext(d_message_broker_azure_service_bus, "Azure Service Bus", "Azure.Messaging.ServiceBus")
+
+Rel(c_recruit_employer_web, d_cache_redis, "Caches data in", "StackExchange.Redis")
+Rel(c_recruit_employer_web, d_http_api_outer_api, "Calls the API of", "HttpClient")
+Rel(c_recruit_provider_web, d_message_broker_azure_service_bus, "Publishes messages to and consumes messages from", "Azure.Messaging.ServiceBus")
+
+@enduml

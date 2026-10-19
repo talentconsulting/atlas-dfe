@@ -1,0 +1,44 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+LAYOUT_WITH_LEGEND()
+
+System_Boundary(sys_SkillsFundingAgency_das_employer_incentives, "Employer Incentives") {
+  Container(c_employer_incentives, "Employer Incentives", "Component")
+  Container(c_employer_incentives_2, "Employer Incentives", "API")
+  Container(c_employer_incentives_functions_domainmessagehandlers, "Employer Incentives Functions DomainMessageHandlers", "Background Job")
+  Container(c_employer_incentives_functions_earningsresiliencecheck, "Employer Incentives Functions EarningsResilienceCheck", "Background Job")
+  Container(c_employer_incentives_functions_paymentsprocess, "Employer Incentives Functions PaymentsProcess", "Background Job")
+  Container(c_employer_incentives_payments_process, "Employer Incentives Payments Process", "Background Job")
+}
+
+System_Ext(d_cloud_service_azure_table_storage, "Azure Table Storage", "Azure Table Storage")
+System_Ext(d_cloud_service_azure_table_storage_configuration, "Azure Table Storage Configuration", "Azure Table Storage")
+SystemDb_Ext(d_database_employer_incentives_database, "Employer Incentives Database", "Entity Framework Core")
+System_Ext(d_http_api_business_central, "Business Central", "HttpClient")
+System_Ext(d_http_api_command_services, "Command Services", "HttpClient")
+System_Ext(d_http_api_employer_incentives_outer, "Employer Incentives Outer", "HttpClient")
+System_Ext(d_http_api_matched_learner, "Matched Learner", "HttpClient")
+SystemQueue_Ext(d_message_broker_azure_service_bus, "Azure Service Bus", "Azure Service Bus")
+SystemQueue_Ext(d_message_broker_azure_service_bus_transport, "Azure Service Bus Transport", "Azure Service Bus")
+SystemQueue_Ext(d_message_broker_learning_transport, "Learning Transport", "NServiceBus Learning Transport")
+SystemQueue_Ext(d_message_broker_nservicebus, "NServiceBus", "NServiceBus")
+SystemDb_Ext(d_object_storage_azure_blob_storage, "Azure Blob Storage", "Azure Blob Storage")
+
+Rel(c_employer_incentives_functions_domainmessagehandlers, d_cloud_service_azure_table_storage, "Uses", "Azure Table Storage")
+Rel(c_employer_incentives_2, d_cloud_service_azure_table_storage, "Uses", "Azure Table Storage")
+Rel(c_employer_incentives_payments_process, d_cloud_service_azure_table_storage_configuration, "Uses", "Azure Table Storage")
+Rel(c_employer_incentives, d_database_employer_incentives_database, "Reads from and writes to", "Entity Framework Core")
+Rel(c_employer_incentives_functions_paymentsprocess, d_database_employer_incentives_database, "Reads from and writes to", "SQL Server")
+Rel(c_employer_incentives_payments_process, d_database_employer_incentives_database, "Reads from and writes to", "Entity Framework Core with SQL Server")
+Rel(c_employer_incentives_2, d_database_employer_incentives_database, "Reads from and writes to", "Entity Framework Core / SQL Server")
+Rel(c_employer_incentives_2, d_http_api_business_central, "Calls the API of", "HttpClient")
+Rel(c_employer_incentives_functions_domainmessagehandlers, d_http_api_command_services, "Calls the API of", "HttpClient")
+Rel(c_employer_incentives_2, d_http_api_employer_incentives_outer, "Calls the API of", "HttpClient")
+Rel(c_employer_incentives_2, d_http_api_matched_learner, "Calls the API of", "HttpClient")
+Rel(c_employer_incentives_functions_paymentsprocess, d_message_broker_azure_service_bus, "Publishes messages to and consumes messages from", "Azure Service Bus")
+Rel(c_employer_incentives_2, d_message_broker_azure_service_bus_transport, "Publishes messages to and consumes messages from", "Azure Service Bus")
+Rel(c_employer_incentives_functions_paymentsprocess, d_message_broker_learning_transport, "Publishes messages to and consumes messages from", "NServiceBus Learning Transport")
+Rel(c_employer_incentives_functions_domainmessagehandlers, d_message_broker_nservicebus, "Publishes messages to and consumes messages from", "NServiceBus")
+Rel(c_employer_incentives_payments_process, d_object_storage_azure_blob_storage, "Stores objects in", "Azure Blob Storage")
+
+@enduml

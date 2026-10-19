@@ -3,13 +3,17 @@
 LAYOUT_WITH_LEGEND()
 
 System_Boundary(sys_SkillsFundingAgency_das_employer_feedback_web, "Employer Feedback") {
-  Container(c_employer_feedback_web, "Employer Feedback", "Web Application")
+  Container(c_employer_feedback, "Employer Feedback", "Web Application")
 }
 
-SystemDb_Ext(d_cache_redis, "Redis", "Redis")
-System_Ext(d_cloud_service_application_insights, "Application Insights", "Azure Application Insights")
+SystemDb_Ext(d_cache_data_protection_redis, "Data Protection Redis", "Redis")
+SystemDb_Ext(d_cache_redis_cache, "Redis Cache", "Redis")
+System_Ext(d_cloud_service_application_insights, "Application Insights")
+System_Ext(d_http_api_employer_feedback_outer_api, "Employer Feedback Outer API", "HTTP")
 
-Rel(c_employer_feedback_web, d_cache_redis, "Caches data in", "Redis")
-Rel(c_employer_feedback_web, d_cloud_service_application_insights, "Uses", "Azure Application Insights")
+Rel(c_employer_feedback, d_cache_data_protection_redis, "Caches data in", "Redis")
+Rel(c_employer_feedback, d_cache_redis_cache, "Caches data in", "Redis")
+Rel(c_employer_feedback, d_cloud_service_application_insights, "Uses")
+Rel(c_employer_feedback, d_http_api_employer_feedback_outer_api, "Calls the API of", "HTTP")
 
 @enduml

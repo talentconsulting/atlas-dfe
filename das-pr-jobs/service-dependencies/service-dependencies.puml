@@ -1,0 +1,23 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+LAYOUT_WITH_LEGEND()
+
+System_Boundary(sys_SkillsFundingAgency_das_pr_jobs, "PR Jobs") {
+  Container(c_pr_jobs, "PR Jobs", "Background Job")
+}
+
+SystemDb_Ext(d_database_pr_database, "PR Database", "SQL Server")
+System_Ext(d_http_api_commitments_v2, "Commitments V2", "HTTP")
+System_Ext(d_http_api_employer_accounts, "Employer Accounts", "HTTP")
+System_Ext(d_http_api_pas_account, "PAS Account", "HTTP")
+System_Ext(d_http_api_provider_relationships, "Provider Relationships", "HTTP")
+System_Ext(d_http_api_roatp_service, "RoATP Service", "HTTP")
+
+Rel(c_pr_jobs, d_database_pr_database, "Reads from and writes to", "SQL Server")
+Rel(c_pr_jobs, d_http_api_commitments_v2, "Calls the API of", "HTTP")
+Rel(c_pr_jobs, d_http_api_employer_accounts, "Calls the API of", "HTTP")
+Rel(c_pr_jobs, d_http_api_pas_account, "Calls the API of", "HTTP")
+Rel(c_pr_jobs, d_http_api_provider_relationships, "Calls the API of", "HTTP")
+Rel(c_pr_jobs, d_http_api_roatp_service, "Calls the API of", "HTTP")
+
+@enduml

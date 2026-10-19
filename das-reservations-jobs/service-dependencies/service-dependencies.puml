@@ -1,0 +1,32 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+LAYOUT_WITH_LEGEND()
+
+System_Boundary(sys_SkillsFundingAgency_das_reservations_jobs, "Reservations") {
+  Container(c_reservations_functions_reservationindex, "Reservations Functions ReservationIndex", "Background Job")
+  Container(c_reservations_functions_reservations, "Reservations Functions Reservations", "Background Job")
+  Container(c_reservations_jobs, "Reservations Jobs", "Background Job")
+  Container(c_reservations_jobs_legal_entities, "Reservations Legal Entities", "Background Job")
+  Container(c_reservations_jobs_provider_permission, "Reservations Provider Permission", "Background Job")
+  Container(c_reservations_jobs_refresh_course, "Reservations Refresh Course", "Background Job")
+}
+
+System_Ext(d_cloud_service_azure_search, "Azure Search")
+SystemDb_Ext(d_database_reservations_database, "Reservations Database", "EntityFramework")
+System_Ext(d_http_api_outer_api, "Outer API", "HttpClient")
+System_Ext(d_http_api_outerapi, "OuterApi", "HttpClient")
+
+Rel(c_reservations_functions_reservationindex, d_cloud_service_azure_search, "Uses")
+Rel(c_reservations_functions_reservations, d_cloud_service_azure_search, "Uses")
+Rel(c_reservations_functions_reservationindex, d_database_reservations_database, "Reads from and writes to", "EntityFramework")
+Rel(c_reservations_functions_reservations, d_database_reservations_database, "Reads from and writes to", "EntityFramework")
+Rel(c_reservations_jobs_legal_entities, d_database_reservations_database, "Reads from and writes to", "SQL Server")
+Rel(c_reservations_jobs_provider_permission, d_database_reservations_database, "Reads from and writes to", "SQL Server")
+Rel(c_reservations_jobs_refresh_course, d_database_reservations_database, "Reads from and writes to", "SQL Server")
+Rel(c_reservations_functions_reservationindex, d_http_api_outer_api, "Calls the API of", "HttpClient")
+Rel(c_reservations_functions_reservations, d_http_api_outer_api, "Calls the API of", "HttpClient")
+Rel(c_reservations_jobs_legal_entities, d_http_api_outerapi, "Calls the API of", "HttpClient")
+Rel(c_reservations_jobs_provider_permission, d_http_api_outerapi, "Calls the API of", "HttpClient")
+Rel(c_reservations_jobs_refresh_course, d_http_api_outerapi, "Calls the API of", "HttpClient")
+
+@enduml

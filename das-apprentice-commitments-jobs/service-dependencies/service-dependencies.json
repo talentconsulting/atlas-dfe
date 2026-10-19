@@ -1,0 +1,111 @@
+{
+  "repository": "SkillsFundingAgency/das-apprentice-commitments-jobs",
+  "ref": "main",
+  "path": "src",
+  "systemName": "Apprentice Commitments",
+  "containers": [
+    {
+      "id": "apprentice-commitments-jobs-fake-server",
+      "name": "Apprentice Commitments Jobs Fake Server",
+      "type": "job",
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.ApprenticeCommitments.Jobs.FakeServer/Program.cs",
+          "reason": "Console application used to run a fake server with OuterApiBuilder."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.ApprenticeCommitments.Jobs.FakeServer/SFA.DAS.ApprenticeCommitments.Jobs.FakeServer.csproj",
+          "reason": "Console project file with OutputType 'Exe'."
+        }
+      ]
+    },
+    {
+      "id": "apprentice-commitments-jobs-functions",
+      "name": "Apprentice Commitments Jobs Functions",
+      "type": "job",
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.ApprenticeCommitments.Jobs.Functions/Startup.cs",
+          "reason": "Azure Functions Startup class with builder.UseNServiceBus and service registrations."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.ApprenticeCommitments.Jobs.Functions/SFA.DAS.ApprenticeCommitments.Jobs.Functions.csproj",
+          "reason": "Azure Functions project file with AzureFunctionsVersion specified."
+        }
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "sourceId": "apprentice-commitments-jobs-functions",
+      "name": "Apprentice Commitments API",
+      "kind": "http-api",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "IEcsApi",
+      "technology": "HTTP",
+      "configurationKeys": [
+        "ApprenticeCommitmentsApiOptions:ApiBaseUrl"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.ApprenticeCommitments.Jobs.Functions/Startup.cs",
+          "reason": "RestEase client registered for IEcsApi with ApiBaseUrl configuration."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "http-api-apprentice-commitments-api",
+      "description": "Calls the API of"
+    },
+    {
+      "sourceId": "apprentice-commitments-jobs-functions",
+      "name": "Azure Service Bus",
+      "kind": "message-broker",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": "ServiceBusClient",
+      "technology": "Azure Service Bus",
+      "configurationKeys": [
+        "AzureWebJobsServiceBus"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [
+        {
+          "type": "queue",
+          "name": "ApprenticeshipCommitmentsJobs",
+          "direction": "outbound",
+          "sourceFile": "src/SFA.DAS.ApprenticeCommitments.Jobs.Functions/Infrastructure/AzureServiceBusTriggerFunction.cs"
+        },
+        {
+          "type": "queue",
+          "name": "NotificationsQueue",
+          "direction": "outbound",
+          "sourceFile": "src/SFA.DAS.ApprenticeCommitments.Jobs.Functions/Startup.cs"
+        }
+      ],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.ApprenticeCommitments.Jobs.Functions/Startup.cs",
+          "reason": "NServiceBus configuration for Azure Service Bus routing and queue setup."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.ApprenticeCommitments.Jobs.Functions/Infrastructure/AzureServiceBusTriggerFunction.cs",
+          "reason": "Service Bus trigger function using ServiceBusTrigger and ServiceBusClient."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "message-broker-azure-service-bus",
+      "description": "Publishes messages to and consumes messages from"
+    }
+  ]
+}

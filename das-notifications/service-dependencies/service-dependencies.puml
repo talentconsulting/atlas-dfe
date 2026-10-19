@@ -1,0 +1,21 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+LAYOUT_WITH_LEGEND()
+
+System_Boundary(sys_SkillsFundingAgency_das_notifications, "Notifications") {
+  Container(c_notifications, "Notifications", "API")
+  Container(c_notifications_messagehandlers, "Notifications MessageHandlers", "Background Job")
+}
+
+System_Ext(d_cloud_service_application_insights, "Application Insights")
+System_Ext(d_cloud_service_azure_table_storage_configuration, "Azure Table Storage Configuration", "Azure Table Storage")
+SystemDb_Ext(d_database_sql_server_notifications_database, "SQL Server Notifications Database", "SQL Server")
+SystemQueue_Ext(d_message_broker_azure_service_bus, "Azure Service Bus", "Azure Service Bus")
+
+Rel(c_notifications, d_cloud_service_application_insights, "Uses")
+Rel(c_notifications_messagehandlers, d_cloud_service_application_insights, "Uses")
+Rel(c_notifications_messagehandlers, d_cloud_service_azure_table_storage_configuration, "Uses", "Azure Table Storage")
+Rel(c_notifications, d_database_sql_server_notifications_database, "Reads from and writes to", "SQL Server")
+Rel(c_notifications, d_message_broker_azure_service_bus, "Publishes messages to and consumes messages from", "Azure Service Bus")
+
+@enduml

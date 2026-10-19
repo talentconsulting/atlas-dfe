@@ -1,0 +1,469 @@
+{
+  "repository": "SkillsFundingAgency/das-reservations-jobs",
+  "ref": "master",
+  "path": "src",
+  "systemName": "Reservations",
+  "containers": [
+    {
+      "id": "reservations-functions-reservationindex",
+      "name": "Reservations Functions ReservationIndex",
+      "type": "job",
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Reservations.Functions.ReservationIndex/Program.cs",
+          "reason": "Found an Azure Functions entry point with HostBuilder configuration, indicating a function app."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.Reservations.Functions.ReservationIndex/SFA.DAS.Reservations.Functions.ReservationIndex.csproj",
+          "reason": "Project file specifies Azure Functions version and output type as Executable."
+        }
+      ]
+    },
+    {
+      "id": "reservations-functions-reservations",
+      "name": "Reservations Functions Reservations",
+      "type": "job",
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Reservations.Functions.Reservations/Program.cs",
+          "reason": "Found an Azure Functions entry point with NServiceBus trigger configuration, indicating a message-handler function."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.Reservations.Functions.Reservations/SFA.DAS.Reservations.Functions.Reservations.csproj",
+          "reason": "Project file specifies Azure Functions version and output type as Executable."
+        }
+      ]
+    },
+    {
+      "id": "reservations-jobs",
+      "name": "Reservations Jobs",
+      "type": "job",
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Reservations.Jobs/Program.cs",
+          "reason": "Found Program.cs with a Main method configuring a Service Collection and calling a job execution method."
+        }
+      ]
+    },
+    {
+      "id": "reservations-jobs-legal-entities",
+      "name": "Reservations Legal Entities",
+      "type": "job",
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Reservations.Functions.LegalEntities/Program.cs",
+          "reason": "NServiceBusTriggerFunction attribute for Azure Functions queue 'LegalEntitiesQueue'"
+        }
+      ]
+    },
+    {
+      "id": "reservations-jobs-provider-permission",
+      "name": "Reservations Provider Permission",
+      "type": "job",
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Reservations.Functions.ProviderPermission/Program.cs",
+          "reason": "NServiceBusTriggerFunction attribute for Azure Functions queue 'ProviderPermissionQueue'"
+        }
+      ]
+    },
+    {
+      "id": "reservations-jobs-refresh-course",
+      "name": "Reservations Refresh Course",
+      "type": "job",
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Reservations.Functions.RefreshCourse/Program.cs",
+          "reason": "HostBuilder configuration for Azure Functions"
+        }
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "sourceId": "reservations-functions-reservationindex",
+      "name": "Azure Search",
+      "kind": "cloud-service",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Reservations.Functions.ReservationIndex/Program.cs",
+          "reason": "services.AddAzureSearch() registration is present."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "cloud-service-azure-search",
+      "description": "Uses"
+    },
+    {
+      "sourceId": "reservations-functions-reservations",
+      "name": "Azure Search",
+      "kind": "cloud-service",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Reservations.Functions.Reservations/ServicesRegistration.cs",
+          "reason": "services.AddAzureSearch() registration is present."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "cloud-service-azure-search",
+      "description": "Uses"
+    },
+    {
+      "sourceId": "reservations-functions-reservationindex",
+      "name": "Reservations Database",
+      "kind": "database",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "ReservationsDataContext",
+      "technology": "EntityFramework",
+      "configurationKeys": [
+        "ReservationsJobs:ConnectionString"
+      ],
+      "authentication": {
+        "type": "managed-identity",
+        "configurationKeys": [
+          "ReservationsJobs:ConnectionString"
+        ]
+      },
+      "operations": [],
+      "resources": [
+        {
+          "type": "sql-database",
+          "name": "Reservations",
+          "direction": "outbound",
+          "sourceFile": "src/SFA.DAS.Reservations.Infrastructure/Database/AddDatabaseExtension.cs"
+        }
+      ],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Reservations.Infrastructure/Database/AddDatabaseExtension.cs",
+          "reason": "ReservationsDataContext configured with database registration and connection string."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "database-reservations-database",
+      "description": "Reads from and writes to"
+    },
+    {
+      "sourceId": "reservations-functions-reservations",
+      "name": "Reservations Database",
+      "kind": "database",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "ReservationsDataContext",
+      "technology": "EntityFramework",
+      "configurationKeys": [
+        "ReservationsJobs:ConnectionString"
+      ],
+      "authentication": {
+        "type": "managed-identity",
+        "configurationKeys": [
+          "ReservationsJobs:ConnectionString"
+        ]
+      },
+      "operations": [],
+      "resources": [
+        {
+          "type": "sql-database",
+          "name": "Reservations",
+          "direction": "outbound",
+          "sourceFile": "src/SFA.DAS.Reservations.Infrastructure/Database/AddDatabaseExtension.cs"
+        }
+      ],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Reservations.Infrastructure/Database/AddDatabaseExtension.cs",
+          "reason": "ReservationsDataContext configured with database registration and connection string."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "database-reservations-database",
+      "description": "Reads from and writes to"
+    },
+    {
+      "sourceId": "reservations-jobs-legal-entities",
+      "name": "Reservations Database",
+      "kind": "database",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": null,
+      "technology": "SQL Server",
+      "configurationKeys": [
+        "ReservationsJobs"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [
+        {
+          "type": "database",
+          "name": null,
+          "direction": "outbound",
+          "sourceFile": "src/SFA.DAS.Reservations.Data/ReservationsDataContext.cs"
+        }
+      ],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Reservations.Functions.LegalEntities/ServicesRegistration.cs",
+          "reason": "Database registration from configuration"
+        },
+        {
+          "sourceFile": "src/SFA.DAS.Reservations.Data/ReservationsDataContext.cs",
+          "reason": "The file contains database DbContext for Reservations"
+        }
+      ],
+      "confidence": "high",
+      "targetId": "database-reservations-database",
+      "description": "Reads from and writes to"
+    },
+    {
+      "sourceId": "reservations-jobs-provider-permission",
+      "name": "Reservations Database",
+      "kind": "database",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": null,
+      "technology": "SQL Server",
+      "configurationKeys": [
+        "ReservationsJobs"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [
+        {
+          "type": "database",
+          "name": null,
+          "direction": "outbound",
+          "sourceFile": "src/SFA.DAS.Reservations.Data/ReservationsDataContext.cs"
+        }
+      ],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Reservations.Functions.ProviderPermission/Program.cs",
+          "reason": "Database registration from configuration"
+        },
+        {
+          "sourceFile": "src/SFA.DAS.Reservations.Data/ReservationsDataContext.cs",
+          "reason": "The file contains database DbContext for Reservations"
+        }
+      ],
+      "confidence": "high",
+      "targetId": "database-reservations-database",
+      "description": "Reads from and writes to"
+    },
+    {
+      "sourceId": "reservations-jobs-refresh-course",
+      "name": "Reservations Database",
+      "kind": "database",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": null,
+      "technology": "SQL Server",
+      "configurationKeys": [
+        "ReservationsJobs"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [
+        {
+          "type": "database",
+          "name": null,
+          "direction": "outbound",
+          "sourceFile": "src/SFA.DAS.Reservations.Data/ReservationsDataContext.cs"
+        }
+      ],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Reservations.Functions.RefreshCourse/Program.cs",
+          "reason": "Database registration from configuration"
+        },
+        {
+          "sourceFile": "src/SFA.DAS.Reservations.Data/ReservationsDataContext.cs",
+          "reason": "The file contains database DbContext for Reservations"
+        }
+      ],
+      "confidence": "high",
+      "targetId": "database-reservations-database",
+      "description": "Reads from and writes to"
+    },
+    {
+      "sourceId": "reservations-functions-reservationindex",
+      "name": "Outer API",
+      "kind": "http-api",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "IOuterApiClient",
+      "technology": "HttpClient",
+      "configurationKeys": [],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Reservations.Functions.ReservationIndex/Program.cs",
+          "reason": "HttpClient for IOuterApiClient is explicitly registered."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "http-api-outer-api",
+      "description": "Calls the API of"
+    },
+    {
+      "sourceId": "reservations-functions-reservations",
+      "name": "Outer API",
+      "kind": "http-api",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "IOuterApiClient",
+      "technology": "HttpClient",
+      "configurationKeys": [],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Reservations.Functions.Reservations/ServicesRegistration.cs",
+          "reason": "HttpClient for IOuterApiClient is explicitly registered."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "http-api-outer-api",
+      "description": "Calls the API of"
+    },
+    {
+      "sourceId": "reservations-jobs-legal-entities",
+      "name": "OuterApi",
+      "kind": "http-api",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "OuterApiClient",
+      "technology": "HttpClient",
+      "configurationKeys": [
+        "ReservationsJobs"
+      ],
+      "authentication": {
+        "type": "header",
+        "configurationKeys": [
+          "ReservationsJobs:ReservationsApimSubscriptionKey"
+        ]
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Reservations.Application/OuterApi/OuterApiClient.cs",
+          "reason": "HttpClient base address set using ReservationsJobs:ReservationsApimUrl"
+        },
+        {
+          "sourceFile": "src/SFA.DAS.Reservations.Functions.LegalEntities/ServicesRegistration.cs",
+          "reason": "HttpClient registration for 'IOuterApiClient' mapped to 'OuterApiClient'"
+        }
+      ],
+      "confidence": "high",
+      "targetId": "http-api-outerapi",
+      "description": "Calls the API of"
+    },
+    {
+      "sourceId": "reservations-jobs-provider-permission",
+      "name": "OuterApi",
+      "kind": "http-api",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "OuterApiClient",
+      "technology": "HttpClient",
+      "configurationKeys": [
+        "ReservationsJobs"
+      ],
+      "authentication": {
+        "type": "header",
+        "configurationKeys": [
+          "ReservationsJobs:ReservationsApimSubscriptionKey"
+        ]
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Reservations.Application/OuterApi/OuterApiClient.cs",
+          "reason": "HttpClient base address set using ReservationsJobs:ReservationsApimUrl"
+        },
+        {
+          "sourceFile": "src/SFA.DAS.Reservations.Functions.ProviderPermission/Program.cs",
+          "reason": "HttpClient registration for 'IOuterApiClient' mapped to 'OuterApiClient'"
+        }
+      ],
+      "confidence": "high",
+      "targetId": "http-api-outerapi",
+      "description": "Calls the API of"
+    },
+    {
+      "sourceId": "reservations-jobs-refresh-course",
+      "name": "OuterApi",
+      "kind": "http-api",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "OuterApiClient",
+      "technology": "HttpClient",
+      "configurationKeys": [
+        "ReservationsJobs"
+      ],
+      "authentication": {
+        "type": "header",
+        "configurationKeys": [
+          "ReservationsJobs:ReservationsApimSubscriptionKey"
+        ]
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Reservations.Application/OuterApi/OuterApiClient.cs",
+          "reason": "HttpClient base address set using ReservationsJobs:ReservationsApimUrl"
+        },
+        {
+          "sourceFile": "src/SFA.DAS.Reservations.Functions.RefreshCourse/Program.cs",
+          "reason": "HttpClient registration for 'IOuterApiClient' mapped to 'OuterApiClient'"
+        }
+      ],
+      "confidence": "high",
+      "targetId": "http-api-outerapi",
+      "description": "Calls the API of"
+    }
+  ]
+}
