@@ -616,11 +616,11 @@
     },
     {
       "sourceId": "employer-finance-web",
-      "name": "Outer API",
+      "name": "Levy Transfer Matching API",
       "kind": "http-api",
       "classification": "internal",
       "direction": "outbound",
-      "client": "OuterApiClient",
+      "client": "ILevyTransferMatchingApiClient",
       "technology": "HttpClient",
       "configurationKeys": [],
       "authentication": {
@@ -633,11 +633,211 @@
         {
           "sourceFile": "src/SFA.DAS.EmployerFinance.Web/StartupExtensions/ApplicationServiceRegistrations.cs",
           "reason": "HttpClient registration for OuterApiClient."
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/EmployerFinance/SFA.DAS.EmployerFinance/Application/Queries/Transfers/GetCounts/GetCountsQueryHandler.cs",
+          "reason": "EmployerFinance APIM area calls Levy Transfer Matching API through ILevyTransferMatchingApiClient"
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/EmployerFinance/SFA.DAS.EmployerFinance/Application/Queries/Transfers/GetFinancialBreakdown/GetFinancialBreakdownHandler.cs",
+          "reason": "EmployerFinance APIM area calls Levy Transfer Matching API through ILevyTransferMatchingApiClient"
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/EmployerFinance/SFA.DAS.EmployerFinance/Application/Queries/Transfers/GetPledges/GetPledgesQueryHandler.cs",
+          "reason": "EmployerFinance APIM area calls Levy Transfer Matching API through ILevyTransferMatchingApiClient"
         }
       ],
-      "confidence": "high",
-      "targetId": "http-api-outer-api",
-      "description": "Calls the API of"
+      "confidence": "medium",
+      "targetId": "http-api-levy-transfer-matching-api",
+      "description": "Calls via APIM (EmployerFinance)",
+      "via": {
+        "repo": "das-apim-endpoints",
+        "label": "APIM",
+        "area": "EmployerFinance",
+        "dependencyName": "Outer API",
+        "operations": [],
+        "areas": [
+          "EmployerFinance"
+        ]
+      }
+    },
+    {
+      "sourceId": "employer-finance-web",
+      "name": "Employer Accounts API",
+      "kind": "http-api",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "IAccountsApiClient",
+      "technology": "HttpClient",
+      "configurationKeys": [],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.EmployerFinance.Web/StartupExtensions/ApplicationServiceRegistrations.cs",
+          "reason": "HttpClient registration for OuterApiClient."
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/EmployerFinance/SFA.DAS.EmployerFinance/Application/Queries/GetAccountMinimumSignedAgreementVersion/GetAccountMinimumSignedAgreementVersionQueryHandler.cs",
+          "reason": "EmployerFinance APIM area calls Employer Accounts API through IAccountsApiClient"
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/EmployerFinance/SFA.DAS.EmployerFinance/Application/Queries/GetAccountsTeamMembersWhichReceiveNotifications/GetAccountTeamMembersWhichReceiveNotificationsQueryHandler.cs",
+          "reason": "EmployerFinance APIM area calls Employer Accounts API through IAccountsApiClient"
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/EmployerFinance/SFA.DAS.EmployerFinance.Api/AppStart/AddServiceRegistrationExtension.cs",
+          "reason": "EmployerFinance APIM area calls Employer Accounts API through IAccountsApiClient"
+        }
+      ],
+      "confidence": "medium",
+      "targetId": "http-api-employer-accounts-api",
+      "targetRepo": "das-employer-accounts",
+      "description": "Calls via APIM (EmployerFinance)",
+      "via": {
+        "repo": "das-apim-endpoints",
+        "label": "APIM",
+        "area": "EmployerFinance",
+        "dependencyName": "Outer API",
+        "operations": [],
+        "areas": [
+          "EmployerFinance"
+        ]
+      }
+    },
+    {
+      "sourceId": "employer-finance-web",
+      "name": "Courses API",
+      "kind": "http-api",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "ICoursesApiClient",
+      "technology": "HttpClient",
+      "configurationKeys": [],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.EmployerFinance.Web/StartupExtensions/ApplicationServiceRegistrations.cs",
+          "reason": "HttpClient registration for OuterApiClient."
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/EmployerFinance/SFA.DAS.EmployerFinance/Application/Queries/GetFrameworks/GetFrameworksQueryHandler.cs",
+          "reason": "EmployerFinance APIM area calls Courses API through ICoursesApiClient"
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/EmployerFinance/SFA.DAS.EmployerFinance/Application/Queries/GetStandards/GetStandardsQueryHandler.cs",
+          "reason": "EmployerFinance APIM area calls Courses API through ICoursesApiClient"
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/EmployerFinance/SFA.DAS.EmployerFinance.Api/AppStart/AddServiceRegistrationExtension.cs",
+          "reason": "EmployerFinance APIM area calls Courses API through ICoursesApiClient"
+        }
+      ],
+      "confidence": "medium",
+      "targetId": "http-api-courses-api",
+      "targetRepo": "das-courses-api",
+      "description": "Calls via APIM (EmployerFinance)",
+      "via": {
+        "repo": "das-apim-endpoints",
+        "label": "APIM",
+        "area": "EmployerFinance",
+        "dependencyName": "Outer API",
+        "operations": [],
+        "areas": [
+          "EmployerFinance"
+        ]
+      }
+    },
+    {
+      "sourceId": "employer-finance-web",
+      "name": "Provider Courses API",
+      "kind": "http-api",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "IProviderCoursesApiClient",
+      "technology": "HttpClient",
+      "configurationKeys": [],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.EmployerFinance.Web/StartupExtensions/ApplicationServiceRegistrations.cs",
+          "reason": "HttpClient registration for OuterApiClient."
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/EmployerFinance/SFA.DAS.EmployerFinance/Application/Queries/GetProvider/GetProviderQueryHandler.cs",
+          "reason": "EmployerFinance APIM area calls Provider Courses API through IProviderCoursesApiClient"
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/EmployerFinance/SFA.DAS.EmployerFinance.Api/AppStart/AddServiceRegistrationExtension.cs",
+          "reason": "EmployerFinance APIM area calls Provider Courses API through IProviderCoursesApiClient"
+        }
+      ],
+      "confidence": "medium",
+      "targetId": "http-api-provider-courses-api",
+      "description": "Calls via APIM (EmployerFinance)",
+      "via": {
+        "repo": "das-apim-endpoints",
+        "label": "APIM",
+        "area": "EmployerFinance",
+        "dependencyName": "Outer API",
+        "operations": [],
+        "areas": [
+          "EmployerFinance"
+        ]
+      }
+    },
+    {
+      "sourceId": "employer-finance-web",
+      "name": "Employer Profiles API",
+      "kind": "http-api",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "IEmployerProfilesApiClient",
+      "technology": "HttpClient",
+      "configurationKeys": [],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.EmployerFinance.Web/StartupExtensions/ApplicationServiceRegistrations.cs",
+          "reason": "HttpClient registration for OuterApiClient."
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/EmployerFinance/SFA.DAS.EmployerFinance.Api/AppStart/AddServiceRegistrationExtension.cs",
+          "reason": "EmployerFinance APIM area calls Employer Profiles API through IEmployerProfilesApiClient"
+        }
+      ],
+      "confidence": "medium",
+      "targetId": "http-api-employer-profiles-api",
+      "description": "Calls via APIM (EmployerFinance)",
+      "via": {
+        "repo": "das-apim-endpoints",
+        "label": "APIM",
+        "area": "EmployerFinance",
+        "dependencyName": "Outer API",
+        "operations": [],
+        "areas": [
+          "EmployerFinance"
+        ]
+      }
     },
     {
       "sourceId": "employer-finance-message-handlers",

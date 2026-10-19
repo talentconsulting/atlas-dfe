@@ -368,11 +368,11 @@
     },
     {
       "sourceId": "employer-incentives-2",
-      "name": "Employer Incentives Outer",
+      "name": "Employer Incentives API",
       "kind": "http-api",
       "classification": "internal",
       "direction": "outbound",
-      "client": "IEmploymentCheckService",
+      "client": "IEmployerIncentivesApiClient, IInternalApiClient",
       "technology": "HttpClient",
       "configurationKeys": [
         "EmployerIncentivesOuterApi"
@@ -382,23 +382,265 @@
         "configurationKeys": []
       },
       "operations": [],
-      "resources": [
-        {
-          "type": "url",
-          "name": null,
-          "direction": "outbound",
-          "sourceFile": "src/SFA.DAS.EmployerIncentives.Commands/ServiceCollectionExtensions.cs"
-        }
-      ],
+      "resources": [],
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.EmployerIncentives.Commands/ServiceCollectionExtensions.cs",
           "reason": "HttpClientBuilder with baseUrl configured using EmployerIncentivesOuterApi settings."
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/EmployerIncentives/SFA.DAS.EmployerIncentives/Application/Commands/AddJobRequest/AddJobCommandHandler.cs",
+          "reason": "EmployerIncentives APIM area calls Employer Incentives API through IEmployerIncentivesApiClient, IInternalApiClient"
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/EmployerIncentives/SFA.DAS.EmployerIncentives/Application/Commands/PausePayments/PausePaymentsCommandHandler.cs",
+          "reason": "EmployerIncentives APIM area calls Employer Incentives API through IEmployerIncentivesApiClient, IInternalApiClient"
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/EmployerIncentives/SFA.DAS.EmployerIncentives/Application/Commands/ReinstateApplication/ReinstateApplicationCommandHandler.cs",
+          "reason": "EmployerIncentives APIM area calls Employer Incentives API through IEmployerIncentivesApiClient, IInternalApiClient"
         }
       ],
-      "confidence": "high",
-      "targetId": "http-api-employer-incentives-outer",
-      "description": "Calls the API of"
+      "confidence": "medium",
+      "targetId": "http-api-employer-incentives-api",
+      "description": "Calls via APIM (EmployerIncentives)",
+      "via": {
+        "repo": "das-apim-endpoints",
+        "label": "APIM",
+        "area": "EmployerIncentives",
+        "dependencyName": "Employer Incentives Outer",
+        "operations": [],
+        "areas": [
+          "EmployerIncentives"
+        ]
+      }
+    },
+    {
+      "sourceId": "employer-incentives-2",
+      "name": "Commitments API",
+      "kind": "http-api",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "ICommitmentsApiClient, IInternalApiClient",
+      "technology": "HttpClient",
+      "configurationKeys": [
+        "EmployerIncentivesOuterApi"
+      ],
+      "authentication": {
+        "type": "apim",
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Commands/ServiceCollectionExtensions.cs",
+          "reason": "HttpClientBuilder with baseUrl configured using EmployerIncentivesOuterApi settings."
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/EmployerIncentives/SFA.DAS.EmployerIncentives/Application/Queries/GetApplication/GetApplicationHandler.cs",
+          "reason": "EmployerIncentives APIM area calls Commitments API through ICommitmentsApiClient, IInternalApiClient"
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/EmployerIncentives/SFA.DAS.EmployerIncentives/Application/Services/CommitmentsService.cs",
+          "reason": "EmployerIncentives APIM area calls Commitments API through ICommitmentsApiClient, IInternalApiClient"
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/EmployerIncentives/SFA.DAS.EmployerIncentives/Clients/CommitmentsApiClient.cs",
+          "reason": "EmployerIncentives APIM area calls Commitments API through ICommitmentsApiClient, IInternalApiClient"
+        }
+      ],
+      "confidence": "medium",
+      "targetId": "http-api-commitments-api",
+      "targetRepo": "das-commitments",
+      "description": "Calls via APIM (EmployerIncentives)",
+      "via": {
+        "repo": "das-apim-endpoints",
+        "label": "APIM",
+        "area": "EmployerIncentives",
+        "dependencyName": "Employer Incentives Outer",
+        "operations": [],
+        "areas": [
+          "EmployerIncentives"
+        ]
+      }
+    },
+    {
+      "sourceId": "employer-incentives-2",
+      "name": "Customer Engagement Finance API",
+      "kind": "http-api",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "ICustomerEngagementApiClient, ICustomerEngagementFinanceApiClient",
+      "technology": "HttpClient",
+      "configurationKeys": [
+        "EmployerIncentivesOuterApi"
+      ],
+      "authentication": {
+        "type": "apim",
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Commands/ServiceCollectionExtensions.cs",
+          "reason": "HttpClientBuilder with baseUrl configured using EmployerIncentivesOuterApi settings."
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/EmployerIncentives/SFA.DAS.EmployerIncentives/Application/Services/CustomerEngagementFinanceService.cs",
+          "reason": "EmployerIncentives APIM area calls Customer Engagement Finance API through ICustomerEngagementApiClient, ICustomerEngagementFinanceApiClient"
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/EmployerIncentives/SFA.DAS.EmployerIncentives/Clients/CustomerEngagementFinanceApiClient.cs",
+          "reason": "EmployerIncentives APIM area calls Customer Engagement Finance API through ICustomerEngagementApiClient, ICustomerEngagementFinanceApiClient"
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/EmployerIncentives/SFA.DAS.EmployerIncentives/Infrastructure/CustomerEngagementFinanceApiHealthCheck.cs",
+          "reason": "EmployerIncentives APIM area calls Customer Engagement Finance API through ICustomerEngagementApiClient, ICustomerEngagementFinanceApiClient"
+        }
+      ],
+      "confidence": "medium",
+      "targetId": "http-api-customer-engagement-finance-api",
+      "description": "Calls via APIM (EmployerIncentives)",
+      "via": {
+        "repo": "das-apim-endpoints",
+        "label": "APIM",
+        "area": "EmployerIncentives",
+        "dependencyName": "Employer Incentives Outer",
+        "operations": [],
+        "areas": [
+          "EmployerIncentives"
+        ]
+      }
+    },
+    {
+      "sourceId": "employer-incentives-2",
+      "name": "Employer Accounts API",
+      "kind": "http-api",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "IAccountsApiClient",
+      "technology": "HttpClient",
+      "configurationKeys": [
+        "EmployerIncentivesOuterApi"
+      ],
+      "authentication": {
+        "type": "apim",
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Commands/ServiceCollectionExtensions.cs",
+          "reason": "HttpClientBuilder with baseUrl configured using EmployerIncentivesOuterApi settings."
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/EmployerIncentives/SFA.DAS.EmployerIncentives/Application/Services/AccountsService.cs",
+          "reason": "EmployerIncentives APIM area calls Employer Accounts API through IAccountsApiClient"
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/EmployerIncentives/SFA.DAS.EmployerIncentives.Api/AppStart/AddServiceRegistrationExtension.cs",
+          "reason": "EmployerIncentives APIM area calls Employer Accounts API through IAccountsApiClient"
+        }
+      ],
+      "confidence": "medium",
+      "targetId": "http-api-employer-accounts-api",
+      "targetRepo": "das-employer-accounts",
+      "description": "Calls via APIM (EmployerIncentives)",
+      "via": {
+        "repo": "das-apim-endpoints",
+        "label": "APIM",
+        "area": "EmployerIncentives",
+        "dependencyName": "Employer Incentives Outer",
+        "operations": [],
+        "areas": [
+          "EmployerIncentives"
+        ]
+      }
+    },
+    {
+      "sourceId": "employer-incentives-2",
+      "name": "Employment Check API",
+      "kind": "http-api",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "IInternalApiClient",
+      "technology": "HttpClient",
+      "configurationKeys": [
+        "EmployerIncentivesOuterApi"
+      ],
+      "authentication": {
+        "type": "apim",
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Commands/ServiceCollectionExtensions.cs",
+          "reason": "HttpClientBuilder with baseUrl configured using EmployerIncentivesOuterApi settings."
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/EmployerIncentives/SFA.DAS.EmployerIncentives/Application/Services/EmploymentCheckService.cs",
+          "reason": "EmployerIncentives APIM area calls Employment Check API through IInternalApiClient"
+        }
+      ],
+      "confidence": "medium",
+      "targetId": "http-api-employment-check-api",
+      "description": "Calls via APIM (EmployerIncentives)",
+      "via": {
+        "repo": "das-apim-endpoints",
+        "label": "APIM",
+        "area": "EmployerIncentives",
+        "dependencyName": "Employer Incentives Outer",
+        "operations": [],
+        "areas": [
+          "EmployerIncentives"
+        ]
+      }
+    },
+    {
+      "sourceId": "employer-incentives-2",
+      "name": "Employer Profiles API",
+      "kind": "http-api",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "IEmployerProfilesApiClient",
+      "technology": "HttpClient",
+      "configurationKeys": [
+        "EmployerIncentivesOuterApi"
+      ],
+      "authentication": {
+        "type": "apim",
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Commands/ServiceCollectionExtensions.cs",
+          "reason": "HttpClientBuilder with baseUrl configured using EmployerIncentivesOuterApi settings."
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/EmployerIncentives/SFA.DAS.EmployerIncentives.Api/AppStart/AddServiceRegistrationExtension.cs",
+          "reason": "EmployerIncentives APIM area calls Employer Profiles API through IEmployerProfilesApiClient"
+        }
+      ],
+      "confidence": "medium",
+      "targetId": "http-api-employer-profiles-api",
+      "description": "Calls via APIM (EmployerIncentives)",
+      "via": {
+        "repo": "das-apim-endpoints",
+        "label": "APIM",
+        "area": "EmployerIncentives",
+        "dependencyName": "Employer Incentives Outer",
+        "operations": [],
+        "areas": [
+          "EmployerIncentives"
+        ]
+      }
     },
     {
       "sourceId": "employer-incentives-2",
