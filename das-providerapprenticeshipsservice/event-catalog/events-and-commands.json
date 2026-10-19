@@ -4,6 +4,24 @@
   "path": "src",
   "commands": [
     {
+      "name": "SendEmailCommand",
+      "namespace": "SFA.DAS.Notifications.Messages.Commands",
+      "sourceFile": "src/SFA.DAS.ProviderApprenticeshipsService.Infrastructure/Services/BackgroundNotificationService.cs",
+      "description": null,
+      "fields": [],
+      "handlers": [],
+      "senders": [
+        {
+          "name": "RoutingExtensions",
+          "sourceFile": "src/SFA.DAS.ProviderApprenticeshipsService.Application/Extensions/RoutingExtensions.cs"
+        },
+        {
+          "name": "BackgroundNotificationService",
+          "sourceFile": "src/SFA.DAS.ProviderApprenticeshipsService.Infrastructure/Services/BackgroundNotificationService.cs"
+        }
+      ]
+    },
+    {
       "name": "SendNotificationCommand",
       "namespace": "SFA.DAS.PAS.Account.Application.Commands.SendNotification",
       "sourceFile": "src/SFA.DAS.PAS.Account.Application/Commands/SendNotification/SendNotificationCommand.cs",
@@ -12,20 +30,17 @@
         {
           "name": "Email",
           "type": "NotificationEmail",
-          "required": null,
+          "required": true,
           "description": null
         }
       ],
       "handlers": [
         {
-          "name": "IMediator.Send",
-          "sourceFile": "src/SFA.DAS.PAS.Account.Api/Orchestrator/EmailOrchestrator.cs"
-        },
-        {
           "name": "SendNotificationCommandHandler",
           "sourceFile": "src/SFA.DAS.PAS.Account.Application/Commands/SendNotification/SendNotificationCommandHandler.cs"
         }
-      ]
+      ],
+      "senders": []
     },
     {
       "name": "DeleteRegisteredUserCommand",
@@ -36,7 +51,7 @@
         {
           "name": "UserRef",
           "type": "string",
-          "required": null,
+          "required": true,
           "description": null
         }
       ],
@@ -45,7 +60,8 @@
           "name": "DeleteRegisteredUserCommandHandler",
           "sourceFile": "src/SFA.DAS.ProviderApprenticeshipsService.Application/Commands/DeleteRegisteredUser/DeleteRegisteredUserCommandHandler.cs"
         }
-      ]
+      ],
+      "senders": []
     },
     {
       "name": "SendNotificationCommand",
@@ -56,7 +72,7 @@
         {
           "name": "Email",
           "type": "NotificationEmail",
-          "required": null,
+          "required": true,
           "description": null
         }
       ],
@@ -64,6 +80,16 @@
         {
           "name": "SendNotificationCommandHandler",
           "sourceFile": "src/SFA.DAS.ProviderApprenticeshipsService.Application/Commands/SendNotification/SendNotificationCommandHandler.cs"
+        }
+      ],
+      "senders": [
+        {
+          "name": "EmailOrchestrator",
+          "sourceFile": "src/SFA.DAS.PAS.Account.Api/Orchestrator/EmailOrchestrator.cs"
+        },
+        {
+          "name": "AccountOrchestrator",
+          "sourceFile": "src/SFA.DAS.ProviderApprenticeshipsService.Web/Orchestrators/AccountOrchestrator.cs"
         }
       ]
     },
@@ -82,7 +108,13 @@
       ],
       "handlers": [
         {
-          "name": "IMediator.Send",
+          "name": "UnsubscribeNotificationHandler",
+          "sourceFile": "src/SFA.DAS.ProviderApprenticeshipsService.Application/Commands/UnsubscribeNotification/UnsubscribeNotificationHandler.cs"
+        }
+      ],
+      "senders": [
+        {
+          "name": "AccountOrchestrator",
           "sourceFile": "src/SFA.DAS.ProviderApprenticeshipsService.Web/Orchestrators/AccountOrchestrator.cs"
         }
       ]
@@ -108,12 +140,14 @@
       ],
       "handlers": [
         {
-          "name": "IMediator.Send",
-          "sourceFile": "src/SFA.DAS.ProviderApprenticeshipsService.Web/Orchestrators/AccountOrchestrator.cs"
-        },
-        {
           "name": "UpdateUserNotificationSettingsHandler",
           "sourceFile": "src/SFA.DAS.ProviderApprenticeshipsService.Application/Commands/UpdateUserNotificationSettings/UpdateUserNotificationSettingsHandler.cs"
+        }
+      ],
+      "senders": [
+        {
+          "name": "AccountOrchestrator",
+          "sourceFile": "src/SFA.DAS.ProviderApprenticeshipsService.Web/Orchestrators/AccountOrchestrator.cs"
         }
       ]
     },
@@ -153,7 +187,8 @@
           "name": "UpsertRegisteredUserCommandHandler",
           "sourceFile": "src/SFA.DAS.ProviderApprenticeshipsService.Application/Commands/UpsertRegisteredUser/UpsertRegisteredUserCommandHandler.cs"
         }
-      ]
+      ],
+      "senders": []
     }
   ],
   "events": []

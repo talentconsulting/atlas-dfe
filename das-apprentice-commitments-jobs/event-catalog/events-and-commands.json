@@ -6,19 +6,19 @@
     {
       "name": "ProcessStoppedApprenticeship",
       "namespace": "SFA.DAS.ApprenticeCommitments.Jobs.Functions.InternalMessages.Commands",
-      "sourceFile": "src/SFA.DAS.ApprenticeCommitments.Jobs.Functions/Handlers/CommitmentsEventHandlers/StoppedApprenticeshipHandler.cs",
+      "sourceFile": "src/SFA.DAS.ApprenticeCommitments.Jobs.Functions/InternalMessages/Commands/ProcessStoppedApprenticeship.cs",
       "description": null,
       "fields": [
         {
           "name": "CommitmentsApprenticeshipId",
           "type": "long",
-          "required": null,
+          "required": true,
           "description": null
         },
         {
           "name": "CommitmentsStoppedOn",
           "type": "DateTime",
-          "required": null,
+          "required": true,
           "description": null
         }
       ],
@@ -27,7 +27,8 @@
           "name": "ProcessStoppedApprenticeshipsHandler",
           "sourceFile": "src/SFA.DAS.ApprenticeCommitments.Jobs.Functions/Handlers/DomainEvents/ProcessStoppedApprenticeshipsHandler.cs"
         }
-      ]
+      ],
+      "senders": []
     },
     {
       "name": "RemindApprenticeCommand",
@@ -38,7 +39,7 @@
         {
           "name": "RegistrationId",
           "type": "Guid",
-          "required": null,
+          "required": true,
           "description": null
         }
       ],
@@ -46,6 +47,12 @@
         {
           "name": "RemindApprenticeCommandHandler",
           "sourceFile": "src/SFA.DAS.ApprenticeCommitments.Jobs.Functions/Handlers/DomainEvents/RemindApprenticeCommandHandler.cs"
+        }
+      ],
+      "senders": [
+        {
+          "name": "SendInvitationRemindersHandler",
+          "sourceFile": "src/SFA.DAS.ApprenticeCommitments.Jobs.Functions/Handlers/DomainEvents/SendInvitationRemindersHandler.cs"
         }
       ]
     },
@@ -73,46 +80,45 @@
           "name": "SendApprenticeshipInvitationCommandHandler",
           "sourceFile": "src/SFA.DAS.ApprenticeCommitments.Jobs.Functions/Handlers/CommandHandlers/SendApprenticeshipInvitationCommandHandler.cs"
         }
+      ],
+      "senders": [
+        {
+          "name": "Program",
+          "sourceFile": "src/SFA.DAS.ApprenticeCommitments.TestMessagePublisher/Program.cs"
+        }
+      ]
+    },
+    {
+      "name": "SendEmailCommand",
+      "namespace": "SFA.DAS.Notifications.Messages.Commands",
+      "sourceFile": "src/SFA.DAS.ApprenticeCommitments.Jobs.Functions/EmailService.cs",
+      "description": null,
+      "fields": [],
+      "handlers": [],
+      "senders": [
+        {
+          "name": "EmailService",
+          "sourceFile": "src/SFA.DAS.ApprenticeCommitments.Jobs.Functions/EmailService.cs"
+        },
+        {
+          "name": "Startup",
+          "sourceFile": "src/SFA.DAS.ApprenticeCommitments.Jobs.Functions/Startup.cs"
+        }
       ]
     }
   ],
   "events": [
     {
-      "name": "ApprenticeEmailAddressChanged",
-      "namespace": "SFA.DAS.ApprenticeAccounts.Messages.Events",
-      "sourceFile": "src/SFA.DAS.ApprenticeCommitments.TestMessagePublisher/Program.cs",
+      "name": "ApprenticeshipEmailAddressChangedEvent",
+      "namespace": null,
+      "sourceFile": "src/SFA.DAS.ApprenticeCommitments.Jobs.Functions/Handlers/DomainEvents/ApprenticeEmailAddressChangedHandler.cs",
       "description": null,
-      "fields": [
-        {
-          "name": "ApprenticeId",
-          "type": "Guid",
-          "required": null,
-          "description": null
-        },
-        {
-          "name": "ChangedOn",
-          "type": "DateTime",
-          "required": null,
-          "description": null
-        }
-      ],
-      "handlers": [
+      "fields": [],
+      "handlers": [],
+      "senders": [
         {
           "name": "ApprenticeEmailAddressChangedHandler",
           "sourceFile": "src/SFA.DAS.ApprenticeCommitments.Jobs.Functions/Handlers/DomainEvents/ApprenticeEmailAddressChangedHandler.cs"
-        }
-      ]
-    },
-    {
-      "name": "ApprenticeshipChangedEvent",
-      "namespace": "SFA.DAS.ApprenticeCommitments.Messages.Events",
-      "sourceFile": "src/SFA.DAS.ApprenticeCommitments.Jobs.Functions/Handlers/DomainEvents/ApprenticeshipChangedEventHandler.cs",
-      "description": null,
-      "fields": [],
-      "handlers": [
-        {
-          "name": "ApprenticeshipChangedEventHandler",
-          "sourceFile": "src/SFA.DAS.ApprenticeCommitments.Jobs.Functions/Handlers/DomainEvents/ApprenticeshipChangedEventHandler.cs"
         }
       ]
     },
@@ -121,23 +127,22 @@
       "namespace": "SFA.DAS.ApprenticeCommitments.Messages.Events",
       "sourceFile": "src/SFA.DAS.ApprenticeCommitments.Jobs.Functions/Handlers/DomainEvents/ApprenticeshipConfirmedEventHandler.cs",
       "description": null,
-      "fields": [],
-      "handlers": [
-        {
-          "name": "ApprenticeshipConfirmedEventHandler",
-          "sourceFile": "src/SFA.DAS.ApprenticeCommitments.Jobs.Functions/Handlers/DomainEvents/ApprenticeshipConfirmedEventHandler.cs"
-        }
-      ]
-    },
-    {
-      "name": "ApprenticeshipEmailAddressChangedEvent",
-      "namespace": "SFA.DAS.ApprenticeCommitments.Messages.Events",
-      "sourceFile": "src/SFA.DAS.ApprenticeCommitments.Jobs.Functions/Handlers/DomainEvents/ApprenticeEmailAddressChangedHandler.cs",
-      "description": null,
       "fields": [
+        {
+          "name": "ConfirmationId",
+          "type": "long",
+          "required": null,
+          "description": null
+        },
         {
           "name": "ApprenticeId",
           "type": "Guid",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "ApprenticeshipId",
+          "type": "long",
           "required": null,
           "description": null
         },
@@ -148,18 +153,42 @@
           "description": null
         }
       ],
-      "handlers": []
+      "handlers": [
+        {
+          "name": "ApprenticeshipConfirmedEventHandler",
+          "sourceFile": "src/SFA.DAS.ApprenticeCommitments.Jobs.Functions/Handlers/DomainEvents/ApprenticeshipConfirmedEventHandler.cs"
+        }
+      ],
+      "senders": [
+        {
+          "name": "Program",
+          "sourceFile": "src/SFA.DAS.ApprenticeCommitments.TestMessagePublisher/Program.cs"
+        }
+      ]
     },
     {
       "name": "ApprenticeshipRegisteredEvent",
       "namespace": "SFA.DAS.ApprenticeCommitments.Messages.Events",
       "sourceFile": "src/SFA.DAS.ApprenticeCommitments.Jobs.Functions/Handlers/DomainEvents/ApprenticeshipRegisteredEventHandler.cs",
       "description": null,
-      "fields": [],
+      "fields": [
+        {
+          "name": "RegistrationId",
+          "type": "Guid",
+          "required": null,
+          "description": null
+        }
+      ],
       "handlers": [
         {
           "name": "ApprenticeshipRegisteredEventHandler",
           "sourceFile": "src/SFA.DAS.ApprenticeCommitments.Jobs.Functions/Handlers/DomainEvents/ApprenticeshipRegisteredEventHandler.cs"
+        }
+      ],
+      "senders": [
+        {
+          "name": "Program",
+          "sourceFile": "src/SFA.DAS.ApprenticeCommitments.TestMessagePublisher/Program.cs"
         }
       ]
     },
@@ -174,7 +203,8 @@
           "name": "StoppedApprenticeshipEventHandler",
           "sourceFile": "src/SFA.DAS.ApprenticeCommitments.Jobs.Functions/Handlers/DomainEvents/StoppedApprenticeshipEventHandler.cs"
         }
-      ]
+      ],
+      "senders": []
     },
     {
       "name": "ApprenticeshipCreatedEvent",
@@ -183,50 +213,14 @@
       "description": null,
       "fields": [
         {
-          "name": "AccountId",
-          "type": "long",
-          "required": null,
-          "description": null
-        },
-        {
-          "name": "AccountLegalEntityId",
-          "type": "long",
-          "required": null,
-          "description": null
-        },
-        {
-          "name": "AccountLegalEntityPublicHashedId",
-          "type": "string",
-          "required": null,
-          "description": null
-        },
-        {
-          "name": "AgreedOn",
-          "type": "DateTime",
-          "required": null,
-          "description": null
-        },
-        {
           "name": "ApprenticeshipId",
           "type": "long",
           "required": null,
           "description": null
         },
         {
-          "name": "EndDate",
-          "type": "DateTime",
-          "required": null,
-          "description": null
-        },
-        {
-          "name": "ProviderId",
-          "type": "long",
-          "required": null,
-          "description": null
-        },
-        {
-          "name": "StartDate",
-          "type": "DateTime",
+          "name": "ContinuationOfId",
+          "type": "long?",
           "required": null,
           "description": null
         }
@@ -240,12 +234,18 @@
           "name": "StoppedApprenticeshipHandler",
           "sourceFile": "src/SFA.DAS.ApprenticeCommitments.Jobs.Functions/Handlers/CommitmentsEventHandlers/StoppedApprenticeshipHandler.cs"
         }
+      ],
+      "senders": [
+        {
+          "name": "Program",
+          "sourceFile": "src/SFA.DAS.ApprenticeCommitments.TestMessagePublisher/Program.cs"
+        }
       ]
     },
     {
       "name": "ApprenticeshipStoppedEvent",
       "namespace": "SFA.DAS.CommitmentsV2.Messages.Events",
-      "sourceFile": "src/SFA.DAS.ApprenticeCommitments.TestMessagePublisher/Program.cs",
+      "sourceFile": "src/SFA.DAS.ApprenticeCommitments.Jobs.Functions/Handlers/CommitmentsEventHandlers/StoppedApprenticeshipHandler.cs",
       "description": null,
       "fields": [
         {
@@ -272,18 +272,11 @@
           "name": "StoppedApprenticeshipHandler",
           "sourceFile": "src/SFA.DAS.ApprenticeCommitments.Jobs.Functions/Handlers/CommitmentsEventHandlers/StoppedApprenticeshipHandler.cs"
         }
-      ]
-    },
-    {
-      "name": "ApprenticeshipUpdatedApprovedEvent",
-      "namespace": "SFA.DAS.CommitmentsV2.Messages.Events",
-      "sourceFile": "src/SFA.DAS.ApprenticeCommitments.Jobs.Functions/Handlers/CommitmentsEventHandlers/CommitmentsEventHandler.cs",
-      "description": null,
-      "fields": [],
-      "handlers": [
+      ],
+      "senders": [
         {
-          "name": "CommitmentsEventHandler",
-          "sourceFile": "src/SFA.DAS.ApprenticeCommitments.Jobs.Functions/Handlers/CommitmentsEventHandlers/CommitmentsEventHandler.cs"
+          "name": "Program",
+          "sourceFile": "src/SFA.DAS.ApprenticeCommitments.TestMessagePublisher/Program.cs"
         }
       ]
     }

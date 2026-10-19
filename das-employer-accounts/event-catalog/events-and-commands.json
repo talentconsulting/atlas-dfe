@@ -28,7 +28,12 @@
           "sourceFile": "src/SFA.DAS.EmployerAccounts/Commands/AcceptInvitation/AcceptInvitationCommandHandler.cs"
         }
       ],
-      "senders": []
+      "senders": [
+        {
+          "name": "AcceptInvitation",
+          "sourceFile": "src/SFA.DAS.EmployerAccounts.Web/Orchestrators/InvitationOrchestrator.cs"
+        }
+      ]
     },
     {
       "name": "AccountLevyStatusCommand",
@@ -57,8 +62,8 @@
       ],
       "senders": [
         {
-          "name": "AddPayeToAccountCommandHandler",
-          "sourceFile": "src/SFA.DAS.EmployerAccounts/Commands/AddPayeToAccount/AddPayeToAccountCommandHandler.cs"
+          "name": "RefreshEmployerLevyDataCompletedEventHandler",
+          "sourceFile": "src/SFA.DAS.EmployerAccounts.MessageHandlers/EventHandlers/EmployerFinance/RefreshEmployerLevyDataCompletedEventHandler.cs"
         }
       ]
     },
@@ -102,7 +107,20 @@
           "sourceFile": "src/SFA.DAS.EmployerAccounts/Commands/AcknowledgeTrainingProviderTask/AcknowledgeTrainingProviderTaskCommandHandler.cs"
         }
       ],
-      "senders": []
+      "senders": [
+        {
+          "name": "AcknowledgeTrainingProviderTask",
+          "sourceFile": "src/SFA.DAS.EmployerAccounts.Api/Controllers/EmployerAccountsController.cs"
+        },
+        {
+          "name": "CreateEmployerAccountViaProviderRequest",
+          "sourceFile": "src/SFA.DAS.EmployerAccounts.Api/Controllers/EmployerAccountsController.cs"
+        },
+        {
+          "name": "AccountsOrchestrator",
+          "sourceFile": "src/SFA.DAS.EmployerAccounts.Api/Orchestrators/AccountsOrchestrator.cs"
+        }
+      ]
     },
     {
       "name": "AddPayeToAccountCommand",
@@ -111,7 +129,13 @@
       "description": null,
       "fields": [
         {
-          "name": "ExternalUserId",
+          "name": "AccessToken",
+          "type": "string",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "Aorn",
           "type": "string",
           "required": null,
           "description": null
@@ -123,13 +147,13 @@
           "description": null
         },
         {
-          "name": "RefreshToken",
+          "name": "EmprefName",
           "type": "string",
           "required": null,
           "description": null
         },
         {
-          "name": "AccessToken",
+          "name": "ExternalUserId",
           "type": "string",
           "required": null,
           "description": null
@@ -141,13 +165,7 @@
           "description": null
         },
         {
-          "name": "EmprefName",
-          "type": "string",
-          "required": null,
-          "description": null
-        },
-        {
-          "name": "Aorn",
+          "name": "RefreshToken",
           "type": "string",
           "required": null,
           "description": null
@@ -159,7 +177,16 @@
           "sourceFile": "src/SFA.DAS.EmployerAccounts/Commands/AddPayeToAccount/AddPayeToAccountCommandHandler.cs"
         }
       ],
-      "senders": []
+      "senders": [
+        {
+          "name": "EmployerAccountOrchestrator.AddPayeToExistingAccount",
+          "sourceFile": "src/SFA.DAS.EmployerAccounts.Web/Orchestrators/EmployerAccountOrchestrator.cs"
+        },
+        {
+          "name": "EmployerAccountPayeOrchestrator.AddPayeSchemeToAccount",
+          "sourceFile": "src/SFA.DAS.EmployerAccounts.Web/Orchestrators/EmployerAccountPayeOrchestrator.cs"
+        }
+      ]
     },
     {
       "name": "CreateAuditCommand",
@@ -170,7 +197,7 @@
         {
           "name": "EasAuditMessage",
           "type": "AuditMessage",
-          "required": false,
+          "required": true,
           "description": null
         }
       ],
@@ -189,27 +216,27 @@
       "description": null,
       "fields": [
         {
+          "name": "ExternalUserId",
+          "type": "string",
+          "required": true,
+          "description": null
+        },
+        {
           "name": "HashedAccountId",
           "type": "string",
-          "required": false,
+          "required": true,
           "description": null
         },
         {
           "name": "HashedUserId",
           "type": "string",
-          "required": false,
+          "required": true,
           "description": null
         },
         {
           "name": "Role",
           "type": "Role",
-          "required": false,
-          "description": null
-        },
-        {
-          "name": "ExternalUserId",
-          "type": "string",
-          "required": false,
+          "required": true,
           "description": null
         }
       ],
@@ -219,7 +246,12 @@
           "sourceFile": "src/SFA.DAS.EmployerAccounts/Commands/ChangeTeamMemberRole/ChangeTeamMemberRoleCommandHandler.cs"
         }
       ],
-      "senders": []
+      "senders": [
+        {
+          "name": "ChangeRole",
+          "sourceFile": "src/SFA.DAS.EmployerAccounts.Web/Orchestrators/EmployerTeamOrchestrator.cs"
+        }
+      ]
     },
     {
       "name": "CreateAccountCommand",
@@ -228,13 +260,25 @@
       "description": null,
       "fields": [
         {
-          "name": "IsViaProviderRequest",
-          "type": "bool",
+          "name": "AccessToken",
+          "type": "string",
+          "required": false,
+          "description": null
+        },
+        {
+          "name": "Aorn",
+          "type": "string",
           "required": false,
           "description": null
         },
         {
           "name": "CorrelationId",
+          "type": "string",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "EmployerRefName",
           "type": "string",
           "required": false,
           "description": null
@@ -242,31 +286,13 @@
         {
           "name": "ExternalUserId",
           "type": "string",
-          "required": false,
+          "required": true,
           "description": null
         },
         {
-          "name": "OrganisationType",
-          "type": "OrganisationType",
-          "required": false,
-          "description": null
-        },
-        {
-          "name": "PublicSectorDataSource",
-          "type": "short?",
-          "required": false,
-          "description": null
-        },
-        {
-          "name": "OrganisationName",
-          "type": "string",
-          "required": false,
-          "description": null
-        },
-        {
-          "name": "OrganisationReferenceNumber",
-          "type": "string",
-          "required": false,
+          "name": "IsViaProviderRequest",
+          "type": "bool",
+          "required": true,
           "description": null
         },
         {
@@ -282,19 +308,13 @@
           "description": null
         },
         {
-          "name": "PayeReference",
+          "name": "OrganisationName",
           "type": "string",
-          "required": false,
+          "required": true,
           "description": null
         },
         {
-          "name": "AccessToken",
-          "type": "string",
-          "required": false,
-          "description": null
-        },
-        {
-          "name": "RefreshToken",
+          "name": "OrganisationReferenceNumber",
           "type": "string",
           "required": false,
           "description": null
@@ -306,19 +326,31 @@
           "description": null
         },
         {
-          "name": "EmployerRefName",
+          "name": "OrganisationType",
+          "type": "OrganisationType",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "PayeReference",
+          "type": "string",
+          "required": false,
+          "description": null
+        },
+        {
+          "name": "PublicSectorDataSource",
+          "type": "short?",
+          "required": false,
+          "description": null
+        },
+        {
+          "name": "RefreshToken",
           "type": "string",
           "required": false,
           "description": null
         },
         {
           "name": "Sector",
-          "type": "string",
-          "required": false,
-          "description": null
-        },
-        {
-          "name": "Aorn",
           "type": "string",
           "required": false,
           "description": null
@@ -330,7 +362,16 @@
           "sourceFile": "src/SFA.DAS.EmployerAccounts/Commands/CreateAccount/CreateAccountCommandHandler.cs"
         }
       ],
-      "senders": []
+      "senders": [
+        {
+          "name": "CreateEmployerAccountViaProviderRequest",
+          "sourceFile": "src/SFA.DAS.EmployerAccounts.Api/Controllers/EmployerAccountsController.cs"
+        },
+        {
+          "name": "EmployerAccountOrchestrator.CreateNewAccount",
+          "sourceFile": "src/SFA.DAS.EmployerAccounts.Web/Orchestrators/EmployerAccountOrchestrator.cs"
+        }
+      ]
     },
     {
       "name": "SendAccountTaskListCompleteNotificationCommand",
@@ -341,31 +382,31 @@
         {
           "name": "HashedAccountId",
           "type": "string",
-          "required": null,
+          "required": true,
           "description": null
         },
         {
           "name": "AccountId",
           "type": "long",
-          "required": null,
+          "required": true,
           "description": null
         },
         {
           "name": "PublicHashedAccountId",
           "type": "string",
-          "required": null,
+          "required": true,
           "description": null
         },
         {
           "name": "OrganisationName",
           "type": "string",
-          "required": null,
+          "required": true,
           "description": null
         },
         {
           "name": "ExternalUserId",
           "type": "string",
-          "required": null,
+          "required": true,
           "description": null
         }
       ],
@@ -384,33 +425,33 @@
       "description": null,
       "fields": [
         {
+          "name": "EmailOfPersonBeingInvited",
+          "type": "string",
+          "required": true,
+          "description": null
+        },
+        {
           "name": "ExternalUserId",
           "type": "string",
-          "required": null,
+          "required": true,
           "description": null
         },
         {
           "name": "HashedAccountId",
           "type": "string",
-          "required": null,
+          "required": true,
           "description": null
         },
         {
           "name": "NameOfPersonBeingInvited",
           "type": "string",
-          "required": null,
-          "description": null
-        },
-        {
-          "name": "EmailOfPersonBeingInvited",
-          "type": "string",
-          "required": null,
+          "required": true,
           "description": null
         },
         {
           "name": "RoleOfPersonBeingInvited",
           "type": "Role",
-          "required": null,
+          "required": true,
           "description": null
         }
       ],
@@ -420,7 +461,16 @@
           "sourceFile": "src/SFA.DAS.EmployerAccounts/Commands/CreateInvitation/CreateInvitationCommandHandler.cs"
         }
       ],
-      "senders": []
+      "senders": [
+        {
+          "name": "InviteTeamMember",
+          "sourceFile": "src/SFA.DAS.EmployerAccounts.Web/Orchestrators/EmployerTeamOrchestrator.cs"
+        },
+        {
+          "name": "CreateInvitation",
+          "sourceFile": "src/SFA.DAS.EmployerAccounts.Web/Orchestrators/InvitationOrchestrator.cs"
+        }
+      ]
     },
     {
       "name": "CreateLegalEntityCommand",
@@ -429,63 +479,63 @@
       "description": null,
       "fields": [
         {
-          "name": "HashedAccountId",
+          "name": "Address",
           "type": "string",
-          "required": null,
+          "required": false,
           "description": null
         },
         {
           "name": "Code",
           "type": "string",
-          "required": null,
+          "required": false,
           "description": null
         },
         {
           "name": "DateOfIncorporation",
           "type": "DateTime?",
-          "required": null,
-          "description": null
-        },
-        {
-          "name": "PublicSectorDataSource",
-          "type": "byte?",
-          "required": null,
-          "description": null
-        },
-        {
-          "name": "Sector",
-          "type": "string",
-          "required": null,
-          "description": null
-        },
-        {
-          "name": "Source",
-          "type": "OrganisationType",
-          "required": null,
-          "description": null
-        },
-        {
-          "name": "Status",
-          "type": "string",
-          "required": null,
-          "description": null
-        },
-        {
-          "name": "Name",
-          "type": "string",
-          "required": null,
-          "description": null
-        },
-        {
-          "name": "Address",
-          "type": "string",
-          "required": null,
+          "required": false,
           "description": null
         },
         {
           "name": "ExternalUserId",
           "type": "string",
-          "required": null,
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "HashedAccountId",
+          "type": "string",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "Name",
+          "type": "string",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "PublicSectorDataSource",
+          "type": "byte?",
+          "required": false,
+          "description": null
+        },
+        {
+          "name": "Sector",
+          "type": "string",
+          "required": false,
+          "description": null
+        },
+        {
+          "name": "Source",
+          "type": "OrganisationType",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "Status",
+          "type": "string",
+          "required": false,
           "description": null
         }
       ],
@@ -495,7 +545,16 @@
           "sourceFile": "src/SFA.DAS.EmployerAccounts/Commands/CreateLegalEntity/CreateLegalEntityCommandHandler.cs"
         }
       ],
-      "senders": []
+      "senders": [
+        {
+          "name": "EmployerAccountOrchestrator.AddLegalEntityToExistingAccount",
+          "sourceFile": "src/SFA.DAS.EmployerAccounts.Web/Orchestrators/EmployerAccountOrchestrator.cs"
+        },
+        {
+          "name": "CreateLegalEntity",
+          "sourceFile": "src/SFA.DAS.EmployerAccounts.Web/Orchestrators/OrganisationOrchestrator.cs"
+        }
+      ]
     },
     {
       "name": "CreateOrganisationAddressRequest",
@@ -522,12 +581,6 @@
           "description": null
         },
         {
-          "name": "TownOrCity",
-          "type": "string",
-          "required": null,
-          "description": null
-        },
-        {
           "name": "County",
           "type": "string",
           "required": null,
@@ -535,6 +588,12 @@
         },
         {
           "name": "Postcode",
+          "type": "string",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "TownOrCity",
           "type": "string",
           "required": null,
           "description": null
@@ -546,7 +605,12 @@
           "sourceFile": "src/SFA.DAS.EmployerAccounts/Commands/CreateOrganisationAddress/CreateOrganisationAddressHandler.cs"
         }
       ],
-      "senders": []
+      "senders": [
+        {
+          "name": "AddOrganisationAddress",
+          "sourceFile": "src/SFA.DAS.EmployerAccounts.Web/Orchestrators/OrganisationOrchestrator.cs"
+        }
+      ]
     },
     {
       "name": "CreateUserAccountCommand",
@@ -606,7 +670,12 @@
           "sourceFile": "src/SFA.DAS.EmployerAccounts/Commands/DeleteInvitation/DeleteInvitationCommandHandler.cs"
         }
       ],
-      "senders": []
+      "senders": [
+        {
+          "name": "Cancel",
+          "sourceFile": "src/SFA.DAS.EmployerAccounts.Web/Orchestrators/EmployerTeamOrchestrator.cs"
+        }
+      ]
     },
     {
       "name": "AssessLevyDormancyCommand",
@@ -620,7 +689,12 @@
           "sourceFile": "src/SFA.DAS.EmployerAccounts/Commands/LevyDormancy/AssessLevyDormancyCommandHandler.cs"
         }
       ],
-      "senders": []
+      "senders": [
+        {
+          "name": "LevyStatusAssessmentJob",
+          "sourceFile": "src/SFA.DAS.EmployerAccounts.Jobs/ScheduledJobs/LevyStatusAssessmentJob.cs"
+        }
+      ]
     },
     {
       "name": "ProcessLevyDormancySwitchesCommand",
@@ -629,7 +703,12 @@
       "description": null,
       "fields": [],
       "handlers": [],
-      "senders": []
+      "senders": [
+        {
+          "name": "LevyDormancyOrchestrationJob",
+          "sourceFile": "src/SFA.DAS.EmployerAccounts.Jobs/ScheduledJobs/LevyDormancyOrchestrationJob.cs"
+        }
+      ]
     },
     {
       "name": "ProcessLevyDormancyWarningsCommand",
@@ -643,7 +722,12 @@
           "sourceFile": "src/SFA.DAS.EmployerAccounts/Commands/LevyDormancy/ProcessLevyDormancyWarningsCommandHandler.cs"
         }
       ],
-      "senders": []
+      "senders": [
+        {
+          "name": "LevyDormancyOrchestrationJob",
+          "sourceFile": "src/SFA.DAS.EmployerAccounts.Jobs/ScheduledJobs/LevyDormancyOrchestrationJob.cs"
+        }
+      ]
     },
     {
       "name": "UpsertEmployerAccountLevyStatusCommand",
@@ -676,7 +760,12 @@
           "sourceFile": "src/SFA.DAS.EmployerAccounts/Commands/LevyDormancy/UpsertEmployerAccountLevyStatusCommandHandler.cs"
         }
       ],
-      "senders": []
+      "senders": [
+        {
+          "name": "RefreshEmployerLevyDataAccountLevyStatusProjectionHandler",
+          "sourceFile": "src/SFA.DAS.EmployerAccounts.MessageHandlers/EventHandlers/EmployerFinance/RefreshEmployerLevyDataAccountLevyStatusProjectionHandler.cs"
+        }
+      ]
     },
     {
       "name": "SaveOrganisationAndPayeData",
@@ -724,7 +813,16 @@
           "sourceFile": "src/SFA.DAS.EmployerAccounts/Commands/OrganisationData/CookieBasedOrganisationDataSaver.cs"
         }
       ],
-      "senders": []
+      "senders": [
+        {
+          "name": "EmployerAccountController.SaveOrganisationDataIfItHasAValidName",
+          "sourceFile": "src/SFA.DAS.EmployerAccounts.Web/Controllers/SearchOrganisationController.cs"
+        },
+        {
+          "name": "EmployerAccountController.SavePensionRegulatorOrganisationDataIfItHasAValidName",
+          "sourceFile": "src/SFA.DAS.EmployerAccounts.Web/Controllers/SearchPensionRegulatorController.cs"
+        }
+      ]
     },
     {
       "name": "SavePayeRefData",
@@ -733,9 +831,39 @@
       "description": null,
       "fields": [
         {
+          "name": "AccessToken",
+          "type": "string",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "EmpRefNotFound",
+          "type": "bool",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "EmployerRefName",
+          "type": "string",
+          "required": null,
+          "description": null
+        },
+        {
           "name": "PayeRefData",
           "type": "EmployerAccountPayeRefData",
           "required": true,
+          "description": null
+        },
+        {
+          "name": "PayeReference",
+          "type": "string",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "RefreshToken",
+          "type": "string",
+          "required": null,
           "description": null
         }
       ],
@@ -745,7 +873,16 @@
           "sourceFile": "src/SFA.DAS.EmployerAccounts/Commands/PayeRefData/CookieBasedPayeRefDataSaver.cs"
         }
       ],
-      "senders": []
+      "senders": [
+        {
+          "name": "EmployerAccountController.GateWayResponse",
+          "sourceFile": "src/SFA.DAS.EmployerAccounts.Web/Controllers/EmployerAccountController.cs"
+        },
+        {
+          "name": "EmployerAccountController.PerformSearchPensionRegulatorByAorn",
+          "sourceFile": "src/SFA.DAS.EmployerAccounts.Web/Controllers/SearchPensionRegulatorController.cs"
+        }
+      ]
     },
     {
       "name": "RecordUserLoggedInCommand",
@@ -756,7 +893,7 @@
         {
           "name": "UserRef",
           "type": "string",
-          "required": null,
+          "required": true,
           "description": null
         }
       ],
@@ -777,19 +914,19 @@
         {
           "name": "AccountId",
           "type": "long",
-          "required": null,
+          "required": true,
           "description": null
         },
         {
           "name": "AccountLegalEntityId",
           "type": "long",
-          "required": null,
+          "required": true,
           "description": null
         },
         {
           "name": "UserId",
           "type": "string",
-          "required": null,
+          "required": true,
           "description": null
         }
       ],
@@ -808,6 +945,18 @@
       "description": null,
       "fields": [
         {
+          "name": "ExternalUserId",
+          "type": "string",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "HashedAccountId",
+          "type": "string",
+          "required": null,
+          "description": null
+        },
+        {
           "name": "UserId",
           "type": "long",
           "required": null,
@@ -818,18 +967,6 @@
           "type": "Guid",
           "required": null,
           "description": null
-        },
-        {
-          "name": "HashedAccountId",
-          "type": "string",
-          "required": null,
-          "description": null
-        },
-        {
-          "name": "ExternalUserId",
-          "type": "string",
-          "required": null,
-          "description": null
         }
       ],
       "handlers": [
@@ -838,7 +975,12 @@
           "sourceFile": "src/SFA.DAS.EmployerAccounts/Commands/RemoveTeamMember/RemoveTeamMemberCommandHandler.cs"
         }
       ],
-      "senders": []
+      "senders": [
+        {
+          "name": "Remove",
+          "sourceFile": "src/SFA.DAS.EmployerAccounts.Web/Orchestrators/EmployerTeamOrchestrator.cs"
+        }
+      ]
     },
     {
       "name": "RenameEmployerAccountCommand",
@@ -847,13 +989,13 @@
       "description": null,
       "fields": [
         {
-          "name": "HashedAccountId",
+          "name": "ExternalUserId",
           "type": "string",
           "required": null,
           "description": null
         },
         {
-          "name": "ExternalUserId",
+          "name": "HashedAccountId",
           "type": "string",
           "required": null,
           "description": null
@@ -871,7 +1013,16 @@
           "sourceFile": "src/SFA.DAS.EmployerAccounts/Commands/RenameEmployerAccount/RenameEmployerAccountCommandHandler.cs"
         }
       ],
-      "senders": []
+      "senders": [
+        {
+          "name": "EmployerAccountOrchestrator.RenameEmployerAccount",
+          "sourceFile": "src/SFA.DAS.EmployerAccounts.Web/Orchestrators/EmployerAccountOrchestrator.cs"
+        },
+        {
+          "name": "EmployerAccountOrchestrator.UpdateAccountNameToLegalEntityName",
+          "sourceFile": "src/SFA.DAS.EmployerAccounts.Web/Orchestrators/EmployerAccountOrchestrator.cs"
+        }
+      ]
     },
     {
       "name": "ResendInvitationCommand",
@@ -880,11 +1031,107 @@
       "description": null,
       "fields": [
         {
-          "name": "HashedInvitationId",
+          "name": "ExternalUserId",
           "type": "string",
           "required": null,
           "description": null
         },
+        {
+          "name": "FirstName",
+          "type": "string",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "HashedAccountId",
+          "type": "string",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "HashedInvitationId",
+          "type": "string",
+          "required": null,
+          "description": null
+        }
+      ],
+      "handlers": [],
+      "senders": [
+        {
+          "name": "Resend",
+          "sourceFile": "src/SFA.DAS.EmployerAccounts.Web/Orchestrators/EmployerTeamOrchestrator.cs"
+        }
+      ]
+    },
+    {
+      "name": "RunHealthCheckCommand",
+      "namespace": "SFA.DAS.EmployerAccounts.Commands.RunHealthCheckCommand",
+      "sourceFile": "src/SFA.DAS.EmployerAccounts/Commands/RunHealthCheckCommand/RunHealthCheckCommand.cs",
+      "description": null,
+      "fields": [
+        {
+          "name": "UserRef",
+          "type": "Guid?",
+          "required": true,
+          "description": null
+        }
+      ],
+      "handlers": [
+        {
+          "name": "RunHealthCheckCommandHandler",
+          "sourceFile": "src/SFA.DAS.EmployerAccounts/Commands/RunHealthCheckCommand/RunHealthCheckCommandHandler.cs"
+        }
+      ],
+      "senders": [
+        {
+          "name": "NServiceBusHealthCheck",
+          "sourceFile": "src/SFA.DAS.EmployerAccounts.Api/HealthChecks/NServiceBusHealthCheck.cs"
+        },
+        {
+          "name": "HealthCheckController.Index",
+          "sourceFile": "src/SFA.DAS.EmployerAccounts.Web/Controllers/HealthCheckController.cs"
+        }
+      ]
+    },
+    {
+      "name": "SendNotificationCommand",
+      "namespace": "SFA.DAS.EmployerAccounts.Commands.SendNotification",
+      "sourceFile": "src/SFA.DAS.EmployerAccounts/Commands/SendNotification/SendNotificationCommand.cs",
+      "description": null,
+      "fields": [
+        {
+          "name": "RecipientsAddress",
+          "type": "string",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "TemplateId",
+          "type": "string",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "Tokens",
+          "type": "Dictionary<string,string>",
+          "required": null,
+          "description": null
+        }
+      ],
+      "handlers": [
+        {
+          "name": "SendNotificationCommandHandler",
+          "sourceFile": "src/SFA.DAS.EmployerAccounts/Commands/SendNotification/SendNotificationCommandHandler.cs"
+        }
+      ],
+      "senders": []
+    },
+    {
+      "name": "SignEmployerAgreementCommand",
+      "namespace": "SFA.DAS.EmployerAccounts.Commands.SignEmployerAgreement",
+      "sourceFile": "src/SFA.DAS.EmployerAccounts/Commands/SignEmployerAgreement/SignEmployerAgreementCommand.cs",
+      "description": null,
+      "fields": [
         {
           "name": "HashedAccountId",
           "type": "string",
@@ -898,42 +1145,630 @@
           "description": null
         },
         {
-          "name": "FirstName",
+          "name": "SignedDate",
+          "type": "DateTime",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "HashedAgreementId",
+          "type": "string",
+          "required": null,
+          "description": null
+        }
+      ],
+      "handlers": [
+        {
+          "name": "SignEmployerAgreementCommandHandler",
+          "sourceFile": "src/SFA.DAS.EmployerAccounts/Commands/SignEmployerAgreement/SignEmployerAgreementCommandHandler.cs"
+        }
+      ],
+      "senders": []
+    },
+    {
+      "name": "SignEmployerAgreementWithoutAuditCommand",
+      "namespace": "SFA.DAS.EmployerAccounts.Commands.SignEmployerAgreementWithOutAudit",
+      "sourceFile": "src/SFA.DAS.EmployerAccounts/Commands/SignEmployerAgreementWithOutAudit/SignEmployerAgreementWithoutAuditCommand.cs",
+      "description": null,
+      "fields": [
+        {
+          "name": "AgreementId",
+          "type": "long",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "CorrelationId",
+          "type": "string",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "RequestId",
+          "type": "Guid",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "User",
+          "type": "User",
+          "required": null,
+          "description": null
+        }
+      ],
+      "handlers": [
+        {
+          "name": "SignEmployerAgreementWithoutAuditCommandHandler",
+          "sourceFile": "src/SFA.DAS.EmployerAccounts/Commands/SignEmployerAgreementWithOutAudit/SignEmployerAgreementWithoutAuditCommandHandler.cs"
+        }
+      ],
+      "senders": [
+        {
+          "name": "CreateEmployerAccountViaProviderRequest",
+          "sourceFile": "src/SFA.DAS.EmployerAccounts.Api/Controllers/EmployerAccountsController.cs"
+        }
+      ]
+    },
+    {
+      "name": "SupportChangeTeamMemberRoleCommand",
+      "namespace": "SFA.DAS.EmployerAccounts.Commands.SupportChangeTeamMemberRole",
+      "sourceFile": "src/SFA.DAS.EmployerAccounts/Commands/SupportChangeTeamMemberRole/SupportChangeTeamMemberRoleCommand.cs",
+      "description": null,
+      "fields": [
+        {
+          "name": "Email",
+          "type": "string",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "HashedAccountId",
+          "type": "string",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "Role",
+          "type": "SFA.DAS.EmployerAccounts.Models.Role",
+          "required": null,
+          "description": null
+        }
+      ],
+      "handlers": [
+        {
+          "name": "SupportChangeTeamMemberRoleCommandHandler",
+          "sourceFile": "src/SFA.DAS.EmployerAccounts/Commands/SupportChangeTeamMemberRole/SupportChangeTeamMemberRoleCommandHandler.cs"
+        }
+      ],
+      "senders": [
+        {
+          "name": "SupportController",
+          "sourceFile": "src/SFA.DAS.EmployerAccounts.Api/Controllers/SupportController.cs"
+        }
+      ]
+    },
+    {
+      "name": "SupportCreateInvitationCommand",
+      "namespace": "SFA.DAS.EmployerAccounts.Commands.SupportCreateInvitation",
+      "sourceFile": "src/SFA.DAS.EmployerAccounts/Commands/SupportCreateInvitation/SupportCreateInvitationCommand.cs",
+      "description": null,
+      "fields": [
+        {
+          "name": "EmailOfPersonBeingInvited",
+          "type": "string",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "HashedAccountId",
+          "type": "string",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "NameOfPersonBeingInvited",
+          "type": "string",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "RoleOfPersonBeingInvited",
+          "type": "SFA.DAS.EmployerAccounts.Models.Role",
+          "required": null,
+          "description": null
+        }
+      ],
+      "handlers": [],
+      "senders": [
+        {
+          "name": "SupportController",
+          "sourceFile": "src/SFA.DAS.EmployerAccounts.Api/Controllers/SupportController.cs"
+        }
+      ]
+    },
+    {
+      "name": "SupportResendInvitationCommand",
+      "namespace": "SFA.DAS.EmployerAccounts.Commands.SupportResendInvitationCommand",
+      "sourceFile": "src/SFA.DAS.EmployerAccounts/Commands/SupportResendInvitationCommand/SupportResendInvitationCommand.cs",
+      "description": null,
+      "fields": [
+        {
+          "name": "Email",
+          "type": "string",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "HashedAccountId",
           "type": "string",
           "required": null,
           "description": null
         }
       ],
       "handlers": [],
-      "senders": []
+      "senders": [
+        {
+          "name": "SupportController",
+          "sourceFile": "src/SFA.DAS.EmployerAccounts.Api/Controllers/SupportController.cs"
+        }
+      ]
     },
     {
-      "name": "RunHealthCheckCommand",
-      "namespace": "SFA.DAS.EmployerAccounts.Commands.RunHealthCheckCommand",
-      "sourceFile": "src/SFA.DAS.EmployerAccounts/Commands/RunHealthCheckCommand/RunHealthCheckCommand.cs",
+      "name": "UnsubscribeNotificationCommand",
+      "namespace": "SFA.DAS.EmployerAccounts.Commands.UnsubscribeNotification",
+      "sourceFile": "src/SFA.DAS.EmployerAccounts/Commands/UnsubscribeNotification/UnsubscribeNotificationCommand.cs",
       "description": null,
       "fields": [
         {
           "name": "UserRef",
-          "type": "Guid?",
+          "type": "string",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "AccountId",
+          "type": "long",
+          "required": null,
+          "description": null
+        }
+      ],
+      "handlers": [
+        {
+          "name": "UnsubscribeNotificationHandler",
+          "sourceFile": "src/SFA.DAS.EmployerAccounts/Commands/UnsubscribeNotification/UnsubscribeNotificationHandler.cs"
+        }
+      ],
+      "senders": []
+    },
+    {
+      "name": "UpdateOrganisationDetailsCommand",
+      "namespace": "SFA.DAS.EmployerAccounts.Commands.UpdateOrganisationDetails",
+      "sourceFile": "src/SFA.DAS.EmployerAccounts/Commands/UpdateOrganisationDetails/UpdateOrganisationDetailsCommand.cs",
+      "description": null,
+      "fields": [
+        {
+          "name": "AccountId",
+          "type": "long",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "AccountLegalEntityId",
+          "type": "long",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "Address",
+          "type": "string",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "Name",
+          "type": "string",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "UserId",
+          "type": "string",
+          "required": null,
+          "description": "The UserRef of the user."
+        }
+      ],
+      "handlers": [
+        {
+          "name": "UpdateOrganisationDetailsCommandHandler",
+          "sourceFile": "src/SFA.DAS.EmployerAccounts/Commands/UpdateOrganisationDetails/UpdateOrganisationDetailsCommandHandler.cs"
+        }
+      ],
+      "senders": [
+        {
+          "name": "UpdateOrganisation",
+          "sourceFile": "src/SFA.DAS.EmployerAccounts.Web/Orchestrators/OrganisationOrchestrator.cs"
+        }
+      ]
+    },
+    {
+      "name": "UpdateShowAccountWizardCommand",
+      "namespace": "SFA.DAS.EmployerAccounts.Commands.UpdateShowWizard",
+      "sourceFile": "src/SFA.DAS.EmployerAccounts/Commands/UpdateShowWizard/UpdateShowAccountWizardCommand.cs",
+      "description": null,
+      "fields": [
+        {
+          "name": "HashedAccountId",
+          "type": "string",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "ExternalUserId",
+          "type": "string",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "ShowWizard",
+          "type": "bool",
+          "required": null,
+          "description": null
+        }
+      ],
+      "handlers": [
+        {
+          "name": "UpdateShowAccountWizardCommandHandler",
+          "sourceFile": "src/SFA.DAS.EmployerAccounts/Commands/UpdateShowWizard/UpdateShowAccountWizardCommandHandler.cs"
+        }
+      ],
+      "senders": []
+    },
+    {
+      "name": "UpdateUserNotificationSettingsCommand",
+      "namespace": "SFA.DAS.EmployerAccounts.Commands.UpdateUserNotificationSettings",
+      "sourceFile": "src/SFA.DAS.EmployerAccounts/Commands/UpdateUserNotificationSettings/UpdateUserNotificationSettingsCommand.cs",
+      "description": null,
+      "fields": [
+        {
+          "name": "Settings",
+          "type": "List<UserNotificationSetting>",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "UserRef",
+          "type": "string",
+          "required": null,
+          "description": null
+        }
+      ],
+      "handlers": [
+        {
+          "name": "UpdateUserNotificationSettingsCommandHandler",
+          "sourceFile": "src/SFA.DAS.EmployerAccounts/Commands/UpdateUserNotificationSettings/UpdateUserNotificationSettingsCommandHandler.cs"
+        }
+      ],
+      "senders": []
+    },
+    {
+      "name": "UpdateTermAndConditionsAcceptedOnCommand",
+      "namespace": "SFA.DAS.EmployerAccounts.Commands.UpsertRegisteredUser",
+      "sourceFile": "src/SFA.DAS.EmployerAccounts/Commands/UpdateTermAndConditionsAcceptedOn/UpdateTermAndConditionsAcceptedOnCommand.cs",
+      "description": null,
+      "fields": [
+        {
+          "name": "UserRef",
+          "type": "string",
+          "required": null,
+          "description": null
+        }
+      ],
+      "handlers": [
+        {
+          "name": "UpdateTermAndConditionsAcceptedOnCommandHandler",
+          "sourceFile": "src/SFA.DAS.EmployerAccounts/Commands/UpdateTermAndConditionsAcceptedOn/UpdateTermAndConditionsAcceptedOnCommandHandler.cs"
+        }
+      ],
+      "senders": []
+    },
+    {
+      "name": "UpsertRegisteredUserCommand",
+      "namespace": "SFA.DAS.EmployerAccounts.Commands.UpsertRegisteredUser",
+      "sourceFile": "src/SFA.DAS.EmployerAccounts/Commands/UpsertRegisteredUser/UpsertRegisteredUserCommand.cs",
+      "description": null,
+      "fields": [
+        {
+          "name": "CorrelationId",
+          "type": "string",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "EmailAddress",
+          "type": "string",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "FirstName",
+          "type": "string",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "LastName",
+          "type": "string",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "UserRef",
+          "type": "string",
+          "required": null,
+          "description": null
+        }
+      ],
+      "handlers": [
+        {
+          "name": "UpsertRegisteredUserCommandHandler",
+          "sourceFile": "src/SFA.DAS.EmployerAccounts/Commands/UpsertRegisteredUser/UpsertRegisteredUserCommandHandler.cs"
+        }
+      ],
+      "senders": [
+        {
+          "name": "CreateEmployerAccountViaProviderRequest",
+          "sourceFile": "src/SFA.DAS.EmployerAccounts.Api/Controllers/EmployerAccountsController.cs"
+        },
+        {
+          "name": "UserController",
+          "sourceFile": "src/SFA.DAS.EmployerAccounts.Api/Controllers/UserController.cs"
+        }
+      ]
+    },
+    {
+      "name": "GetAccountHistoryByPayeRefQuery",
+      "namespace": "SFA.DAS.EmployerAccounts.Queries.GetAccountHistoryByPayeRef",
+      "sourceFile": "src/SFA.DAS.EmployerAccounts.Api/Controllers/AccountHistoriesController.cs",
+      "description": null,
+      "fields": [
+        {
+          "name": "Ref",
+          "type": "string",
           "required": null,
           "description": null
         }
       ],
       "handlers": [],
-      "senders": []
+      "senders": [
+        {
+          "name": "GetAccountHistoryByRef",
+          "sourceFile": "src/SFA.DAS.EmployerAccounts.Api/Controllers/AccountHistoriesController.cs"
+        }
+      ]
     },
     {
-      "name": "ImportLevyDeclarationsCommand",
-      "namespace": "SFA.DAS.EmployerFinance.Messages.Commands",
-      "sourceFile": "src/SFA.DAS.EmployerAccounts/Extensions/RoutingExtensions.cs",
+      "name": "GetAccountLegalEntitiesQuery",
+      "namespace": "SFA.DAS.EmployerAccounts.Queries.GetAccountLegalEntities.Api",
+      "sourceFile": "src/SFA.DAS.EmployerAccounts.Api/Controllers/AccountLegalEntitiesController.cs",
       "description": null,
       "fields": [],
       "handlers": [],
       "senders": [
         {
-          "name": "RoutingExtensions.AddRouting",
-          "sourceFile": "src/SFA.DAS.EmployerAccounts/Extensions/RoutingExtensions.cs"
+          "name": "Get",
+          "sourceFile": "src/SFA.DAS.EmployerAccounts.Api/Controllers/AccountLegalEntitiesController.cs"
+        }
+      ]
+    },
+    {
+      "name": "GetAccountLegalEntitiesByHashedAccountIdRequest",
+      "namespace": "SFA.DAS.EmployerAccounts.Queries.GetAccountLegalEntitiesByHashedAccountId",
+      "sourceFile": "src/SFA.DAS.EmployerAccounts.Api/Controllers/LegalEntitiesController.cs",
+      "description": null,
+      "fields": [
+        {
+          "name": "AccountId",
+          "type": "long",
+          "required": null,
+          "description": null
+        }
+      ],
+      "handlers": [],
+      "senders": [
+        {
+          "name": "GetLegalEntities",
+          "sourceFile": "src/SFA.DAS.EmployerAccounts.Api/Controllers/LegalEntitiesController.cs"
+        }
+      ]
+    },
+    {
+      "name": "GetAllAccountLegalEntitiesByHashedAccountIdQuery",
+      "namespace": "SFA.DAS.EmployerAccounts.Queries.GetAllAccountLegalEntitiesByHashedAccountId",
+      "sourceFile": "src/SFA.DAS.EmployerAccounts.Api/Controllers/AccountLegalEntitiesController.cs",
+      "description": null,
+      "fields": [
+        {
+          "name": "SearchTerm",
+          "type": "string",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "AccountIds",
+          "type": "List<long>",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "PageNumber",
+          "type": "int",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "PageSize",
+          "type": "int",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "SortColumn",
+          "type": "string",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "IsAscending",
+          "type": "bool",
+          "required": null,
+          "description": null
+        }
+      ],
+      "handlers": [],
+      "senders": [
+        {
+          "name": "GetAllLegalEntities",
+          "sourceFile": "src/SFA.DAS.EmployerAccounts.Api/Controllers/AccountLegalEntitiesController.cs"
+        }
+      ]
+    },
+    {
+      "name": "GetEmployerAgreementTemplatesRequest",
+      "namespace": "SFA.DAS.EmployerAccounts.Queries.GetEmployerAgreementTemplates",
+      "sourceFile": "src/SFA.DAS.EmployerAccounts.Api/Controllers/EmployerAgreementTemplatesController.cs",
+      "description": null,
+      "fields": [],
+      "handlers": [],
+      "senders": [
+        {
+          "name": "Get",
+          "sourceFile": "src/SFA.DAS.EmployerAccounts.Api/Controllers/EmployerAgreementTemplatesController.cs"
+        }
+      ]
+    },
+    {
+      "name": "GetLegalEntityQuery",
+      "namespace": "SFA.DAS.EmployerAccounts.Queries.GetLegalEntity",
+      "sourceFile": "src/SFA.DAS.EmployerAccounts.Api/Controllers/LegalEntitiesController.cs",
+      "description": null,
+      "fields": [
+        {
+          "name": "AccountId",
+          "type": "long",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "LegalEntityId",
+          "type": "long",
+          "required": true,
+          "description": null
+        }
+      ],
+      "handlers": [],
+      "senders": [
+        {
+          "name": "GetLegalEntity",
+          "sourceFile": "src/SFA.DAS.EmployerAccounts.Api/Controllers/LegalEntitiesController.cs"
+        }
+      ]
+    },
+    {
+      "name": "QueryAccountsRequest",
+      "namespace": "SFA.DAS.EmployerAccounts.Queries.QueryAccounts",
+      "sourceFile": "src/SFA.DAS.EmployerAccounts.Api/Controllers/EmployerAccountsController.cs",
+      "description": null,
+      "fields": [
+        {
+          "name": "AccountIds",
+          "type": "List<long>",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "Select",
+          "type": "List<string>",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "Include",
+          "type": "List<string>",
+          "required": null,
+          "description": null
+        }
+      ],
+      "handlers": [],
+      "senders": [
+        {
+          "name": "QueryAccounts",
+          "sourceFile": "src/SFA.DAS.EmployerAccounts.Api/Controllers/EmployerAccountsController.cs"
+        }
+      ]
+    },
+    {
+      "name": "RemovePayeFromAccountCommand",
+      "namespace": "SFA.DAS.EmployerAccounts.Queries.RemovePayeFromAccount",
+      "sourceFile": "src/SFA.DAS.EmployerAccounts/Queries/RemovePayeFromAccount/RemovePayeFromAccountCommand.cs",
+      "description": null,
+      "fields": [
+        {
+          "name": "HashedAccountId",
+          "type": "string",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "PayeRef",
+          "type": "string",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "UserId",
+          "type": "string",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "RemoveScheme",
+          "type": "bool",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "CompanyName",
+          "type": "string",
+          "required": null,
+          "description": null
+        }
+      ],
+      "handlers": [
+        {
+          "name": "RemovePayeFromAccountCommandHandler",
+          "sourceFile": "src/SFA.DAS.EmployerAccounts/Queries/RemovePayeFromAccount/RemovePayeFromAccountCommandHandler.cs"
+        }
+      ],
+      "senders": []
+    },
+    {
+      "name": "SearchEmployerAccountsByNameQuery",
+      "namespace": "SFA.DAS.EmployerAccounts.Queries.SearchEmployerAccountsByName",
+      "sourceFile": "src/SFA.DAS.EmployerAccounts.Api/Controllers/EmployerAccountsController.cs",
+      "description": null,
+      "fields": [
+        {
+          "name": "EmployerName",
+          "type": "string",
+          "required": true,
+          "description": null
+        }
+      ],
+      "handlers": [],
+      "senders": [
+        {
+          "name": "SearchAccounts",
+          "sourceFile": "src/SFA.DAS.EmployerAccounts.Api/Controllers/EmployerAccountsController.cs"
         }
       ]
     },
@@ -954,33 +1789,25 @@
     {
       "name": "SendEmailCommand",
       "namespace": "SFA.DAS.Notifications.Messages.Commands",
-      "sourceFile": "src/SFA.DAS.EmployerAccounts/Extensions/RoutingExtensions.cs",
+      "sourceFile": "src/SFA.DAS.EmployerAccounts/Commands/SendNotification/SendNotificationCommandHandler.cs",
       "description": null,
       "fields": [],
       "handlers": [],
       "senders": [
         {
-          "name": "CreatedAccountTaskListCompleteEventNotificationHandler.Handle",
-          "sourceFile": "src/SFA.DAS.EmployerAccounts.MessageHandlers/EventHandlers/EmployerAccounts/CreateAccountTaskListCompleteEvent/CreatedAccountTaskListCompleteEventNotificationHandler.cs"
-        },
-        {
-          "name": "ResendInvitationCommandHandler.SendNotification",
-          "sourceFile": "src/SFA.DAS.EmployerAccounts/Commands/ResendInvitation/ResendInvitationCommandHandler.cs"
-        },
-        {
-          "name": "SendNotificationCommandHandler.Handle",
+          "name": "SendNotificationCommandHandler",
           "sourceFile": "src/SFA.DAS.EmployerAccounts/Commands/SendNotification/SendNotificationCommandHandler.cs"
         },
         {
-          "name": "SupportCreateInvitationCommandHandler.SendInvitation",
+          "name": "SupportCreateInvitationCommandHandler",
           "sourceFile": "src/SFA.DAS.EmployerAccounts/Commands/SupportCreateInvitation/SupportCreateInvitationCommandHandler.cs"
         },
         {
-          "name": "SupportResendInvitationCommandHandler.SendNotification",
+          "name": "SupportResendInvitationCommandHandler",
           "sourceFile": "src/SFA.DAS.EmployerAccounts/Commands/SupportResendInvitationCommand/SupportResendInvitationCommandHandler.cs"
         },
         {
-          "name": "RoutingExtensions.AddRouting",
+          "name": "RoutingExtensions",
           "sourceFile": "src/SFA.DAS.EmployerAccounts/Extensions/RoutingExtensions.cs"
         }
       ]
@@ -996,73 +1823,73 @@
         {
           "name": "AccountId",
           "type": "long",
-          "required": null,
+          "required": true,
           "description": null
         },
         {
           "name": "AgreementId",
           "type": "long",
-          "required": null,
+          "required": true,
           "description": null
         },
         {
           "name": "LegalEntityId",
           "type": "long",
-          "required": null,
+          "required": true,
           "description": null
         },
         {
           "name": "AccountLegalEntityId",
           "type": "long",
-          "required": null,
+          "required": true,
           "description": null
         },
         {
           "name": "AccountLegalEntityPublicHashedId",
           "type": "string",
-          "required": null,
+          "required": true,
           "description": null
         },
         {
           "name": "OrganisationName",
           "type": "string",
-          "required": null,
+          "required": true,
           "description": null
         },
         {
           "name": "UserName",
           "type": "string",
-          "required": null,
+          "required": true,
           "description": null
         },
         {
           "name": "UserRef",
           "type": "Guid",
-          "required": null,
+          "required": true,
           "description": null
         },
         {
           "name": "Created",
           "type": "DateTime",
-          "required": null,
+          "required": true,
           "description": null
         },
         {
           "name": "OrganisationReferenceNumber",
           "type": "string",
-          "required": null,
+          "required": true,
           "description": null
         },
         {
           "name": "OrganisationAddress",
           "type": "string",
-          "required": null,
+          "required": true,
           "description": null
         },
         {
           "name": "OrganisationType",
           "type": "SFA.DAS.EmployerAccounts.Types.Models.OrganisationType",
-          "required": null,
+          "required": true,
           "description": null
         }
       ],
@@ -1071,174 +1898,12 @@
         {
           "name": "CreateLegalEntityCommandHandler",
           "sourceFile": "src/SFA.DAS.EmployerAccounts/Commands/CreateLegalEntity/CreateLegalEntityCommandHandler.cs"
-        }
-      ]
-    },
-    {
-      "name": "CreatedAccountTaskListCompleteEvent",
-      "namespace": null,
-      "sourceFile": "src/SFA.DAS.EmployerAccounts/Commands/CreateAccountComplete/SendAccountTaskListCompleteNotificationCommandHandler.cs",
-      "description": null,
-      "fields": [
-        {
-          "name": "AccountId",
-          "type": "long",
-          "required": null,
-          "description": null
-        },
-        {
-          "name": "Name",
-          "type": "string",
-          "required": null,
-          "description": null
-        },
-        {
-          "name": "UserRef",
-          "type": "Guid",
-          "required": null,
-          "description": null
-        }
-      ],
-      "handlers": [],
-      "senders": [
-        {
-          "name": "SendAccountTaskListCompleteNotificationCommandHandler",
-          "sourceFile": "src/SFA.DAS.EmployerAccounts/Commands/CreateAccountComplete/SendAccountTaskListCompleteNotificationCommandHandler.cs"
-        }
-      ]
-    },
-    {
-      "name": "CreatedAgreementEvent",
-      "namespace": null,
-      "sourceFile": "src/SFA.DAS.EmployerAccounts/Commands/CreateLegalEntity/CreateLegalEntityCommandHandler.cs",
-      "description": null,
-      "fields": [
-        {
-          "name": "AgreementId",
-          "type": "long",
-          "required": null,
-          "description": null
-        },
-        {
-          "name": "LegalEntityId",
-          "type": "long",
-          "required": null,
-          "description": null
-        },
-        {
-          "name": "OrganisationName",
-          "type": "string",
-          "required": null,
-          "description": null
-        },
-        {
-          "name": "AccountId",
-          "type": "long",
-          "required": null,
-          "description": null
-        },
-        {
-          "name": "UserName",
-          "type": "string",
-          "required": null,
-          "description": null
-        },
-        {
-          "name": "UserRef",
-          "type": "Guid",
-          "required": null,
-          "description": null
-        },
-        {
-          "name": "Created",
-          "type": "DateTime",
-          "required": null,
-          "description": null
-        }
-      ],
-      "handlers": [],
-      "senders": [
-        {
-          "name": "CreateLegalEntityCommandHandler",
-          "sourceFile": "src/SFA.DAS.EmployerAccounts/Commands/CreateLegalEntity/CreateLegalEntityCommandHandler.cs"
-        }
-      ]
-    },
-    {
-      "name": "InvitedUserEvent",
-      "namespace": null,
-      "sourceFile": "src/SFA.DAS.EmployerAccounts/Commands/CreateInvitation/CreateInvitationCommandHandler.cs",
-      "description": null,
-      "fields": [
-        {
-          "name": "AccountId",
-          "type": "long",
-          "required": null,
-          "description": null
-        },
-        {
-          "name": "PersonInvited",
-          "type": "string",
-          "required": null,
-          "description": null
-        },
-        {
-          "name": "UserName",
-          "type": "string",
-          "required": null,
-          "description": null
-        },
-        {
-          "name": "UserRef",
-          "type": "Guid",
-          "required": null,
-          "description": null
-        },
-        {
-          "name": "Created",
-          "type": "DateTime",
-          "required": null,
-          "description": null
-        }
-      ],
-      "handlers": [],
-      "senders": [
-        {
-          "name": "CreateInvitationCommandHandler",
-          "sourceFile": "src/SFA.DAS.EmployerAccounts/Commands/CreateInvitation/CreateInvitationCommandHandler.cs"
-        }
-      ]
-    },
-    {
-      "name": "ApprenticeshipEmployerTypeChangeEvent",
-      "namespace": "SFA.DAS.EmployerAccounts.Commands.AccountLevyStatus",
-      "sourceFile": "src/SFA.DAS.EmployerAccounts/Commands/AccountLevyStatus/AccountLevyStatusCommandHandler.cs",
-      "description": null,
-      "fields": [
-        {
-          "name": "AccountId",
-          "type": "long",
-          "required": null,
-          "description": null
-        },
-        {
-          "name": "ApprenticeshipEmployerType",
-          "type": "ApprenticeshipEmployerType",
-          "required": null,
-          "description": null
-        }
-      ],
-      "handlers": [],
-      "senders": [
-        {
-          "name": "AccountLevyStatusCommandHandler",
-          "sourceFile": "src/SFA.DAS.EmployerAccounts/Commands/AccountLevyStatus/AccountLevyStatusCommandHandler.cs"
         }
       ]
     },
     {
       "name": "AddedPayeSchemeEvent",
-      "namespace": "SFA.DAS.EmployerAccounts.Commands.AddPayeToAccount",
+      "namespace": null,
       "sourceFile": "src/SFA.DAS.EmployerAccounts/Commands/AddPayeToAccount/AddPayeToAccountCommandHandler.cs",
       "description": null,
       "fields": [
@@ -1296,6 +1961,201 @@
         {
           "name": "AddPayeToAccountCommandHandler",
           "sourceFile": "src/SFA.DAS.EmployerAccounts/Commands/AddPayeToAccount/AddPayeToAccountCommandHandler.cs"
+        }
+      ]
+    },
+    {
+      "name": "ApprenticeshipEmployerTypeChangeEvent",
+      "namespace": null,
+      "sourceFile": "src/SFA.DAS.EmployerAccounts/Commands/AccountLevyStatus/AccountLevyStatusCommandHandler.cs",
+      "description": null,
+      "fields": [
+        {
+          "name": "AccountId",
+          "type": "long",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "ApprenticeshipEmployerType",
+          "type": "ApprenticeshipEmployerType",
+          "required": null,
+          "description": null
+        }
+      ],
+      "handlers": [],
+      "senders": [
+        {
+          "name": "AccountLevyStatusCommandHandler",
+          "sourceFile": "src/SFA.DAS.EmployerAccounts/Commands/AccountLevyStatus/AccountLevyStatusCommandHandler.cs"
+        }
+      ]
+    },
+    {
+      "name": "CreatedAccountTaskListCompleteEvent",
+      "namespace": null,
+      "sourceFile": "src/SFA.DAS.EmployerAccounts/Commands/CreateAccountComplete/SendAccountTaskListCompleteNotificationCommandHandler.cs",
+      "description": null,
+      "fields": [
+        {
+          "name": "AccountId",
+          "type": "long",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "Name",
+          "type": "string",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "UserRef",
+          "type": "Guid",
+          "required": true,
+          "description": null
+        }
+      ],
+      "handlers": [],
+      "senders": [
+        {
+          "name": "SendAccountTaskListCompleteNotificationCommandHandler",
+          "sourceFile": "src/SFA.DAS.EmployerAccounts/Commands/CreateAccountComplete/SendAccountTaskListCompleteNotificationCommandHandler.cs"
+        }
+      ]
+    },
+    {
+      "name": "CreatedAgreementEvent",
+      "namespace": null,
+      "sourceFile": "src/SFA.DAS.EmployerAccounts/Commands/CreateLegalEntity/CreateLegalEntityCommandHandler.cs",
+      "description": null,
+      "fields": [
+        {
+          "name": "AgreementId",
+          "type": "long",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "LegalEntityId",
+          "type": "long",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "OrganisationName",
+          "type": "string",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "AccountId",
+          "type": "long",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "UserName",
+          "type": "string",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "UserRef",
+          "type": "Guid",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "Created",
+          "type": "DateTime",
+          "required": true,
+          "description": null
+        }
+      ],
+      "handlers": [],
+      "senders": [
+        {
+          "name": "CreateLegalEntityCommandHandler",
+          "sourceFile": "src/SFA.DAS.EmployerAccounts/Commands/CreateLegalEntity/CreateLegalEntityCommandHandler.cs"
+        }
+      ]
+    },
+    {
+      "name": "InvitedUserEvent",
+      "namespace": null,
+      "sourceFile": "src/SFA.DAS.EmployerAccounts/Commands/CreateInvitation/CreateInvitationCommandHandler.cs",
+      "description": null,
+      "fields": [
+        {
+          "name": "AccountId",
+          "type": "long",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "PersonInvited",
+          "type": "string",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "UserName",
+          "type": "string",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "UserRef",
+          "type": "Guid",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "Created",
+          "type": "DateTime",
+          "required": true,
+          "description": null
+        }
+      ],
+      "handlers": [],
+      "senders": [
+        {
+          "name": "CreateInvitationCommandHandler",
+          "sourceFile": "src/SFA.DAS.EmployerAccounts/Commands/CreateInvitation/CreateInvitationCommandHandler.cs"
+        }
+      ]
+    },
+    {
+      "name": "UpsertedUserEvent",
+      "namespace": null,
+      "sourceFile": "src/SFA.DAS.EmployerAccounts/Commands/UpsertRegisteredUser/UpsertRegisteredUserCommandHandler.cs",
+      "description": null,
+      "fields": [
+        {
+          "name": "Created",
+          "type": "DateTime",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "UserRef",
+          "type": "string",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "CorrelationId",
+          "type": "string",
+          "required": null,
+          "description": null
+        }
+      ],
+      "handlers": [],
+      "senders": [
+        {
+          "name": "UpsertRegisteredUserCommandHandler",
+          "sourceFile": "src/SFA.DAS.EmployerAccounts/Commands/UpsertRegisteredUser/UpsertRegisteredUserCommandHandler.cs"
         }
       ]
     },
@@ -1384,6 +2244,209 @@
       ]
     },
     {
+      "name": "SignedAgreementEvent",
+      "namespace": "SFA.DAS.EmployerAccounts.Commands.SignEmployerAgreement",
+      "sourceFile": "src/SFA.DAS.EmployerAccounts/Commands/SignEmployerAgreement/SignEmployerAgreementCommandHandler.cs",
+      "description": null,
+      "fields": [
+        {
+          "name": "AccountId",
+          "type": "long",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "AgreementId",
+          "type": "long",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "AccountLegalEntityId",
+          "type": "long",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "LegalEntityId",
+          "type": "long",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "OrganisationName",
+          "type": "string",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "CohortCreated",
+          "type": "bool",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "Created",
+          "type": "DateTime",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "UserName",
+          "type": "string",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "UserRef",
+          "type": "Guid",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "AgreementType",
+          "type": "AgreementType",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "SignedAgreementVersion",
+          "type": "int",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "CorrelationId",
+          "type": "string",
+          "required": null,
+          "description": null
+        }
+      ],
+      "handlers": [],
+      "senders": [
+        {
+          "name": "SignEmployerAgreementCommandHandler",
+          "sourceFile": "src/SFA.DAS.EmployerAccounts/Commands/SignEmployerAgreement/SignEmployerAgreementCommandHandler.cs"
+        },
+        {
+          "name": "SignEmployerAgreementWithoutAuditCommandHandler",
+          "sourceFile": "src/SFA.DAS.EmployerAccounts/Commands/SignEmployerAgreementWithOutAudit/SignEmployerAgreementWithoutAuditCommandHandler.cs"
+        }
+      ]
+    },
+    {
+      "name": "AccountCreatedEvent",
+      "namespace": "SFA.DAS.EmployerAccounts.Events.Account",
+      "sourceFile": "src/SFA.DAS.EmployerAccounts/Events/Account/AccountCreatedEvent.cs",
+      "description": null,
+      "fields": [
+        {
+          "name": "ResourceUri",
+          "type": "string",
+          "required": null,
+          "description": null
+        }
+      ],
+      "handlers": [],
+      "senders": []
+    },
+    {
+      "name": "AccountRenamedEvent",
+      "namespace": "SFA.DAS.EmployerAccounts.Events.Account",
+      "sourceFile": "src/SFA.DAS.EmployerAccounts/Events/Account/AccountRenamedEvent.cs",
+      "description": null,
+      "fields": [
+        {
+          "name": "ResourceUri",
+          "type": "string",
+          "required": null,
+          "description": null
+        }
+      ],
+      "handlers": [],
+      "senders": []
+    },
+    {
+      "name": "AgreementRemovedEvent",
+      "namespace": "SFA.DAS.EmployerAccounts.Events.Agreement",
+      "sourceFile": "src/SFA.DAS.EmployerAccounts/Events/Agreement/AgreementRemovedEvent.cs",
+      "description": null,
+      "fields": [
+        {
+          "name": "HashedAgreementId",
+          "type": "string",
+          "required": null,
+          "description": null
+        }
+      ],
+      "handlers": [],
+      "senders": []
+    },
+    {
+      "name": "AgreementSignedEvent",
+      "namespace": "SFA.DAS.EmployerAccounts.Events.Agreement",
+      "sourceFile": "src/SFA.DAS.EmployerAccounts/Events/Agreement/AgreementSignedEvent.cs",
+      "description": null,
+      "fields": [
+        {
+          "name": "ResourceUrl",
+          "type": "string",
+          "required": null,
+          "description": null
+        }
+      ],
+      "handlers": [],
+      "senders": []
+    },
+    {
+      "name": "LegalEntityCreatedEvent",
+      "namespace": "SFA.DAS.EmployerAccounts.Events.LegalEntity",
+      "sourceFile": "src/SFA.DAS.EmployerAccounts/Events/LegalEntity/LegalEntityCreatedEvent.cs",
+      "description": null,
+      "fields": [
+        {
+          "name": "ResourceUri",
+          "type": "string",
+          "required": null,
+          "description": null
+        }
+      ],
+      "handlers": [],
+      "senders": []
+    },
+    {
+      "name": "PayeSchemeAddedEvent",
+      "namespace": "SFA.DAS.EmployerAccounts.Events.PayeScheme",
+      "sourceFile": "src/SFA.DAS.EmployerAccounts/Events/PayeScheme/PayeSchemeAddedEvent.cs",
+      "description": null,
+      "fields": [
+        {
+          "name": "ResourceUri",
+          "type": "string",
+          "required": null,
+          "description": null
+        }
+      ],
+      "handlers": [],
+      "senders": []
+    },
+    {
+      "name": "PayeSchemeRemovedEvent",
+      "namespace": "SFA.DAS.EmployerAccounts.Events.PayeScheme",
+      "sourceFile": "src/SFA.DAS.EmployerAccounts/Events/PayeScheme/PayeSchemeRemovedEvent.cs",
+      "description": null,
+      "fields": [
+        {
+          "name": "ResourceUri",
+          "type": "string",
+          "required": null,
+          "description": null
+        }
+      ],
+      "handlers": [],
+      "senders": []
+    },
+    {
       "name": "AccountUserRemovedEvent",
       "namespace": "SFA.DAS.EmployerAccounts.Messages.Events",
       "sourceFile": "src/SFA.DAS.EmployerAccounts.Messages/Events/AccountUserRemovedEvent.cs",
@@ -1443,7 +2506,12 @@
         }
       ],
       "handlers": [],
-      "senders": []
+      "senders": [
+        {
+          "name": "SupportChangeTeamMemberRoleCommandHandler",
+          "sourceFile": "src/SFA.DAS.EmployerAccounts/Commands/SupportChangeTeamMemberRole/SupportChangeTeamMemberRoleCommandHandler.cs"
+        }
+      ]
     },
     {
       "name": "AddedLegalEntityEvent",
@@ -1613,7 +2681,7 @@
       "handlers": [],
       "senders": [
         {
-          "name": "ProcessLevyDormancySwitchesCommandHandler.Handle",
+          "name": "ProcessLevyDormancySwitchesCommandHandler",
           "sourceFile": "src/SFA.DAS.EmployerAccounts/Commands/LevyDormancy/ProcessLevyDormancySwitchesCommandHandler.cs"
         }
       ]
@@ -1749,7 +2817,7 @@
       ],
       "handlers": [
         {
-          "name": "CreatedAccountTaskListCompleteEventNotificationHandler.Handle",
+          "name": "CreatedAccountTaskListCompleteEventNotificationHandler",
           "sourceFile": "src/SFA.DAS.EmployerAccounts.MessageHandlers/EventHandlers/EmployerAccounts/CreateAccountTaskListCompleteEvent/CreatedAccountTaskListCompleteEventNotificationHandler.cs"
         }
       ],
@@ -1874,7 +2942,7 @@
       ],
       "handlers": [
         {
-          "name": "HealthCheckEventHandler.Handle",
+          "name": "HealthCheckEventHandler",
           "sourceFile": "src/SFA.DAS.EmployerAccounts.MessageHandlers/EventHandlers/HealthCheckEventHandler.cs"
         }
       ],
@@ -1893,18 +2961,6 @@
           "description": null
         },
         {
-          "name": "Created",
-          "type": "DateTime",
-          "required": null,
-          "description": null
-        },
-        {
-          "name": "PersonInvited",
-          "type": "string",
-          "required": null,
-          "description": null
-        },
-        {
           "name": "UserName",
           "type": "string",
           "required": null,
@@ -1915,15 +2971,22 @@
           "type": "Guid",
           "required": null,
           "description": null
+        },
+        {
+          "name": "PersonInvited",
+          "type": "string",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "Created",
+          "type": "DateTime",
+          "required": null,
+          "description": null
         }
       ],
       "handlers": [],
-      "senders": [
-        {
-          "name": "SupportCreateInvitationCommandHandler.PublishUserInvitedEvent",
-          "sourceFile": "src/SFA.DAS.EmployerAccounts/Commands/SupportCreateInvitation/SupportCreateInvitationCommandHandler.cs"
-        }
-      ]
+      "senders": []
     },
     {
       "name": "LevyDormancyThresholdReachedEvent",
@@ -2161,7 +3224,12 @@
         }
       ],
       "handlers": [],
-      "senders": []
+      "senders": [
+        {
+          "name": "UpdateOrganisationDetailsCommandHandler",
+          "sourceFile": "src/SFA.DAS.EmployerAccounts/Commands/UpdateOrganisationDetails/UpdateOrganisationDetailsCommandHandler.cs"
+        }
+      ]
     },
     {
       "name": "UpsertedUserEvent",
@@ -2243,9 +3311,9 @@
       ]
     },
     {
-      "name": "RefreshEmployerLevyDataCompletedEvent",
-      "namespace": "SFA.DAS.EmployerFinance.Messages.Events",
-      "sourceFile": "src/SFA.DAS.EmployerAccounts.MessageHandlers/EventHandlers/EmployerFinance/RefreshEmployerLevyDataAccountLevyStatusProjectionHandler.cs",
+      "name": "DeletedPayeSchemeEvent",
+      "namespace": "SFA.DAS.EmployerAccounts.Queries.RemovePayeFromAccount",
+      "sourceFile": "src/SFA.DAS.EmployerAccounts/Queries/RemovePayeFromAccount/RemovePayeFromAccountCommandHandler.cs",
       "description": null,
       "fields": [
         {
@@ -2255,8 +3323,26 @@
           "description": null
         },
         {
-          "name": "LastLevyDeclarationDate",
-          "type": "DateTime",
+          "name": "PayeRef",
+          "type": "string",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "OrganisationName",
+          "type": "string",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "UserName",
+          "type": "string",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "UserRef",
+          "type": "Guid",
           "required": null,
           "description": null
         },
@@ -2267,13 +3353,48 @@
           "description": null
         }
       ],
-      "handlers": [
+      "handlers": [],
+      "senders": [
         {
-          "name": "RefreshEmployerLevyDataAccountLevyStatusProjectionHandler.Handle",
-          "sourceFile": "src/SFA.DAS.EmployerAccounts.MessageHandlers/EventHandlers/EmployerFinance/RefreshEmployerLevyDataAccountLevyStatusProjectionHandler.cs"
+          "name": "RemovePayeFromAccountCommandHandler",
+          "sourceFile": "src/SFA.DAS.EmployerAccounts/Queries/RemovePayeFromAccount/RemovePayeFromAccountCommandHandler.cs"
+        }
+      ]
+    },
+    {
+      "name": "RefreshEmployerLevyDataCompletedEvent",
+      "namespace": "SFA.DAS.EmployerFinance.Messages.Events",
+      "sourceFile": "src/SFA.DAS.EmployerAccounts.MessageHandlers/EventHandlers/EmployerFinance/RefreshEmployerLevyDataCompletedEventHandler.cs",
+      "description": null,
+      "fields": [
+        {
+          "name": "AccountId",
+          "type": "long",
+          "required": true,
+          "description": null
         },
         {
-          "name": "RefreshEmployerLevyDataCompletedEventHandler.Handle",
+          "name": "LastLevyDeclarationDate",
+          "type": "DateTime",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "Created",
+          "type": "DateTime",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "LevyTransactionValue",
+          "type": "decimal",
+          "required": true,
+          "description": null
+        }
+      ],
+      "handlers": [
+        {
+          "name": "RefreshEmployerLevyDataCompletedEventHandler",
           "sourceFile": "src/SFA.DAS.EmployerAccounts.MessageHandlers/EventHandlers/EmployerFinance/RefreshEmployerLevyDataCompletedEventHandler.cs"
         }
       ],

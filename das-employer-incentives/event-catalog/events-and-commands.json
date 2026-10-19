@@ -5,6 +5,48 @@
   "commands": [
     {
       "name": "AddEmployerVendorIdCommand",
+      "namespace": null,
+      "sourceFile": "src/SFA.DAS.EmployerIncentives.Events/Accounts/BankDetailsApprovedForLegalEntityHandler.cs",
+      "description": null,
+      "fields": [
+        {
+          "name": "HashedLegalEntityId",
+          "type": "string",
+          "required": null,
+          "description": null
+        }
+      ],
+      "handlers": [],
+      "senders": [
+        {
+          "name": "BankDetailsApprovedForLegalEntityHandler",
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Events/Accounts/BankDetailsApprovedForLegalEntityHandler.cs"
+        }
+      ]
+    },
+    {
+      "name": "CalculateEarningsCommand",
+      "namespace": null,
+      "sourceFile": "src/SFA.DAS.EmployerIncentives.Events/ApprenticeshipIncentives/CreatedHandler.cs",
+      "description": null,
+      "fields": [
+        {
+          "name": "ApprenticeshipIncentiveId",
+          "type": "Guid",
+          "required": null,
+          "description": null
+        }
+      ],
+      "handlers": [],
+      "senders": [
+        {
+          "name": "CreatedHandler",
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Events/ApprenticeshipIncentives/CreatedHandler.cs"
+        }
+      ]
+    },
+    {
+      "name": "AddEmployerVendorIdCommand",
       "namespace": "SFA.DAS.EmployerIncentives.Abstractions.Events",
       "sourceFile": "src/SFA.DAS.EmployerIncentives.Abstractions/Events/AddEmployerVendorIdCommand.cs",
       "description": null,
@@ -76,18 +118,30 @@
         {
           "name": "ApprenticeshipIncentiveId",
           "type": "Guid",
-          "required": null,
+          "required": true,
           "description": null
         },
         {
           "name": "CollectionPeriodNumber",
           "type": "byte",
-          "required": null,
+          "required": true,
           "description": null
         },
         {
           "name": "CollectionYear",
           "type": "short",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "Period",
+          "type": "int",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "Year",
+          "type": "int",
           "required": null,
           "description": null
         }
@@ -98,7 +152,12 @@
           "sourceFile": "src/SFA.DAS.EmployerIncentives.Commands/ApprenticeshipIncentive/CalculateDaysInLearning/CalculateDaysInLearningCommandHandler.cs"
         }
       ],
-      "senders": []
+      "senders": [
+        {
+          "name": "CalculateDaysInLearning",
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Functions.PaymentsProcess/Activities/CalculateDaysinLearning.cs"
+        }
+      ]
     },
     {
       "name": "CreatePaymentCommand",
@@ -109,19 +168,19 @@
         {
           "name": "ApprenticeshipIncentiveId",
           "type": "Guid",
-          "required": null,
-          "description": null
-        },
-        {
-          "name": "PendingPaymentId",
-          "type": "Guid",
-          "required": null,
+          "required": true,
           "description": null
         },
         {
           "name": "CollectionPeriod",
           "type": "Domain.ValueObjects.CollectionPeriod",
-          "required": null,
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "PendingPaymentId",
+          "type": "Guid",
+          "required": true,
           "description": null
         }
       ],
@@ -131,7 +190,12 @@
           "sourceFile": "src/SFA.DAS.EmployerIncentives.Commands/ApprenticeshipIncentive/CreatePayment/CreatePaymentCommandHandler.cs"
         }
       ],
-      "senders": []
+      "senders": [
+        {
+          "name": "CreatePayment.Create",
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Functions.PaymentsProcess/Activities/CreatePayment.cs"
+        }
+      ]
     },
     {
       "name": "LearnerChangeOfCircumstanceCommand",
@@ -142,7 +206,7 @@
         {
           "name": "ApprenticeshipIncentiveId",
           "type": "Guid",
-          "required": null,
+          "required": true,
           "description": null
         }
       ],
@@ -152,7 +216,12 @@
           "sourceFile": "src/SFA.DAS.EmployerIncentives.Commands/ApprenticeshipIncentive/LearnerChangeOfCircumstance/LearnerChangeOfCircumstanceCommandHandler.cs"
         }
       ],
-      "senders": []
+      "senders": [
+        {
+          "name": "LearnerChangeOfCircumstanceActivity.Update",
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Functions.PaymentsProcess/Activities/LearnerChangeOfCircumstance.cs"
+        }
+      ]
     },
     {
       "name": "CompleteCommand",
@@ -161,14 +230,14 @@
       "description": null,
       "fields": [
         {
-          "name": "CompletionDateTime",
-          "type": "DateTime",
+          "name": "CollectionPeriod",
+          "type": "Domain.ValueObjects.CollectionPeriod",
           "required": null,
           "description": null
         },
         {
-          "name": "CollectionPeriod",
-          "type": "Domain.ValueObjects.CollectionPeriod",
+          "name": "CompletionDateTime",
+          "type": "DateTime",
           "required": null,
           "description": null
         }
@@ -179,7 +248,12 @@
           "sourceFile": "src/SFA.DAS.EmployerIncentives.Commands/ApprenticeshipIncentive/PaymentProcess/CompleteCommandHandler.cs"
         }
       ],
-      "senders": []
+      "senders": [
+        {
+          "name": "CompletePaymentProcess.Complete",
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Functions.PaymentsProcess/Activities/CompletePaymentProcess.cs"
+        }
+      ]
     },
     {
       "name": "SendMetricsReportCommand",
@@ -200,7 +274,12 @@
           "sourceFile": "src/SFA.DAS.EmployerIncentives.Commands/ApprenticeshipIncentive/PaymentProcess/SendMetricsReportCommandHandler.cs"
         }
       ],
-      "senders": []
+      "senders": [
+        {
+          "name": "SendMetricsReport.Complete",
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Functions.PaymentsProcess/Activities/SendMetricsReport.cs"
+        }
+      ]
     },
     {
       "name": "RefreshLearnerCommand",
@@ -221,7 +300,12 @@
           "sourceFile": "src/SFA.DAS.EmployerIncentives.Commands/ApprenticeshipIncentive/RefreshLearner/RefreshLearnerCommandHandler.cs"
         }
       ],
-      "senders": []
+      "senders": [
+        {
+          "name": "LearnerMatchAndUpdate.Create",
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Functions.PaymentsProcess/Activities/LearnerMatchAndUpdate.cs"
+        }
+      ]
     },
     {
       "name": "ReinstatePendingPaymentCommand",
@@ -229,6 +313,12 @@
       "sourceFile": "src/SFA.DAS.EmployerIncentives.Commands/ApprenticeshipIncentive/ReinstatePayments/ReinstatePendingPaymentCommand.cs",
       "description": null,
       "fields": [
+        {
+          "name": "Payment",
+          "type": "object",
+          "required": null,
+          "description": null
+        },
         {
           "name": "PendingPaymentId",
           "type": "Guid",
@@ -248,7 +338,12 @@
           "sourceFile": "src/SFA.DAS.EmployerIncentives.Commands/ApprenticeshipIncentive/ReinstatePayments/ReinstatePendingPaymentCommandHandler.cs"
         }
       ],
-      "senders": []
+      "senders": [
+        {
+          "name": "ReinstatePaymentsController",
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Api/Controllers/ReinstatePaymentsController.cs"
+        }
+      ]
     },
     {
       "name": "RevertPaymentCommand",
@@ -263,8 +358,20 @@
           "description": null
         },
         {
+          "name": "DecisionReference",
+          "type": "string",
+          "required": null,
+          "description": null
+        },
+        {
           "name": "DecisionReferenceNumber",
           "type": "string",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "Payment",
+          "type": "object",
           "required": null,
           "description": null
         },
@@ -279,6 +386,18 @@
           "type": "string",
           "required": null,
           "description": null
+        },
+        {
+          "name": "TaskCreatedDate",
+          "type": "DateTime",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "TaskId",
+          "type": "string",
+          "required": null,
+          "description": null
         }
       ],
       "handlers": [
@@ -287,7 +406,12 @@
           "sourceFile": "src/SFA.DAS.EmployerIncentives.Commands/ApprenticeshipIncentive/RevertPayments/RevertPaymentCommandHandler.cs"
         }
       ],
-      "senders": []
+      "senders": [
+        {
+          "name": "RevertPaymentsController",
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Api/Controllers/RevertPaymentsController.cs"
+        }
+      ]
     },
     {
       "name": "SendClawbacksCommand",
@@ -320,7 +444,12 @@
           "sourceFile": "src/SFA.DAS.EmployerIncentives.Commands/ApprenticeshipIncentive/SendClawbacks/SendClawbacksCommandHandler.cs"
         }
       ],
-      "senders": []
+      "senders": [
+        {
+          "name": "SendClawbacksForAccountLegalEntity.Send",
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Functions.PaymentsProcess/Activities/SendClawbacksForAccountLegalEntity.cs"
+        }
+      ]
     },
     {
       "name": "SendPaymentRequestsCommand",
@@ -335,14 +464,20 @@
           "description": null
         },
         {
+          "name": "CollectionPeriod",
+          "type": "Domain.ValueObjects.CollectionPeriod",
+          "required": null,
+          "description": null
+        },
+        {
           "name": "PaidDate",
           "type": "DateTime",
           "required": null,
           "description": null
         },
         {
-          "name": "CollectionPeriod",
-          "type": "Domain.ValueObjects.CollectionPeriod",
+          "name": "PaymentDate",
+          "type": "DateTime",
           "required": null,
           "description": null
         }
@@ -353,7 +488,12 @@
           "sourceFile": "src/SFA.DAS.EmployerIncentives.Commands/ApprenticeshipIncentive/SendPaymentRequests/SendPaymentRequestsCommandHandler.cs"
         }
       ],
-      "senders": []
+      "senders": [
+        {
+          "name": "SendPaymentRequestsForAccountLegalEntity.Send",
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Functions.PaymentsProcess/Activities/SendPaymentRequestsForAccountLegalEntity.cs"
+        }
+      ]
     },
     {
       "name": "SetSuccessfulLearnerMatchCommand",
@@ -368,14 +508,14 @@
           "description": null
         },
         {
-          "name": "Uln",
-          "type": "long",
+          "name": "Succeeded",
+          "type": "bool",
           "required": null,
           "description": null
         },
         {
-          "name": "Succeeded",
-          "type": "bool",
+          "name": "Uln",
+          "type": "long",
           "required": null,
           "description": null
         }
@@ -386,7 +526,12 @@
           "sourceFile": "src/SFA.DAS.EmployerIncentives.Commands/ApprenticeshipIncentive/SetSuccessfulLearnerMatch/SetSuccessfulLearnerMatchCommandHandler.cs"
         }
       ],
-      "senders": []
+      "senders": [
+        {
+          "name": "SetSuccessfulLearnerMatch.Set",
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Functions.PaymentsProcess/Activities/SetSuccessfulLearnerMatch.cs"
+        }
+      ]
     },
     {
       "name": "SetActivePeriodToInProgressCommand",
@@ -400,7 +545,12 @@
           "sourceFile": "src/SFA.DAS.EmployerIncentives.Commands/CollectionCalendar/SetActivePeriodToInProgress/SetActivePeriodToInProgressCommandHandler.cs"
         }
       ],
-      "senders": []
+      "senders": [
+        {
+          "name": "SetActivePeriodToInProgress.Update",
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Functions.PaymentsProcess/Activities/SetActivePeriodToInProgress.cs"
+        }
+      ]
     },
     {
       "name": "UpdateCollectionPeriodCommand",
@@ -479,14 +629,32 @@
       "namespace": "SFA.DAS.EmployerIncentives.Commands.EarningsResilienceCheck",
       "sourceFile": "src/SFA.DAS.EmployerIncentives.Commands/EarningsResilienceCheck/EarningsResilienceApplicationsCheckCommand.cs",
       "description": null,
-      "fields": [],
+      "fields": [
+        {
+          "name": "CancelCommand",
+          "type": "bool",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "CommandDelay",
+          "type": "TimeSpan",
+          "required": true,
+          "description": null
+        }
+      ],
       "handlers": [
         {
           "name": "EarningsResilienceApplicationsCheckCommandHandler",
           "sourceFile": "src/SFA.DAS.EmployerIncentives.Commands/EarningsResilienceCheck/EarningsResilienceApplicationsCheckCommandHandler.cs"
         }
       ],
-      "senders": []
+      "senders": [
+        {
+          "name": "EarningsResilienceCommandController",
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Api/Controllers/EarningsResilienceCommandController.cs"
+        }
+      ]
     },
     {
       "name": "EarningsResilienceIncentivesCheckCommand",
@@ -495,15 +663,15 @@
       "description": null,
       "fields": [
         {
-          "name": "CommandDelay",
-          "type": "TimeSpan",
-          "required": false,
+          "name": "CancelCommand",
+          "type": "bool",
+          "required": null,
           "description": null
         },
         {
-          "name": "CancelCommand",
-          "type": "bool",
-          "required": false,
+          "name": "CommandDelay",
+          "type": "TimeSpan",
+          "required": null,
           "description": null
         }
       ],
@@ -511,6 +679,25 @@
         {
           "name": "EarningsResilienceIncentivesCheckCommandHandler",
           "sourceFile": "src/SFA.DAS.EmployerIncentives.Commands/EarningsResilienceCheck/EarningsResilienceIncentivesCheckCommandHandler.cs"
+        }
+      ],
+      "senders": [
+        {
+          "name": "EarningsResilienceCommandController",
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Api/Controllers/EarningsResilienceCommandController.cs"
+        }
+      ]
+    },
+    {
+      "name": "RecalculateEarningsCommand",
+      "namespace": "SFA.DAS.EmployerIncentives.Commands.RecalculateEarnings",
+      "sourceFile": "src/SFA.DAS.EmployerIncentives.Commands/RecalculateEarnings/RecalculateEarningsCommandHandler.cs",
+      "description": null,
+      "fields": [],
+      "handlers": [
+        {
+          "name": "RecalculateEarningsCommandHandler",
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Commands/RecalculateEarnings/RecalculateEarningsCommandHandler.cs"
         }
       ],
       "senders": []
@@ -524,25 +711,25 @@
         {
           "name": "AccountLegalEntities",
           "type": "IEnumerable<AccountLegalEntity>",
-          "required": true,
+          "required": null,
           "description": null
         },
         {
           "name": "PageNumber",
           "type": "int",
-          "required": true,
+          "required": null,
           "description": null
         },
         {
           "name": "PageSize",
           "type": "int",
-          "required": true,
+          "required": null,
           "description": null
         },
         {
           "name": "TotalPages",
           "type": "int",
-          "required": true,
+          "required": null,
           "description": null
         }
       ],
@@ -563,13 +750,13 @@
         {
           "name": "AccountId",
           "type": "long",
-          "required": true,
+          "required": null,
           "description": null
         },
         {
           "name": "AccountLegalEntityId",
           "type": "long",
-          "required": true,
+          "required": null,
           "description": null
         },
         {
@@ -596,29 +783,34 @@
         {
           "name": "AccountId",
           "type": "long",
-          "required": true,
+          "required": null,
           "description": null
         },
         {
           "name": "AccountLegalEntityId",
           "type": "long",
-          "required": true,
-          "description": null
-        },
-        {
-          "name": "EmailAddress",
-          "type": "string",
-          "required": true,
+          "required": null,
           "description": null
         },
         {
           "name": "AddBankDetailsUrl",
           "type": "string",
-          "required": true,
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "EmailAddress",
+          "type": "string",
+          "required": null,
           "description": null
         }
       ],
-      "handlers": [],
+      "handlers": [
+        {
+          "name": "SendBankDetailsReminderEmailCommandHandler",
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Commands/SendEmail/SendBankDetailsReminderEmailCommandHandler.cs"
+        }
+      ],
       "senders": []
     },
     {
@@ -630,29 +822,34 @@
         {
           "name": "AccountId",
           "type": "long",
-          "required": true,
+          "required": null,
           "description": null
         },
         {
           "name": "AccountLegalEntityId",
           "type": "long",
-          "required": true,
-          "description": null
-        },
-        {
-          "name": "EmailAddress",
-          "type": "string",
-          "required": true,
+          "required": null,
           "description": null
         },
         {
           "name": "ApplicationId",
           "type": "Guid",
-          "required": true,
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "EmailAddress",
+          "type": "string",
+          "required": null,
           "description": null
         }
       ],
-      "handlers": [],
+      "handlers": [
+        {
+          "name": "SendBankDetailsRepeatReminderEmailCommandHandler",
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Commands/SendEmail/SendBankDetailsRepeatReminderEmailCommandHandler.cs"
+        }
+      ],
       "senders": []
     },
     {
@@ -664,29 +861,34 @@
         {
           "name": "AccountId",
           "type": "long",
-          "required": true,
+          "required": null,
           "description": null
         },
         {
           "name": "AccountLegalEntityId",
           "type": "long",
-          "required": true,
-          "description": null
-        },
-        {
-          "name": "EmailAddress",
-          "type": "string",
-          "required": true,
+          "required": null,
           "description": null
         },
         {
           "name": "AddBankDetailsUrl",
           "type": "string",
-          "required": true,
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "EmailAddress",
+          "type": "string",
+          "required": null,
           "description": null
         }
       ],
-      "handlers": [],
+      "handlers": [
+        {
+          "name": "SendBankDetailsRequiredEmailCommandHandler",
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Commands/SendEmail/SendBankDetailsRequiredEmailCommandHandler.cs"
+        }
+      ],
       "senders": []
     },
     {
@@ -714,19 +916,24 @@
           "description": null
         },
         {
-          "name": "LegalEntityName",
-          "type": "string",
-          "required": null,
-          "description": null
-        },
-        {
           "name": "LegalEntityId",
           "type": "long",
           "required": null,
           "description": null
+        },
+        {
+          "name": "LegalEntityName",
+          "type": "string",
+          "required": null,
+          "description": null
         }
       ],
-      "handlers": [],
+      "handlers": [
+        {
+          "name": "SignLegalEntityAgreementCommandHandler",
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Commands/SignLegalEntityAgreement/SignLegalEntityAgreementHandler.cs"
+        }
+      ],
       "senders": []
     },
     {
@@ -785,16 +992,24 @@
           "type": "Guid",
           "required": null,
           "description": null
-        },
-        {
-          "name": "LockId",
-          "type": "string",
-          "required": null,
-          "description": null
         }
       ],
-      "handlers": [],
-      "senders": []
+      "handlers": [
+        {
+          "name": "HandleApprenticeshipIncentivesCalculateEarningsCommand.HandleCommand",
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Functions.DomainMessageHandlers/HandleApprenticeshipIncentivesCalculateEarningsCommand.cs"
+        }
+      ],
+      "senders": [
+        {
+          "name": "PaymentsCalculationRequiredHandler",
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Events/EarningsResilienceCheck/PaymentsCalculationRequiredHandler.cs"
+        },
+        {
+          "name": "CalculateEarningsActivity",
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Functions.PaymentsProcess/Activities/CalculateEarnings.cs"
+        }
+      ]
     },
     {
       "name": "CreateIncentiveCommand",
@@ -815,8 +1030,8 @@
           "description": null
         },
         {
-          "name": "IncentiveApplicationApprenticeshipId",
-          "type": "Guid",
+          "name": "ApprenticeshipEmployerTypeOnApproval",
+          "type": "ApprenticeshipEmployerType",
           "required": true,
           "description": null
         },
@@ -827,13 +1042,13 @@
           "description": null
         },
         {
-          "name": "FirstName",
-          "type": "string",
-          "required": true,
+          "name": "ApprenticeshipIncentiveId",
+          "type": "Guid",
+          "required": null,
           "description": null
         },
         {
-          "name": "LastName",
+          "name": "CourseName",
           "type": "string",
           "required": true,
           "description": null
@@ -845,45 +1060,15 @@
           "description": null
         },
         {
-          "name": "Uln",
-          "type": "long",
-          "required": true,
-          "description": null
-        },
-        {
-          "name": "PlannedStartDate",
+          "name": "DateSubmitted",
           "type": "DateTime",
-          "required": true,
+          "required": null,
           "description": null
         },
         {
-          "name": "ApprenticeshipEmployerTypeOnApproval",
-          "type": "ApprenticeshipEmployerType",
-          "required": true,
-          "description": null
-        },
-        {
-          "name": "UKPRN",
-          "type": "long?",
-          "required": false,
-          "description": null
-        },
-        {
-          "name": "SubmittedDate",
-          "type": "DateTime",
-          "required": true,
-          "description": null
-        },
-        {
-          "name": "SubmittedByEmail",
+          "name": "Email",
           "type": "string",
-          "required": true,
-          "description": null
-        },
-        {
-          "name": "CourseName",
-          "type": "string",
-          "required": true,
+          "required": null,
           "description": null
         },
         {
@@ -893,14 +1078,122 @@
           "description": null
         },
         {
+          "name": "FirstName",
+          "type": "string",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "Id",
+          "type": "Guid",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "IncentiveApplicationApprenticeshipId",
+          "type": "Guid",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "LastName",
+          "type": "string",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "LegalEntityName",
+          "type": "string",
+          "required": null,
+          "description": null
+        },
+        {
           "name": "Phase",
           "type": "Phase",
           "required": true,
           "description": null
+        },
+        {
+          "name": "PhaseIdentifier",
+          "type": "Phase",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "PlannedEndDate",
+          "type": "DateTime",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "PlannedStartDate",
+          "type": "DateTime",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "StartDate",
+          "type": "DateTime",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "SubmittedBy",
+          "type": "string",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "SubmittedByEmail",
+          "type": "string",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "SubmittedDate",
+          "type": "DateTime",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "UKPRN",
+          "type": "long?",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "ULN",
+          "type": "long",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "Uln",
+          "type": "long",
+          "required": true,
+          "description": null
         }
       ],
-      "handlers": [],
-      "senders": []
+      "handlers": [
+        {
+          "name": "HandleApprenticeshipIncentivesCreateCommand.HandleCommand",
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Functions.DomainMessageHandlers/HandleApprenticeshipIncentivesCreateCommand.cs"
+        }
+      ],
+      "senders": [
+        {
+          "name": "EarningsCalculationRequiredHandler",
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Events/EarningsResilienceCheck/EarningsCalculationRequiredHandler.cs"
+        },
+        {
+          "name": "SubmittedHandler",
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Events/IncentiveApplications/SubmittedHandler.cs"
+        },
+        {
+          "name": "NServiceBusConsole",
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Functions.TestConsole/NServiceBusConsole.cs"
+        }
+      ]
     },
     {
       "name": "RecalculateEarningsCommand",
@@ -915,12 +1208,7 @@
           "description": null
         }
       ],
-      "handlers": [
-        {
-          "name": "RecalculateEarningsCommandHandler",
-          "sourceFile": "src/SFA.DAS.EmployerIncentives.Commands/RecalculateEarnings/RecalculateEarningsCommandHandler.cs"
-        }
-      ],
+      "handlers": [],
       "senders": []
     },
     {
@@ -930,25 +1218,13 @@
       "description": null,
       "fields": [
         {
-          "name": "CheckType",
-          "type": "string",
-          "required": true,
-          "description": null
-        },
-        {
           "name": "AccountLegalEntityId",
           "type": "long",
           "required": true,
           "description": null
         },
         {
-          "name": "ULN",
-          "type": "long",
-          "required": true,
-          "description": null
-        },
-        {
-          "name": "ServiceRequestTaskId",
+          "name": "CheckType",
           "type": "string",
           "required": true,
           "description": null
@@ -964,9 +1240,26 @@
           "type": "DateTime",
           "required": true,
           "description": null
+        },
+        {
+          "name": "ServiceRequestTaskId",
+          "type": "string",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "ULN",
+          "type": "long",
+          "required": true,
+          "description": null
         }
       ],
-      "handlers": [],
+      "handlers": [
+        {
+          "name": "HandleRefreshEmploymentCheckCommand",
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Functions.DomainMessageHandlers/HandleRefreshEmploymentCheckCommand.cs"
+        }
+      ],
       "senders": []
     },
     {
@@ -982,6 +1275,12 @@
           "description": null
         },
         {
+          "name": "Id",
+          "type": "Guid",
+          "required": null,
+          "description": null
+        },
+        {
           "name": "IncentiveApplicationApprenticeshipId",
           "type": "Guid",
           "required": true,
@@ -990,11 +1289,20 @@
       ],
       "handlers": [
         {
+          "name": "HandleReinstateApprenticeshipIncentivesCommand",
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Functions.DomainMessageHandlers/HandleReinstateApprenticeshipIncentivesCommand.cs"
+        },
+        {
           "name": "ReinstateApprenticeshipIncentiveCommandHandler",
           "sourceFile": "src/SFA.DAS.EmployerIncentives.Commands/ApprenticeshipIncentive/Withdraw/ReinstateApprenticeshipIncentiveCommandHandler.cs"
         }
       ],
-      "senders": []
+      "senders": [
+        {
+          "name": "ApplicationReinstatedHandler",
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Events/IncentiveApplications/ApplicationReinstatedHandler.cs"
+        }
+      ]
     },
     {
       "name": "SendEmploymentCheckRequestsCommand",
@@ -1017,11 +1325,24 @@
       ],
       "handlers": [
         {
+          "name": "HandleSendEmploymentCheckRequestsCommand",
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Functions.DomainMessageHandlers/HandleSendEmploymentCheckRequestsCommand.cs"
+        },
+        {
           "name": "SendEmploymentCheckRequestsCommandHandler",
           "sourceFile": "src/SFA.DAS.EmployerIncentives.Commands/ApprenticeshipIncentive/SendEmploymentCheckRequests/SendEmploymentCheckRequestsCommandHandler.cs"
+        },
+        {
+          "name": "SendEmploymentCheckRequestsCommandHandlerWithEmploymentCheckToggle",
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Commands/ApprenticeshipIncentive/SendEmploymentCheckRequests/SendEmploymentCheckRequertsCommandHandlerWithEmploymentCheckToggle.cs"
         }
       ],
-      "senders": []
+      "senders": [
+        {
+          "name": "EmploymentChecksCreatedHandler",
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Events/ApprenticeshipIncentives/EmploymentChecksCreatedHandler.cs"
+        }
+      ]
     },
     {
       "name": "UpdateEmploymentCheckCommand",
@@ -1036,25 +1357,30 @@
           "description": null
         },
         {
-          "name": "Result",
-          "type": "EmploymentCheckResultType",
+          "name": "DateChecked",
+          "type": "DateTime",
           "required": true,
           "description": null
         },
         {
           "name": "ErrorType",
           "type": "EmploymentCheckResultError?",
-          "required": false,
+          "required": null,
           "description": null
         },
         {
-          "name": "DateChecked",
-          "type": "DateTime",
+          "name": "Result",
+          "type": "EmploymentCheckResultType",
           "required": true,
           "description": null
         }
       ],
-      "handlers": [],
+      "handlers": [
+        {
+          "name": "HandleUpdateEmploymentCheckCommand",
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Functions.DomainMessageHandlers/HandleUpdateEmploymentCheckCommand.cs"
+        }
+      ],
       "senders": []
     },
     {
@@ -1086,6 +1412,18 @@
           "type": "Guid",
           "required": true,
           "description": null
+        },
+        {
+          "name": "Period",
+          "type": "int",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "Year",
+          "type": "int",
+          "required": null,
+          "description": null
         }
       ],
       "handlers": [
@@ -1094,7 +1432,12 @@
           "sourceFile": "src/SFA.DAS.EmployerIncentives.Commands/ApprenticeshipIncentive/ValidatePendingPayment/ValidatePendingPaymentCommandHandler.cs"
         }
       ],
-      "senders": []
+      "senders": [
+        {
+          "name": "ValidatePendingPayment.Validate",
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Functions.PaymentsProcess/Activities/ValidatePendingPayment.cs"
+        }
+      ]
     },
     {
       "name": "ValidationOverrideCommand",
@@ -1127,6 +1470,18 @@
           "description": null
         },
         {
+          "name": "TaskCreatedDate",
+          "type": "DateTime",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "TaskId",
+          "type": "string",
+          "required": null,
+          "description": null
+        },
+        {
           "name": "ULN",
           "type": "long",
           "required": true,
@@ -1141,11 +1496,20 @@
       ],
       "handlers": [
         {
+          "name": "HandleValidationOverrideCommand",
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Functions.DomainMessageHandlers/HandleValidationOverrideCommand.cs"
+        },
+        {
           "name": "ValidationOverrideCommandHandler",
           "sourceFile": "src/SFA.DAS.EmployerIncentives.Commands/ApprenticeshipIncentive/ValidationOverrides/ValidationOverrideCommandHandler.cs"
         }
       ],
-      "senders": []
+      "senders": [
+        {
+          "name": "ValidationOverrideController",
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Api/Controllers/ValidationOverrideController.cs"
+        }
+      ]
     },
     {
       "name": "WithdrawCommand",
@@ -1157,6 +1521,12 @@
           "name": "AccountId",
           "type": "long",
           "required": true,
+          "description": null
+        },
+        {
+          "name": "Id",
+          "type": "Guid",
+          "required": null,
           "description": null
         },
         {
@@ -1174,11 +1544,24 @@
       ],
       "handlers": [
         {
+          "name": "HandleApprenticeshipIncentivesWithdrawCommand.HandleCommand",
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Functions.DomainMessageHandlers/HandleApprenticeshipIncentivesWithdrawCommand.cs"
+        },
+        {
           "name": "WithdrawCommandHandler",
           "sourceFile": "src/SFA.DAS.EmployerIncentives.Commands/ApprenticeshipIncentive/Withdraw/WithdrawCommandHandler.cs"
         }
       ],
-      "senders": []
+      "senders": [
+        {
+          "name": "ComplianceWithdrawnHandler",
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Events/IncentiveApplications/ComplianceWithdrawnHandler.cs"
+        },
+        {
+          "name": "EmployerWithdrawnHandler",
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Events/IncentiveApplications/EmployerWithdrawnHandler.cs"
+        }
+      ]
     },
     {
       "name": "CompleteEarningsCalculationCommand",
@@ -1190,6 +1573,12 @@
           "name": "AccountId",
           "type": "long",
           "required": true,
+          "description": null
+        },
+        {
+          "name": "ApplicationApprenticeshipId",
+          "type": "Guid",
+          "required": null,
           "description": null
         },
         {
@@ -1215,9 +1604,18 @@
         {
           "name": "CompleteEarningsCalculationCommandHandler",
           "sourceFile": "src/SFA.DAS.EmployerIncentives.Commands/CompleteEarningsCalculation/CompleteEarningsCalculationCommandHandler.cs"
+        },
+        {
+          "name": "HandleCompleteEarningsCalculationCommand.HandleCommand",
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Functions.DomainMessageHandlers/HandleCompleteEarningsCalculationCommand.cs"
         }
       ],
-      "senders": []
+      "senders": [
+        {
+          "name": "EarningsCalculatedHandler",
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Events/ApprenticeshipIncentives/EarningsCalculatedHandler.cs"
+        }
+      ]
     },
     {
       "name": "UpdateVendorRegistrationCaseStatusForAccountCommand",
@@ -1238,7 +1636,7 @@
           "description": null
         },
         {
-          "name": "Status",
+          "name": "HashedLegalEntityId",
           "type": "string",
           "required": true,
           "description": null
@@ -1250,13 +1648,18 @@
           "description": null
         },
         {
-          "name": "HashedLegalEntityId",
+          "name": "Status",
           "type": "string",
           "required": true,
           "description": null
         }
       ],
-      "handlers": [],
+      "handlers": [
+        {
+          "name": "HandleUpdateVendorRegistrationCaseStatusForAccountCommand",
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Functions.DomainMessageHandlers/HandleUpdateVendorRegistrationCaseStatusForAccountCommand.cs"
+        }
+      ],
       "senders": []
     },
     {
@@ -1273,13 +1676,19 @@
         },
         {
           "name": "Action",
-          "type": "PausePaymentsAction?",
+          "type": "SFA.DAS.EmployerIncentives.Enums.PausePaymentsAction?",
           "required": null,
           "description": null
         },
         {
           "name": "DateServiceRequestTaskCreated",
           "type": "DateTime?",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "DecisionReference",
+          "type": "string",
           "required": null,
           "description": null
         },
@@ -1296,6 +1705,18 @@
           "description": null
         },
         {
+          "name": "TaskCreatedDate",
+          "type": "DateTime",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "TaskId",
+          "type": "string",
+          "required": null,
+          "description": null
+        },
+        {
           "name": "ULN",
           "type": "long",
           "required": true,
@@ -1304,11 +1725,20 @@
       ],
       "handlers": [
         {
+          "name": "HandlePausePaymentsCommand",
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Functions.DomainMessageHandlers/HandlePausePaymentsCommand.cs"
+        },
+        {
           "name": "PausePaymentsCommandHandler",
           "sourceFile": "src/SFA.DAS.EmployerIncentives.Commands/ApprenticeshipIncentive/PausePayments/PausePaymentsCommandHandler.cs"
         }
       ],
-      "senders": []
+      "senders": [
+        {
+          "name": "PausePaymentsController",
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Api/Controllers/PausePaymentsController.cs"
+        }
+      ]
     },
     {
       "name": "ComplianceWithdrawalCommand",
@@ -1323,32 +1753,42 @@
           "description": null
         },
         {
-          "name": "ULN",
-          "type": "long",
-          "required": true,
-          "description": null
-        },
-        {
-          "name": "ServiceRequestTaskId",
-          "type": "string",
-          "required": true,
-          "description": null
-        },
-        {
           "name": "DecisionReference",
           "type": "string",
           "required": true,
           "description": null
         },
         {
-          "name": "ServiceRequestCreated",
+          "name": "TaskCreatedDate",
           "type": "DateTime",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "TaskId",
+          "type": "string",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "ULN",
+          "type": "long",
           "required": true,
           "description": null
         }
       ],
-      "handlers": [],
-      "senders": []
+      "handlers": [
+        {
+          "name": "HandleComplianceWithdrawalCommand",
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Functions.DomainMessageHandlers/HandleComplianceWithdrawalCommand.cs"
+        }
+      ],
+      "senders": [
+        {
+          "name": "WithdrawalCommandController",
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Api/Controllers/WithdrawalCommandController.cs"
+        }
+      ]
     },
     {
       "name": "EmployerWithdrawalCommand",
@@ -1357,20 +1797,14 @@
       "description": null,
       "fields": [
         {
+          "name": "AccountId",
+          "type": "long",
+          "required": true,
+          "description": null
+        },
+        {
           "name": "AccountLegalEntityId",
           "type": "long",
-          "required": true,
-          "description": null
-        },
-        {
-          "name": "ULN",
-          "type": "long",
-          "required": true,
-          "description": null
-        },
-        {
-          "name": "ServiceRequestTaskId",
-          "type": "string",
           "required": true,
           "description": null
         },
@@ -1381,26 +1815,46 @@
           "description": null
         },
         {
-          "name": "ServiceRequestCreated",
+          "name": "EmailAddress",
+          "type": "string",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "TaskCreatedDate",
           "type": "DateTime",
           "required": true,
           "description": null
         },
         {
-          "name": "AccountId",
-          "type": "long",
+          "name": "TaskId",
+          "type": "string",
           "required": true,
           "description": null
         },
         {
-          "name": "EmailAddress",
-          "type": "string",
+          "name": "ULN",
+          "type": "long",
           "required": true,
           "description": null
         }
       ],
-      "handlers": [],
-      "senders": []
+      "handlers": [
+        {
+          "name": "HandleEmployerWithdrawalCommand",
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Functions.DomainMessageHandlers/HandleEmployerWithdrawalCommand.cs"
+        }
+      ],
+      "senders": [
+        {
+          "name": "WithdrawalCommandController",
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Api/Controllers/WithdrawalCommandController.cs"
+        },
+        {
+          "name": "AccountLegalEntityRemovedHandler",
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Events/Accounts/AccountLegalEntityRemovedHandler.cs"
+        }
+      ]
     },
     {
       "name": "ReinstateWithdrawalCommand",
@@ -1415,18 +1869,6 @@
           "description": null
         },
         {
-          "name": "ULN",
-          "type": "long",
-          "required": true,
-          "description": null
-        },
-        {
-          "name": "ServiceRequestTaskId",
-          "type": "string",
-          "required": true,
-          "description": null
-        },
-        {
           "name": "DecisionReference",
           "type": "string",
           "required": true,
@@ -1437,10 +1879,44 @@
           "type": "DateTime",
           "required": true,
           "description": null
+        },
+        {
+          "name": "ServiceRequestTaskId",
+          "type": "string",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "TaskCreatedDate",
+          "type": "DateTime",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "TaskId",
+          "type": "string",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "ULN",
+          "type": "long",
+          "required": true,
+          "description": null
         }
       ],
-      "handlers": [],
-      "senders": []
+      "handlers": [
+        {
+          "name": "HandleReinstateWithdrawalCommand",
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Functions.DomainMessageHandlers/HandleReinstateWithdrawalCommand.cs"
+        }
+      ],
+      "senders": [
+        {
+          "name": "WithdrawalCommandController",
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Api/Controllers/WithdrawalCommandController.cs"
+        }
+      ]
     },
     {
       "name": "UpdateIncentiveApplicationCommand",
@@ -1543,18 +2019,57 @@
           "type": "long",
           "required": null,
           "description": null
-        },
-        {
-          "name": "LockId",
-          "type": "string",
-          "required": null,
-          "description": null
         }
       ],
       "handlers": [
         {
           "name": "UpsertLegalEntityCommandHandler",
           "sourceFile": "src/SFA.DAS.EmployerIncentives.Commands/UpsertLegalEntity/UpsertLegalEntityCommandHandler.cs"
+        }
+      ],
+      "senders": []
+    },
+    {
+      "name": "BlockAccountLegalEntityForPaymentsCommand",
+      "namespace": "SFA.DAS.EmployerIncentives.Commands.VendorBlock",
+      "sourceFile": "src/SFA.DAS.EmployerIncentives.Commands/VendorBlock/BlockAccountLegalEntityForPaymentsCommand.cs",
+      "description": null,
+      "fields": [
+        {
+          "name": "VendorId",
+          "type": "string",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "VendorBlockEndDate",
+          "type": "DateTime",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "ServiceRequestTaskId",
+          "type": "string",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "ServiceRequestDecisionReference",
+          "type": "string",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "ServiceRequestCreatedDate",
+          "type": "DateTime?",
+          "required": null,
+          "description": null
+        }
+      ],
+      "handlers": [
+        {
+          "name": "BlockAccountLegalEntityForPaymentsCommandHandler",
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Commands/VendorBlock/BlockAccountLegalEntityForPaymentsCommandHandler.cs"
         }
       ],
       "senders": []
@@ -1592,9 +2107,924 @@
   ],
   "events": [
     {
+      "name": "AccountLegalEntityRemoved",
+      "namespace": "SFA.DAS.EmployerIncentives.Domain.Accounts.Events",
+      "sourceFile": "src/SFA.DAS.EmployerIncentives.Domain/Accounts/Events/AccountLegalEntityRemoved.cs",
+      "description": null,
+      "fields": [
+        {
+          "name": "AccountLegalEntityId",
+          "type": "long",
+          "required": true,
+          "description": null
+        }
+      ],
+      "handlers": [
+        {
+          "name": "AccountLegalEntityRemovedHandler",
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Events/Accounts/AccountLegalEntityRemovedHandler.cs"
+        }
+      ],
+      "senders": []
+    },
+    {
+      "name": "BankDetailsApprovedForLegalEntity",
+      "namespace": "SFA.DAS.EmployerIncentives.Domain.Accounts.Events",
+      "sourceFile": "src/SFA.DAS.EmployerIncentives.Domain/Accounts/Events/BankDetailsApprovedForLegalEntity.cs",
+      "description": null,
+      "fields": [
+        {
+          "name": "HashedLegalEntityId",
+          "type": "string",
+          "required": true,
+          "description": null
+        }
+      ],
+      "handlers": [
+        {
+          "name": "BankDetailsApprovedForLegalEntityHandler",
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Events/Accounts/BankDetailsApprovedForLegalEntityHandler.cs"
+        }
+      ],
+      "senders": []
+    },
+    {
+      "name": "VendorBlockCreated",
+      "namespace": "SFA.DAS.EmployerIncentives.Domain.Accounts.Events",
+      "sourceFile": "src/SFA.DAS.EmployerIncentives.Domain/Accounts/Events/VendorBlockCreated.cs",
+      "description": null,
+      "fields": [
+        {
+          "name": "VendorId",
+          "type": "string",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "VendorBlockEndDate",
+          "type": "DateTime",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "ServiceRequest",
+          "type": "ServiceRequest",
+          "required": null,
+          "description": null
+        }
+      ],
+      "handlers": [],
+      "senders": []
+    },
+    {
+      "name": "BreakInLearningDeleted",
+      "namespace": "SFA.DAS.EmployerIncentives.Domain.ApprenticeshipIncentives.Events",
+      "sourceFile": "src/SFA.DAS.EmployerIncentives.Domain/ApprenticeshipIncentives/Events/BreakInLearningDeleted.cs",
+      "description": null,
+      "fields": [
+        {
+          "name": "ApprenticeshipIncentiveId",
+          "type": "Guid",
+          "required": null,
+          "description": null
+        }
+      ],
+      "handlers": [],
+      "senders": []
+    },
+    {
+      "name": "ClawbackDeleted",
+      "namespace": "SFA.DAS.EmployerIncentives.Domain.ApprenticeshipIncentives.Events",
+      "sourceFile": "src/SFA.DAS.EmployerIncentives.Domain/ApprenticeshipIncentives/Events/ClawbackDeleted.cs",
+      "description": null,
+      "fields": [
+        {
+          "name": "AccountId",
+          "type": "long",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "AccountLegalEntityId",
+          "type": "long",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "ClawbackPaymentModel",
+          "type": "ClawbackPaymentModel",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "Model",
+          "type": "ClawbackPaymentModel",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "UniqueLearnerNumber",
+          "type": "long",
+          "required": null,
+          "description": null
+        }
+      ],
+      "handlers": [],
+      "senders": [
+        {
+          "name": "EarningsCalculator",
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Domain/ValueObjects/Earnings/EarningsCalculator.cs"
+        }
+      ]
+    },
+    {
+      "name": "Created",
+      "namespace": "SFA.DAS.EmployerIncentives.Domain.ApprenticeshipIncentives.Events",
+      "sourceFile": "src/SFA.DAS.EmployerIncentives.Domain/ApprenticeshipIncentives/Events/Created.cs",
+      "description": null,
+      "fields": [
+        {
+          "name": "AccountId",
+          "type": "long",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "ApprenticeshipId",
+          "type": "long",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "ApprenticeshipIncentiveId",
+          "type": "Guid",
+          "required": null,
+          "description": null
+        }
+      ],
+      "handlers": [
+        {
+          "name": "CreatedHandler",
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Events/ApprenticeshipIncentives/CreatedHandler.cs"
+        }
+      ],
+      "senders": []
+    },
+    {
+      "name": "EarningsCalculated",
+      "namespace": "SFA.DAS.EmployerIncentives.Domain.ApprenticeshipIncentives.Events",
+      "sourceFile": "src/SFA.DAS.EmployerIncentives.Domain/ApprenticeshipIncentives/Events/EarningsCalculated.cs",
+      "description": null,
+      "fields": [
+        {
+          "name": "AccountId",
+          "type": "long",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "ApplicationApprenticeshipId",
+          "type": "Guid",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "ApprenticeshipId",
+          "type": "long",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "ApprenticeshipIncentiveId",
+          "type": "Guid",
+          "required": null,
+          "description": null
+        }
+      ],
+      "handlers": [
+        {
+          "name": "EarningsCalculatedHandler",
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Events/ApprenticeshipIncentives/EarningsCalculatedHandler.cs"
+        }
+      ],
+      "senders": [
+        {
+          "name": "DefaultEarningsCalculator",
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Domain/ValueObjects/Earnings/DefaultEarningsCalculator.cs"
+        }
+      ]
+    },
+    {
+      "name": "EmploymentCheckDeleted",
+      "namespace": "SFA.DAS.EmployerIncentives.Domain.ApprenticeshipIncentives.Events",
+      "sourceFile": "src/SFA.DAS.EmployerIncentives.Domain/ApprenticeshipIncentives/Events/EmploymentCheckDeleted.cs",
+      "description": null,
+      "fields": [
+        {
+          "name": "Model",
+          "type": "EmploymentCheckModel",
+          "required": null,
+          "description": null
+        }
+      ],
+      "handlers": [],
+      "senders": []
+    },
+    {
+      "name": "EmploymentChecksCreated",
+      "namespace": "SFA.DAS.EmployerIncentives.Domain.ApprenticeshipIncentives.Events",
+      "sourceFile": "src/SFA.DAS.EmployerIncentives.Domain/ApprenticeshipIncentives/Events/EmploymentChecksCreated.cs",
+      "description": null,
+      "fields": [
+        {
+          "name": "ApprenticeshipIncentiveId",
+          "type": "Guid",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "Model",
+          "type": "EmploymentCheckModel",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "ServiceRequest",
+          "type": "ServiceRequest",
+          "required": null,
+          "description": null
+        }
+      ],
+      "handlers": [
+        {
+          "name": "EmploymentChecksCreatedHandler",
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Events/ApprenticeshipIncentives/EmploymentChecksCreatedHandler.cs"
+        }
+      ],
+      "senders": []
+    },
+    {
+      "name": "LearningResumed",
+      "namespace": "SFA.DAS.EmployerIncentives.Domain.ApprenticeshipIncentives.Events",
+      "sourceFile": "src/SFA.DAS.EmployerIncentives.Domain/ApprenticeshipIncentives/Events/LearningResumed.cs",
+      "description": null,
+      "fields": [
+        {
+          "name": "ApprenticeshipIncentiveId",
+          "type": "Guid",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "ResumedDate",
+          "type": "DateTime",
+          "required": null,
+          "description": null
+        }
+      ],
+      "handlers": [],
+      "senders": []
+    },
+    {
+      "name": "LearningStopped",
+      "namespace": "SFA.DAS.EmployerIncentives.Domain.ApprenticeshipIncentives.Events",
+      "sourceFile": "src/SFA.DAS.EmployerIncentives.Domain/ApprenticeshipIncentives/Events/LearningStopped.cs",
+      "description": null,
+      "fields": [
+        {
+          "name": "ApprenticeshipIncentiveId",
+          "type": "Guid",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "StoppedDate",
+          "type": "DateTime",
+          "required": null,
+          "description": null
+        }
+      ],
+      "handlers": [],
+      "senders": []
+    },
+    {
+      "name": "MinimumAgreementVersionChanged",
+      "namespace": "SFA.DAS.EmployerIncentives.Domain.ApprenticeshipIncentives.Events",
+      "sourceFile": "src/SFA.DAS.EmployerIncentives.Domain/ApprenticeshipIncentives/Events/MinimumAgreementVersionChanged.cs",
+      "description": null,
+      "fields": [
+        {
+          "name": "ApprenticeshipIncentiveId",
+          "type": "Guid",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "PreviousAgreementVersion",
+          "type": "int?",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "NewAgreementVersion",
+          "type": "int",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "Model",
+          "type": "ApprenticeshipIncentiveModel",
+          "required": null,
+          "description": null
+        }
+      ],
+      "handlers": [],
+      "senders": []
+    },
+    {
+      "name": "PaymentDeleted",
+      "namespace": "SFA.DAS.EmployerIncentives.Domain.ApprenticeshipIncentives.Events",
+      "sourceFile": "src/SFA.DAS.EmployerIncentives.Domain/ApprenticeshipIncentives/Events/PaymentDeleted.cs",
+      "description": null,
+      "fields": [
+        {
+          "name": "AccountId",
+          "type": "long",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "AccountLegalEntityId",
+          "type": "long",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "Model",
+          "type": "PaymentModel",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "PaymentModel",
+          "type": "PaymentModel",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "UniqueLearnerNumber",
+          "type": "long",
+          "required": null,
+          "description": null
+        }
+      ],
+      "handlers": [],
+      "senders": [
+        {
+          "name": "EarningsCalculator",
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Domain/ValueObjects/Earnings/EarningsCalculator.cs"
+        }
+      ]
+    },
+    {
+      "name": "PaymentReverted",
+      "namespace": "SFA.DAS.EmployerIncentives.Domain.ApprenticeshipIncentives.Events",
+      "sourceFile": "src/SFA.DAS.EmployerIncentives.Domain/ApprenticeshipIncentives/Events/PaymentReverted.cs",
+      "description": null,
+      "fields": [
+        {
+          "name": "Model",
+          "type": "PaymentModel",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "ServiceRequest",
+          "type": "ServiceRequest",
+          "required": null,
+          "description": null
+        }
+      ],
+      "handlers": [],
+      "senders": []
+    },
+    {
+      "name": "PaymentsPaused",
+      "namespace": "SFA.DAS.EmployerIncentives.Domain.ApprenticeshipIncentives.Events",
+      "sourceFile": "src/SFA.DAS.EmployerIncentives.Domain/ApprenticeshipIncentives/Events/PaymentsPaused.cs",
+      "description": null,
+      "fields": [
+        {
+          "name": "AccountId",
+          "type": "long",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "AccountLegalEntityId",
+          "type": "long",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "Model",
+          "type": "ApprenticeshipIncentiveModel",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "ServiceRequest",
+          "type": "ServiceRequest",
+          "required": null,
+          "description": null
+        }
+      ],
+      "handlers": [],
+      "senders": []
+    },
+    {
+      "name": "PaymentsResumed",
+      "namespace": "SFA.DAS.EmployerIncentives.Domain.ApprenticeshipIncentives.Events",
+      "sourceFile": "src/SFA.DAS.EmployerIncentives.Domain/ApprenticeshipIncentives/Events/PaymentsResumed.cs",
+      "description": null,
+      "fields": [
+        {
+          "name": "AccountId",
+          "type": "long",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "AccountLegalEntityId",
+          "type": "long",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "Model",
+          "type": "ApprenticeshipIncentiveModel",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "ServiceRequest",
+          "type": "ServiceRequest",
+          "required": null,
+          "description": null
+        }
+      ],
+      "handlers": [],
+      "senders": []
+    },
+    {
+      "name": "PendingPaymentDeleted",
+      "namespace": "SFA.DAS.EmployerIncentives.Domain.ApprenticeshipIncentives.Events",
+      "sourceFile": "src/SFA.DAS.EmployerIncentives.Domain/ApprenticeshipIncentives/Events/PendingPaymentDeleted.cs",
+      "description": null,
+      "fields": [
+        {
+          "name": "AccountId",
+          "type": "long",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "AccountLegalEntityId",
+          "type": "long",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "Model",
+          "type": "PendingPaymentModel",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "PendingPaymentModel",
+          "type": "PendingPaymentModel",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "UniqueLearnerNumber",
+          "type": "long",
+          "required": null,
+          "description": null
+        }
+      ],
+      "handlers": [],
+      "senders": [
+        {
+          "name": "EarningsCalculator",
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Domain/ValueObjects/Earnings/EarningsCalculator.cs"
+        }
+      ]
+    },
+    {
+      "name": "PendingPaymentReinstated",
+      "namespace": "SFA.DAS.EmployerIncentives.Domain.ApprenticeshipIncentives.Events",
+      "sourceFile": "src/SFA.DAS.EmployerIncentives.Domain/ApprenticeshipIncentives/Events/PendingPaymentReinstated.cs",
+      "description": null,
+      "fields": [
+        {
+          "name": "Model",
+          "type": "PendingPaymentModel",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "ReinstatePaymentRequest",
+          "type": "ReinstatePaymentRequest",
+          "required": null,
+          "description": null
+        }
+      ],
+      "handlers": [],
+      "senders": []
+    },
+    {
+      "name": "StartDateChanged",
+      "namespace": "SFA.DAS.EmployerIncentives.Domain.ApprenticeshipIncentives.Events",
+      "sourceFile": "src/SFA.DAS.EmployerIncentives.Domain/ApprenticeshipIncentives/Events/StartDateChanged.cs",
+      "description": null,
+      "fields": [
+        {
+          "name": "ApprenticeshipIncentiveId",
+          "type": "Guid",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "PreviousStartDate",
+          "type": "DateTime",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "NewStartDate",
+          "type": "DateTime",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "Model",
+          "type": "ApprenticeshipIncentiveModel",
+          "required": null,
+          "description": null
+        }
+      ],
+      "handlers": [],
+      "senders": []
+    },
+    {
+      "name": "ValidationOverrideCreated",
+      "namespace": "SFA.DAS.EmployerIncentives.Domain.ApprenticeshipIncentives.Events",
+      "sourceFile": "src/SFA.DAS.EmployerIncentives.Domain/ApprenticeshipIncentives/Events/ValidationOverrideCreated.cs",
+      "description": null,
+      "fields": [
+        {
+          "name": "ValidationOverrideId",
+          "type": "Guid",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "ApprenticeshipIncentiveId",
+          "type": "Guid",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "ValidationOverrideStep",
+          "type": "ValidationOverrideStep",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "ServiceRequest",
+          "type": "ServiceRequest",
+          "required": null,
+          "description": null
+        }
+      ],
+      "handlers": [],
+      "senders": []
+    },
+    {
+      "name": "ValidationOverrideDeleted",
+      "namespace": "SFA.DAS.EmployerIncentives.Domain.ApprenticeshipIncentives.Events",
+      "sourceFile": "src/SFA.DAS.EmployerIncentives.Domain/ApprenticeshipIncentives/Events/ValidationOverrideDeleted.cs",
+      "description": null,
+      "fields": [
+        {
+          "name": "ValidationOverrideId",
+          "type": "Guid",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "ApprenticeshipIncentiveId",
+          "type": "Guid",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "ValidationOverrideStep",
+          "type": "ValidationOverrideStep",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "ServiceRequest",
+          "type": "ServiceRequest",
+          "required": null,
+          "description": null
+        }
+      ],
+      "handlers": [],
+      "senders": []
+    },
+    {
+      "name": "EarningsCalculationRequired",
+      "namespace": "SFA.DAS.EmployerIncentives.Domain.EarningsResilienceCheck.Events",
+      "sourceFile": "src/SFA.DAS.EmployerIncentives.Domain/EarningsResilienceCheck/Events/EarningsCalculationRequired.cs",
+      "description": null,
+      "fields": [
+        {
+          "name": "Model",
+          "type": "IncentiveApplicationModel",
+          "required": null,
+          "description": null
+        }
+      ],
+      "handlers": [
+        {
+          "name": "EarningsCalculationRequiredHandler",
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Events/EarningsResilienceCheck/EarningsCalculationRequiredHandler.cs"
+        }
+      ],
+      "senders": []
+    },
+    {
+      "name": "PaymentsCalculationRequired",
+      "namespace": "SFA.DAS.EmployerIncentives.Domain.EarningsResilienceCheck.Events",
+      "sourceFile": "src/SFA.DAS.EmployerIncentives.Domain/EarningsResilienceCheck/Events/PaymentsCalculationRequired.cs",
+      "description": null,
+      "fields": [
+        {
+          "name": "Model",
+          "type": "ApprenticeshipIncentiveModel",
+          "required": null,
+          "description": null
+        }
+      ],
+      "handlers": [
+        {
+          "name": "PaymentsCalculationRequiredHandler",
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Events/EarningsResilienceCheck/PaymentsCalculationRequiredHandler.cs"
+        }
+      ],
+      "senders": []
+    },
+    {
+      "name": "ApplicationReinstated",
+      "namespace": "SFA.DAS.EmployerIncentives.Domain.IncentiveApplications.Events",
+      "sourceFile": "src/SFA.DAS.EmployerIncentives.Domain/IncentiveApplications/Events/ApplicationReinstated.cs",
+      "description": null,
+      "fields": [
+        {
+          "name": "AccountId",
+          "type": "long",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "AccountLegalEntityId",
+          "type": "long",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "Model",
+          "type": "ApprenticeshipModel",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "ServiceRequest",
+          "type": "ServiceRequest",
+          "required": null,
+          "description": null
+        }
+      ],
+      "handlers": [
+        {
+          "name": "ApplicationReinstatedHandler",
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Events/IncentiveApplications/ApplicationReinstatedHandler.cs"
+        }
+      ],
+      "senders": []
+    },
+    {
+      "name": "ApplicationWithdrawn",
+      "namespace": "SFA.DAS.EmployerIncentives.Domain.IncentiveApplications.Events",
+      "sourceFile": "src/SFA.DAS.EmployerIncentives.Domain/IncentiveApplications/Events/ApplicationWithdrawn.cs",
+      "description": null,
+      "fields": [
+        {
+          "name": "WithdrawalStatus",
+          "type": "IncentiveApplicationStatus",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "AccountId",
+          "type": "long",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "AccountLegalEntityId",
+          "type": "long",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "Model",
+          "type": "ApprenticeshipModel",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "ServiceRequest",
+          "type": "ServiceRequest",
+          "required": null,
+          "description": null
+        }
+      ],
+      "handlers": [],
+      "senders": []
+    },
+    {
+      "name": "ComplianceWithdrawn",
+      "namespace": "SFA.DAS.EmployerIncentives.Domain.IncentiveApplications.Events",
+      "sourceFile": "src/SFA.DAS.EmployerIncentives.Domain/IncentiveApplications/Events/ComplianceWithdrawn.cs",
+      "description": null,
+      "fields": [
+        {
+          "name": "AccountId",
+          "type": "long",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "EmailAddress",
+          "type": "string",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "LegalEntity",
+          "type": "string",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "Model",
+          "type": "ComplianceModel",
+          "required": null,
+          "description": null
+        }
+      ],
+      "handlers": [
+        {
+          "name": "ComplianceWithdrawnHandler",
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Events/IncentiveApplications/ComplianceWithdrawnHandler.cs"
+        }
+      ],
+      "senders": []
+    },
+    {
+      "name": "EmployerWithdrawn",
+      "namespace": "SFA.DAS.EmployerIncentives.Domain.IncentiveApplications.Events",
+      "sourceFile": "src/SFA.DAS.EmployerIncentives.Domain/IncentiveApplications/Events/EmployerWithdrawn.cs",
+      "description": null,
+      "fields": [
+        {
+          "name": "AccountId",
+          "type": "long",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "EmailAddress",
+          "type": "string",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "LegalEntity",
+          "type": "string",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "Model",
+          "type": "WithdrawnModel",
+          "required": null,
+          "description": null
+        }
+      ],
+      "handlers": [
+        {
+          "name": "EmployerWithdrawnHandler",
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Events/IncentiveApplications/EmployerWithdrawnHandler.cs"
+        }
+      ],
+      "senders": []
+    },
+    {
+      "name": "Submitted",
+      "namespace": "SFA.DAS.EmployerIncentives.Domain.IncentiveApplications.Events",
+      "sourceFile": "src/SFA.DAS.EmployerIncentives.Domain/IncentiveApplications/Events/Submitted.cs",
+      "description": null,
+      "fields": [
+        {
+          "name": "EligibleApprenticeships",
+          "type": "IEnumerable<ApprenticeshipModel>",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "Model",
+          "type": "IncentiveApplicationModel",
+          "required": null,
+          "description": null
+        }
+      ],
+      "handlers": [
+        {
+          "name": "SubmittedHandler",
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Events/IncentiveApplications/SubmittedHandler.cs"
+        }
+      ],
+      "senders": []
+    },
+    {
+      "name": "EmployerIncentiveClaimSubmittedEvent",
+      "namespace": "SFA.DAS.EmployerIncentives.Messages.Events",
+      "sourceFile": "src/SFA.DAS.EmployerIncentives.Messages/Events/EmployerIncentiveClaimSubmittedEvent.cs",
+      "description": null,
+      "fields": [
+        {
+          "name": "AccountId",
+          "type": "long",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "IncentiveClaimApplicationId",
+          "type": "Guid",
+          "required": null,
+          "description": null
+        }
+      ],
+      "handlers": [],
+      "senders": []
+    },
+    {
+      "name": "EmploymentCheckCompletedEvent",
+      "namespace": "SFA.DAS.EmployerIncentives.Messages.Events",
+      "sourceFile": "src/SFA.DAS.EmployerIncentives.Messages/Events/EmploymentCheckCompletedEvent.cs",
+      "description": null,
+      "fields": [
+        {
+          "name": "CorrelationId",
+          "type": "Guid",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "Result",
+          "type": "string",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "DateChecked",
+          "type": "DateTime",
+          "required": null,
+          "description": null
+        }
+      ],
+      "handlers": [],
+      "senders": []
+    },
+    {
       "name": "RefreshLegalEntitiesEvent",
       "namespace": "SFA.DAS.EmployerIncentives.Messages.Events",
-      "sourceFile": "src/SFA.DAS.EmployerIncentives.Commands/RefreshLegalEntities/RefreshLegalEntitiesCommandHandler.cs",
+      "sourceFile": "src/SFA.DAS.EmployerIncentives.Messages/Events/RefreshLegalEntitiesEvent.cs",
       "description": null,
       "fields": [
         {
@@ -1621,30 +3051,30 @@
     {
       "name": "RefreshLegalEntityEvent",
       "namespace": "SFA.DAS.EmployerIncentives.Messages.Events",
-      "sourceFile": "src/SFA.DAS.EmployerIncentives.Commands/RefreshLegalEntities/RefreshLegalEntitiesCommandHandler.cs",
+      "sourceFile": "src/SFA.DAS.EmployerIncentives.Messages/Events/RefreshLegalEntityEvent.cs",
       "description": null,
       "fields": [
         {
           "name": "AccountId",
-          "type": "Type.Inferred",
+          "type": "long",
           "required": null,
           "description": null
         },
         {
           "name": "AccountLegalEntityId",
-          "type": "Type.Inferred",
+          "type": "long",
           "required": null,
           "description": null
         },
         {
           "name": "LegalEntityId",
-          "type": "Type.Inferred",
+          "type": "long",
           "required": null,
           "description": null
         },
         {
           "name": "OrganisationName",
-          "type": "Type.Inferred",
+          "type": "string",
           "required": null,
           "description": null
         }

@@ -24,7 +24,7 @@
         {
           "name": "TransferConnectionInvitationId",
           "type": "int?",
-          "required": null,
+          "required": false,
           "description": null
         }
       ],
@@ -61,7 +61,12 @@
           "sourceFile": "src/SFA.DAS.EmployerFinance/Commands/BulkPaymentsIngest/BulkPaymentsIngestCommandHandler.cs"
         }
       ],
-      "senders": []
+      "senders": [
+        {
+          "name": "StagingOrchestrator.IngestBulkPayments",
+          "sourceFile": "src/SFA.DAS.EmployerFinance.Api/Orchestrators/StagingOrchestrator.cs"
+        }
+      ]
     },
     {
       "name": "CreateAccountCommand",
@@ -88,7 +93,12 @@
           "sourceFile": "src/SFA.DAS.EmployerFinance/Commands/CreateAccount/CreateAccountCommandHandler.cs"
         }
       ],
-      "senders": []
+      "senders": [
+        {
+          "name": "CreatedAccountEventHandler",
+          "sourceFile": "src/SFA.DAS.EmployerFinance.MessageHandlers/EventHandlers/CreatedAccountEventHandler.cs"
+        }
+      ]
     },
     {
       "name": "CreateAccountLegalEntityCommand",
@@ -97,31 +107,13 @@
       "description": null,
       "fields": [
         {
-          "name": "Id",
+          "name": "AccountId",
           "type": "long",
           "required": true,
           "description": null
         },
         {
-          "name": "PendingAgreementId",
-          "type": "long?",
-          "required": null,
-          "description": null
-        },
-        {
-          "name": "SignedAgreementId",
-          "type": "long?",
-          "required": null,
-          "description": null
-        },
-        {
-          "name": "SignedAgreementVersion",
-          "type": "int?",
-          "required": null,
-          "description": null
-        },
-        {
-          "name": "AccountId",
+          "name": "Id",
           "type": "long",
           "required": true,
           "description": null
@@ -131,6 +123,24 @@
           "type": "long",
           "required": true,
           "description": null
+        },
+        {
+          "name": "PendingAgreementId",
+          "type": "long?",
+          "required": false,
+          "description": null
+        },
+        {
+          "name": "SignedAgreementId",
+          "type": "long?",
+          "required": false,
+          "description": null
+        },
+        {
+          "name": "SignedAgreementVersion",
+          "type": "int?",
+          "required": false,
+          "description": null
         }
       ],
       "handlers": [
@@ -139,7 +149,12 @@
           "sourceFile": "src/SFA.DAS.EmployerFinance/Commands/CreateAccountLegalEntity/CreateAccountLegalEntityCommandHandler.cs"
         }
       ],
-      "senders": []
+      "senders": [
+        {
+          "name": "AddedLegalEntityEventHandler",
+          "sourceFile": "src/SFA.DAS.EmployerFinance.MessageHandlers/EventHandlers/AddedLegalEntityEventHandler.cs"
+        }
+      ]
     },
     {
       "name": "CreateAuditJobCommand",
@@ -148,8 +163,8 @@
       "description": null,
       "fields": [
         {
-          "name": "JobId",
-          "type": "string",
+          "name": "DateStarted",
+          "type": "DateTime",
           "required": true,
           "description": null
         },
@@ -160,8 +175,8 @@
           "description": null
         },
         {
-          "name": "DateStarted",
-          "type": "DateTime",
+          "name": "JobId",
+          "type": "string",
           "required": true,
           "description": null
         },
@@ -178,7 +193,12 @@
           "sourceFile": "src/SFA.DAS.EmployerFinance/Commands/CreateAuditJob/CreateAuditJobCommandHandler.cs"
         }
       ],
-      "senders": []
+      "senders": [
+        {
+          "name": "AuditLogOrchestrator",
+          "sourceFile": "src/SFA.DAS.EmployerFinance.Api/Orchestrators/AuditLogOrchestrator.cs"
+        }
+      ]
     },
     {
       "name": "CreateAuditWorkflowLogCommand",
@@ -187,49 +207,13 @@
       "description": null,
       "fields": [
         {
-          "name": "JobId",
-          "type": "string",
-          "required": null,
-          "description": null
-        },
-        {
-          "name": "WorkflowId",
-          "type": "string",
-          "required": null,
-          "description": null
-        },
-        {
-          "name": "SpanId",
-          "type": "string",
-          "required": null,
-          "description": null
-        },
-        {
-          "name": "Sequence",
-          "type": "int",
-          "required": null,
-          "description": null
-        },
-        {
-          "name": "Stage",
+          "name": "DataJson",
           "type": "string",
           "required": null,
           "description": null
         },
         {
           "name": "Description",
-          "type": "string",
-          "required": null,
-          "description": null
-        },
-        {
-          "name": "Status",
-          "type": "string",
-          "required": null,
-          "description": null
-        },
-        {
-          "name": "DataJson",
           "type": "string",
           "required": null,
           "description": null
@@ -245,6 +229,42 @@
           "type": "string",
           "required": null,
           "description": null
+        },
+        {
+          "name": "JobId",
+          "type": "string",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "Sequence",
+          "type": "int",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "SpanId",
+          "type": "string",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "Stage",
+          "type": "string",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "Status",
+          "type": "string",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "WorkflowId",
+          "type": "string",
+          "required": null,
+          "description": null
         }
       ],
       "handlers": [
@@ -253,7 +273,12 @@
           "sourceFile": "src/SFA.DAS.EmployerFinance/Commands/CreateAuditWorkflowLog/CreateAuditWorkflowLogCommandHandler.cs"
         }
       ],
-      "senders": []
+      "senders": [
+        {
+          "name": "AuditLogOrchestrator",
+          "sourceFile": "src/SFA.DAS.EmployerFinance.Api/Orchestrators/AuditLogOrchestrator.cs"
+        }
+      ]
     },
     {
       "name": "CreateEnglishFractionCalculationDateCommand",
@@ -274,7 +299,12 @@
           "sourceFile": "src/SFA.DAS.EmployerFinance/Commands/CreateEnglishFractionCalculationDate/CreateEnglishFractionCalculationDateCommandHandler.cs"
         }
       ],
-      "senders": []
+      "senders": [
+        {
+          "name": "EnglishFractionCalculationDateOrchestrator",
+          "sourceFile": "src/SFA.DAS.EmployerFinance.Api/Orchestrators/EnglishFractionCalculationDateOrchestrator.cs"
+        }
+      ]
     },
     {
       "name": "CreateNewPeriodEndCommand",
@@ -295,7 +325,16 @@
           "sourceFile": "src/SFA.DAS.EmployerFinance/Commands/CreateNewPeriodEnd/CreateNewPeriodEndCommandHandler.cs"
         }
       ],
-      "senders": []
+      "senders": [
+        {
+          "name": "PeriodEndOrchestrator.CreatePeriodEnd",
+          "sourceFile": "src/SFA.DAS.EmployerFinance.Api/Orchestrators/PeriodEndOrchestrator.cs"
+        },
+        {
+          "name": "ImportPaymentsCommandHandler",
+          "sourceFile": "src/SFA.DAS.EmployerFinance.MessageHandlers/CommandHandlers/Payment/ImportPaymentsCommandHandler.cs"
+        }
+      ]
     },
     {
       "name": "CreateTransferTransactionsCommand",
@@ -333,25 +372,25 @@
     {
       "name": "DeleteTransferConnectionInvitationCommand",
       "namespace": "SFA.DAS.EmployerFinance.Commands.DeleteTransferConnectionInvitation",
-      "sourceFile": "src/SFA.DAS.EmployerFinance/Commands/DeleteTransferConnectionInvitation/DeleteTransferConnectionInvitationCommandHandler.cs",
+      "sourceFile": "src/SFA.DAS.EmployerFinance/Commands/DeleteTransferConnectionInvitation/DeleteTransferConnectionInvitationCommand.cs",
       "description": null,
       "fields": [
         {
           "name": "AccountId",
           "type": "long",
-          "required": null,
+          "required": true,
           "description": null
         },
         {
           "name": "UserRef",
           "type": "Guid",
-          "required": null,
+          "required": true,
           "description": null
         },
         {
           "name": "TransferConnectionInvitationId",
           "type": "long?",
-          "required": null,
+          "required": false,
           "description": null
         }
       ],
@@ -366,19 +405,19 @@
     {
       "name": "ExpireAccountFundsCommand",
       "namespace": "SFA.DAS.EmployerFinance.Commands.ExpireAccountFunds",
-      "sourceFile": "src/SFA.DAS.EmployerFinance/Commands/ExpireAccountFunds/ExpireAccountFundsCommandHandler.cs",
+      "sourceFile": "src/SFA.DAS.EmployerFinance/Commands/ExpireAccountFunds/ExpireAccountFundsCommand.cs",
       "description": null,
       "fields": [
         {
           "name": "AccountId",
           "type": "long",
-          "required": null,
+          "required": true,
           "description": null
         },
         {
           "name": "CorrelationId",
           "type": "string",
-          "required": null,
+          "required": true,
           "description": null
         }
       ],
@@ -388,7 +427,12 @@
           "sourceFile": "src/SFA.DAS.EmployerFinance/Commands/ExpireAccountFunds/ExpireAccountFundsCommandHandler.cs"
         }
       ],
-      "senders": []
+      "senders": [
+        {
+          "name": "FinanceOrchestrator.ExpireFunds",
+          "sourceFile": "src/SFA.DAS.EmployerFinance.Api/Orchestrators/FinanceOrchestrator.cs"
+        }
+      ]
     },
     {
       "name": "LegalEntitySignAgreementCommand",
@@ -397,27 +441,27 @@
       "description": null,
       "fields": [
         {
-          "name": "SignedAgreementId",
-          "type": "long",
-          "required": null,
-          "description": null
-        },
-        {
-          "name": "SignedAgreementVersion",
-          "type": "int",
-          "required": null,
-          "description": null
-        },
-        {
           "name": "AccountId",
           "type": "long",
-          "required": null,
+          "required": true,
           "description": null
         },
         {
           "name": "LegalEntityId",
           "type": "long",
-          "required": null,
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "SignedAgreementId",
+          "type": "long",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "SignedAgreementVersion",
+          "type": "int",
+          "required": true,
           "description": null
         }
       ],
@@ -427,36 +471,41 @@
           "sourceFile": "src/SFA.DAS.EmployerFinance/Commands/LegalEntitySignAgreement/LegalEntitySignAgreementCommand.cs"
         }
       ],
-      "senders": []
+      "senders": [
+        {
+          "name": "SignedAgreementEventHandler",
+          "sourceFile": "src/SFA.DAS.EmployerFinance.MessageHandlers/EventHandlers/SignedAgreementEventHandler.cs"
+        }
+      ]
     },
     {
       "name": "PersistEnglishFractionsCommand",
       "namespace": "SFA.DAS.EmployerFinance.Commands.PersistEnglishFractions",
-      "sourceFile": "src/SFA.DAS.EmployerFinance/Commands/PersistEnglishFractions/PersistEnglishFractionsCommandHandler.cs",
+      "sourceFile": "src/SFA.DAS.EmployerFinance/Commands/PersistEnglishFractions/PersistEnglishFractionsCommand.cs",
       "description": null,
       "fields": [
         {
           "name": "DateCalculated",
           "type": "DateTime",
-          "required": null,
+          "required": true,
           "description": null
         },
         {
           "name": "EmployerReference",
           "type": "string",
-          "required": null,
+          "required": true,
           "description": null
         },
         {
           "name": "Fractions",
           "type": "List<Models.Levy.DasEnglishFraction>",
-          "required": null,
+          "required": true,
           "description": null
         },
         {
           "name": "UpdateRequired",
           "type": "bool",
-          "required": null,
+          "required": true,
           "description": null
         }
       ],
@@ -466,7 +515,12 @@
           "sourceFile": "src/SFA.DAS.EmployerFinance/Commands/PersistEnglishFractions/PersistEnglishFractionsCommandHandler.cs"
         }
       ],
-      "senders": []
+      "senders": [
+        {
+          "name": "EnglishFractionsOrchestrator",
+          "sourceFile": "src/SFA.DAS.EmployerFinance.Api/Orchestrators/EnglishFractionsOrchestrator.cs"
+        }
+      ]
     },
     {
       "name": "PersistLevyDeclarationsCommand",
@@ -487,7 +541,12 @@
           "sourceFile": "src/SFA.DAS.EmployerFinance/Commands/PersistLevyDeclarations/PersistLevyDeclarationsCommandHandler.cs"
         }
       ],
-      "senders": []
+      "senders": [
+        {
+          "name": "LevyDeclarationOrchestrator.PersistLevyDeclarations",
+          "sourceFile": "src/SFA.DAS.EmployerFinance.Api/Orchestrators/LevyDeclarationOrchestrator.cs"
+        }
+      ]
     },
     {
       "name": "RefreshAccountTransfersCommand",
@@ -639,6 +698,428 @@
       "senders": []
     },
     {
+      "name": "RemoveAccountLegalEntityCommand",
+      "namespace": "SFA.DAS.EmployerFinance.Commands.RemoveAccountLegalEntity",
+      "sourceFile": "src/SFA.DAS.EmployerFinance/Commands/RemoveAccountLegalEntity/RemoveAccountLegalEntityCommand.cs",
+      "description": null,
+      "fields": [
+        {
+          "name": "Id",
+          "type": "long",
+          "required": true,
+          "description": null
+        }
+      ],
+      "handlers": [
+        {
+          "name": "RemoveAccountLegalEntityCommandHandler",
+          "sourceFile": "src/SFA.DAS.EmployerFinance/Commands/RemoveAccountLegalEntity/RemoveAccountLegalEntityCommandHandler.cs"
+        }
+      ],
+      "senders": [
+        {
+          "name": "RemovedLegalEntityEventHandler",
+          "sourceFile": "src/SFA.DAS.EmployerFinance.MessageHandlers/EventHandlers/RemovedLegalEntityEventHandler.cs"
+        }
+      ]
+    },
+    {
+      "name": "RemoveAccountPayeCommand",
+      "namespace": "SFA.DAS.EmployerFinance.Commands.RemoveAccountPaye",
+      "sourceFile": "src/SFA.DAS.EmployerFinance/Commands/RemoveAccountPaye/RemoveAccountPayeCommand.cs",
+      "description": null,
+      "fields": [
+        {
+          "name": "AccountId",
+          "type": "long",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "PayeRef",
+          "type": "string",
+          "required": true,
+          "description": null
+        }
+      ],
+      "handlers": [
+        {
+          "name": "RemoveAccountPayeCommandHandler",
+          "sourceFile": "src/SFA.DAS.EmployerFinance/Commands/RemoveAccountPaye/RemoveAccountPayeCommandHandler.cs"
+        }
+      ],
+      "senders": [
+        {
+          "name": "DeletedPayeSchemeEventHandler",
+          "sourceFile": "src/SFA.DAS.EmployerFinance.MessageHandlers/EventHandlers/DeletedPayeSchemeEventHandler.cs"
+        }
+      ]
+    },
+    {
+      "name": "RenameAccountCommand",
+      "namespace": "SFA.DAS.EmployerFinance.Commands.RenameAccount",
+      "sourceFile": "src/SFA.DAS.EmployerFinance/Commands/RenameAccount/RenameAccountCommand.cs",
+      "description": null,
+      "fields": [
+        {
+          "name": "Id",
+          "type": "long",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "Name",
+          "type": "string",
+          "required": true,
+          "description": null
+        }
+      ],
+      "handlers": [
+        {
+          "name": "RenameAccountCommandHandler",
+          "sourceFile": "src/SFA.DAS.EmployerFinance/Commands/RenameAccount/RenameAccountCommandHandler.cs"
+        }
+      ],
+      "senders": [
+        {
+          "name": "ChangedAccountNameEventHandler",
+          "sourceFile": "src/SFA.DAS.EmployerFinance.MessageHandlers/EventHandlers/ChangedAccountNameEventHandler.cs"
+        }
+      ]
+    },
+    {
+      "name": "RunHealthCheckCommand",
+      "namespace": "SFA.DAS.EmployerFinance.Commands.RunHealthCheckCommand",
+      "sourceFile": "src/SFA.DAS.EmployerFinance/Commands/RunHealthCheckCommand/RunHealthCheckCommand.cs",
+      "description": null,
+      "fields": [
+        {
+          "name": "UserRef",
+          "type": "Guid?",
+          "required": true,
+          "description": null
+        }
+      ],
+      "handlers": [
+        {
+          "name": "RunHealthCheckCommandHandler",
+          "sourceFile": "src/SFA.DAS.EmployerFinance/Commands/RunHealthCheckCommand/RunHealthCheckCommandHandler.cs"
+        }
+      ],
+      "senders": [
+        {
+          "name": "HealthCheckController",
+          "sourceFile": "src/SFA.DAS.EmployerFinance.Web/Controllers/HealthCheckController.cs"
+        }
+      ]
+    },
+    {
+      "name": "SendTransferConnectionInvitationCommand",
+      "namespace": "SFA.DAS.EmployerFinance.Commands.SendTransferConnectionInvitation",
+      "sourceFile": "src/SFA.DAS.EmployerFinance/Commands/SendTransferConnectionInvitation/SendTransferConnectionInvitationCommand.cs",
+      "description": null,
+      "fields": [
+        {
+          "name": "AccountId",
+          "type": "long",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "UserRef",
+          "type": "Guid",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "ReceiverAccountPublicHashedId",
+          "type": "string",
+          "required": true,
+          "description": null
+        }
+      ],
+      "handlers": [
+        {
+          "name": "SendTransferConnectionInvitationCommandHandler",
+          "sourceFile": "src/SFA.DAS.EmployerFinance/Commands/SendTransferConnectionInvitation/SendTransferConnectionInvitationCommandHandler.cs"
+        }
+      ],
+      "senders": []
+    },
+    {
+      "name": "StageTransfersCommand",
+      "namespace": "SFA.DAS.EmployerFinance.Commands.StagingTransfers",
+      "sourceFile": "src/SFA.DAS.EmployerFinance/Commands/StagingTransfers/StageTransfersCommand.cs",
+      "description": null,
+      "fields": [
+        {
+          "name": "CorrelationId",
+          "type": "string",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "Transfers",
+          "type": "List<TransferStaging>",
+          "required": null,
+          "description": null
+        }
+      ],
+      "handlers": [
+        {
+          "name": "StageTransfersCommandHandler",
+          "sourceFile": "src/SFA.DAS.EmployerFinance/Commands/StagingTransfers/StageTransfersCommandHandler.cs"
+        }
+      ],
+      "senders": [
+        {
+          "name": "TransferStagingOrchestrator.StageTransfers",
+          "sourceFile": "src/SFA.DAS.EmployerFinance.Api/Orchestrators/TransferStagingOrchestrator.cs"
+        }
+      ]
+    },
+    {
+      "name": "TransactionLineStagingCommand",
+      "namespace": "SFA.DAS.EmployerFinance.Commands.TransactionLineStaging",
+      "sourceFile": "src/SFA.DAS.EmployerFinance/Commands/TransactionLineStaging/TransactionLineStagingCommand.cs",
+      "description": null,
+      "fields": [
+        {
+          "name": "CorrelationId",
+          "type": "string",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "TransactionLines",
+          "type": "List<TransactionLineStagingModel>",
+          "required": null,
+          "description": null
+        }
+      ],
+      "handlers": [
+        {
+          "name": "TransactionLineStagingCommandHandler",
+          "sourceFile": "src/SFA.DAS.EmployerFinance/Commands/TransactionLineStaging/TransactionLineStagingCommandHandler.cs"
+        }
+      ],
+      "senders": [
+        {
+          "name": "TransactionLineStagingOrchestrator.IngestTransactionLines",
+          "sourceFile": "src/SFA.DAS.EmployerFinance.Api/Orchestrators/TransactionLineStagingOrchestrator.cs"
+        }
+      ]
+    },
+    {
+      "name": "TransferStagedToOperationalCommand",
+      "namespace": "SFA.DAS.EmployerFinance.Commands.TransferStagedToOperational",
+      "sourceFile": "src/SFA.DAS.EmployerFinance/Commands/TransferStagedToOperational/TransferStagedToOperationalCommand.cs",
+      "description": null,
+      "fields": [
+        {
+          "name": "AccountId",
+          "type": "long",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "CorrelationId",
+          "type": "string",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "PeriodEnd",
+          "type": "string",
+          "required": null,
+          "description": null
+        }
+      ],
+      "handlers": [
+        {
+          "name": "TransferStagedToOperationalCommandHandler",
+          "sourceFile": "src/SFA.DAS.EmployerFinance/Commands/TransferStagedToOperational/TransferStagedToOperationalCommandHandler.cs"
+        }
+      ],
+      "senders": [
+        {
+          "name": "StagedToOperationalController",
+          "sourceFile": "src/SFA.DAS.EmployerFinance.Api/Controllers/StagedToOperationalController.cs"
+        }
+      ]
+    },
+    {
+      "name": "UpdateEnglishFractionsCommand",
+      "namespace": "SFA.DAS.EmployerFinance.Commands.UpdateEnglishFractions",
+      "sourceFile": "src/SFA.DAS.EmployerFinance/Commands/UpdateEnglishFractions/UpdateEnglishFractionsCommand.cs",
+      "description": null,
+      "fields": [
+        {
+          "name": "EmployerReference",
+          "type": "string",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "EnglishFractionUpdateResponse",
+          "type": "GetEnglishFractionUpdateRequiredResponse",
+          "required": null,
+          "description": null
+        }
+      ],
+      "handlers": [
+        {
+          "name": "UpdateEnglishFractionsCommandHandler",
+          "sourceFile": "src/SFA.DAS.EmployerFinance/Commands/UpdateEnglishFractions/UpdateEnglishFractionsCommandHandler.cs"
+        }
+      ],
+      "senders": []
+    },
+    {
+      "name": "UpdatePayeInformationCommand",
+      "namespace": "SFA.DAS.EmployerFinance.Commands.UpdatePayeInformation",
+      "sourceFile": "src/SFA.DAS.EmployerFinance/Commands/UpdatePayeInformation/UpdatePayeInformationCommand.cs",
+      "description": null,
+      "fields": [
+        {
+          "name": "PayeRef",
+          "type": "string",
+          "required": true,
+          "description": null
+        }
+      ],
+      "handlers": [
+        {
+          "name": "UpdatePayeInformationCommandHandler",
+          "sourceFile": "src/SFA.DAS.EmployerFinance/Commands/UpdatePayeInformation/UpdatePayeInformationCommandHandler.cs"
+        }
+      ],
+      "senders": [
+        {
+          "name": "DasAccountService",
+          "sourceFile": "src/SFA.DAS.EmployerFinance/Services/DasAccountService.cs"
+        }
+      ]
+    },
+    {
+      "name": "UpdatePaymentMetadataStagingCommand",
+      "namespace": "SFA.DAS.EmployerFinance.Commands.UpdatePaymentMetadataStaging",
+      "sourceFile": "src/SFA.DAS.EmployerFinance/Commands/UpdatePaymentMetadataStaging/UpdatePaymentMetadataStagingCommand.cs",
+      "description": null,
+      "fields": [
+        {
+          "name": "PaymentId",
+          "type": "Guid",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "PaymentMetadataStaging",
+          "type": "PaymentMetaDataStaging",
+          "required": true,
+          "description": null
+        }
+      ],
+      "handlers": [
+        {
+          "name": "UpdatePaymentMetadataStagingCommandHandler",
+          "sourceFile": "src/SFA.DAS.EmployerFinance/Commands/UpdatePaymentMetadataStaging/UpdatePaymentMetadataStagingCommandHandler.cs"
+        }
+      ],
+      "senders": [
+        {
+          "name": "PaymentMetaDataOrchestrator.UpdatePaymentMetaDataStaging",
+          "sourceFile": "src/SFA.DAS.EmployerFinance.Api/Orchestrators/PaymentMetaDataOrchestrator.cs"
+        }
+      ]
+    },
+    {
+      "name": "UpsertRegisteredUserCommand",
+      "namespace": "SFA.DAS.EmployerFinance.Commands.UpsertRegisteredUser",
+      "sourceFile": "src/SFA.DAS.EmployerFinance/Commands/UpsertRegisteredUser/UpsertRegisteredUser.cs",
+      "description": null,
+      "fields": [
+        {
+          "name": "CorrelationId",
+          "type": "string",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "EmailAddress",
+          "type": "string",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "FirstName",
+          "type": "string",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "LastName",
+          "type": "string",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "UserRef",
+          "type": "string",
+          "required": true,
+          "description": null
+        }
+      ],
+      "handlers": [
+        {
+          "name": "UpsertRegisteredUserCommandHandler",
+          "sourceFile": "src/SFA.DAS.EmployerFinance/Commands/UpsertRegisteredUser/UpsertRegisteredUserCommandHandler.cs"
+        }
+      ],
+      "senders": [
+        {
+          "name": "UserController",
+          "sourceFile": "src/SFA.DAS.EmployerFinance.Api/Controllers/UserController.cs"
+        },
+        {
+          "name": "TransferConnectionsController",
+          "sourceFile": "src/SFA.DAS.EmployerFinance.Web/Controllers/TransferConnectionsController.cs"
+        }
+      ]
+    },
+    {
+      "name": "WithdrawTransferConnectionInvitationBySenderCommand",
+      "namespace": "SFA.DAS.EmployerFinance.Commands.WithdrawTransferConnectionInvitationBySender",
+      "sourceFile": "src/SFA.DAS.EmployerFinance/Commands/WithdrawTransferConnectionInvitationBySender/WithdrawTransferConnectionInvitationBySenderCommand.cs",
+      "description": null,
+      "fields": [
+        {
+          "name": "SenderAccountId",
+          "type": "long",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "TransferConnectionInvitationId",
+          "type": "int",
+          "required": true,
+          "description": null
+        }
+      ],
+      "handlers": [
+        {
+          "name": "WithdrawTransferConnectionInvitationBySenderCommandHandler",
+          "sourceFile": "src/SFA.DAS.EmployerFinance/Commands/WithdrawTransferConnectionInvitationBySender/WithdrawTransferConnectionInvitationBySenderCommandHandler.cs"
+        }
+      ],
+      "senders": [
+        {
+          "name": "ApprenticeshipEmployerTypeChangeEventHandler",
+          "sourceFile": "src/SFA.DAS.EmployerFinance.MessageHandlers/EventHandlers/ApprenticeshipEmployerTypeChangeEventHandler.cs"
+        }
+      ]
+    },
+    {
       "name": "CreateAccountPayeCommand",
       "namespace": "SFA.DAS.EmployerFinance.Messages.Commands",
       "sourceFile": "src/SFA.DAS.EmployerFinance.Messages/Commands/CreateAccountPayeCommand.cs",
@@ -697,7 +1178,7 @@
         {
           "name": "DateTo",
           "type": "DateTime?",
-          "required": null,
+          "required": false,
           "description": null
         }
       ],
@@ -723,16 +1204,11 @@
         {
           "name": "DateTo",
           "type": "DateTime?",
-          "required": null,
+          "required": false,
           "description": null
         }
       ],
-      "handlers": [
-        {
-          "name": "DraftExpireFundsCommandHandler",
-          "sourceFile": "src/SFA.DAS.EmployerFinance.MessageHandlers/CommandHandlers/Expiry/DraftExpireFundsCommandHandler.cs"
-        }
-      ],
+      "handlers": [],
       "senders": []
     },
     {
@@ -751,7 +1227,7 @@
       "handlers": [
         {
           "name": "ExpireAccountFundsCommandHandler",
-          "sourceFile": "src/SFA.DAS.EmployerFinance.MessageHandlers/CommandHandlers/Levy/ExpireAccountFundsCommandHandler.cs"
+          "sourceFile": "src/SFA.DAS.EmployerFinance.MessageHandlers/CommandHandlers/Expiry/ExpireAccountFundsCommandHandler.cs"
         }
       ],
       "senders": [
@@ -779,13 +1255,13 @@
         {
           "name": "AccountId",
           "type": "long",
-          "required": null,
+          "required": true,
           "description": null
         },
         {
           "name": "PayeRef",
           "type": "string",
-          "required": null,
+          "required": true,
           "description": null
         }
       ],
@@ -809,25 +1285,25 @@
     {
       "name": "ImportAccountPaymentMetadataCommand",
       "namespace": "SFA.DAS.EmployerFinance.Messages.Commands",
-      "sourceFile": "src/SFA.DAS.EmployerFinance.Jobs/ScheduledJobs/RepairMissingPaymentsMetadata.cs",
+      "sourceFile": "src/SFA.DAS.EmployerFinance.MessageHandlers/CommandHandlers/Payment/ImportAccountPaymentMetadataCommandHandler.cs",
       "description": null,
       "fields": [
         {
           "name": "AccountId",
           "type": "long",
-          "required": null,
+          "required": true,
           "description": null
         },
         {
           "name": "PaymentId",
           "type": "long",
-          "required": null,
+          "required": true,
           "description": null
         },
         {
           "name": "PeriodEndRef",
           "type": "string",
-          "required": null,
+          "required": true,
           "description": null
         }
       ],
@@ -849,6 +1325,10 @@
         {
           "name": "RoutingExtensions",
           "sourceFile": "src/SFA.DAS.EmployerFinance/Extensions/RoutingExtensions.cs"
+        },
+        {
+          "name": "RoutingExtensions.AddRouting",
+          "sourceFile": "src/SFA.DAS.EmployerFinance/Extensions/RoutingExtensions.cs"
         }
       ]
     },
@@ -861,22 +1341,17 @@
         {
           "name": "AccountId",
           "type": "long",
-          "required": null,
+          "required": true,
           "description": null
         },
         {
           "name": "PeriodEndRef",
           "type": "string",
-          "required": null,
+          "required": true,
           "description": null
         }
       ],
-      "handlers": [
-        {
-          "name": "ImportAccountPaymentsCommandHandler",
-          "sourceFile": "src/SFA.DAS.EmployerFinance.MessageHandlers/CommandHandlers/Payment/ImportAccountPaymentsCommandHandler.cs"
-        }
-      ],
+      "handlers": [],
       "senders": [
         {
           "name": "ProcessPeriodEndPaymentsCommandHandler",
@@ -895,6 +1370,10 @@
         {
           "name": "RoutingExtensions",
           "sourceFile": "src/SFA.DAS.EmployerFinance/Extensions/RoutingExtensions.cs"
+        },
+        {
+          "name": "RoutingExtensions.AddRouting",
+          "sourceFile": "src/SFA.DAS.EmployerFinance/Extensions/RoutingExtensions.cs"
         }
       ]
     },
@@ -904,12 +1383,7 @@
       "sourceFile": "src/SFA.DAS.EmployerFinance.Messages/Commands/ImportPaymentsCommand.cs",
       "description": null,
       "fields": [],
-      "handlers": [
-        {
-          "name": "ImportPaymentsCommandHandler",
-          "sourceFile": "src/SFA.DAS.EmployerFinance.MessageHandlers/CommandHandlers/Payment/ImportPaymentsCommandHandler.cs"
-        }
-      ],
+      "handlers": [],
       "senders": [
         {
           "name": "ImportPaymentsJob",
@@ -926,13 +1400,13 @@
         {
           "name": "BatchNumber",
           "type": "int",
-          "required": null,
+          "required": false,
           "description": null
         },
         {
           "name": "PeriodEndRef",
           "type": "string",
-          "required": null,
+          "required": true,
           "description": null
         }
       ],
@@ -946,23 +1420,27 @@
         {
           "name": "ImportPaymentsCommandHandler",
           "sourceFile": "src/SFA.DAS.EmployerFinance.MessageHandlers/CommandHandlers/Payment/ImportPaymentsCommandHandler.cs"
+        },
+        {
+          "name": "ProcessPeriodEndPaymentsCommandHandler",
+          "sourceFile": "src/SFA.DAS.EmployerFinance.MessageHandlers/CommandHandlers/Payment/ProcessPeriodEndPaymentsCommandHandler.cs"
         }
       ]
     },
     {
       "name": "SendEmailCommand",
       "namespace": "SFA.DAS.Notifications.Messages.Commands",
-      "sourceFile": "src/SFA.DAS.EmployerFinance/Services/NotificationsService.cs",
+      "sourceFile": "src/SFA.DAS.EmployerFinance/Extensions/RoutingExtensions.cs",
       "description": null,
       "fields": [],
       "handlers": [],
       "senders": [
         {
-          "name": "RoutingExtensions",
+          "name": "RoutingExtensions.AddRouting",
           "sourceFile": "src/SFA.DAS.EmployerFinance/Extensions/RoutingExtensions.cs"
         },
         {
-          "name": "NotificationsService",
+          "name": "NotificationsService.SendEmail",
           "sourceFile": "src/SFA.DAS.EmployerFinance/Services/NotificationsService.cs"
         }
       ]
@@ -976,21 +1454,21 @@
       "description": null,
       "fields": [
         {
-          "name": "AccountId",
-          "type": "string",
-          "required": null,
+          "name": "AccountLegalEntityId",
+          "type": "long",
+          "required": true,
           "description": null
         },
         {
-          "name": "AccountLegalEntityId",
+          "name": "AccountId",
           "type": "long",
-          "required": null,
+          "required": true,
           "description": null
         },
         {
           "name": "LegalEntityId",
           "type": "long",
-          "required": null,
+          "required": true,
           "description": null
         }
       ],
@@ -1010,26 +1488,26 @@
       "fields": [
         {
           "name": "AccountId",
-          "type": "string",
-          "required": null,
+          "type": "long",
+          "required": true,
           "description": null
         },
         {
           "name": "PayeRef",
           "type": "string",
-          "required": null,
+          "required": true,
           "description": null
         },
         {
           "name": "SchemeName",
           "type": "string",
-          "required": null,
+          "required": false,
           "description": null
         },
         {
           "name": "Aorn",
           "type": "string",
-          "required": null,
+          "required": false,
           "description": null
         }
       ],
@@ -1050,13 +1528,13 @@
         {
           "name": "AccountId",
           "type": "long",
-          "required": null,
+          "required": true,
           "description": null
         },
         {
           "name": "ApprenticeshipEmployerType",
           "type": "ApprenticeshipEmployerType",
-          "required": null,
+          "required": true,
           "description": null
         }
       ],
@@ -1077,13 +1555,13 @@
         {
           "name": "AccountId",
           "type": "long",
-          "required": null,
+          "required": true,
           "description": null
         },
         {
           "name": "CurrentName",
           "type": "string",
-          "required": null,
+          "required": true,
           "description": null
         }
       ],
@@ -1104,13 +1582,13 @@
         {
           "name": "AccountId",
           "type": "long",
-          "required": null,
+          "required": true,
           "description": null
         },
         {
           "name": "Name",
           "type": "string",
-          "required": null,
+          "required": true,
           "description": null
         }
       ],
@@ -1130,14 +1608,14 @@
       "fields": [
         {
           "name": "AccountId",
-          "type": "string",
-          "required": null,
+          "type": "long",
+          "required": true,
           "description": null
         },
         {
           "name": "PayeRef",
           "type": "string",
-          "required": null,
+          "required": true,
           "description": null
         }
       ],
@@ -1158,7 +1636,7 @@
         {
           "name": "AccountLegalEntityId",
           "type": "long",
-          "required": null,
+          "required": true,
           "description": null
         }
       ],
@@ -1179,25 +1657,25 @@
         {
           "name": "AgreementId",
           "type": "long",
-          "required": null,
+          "required": true,
           "description": null
         },
         {
           "name": "SignedAgreementVersion",
           "type": "int",
-          "required": null,
+          "required": true,
           "description": null
         },
         {
           "name": "AccountId",
           "type": "long",
-          "required": null,
+          "required": true,
           "description": null
         },
         {
           "name": "LegalEntityId",
           "type": "long",
-          "required": null,
+          "required": true,
           "description": null
         }
       ],
@@ -1212,13 +1690,25 @@
     {
       "name": "ProcessPaymentEvent",
       "namespace": "SFA.DAS.EmployerFinance.Events.ProcessPayment",
-      "sourceFile": "src/SFA.DAS.EmployerFinance/Commands/RefreshPaymentData/RefreshPaymentDataCommandHandler.cs",
+      "sourceFile": "src/SFA.DAS.EmployerFinance/Events/ProcessPayment/ProcessPaymentEvent.cs",
       "description": null,
-      "fields": [],
-      "handlers": [],
+      "fields": [
+        {
+          "name": "AccountId",
+          "type": "long",
+          "required": true,
+          "description": null
+        }
+      ],
+      "handlers": [
+        {
+          "name": "ProcessPaymentEventHandler",
+          "sourceFile": "src/SFA.DAS.EmployerFinance/Events/ProcessPayment/ProcessPaymentEventHandler.cs"
+        }
+      ],
       "senders": [
         {
-          "name": "RefreshPaymentDataCommandHandler",
+          "name": "RefreshPaymentDataCommandHandler.Handle",
           "sourceFile": "src/SFA.DAS.EmployerFinance/Commands/RefreshPaymentData/RefreshPaymentDataCommandHandler.cs"
         }
       ]
@@ -1232,13 +1722,13 @@
         {
           "name": "AccountId",
           "type": "long",
-          "required": null,
+          "required": true,
           "description": null
         },
         {
           "name": "Created",
           "type": "DateTime",
-          "required": null,
+          "required": true,
           "description": null
         }
       ],
@@ -1247,10 +1737,6 @@
         {
           "name": "ExpireAccountFundsCommandHandler",
           "sourceFile": "src/SFA.DAS.EmployerFinance.MessageHandlers/CommandHandlers/Expiry/ExpireAccountFundsCommandHandler.cs"
-        },
-        {
-          "name": "ExpireAccountFundsCommandHandler",
-          "sourceFile": "src/SFA.DAS.EmployerFinance.MessageHandlers/CommandHandlers/Levy/ExpireAccountFundsCommandHandler.cs"
         }
       ]
     },
@@ -1263,55 +1749,55 @@
         {
           "name": "ApprovedByUserId",
           "type": "long",
-          "required": null,
+          "required": true,
           "description": null
         },
         {
           "name": "ApprovedByUserName",
           "type": "string",
-          "required": null,
+          "required": true,
           "description": null
         },
         {
           "name": "ApprovedByUserRef",
           "type": "Guid",
-          "required": null,
-          "description": null
-        },
-        {
-          "name": "ReceiverAccountId",
-          "type": "long",
-          "required": null,
-          "description": null
-        },
-        {
-          "name": "ReceiverAccountName",
-          "type": "string",
-          "required": null,
-          "description": null
-        },
-        {
-          "name": "SenderAccountId",
-          "type": "long",
-          "required": null,
-          "description": null
-        },
-        {
-          "name": "SenderAccountName",
-          "type": "string",
-          "required": null,
-          "description": null
-        },
-        {
-          "name": "TransferConnectionRequestId",
-          "type": "int",
-          "required": null,
+          "required": true,
           "description": null
         },
         {
           "name": "Created",
           "type": "DateTime",
-          "required": null,
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "ReceiverAccountId",
+          "type": "long",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "ReceiverAccountName",
+          "type": "string",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "SenderAccountId",
+          "type": "long",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "SenderAccountName",
+          "type": "string",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "TransferConnectionRequestId",
+          "type": "int",
+          "required": true,
           "description": null
         }
       ],
@@ -1327,25 +1813,107 @@
         {
           "name": "AccountId",
           "type": "long",
-          "required": null,
+          "required": true,
           "description": null
         },
         {
           "name": "Amount",
           "type": "decimal",
-          "required": null,
+          "required": true,
           "description": null
         },
         {
           "name": "ProviderName",
           "type": "string",
-          "required": null,
+          "required": true,
           "description": null
         },
         {
           "name": "Created",
           "type": "DateTime",
-          "required": null,
+          "required": true,
+          "description": null
+        }
+      ],
+      "handlers": [],
+      "senders": []
+    },
+    {
+      "name": "DeleteTransferConnectionRequestEvent",
+      "namespace": "SFA.DAS.EmployerFinance.Messages.Events",
+      "sourceFile": "src/SFA.DAS.EmployerFinance/Models/TransferConnections/TransferConnectionInvitation.cs",
+      "description": null,
+      "fields": [
+        {
+          "name": "Created",
+          "type": "DateTime",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "DeletedByAccountId",
+          "type": "long",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "DeletedByUserId",
+          "type": "long",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "DeletedByUserName",
+          "type": "string",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "DeletedByUserRef",
+          "type": "Guid",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "ReceiverAccountHashedId",
+          "type": "string",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "ReceiverAccountId",
+          "type": "long",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "ReceiverAccountName",
+          "type": "string",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "SenderAccountHashedId",
+          "type": "string",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "SenderAccountId",
+          "type": "long",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "SenderAccountName",
+          "type": "string",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "TransferConnectionRequestId",
+          "type": "int",
+          "required": true,
           "description": null
         }
       ],
@@ -1489,7 +2057,7 @@
       "handlers": [],
       "senders": [
         {
-          "name": "RefreshEmployerLevyDataCommandHandler",
+          "name": "RefreshEmployerLevyDataCommandHandler.PublishAccountLevyStatusEvent",
           "sourceFile": "src/SFA.DAS.EmployerFinance/Commands/RefreshEmployerLevyData/RefreshEmployerLevyDataCommandHandler.cs"
         }
       ]
@@ -1515,7 +2083,7 @@
         {
           "name": "LastLevyDeclarationDate",
           "type": "DateTime?",
-          "required": null,
+          "required": false,
           "description": null
         },
         {
@@ -1552,7 +2120,7 @@
       "handlers": [],
       "senders": [
         {
-          "name": "RefreshEmployerLevyDataCommandHandler",
+          "name": "RefreshEmployerLevyDataCommandHandler.PublishRefreshEmployerLevyDataCompletedEvent",
           "sourceFile": "src/SFA.DAS.EmployerFinance/Commands/RefreshEmployerLevyData/RefreshEmployerLevyDataCommandHandler.cs"
         }
       ]
@@ -1579,7 +2147,7 @@
           "name": "PaymentsProcessed",
           "type": "bool",
           "required": true,
-          "description": "true if we have processed some payments; otherwise false;"
+          "description": "true if we have processed some payments; otherwise false"
         },
         {
           "name": "PeriodEnd",
@@ -1591,7 +2159,7 @@
       "handlers": [],
       "senders": [
         {
-          "name": "RefreshPaymentDataCommandHandler",
+          "name": "RefreshPaymentDataCommandHandler.PublishRefreshPaymentDataCompletedEvent",
           "sourceFile": "src/SFA.DAS.EmployerFinance/Commands/RefreshPaymentData/RefreshPaymentDataCommandHandler.cs"
         }
       ]
@@ -1679,6 +2247,12 @@
       "description": null,
       "fields": [
         {
+          "name": "Created",
+          "type": "DateTime",
+          "required": true,
+          "description": null
+        },
+        {
           "name": "ReceiverAccountId",
           "type": "long",
           "required": true,
@@ -1723,12 +2297,6 @@
         {
           "name": "TransferConnectionRequestId",
           "type": "int",
-          "required": true,
-          "description": null
-        },
-        {
-          "name": "Created",
-          "type": "DateTime",
           "required": true,
           "description": null
         }
