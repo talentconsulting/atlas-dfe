@@ -1,0 +1,349 @@
+{
+  "database": {
+    "name": null,
+    "engine": null
+  },
+  "tables": [
+    {
+      "name": "OutboxData",
+      "schema": "dbo",
+      "entity": null,
+      "columns": [
+        {
+          "name": "MessageId",
+          "type": "NVARCHAR(200)",
+          "nullable": false,
+          "primaryKey": true,
+          "generated": false,
+          "default": null,
+          "ordinal": 1
+        },
+        {
+          "name": "Dispatched",
+          "type": "BIT",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": false,
+          "default": "(0)",
+          "ordinal": 2
+        },
+        {
+          "name": "DispatchedAt",
+          "type": "DATETIME",
+          "nullable": true,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": 3
+        },
+        {
+          "name": "PersistenceVersion",
+          "type": "VARCHAR(23)",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": 4
+        },
+        {
+          "name": "Operations",
+          "type": "NVARCHAR(MAX)",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": 5
+        }
+      ],
+      "relationships": [],
+      "indexes": [
+        {
+          "name": "IX_DispatchedAt",
+          "type": null,
+          "columns": [
+            "DispatchedAt"
+          ],
+          "unique": false,
+          "filter": "[Dispatched] = 1"
+        }
+      ],
+      "hasPii": false
+    },
+    {
+      "name": "ClientOutboxData",
+      "schema": "dbo",
+      "entity": null,
+      "columns": [
+        {
+          "name": "MessageId",
+          "type": "UNIQUEIDENTIFIER",
+          "nullable": false,
+          "primaryKey": true,
+          "generated": false,
+          "default": null,
+          "ordinal": 1
+        },
+        {
+          "name": "EndpointName",
+          "type": "NVARCHAR(150)",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": 2
+        },
+        {
+          "name": "CreatedAt",
+          "type": "DATETIME",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": 3
+        },
+        {
+          "name": "Dispatched",
+          "type": "BIT",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": false,
+          "default": "(0)",
+          "ordinal": 4
+        },
+        {
+          "name": "DispatchedAt",
+          "type": "DATETIME",
+          "nullable": true,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": 5
+        },
+        {
+          "name": "PersistenceVersion",
+          "type": "VARCHAR(23)",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": 6
+        },
+        {
+          "name": "Operations",
+          "type": "NVARCHAR(MAX)",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": 7
+        }
+      ],
+      "relationships": [],
+      "indexes": [
+        {
+          "name": "IX_CreatedAt_PersistenceVersion",
+          "type": null,
+          "columns": [
+            "CreatedAt",
+            "PersistenceVersion"
+          ],
+          "unique": false,
+          "filter": "[Dispatched] = 0"
+        },
+        {
+          "name": "IX_DispatchedAt_PersistenceVersion",
+          "type": null,
+          "columns": [
+            "DispatchedAt",
+            "PersistenceVersion"
+          ],
+          "unique": false,
+          "filter": "[Dispatched] = 1"
+        }
+      ],
+      "hasPii": false
+    },
+    {
+      "name": "Foobars",
+      "schema": "dbo",
+      "entity": null,
+      "columns": [
+        {
+          "name": "Id",
+          "type": "INT",
+          "nullable": false,
+          "primaryKey": true,
+          "generated": true,
+          "default": null,
+          "ordinal": 1
+        },
+        {
+          "name": "Created",
+          "type": "DATETIME",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": 2
+        },
+        {
+          "name": "Updated",
+          "type": "DATETIME",
+          "nullable": true,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": 3
+        }
+      ],
+      "relationships": [],
+      "indexes": [],
+      "hasPii": false
+    }
+  ],
+  "types": [
+    {
+      "name": "DasEnv",
+      "kind": "enum",
+      "values": [
+        "LOCAL",
+        "AT",
+        "TEST",
+        "TEST2",
+        "PREPROD",
+        "PROD",
+        "MO",
+        "DEMO"
+      ]
+    },
+    {
+      "name": "OrganisationSubType",
+      "kind": "enum",
+      "values": [
+        "None",
+        "Ons",
+        "Nhs",
+        "Police"
+      ]
+    },
+    {
+      "name": "ClientName",
+      "kind": "enum",
+      "values": [
+        "ProviderRoatp",
+        "BulkStop",
+        "DataLocks",
+        "Qa",
+        "ServiceAdmin",
+        "SupportConsole",
+        "TraineeshipRoatp",
+        "ServiceAdminAan",
+        "RoatpServiceAdmin"
+      ]
+    },
+    {
+      "name": "CustomServiceRoleValueType",
+      "kind": "enum",
+      "values": [
+        "Name",
+        "Code"
+      ]
+    },
+    {
+      "name": "RoleStatus",
+      "kind": "enum",
+      "values": [
+        "InActive",
+        "Active"
+      ]
+    },
+    {
+      "name": "ApprenticeDetailsBanners",
+      "kind": "enum",
+      "values": [
+        "None",
+        "ChangeOfPriceRejected",
+        "ChangeOfPriceApproved",
+        "ChangeOfPriceRequestSent",
+        "ChangeOfPriceCancelled",
+        "ChangeOfStartDateApproved",
+        "ChangeOfStartDateRejected",
+        "ProviderPaymentsInactive"
+      ]
+    },
+    {
+      "name": "NavigationSection",
+      "kind": "enum",
+      "values": [
+        "None",
+        "AccountsHome",
+        "AccountsFinance",
+        "RecruitHome",
+        "ApprenticesHome",
+        "AccountsTeamsView",
+        "AccountsAgreements",
+        "AccountsSchemes"
+      ]
+    },
+    {
+      "name": "EncodingType",
+      "kind": "enum",
+      "values": [
+        "CohortReference",
+        "AccountId",
+        "PublicAccountId",
+        "AccountLegalEntityId",
+        "PublicAccountLegalEntityId",
+        "ApprenticeshipId",
+        "RedundancyServiceApprenticeReference",
+        "RedundancyServiceEmployerReference",
+        "PledgeId",
+        "TransferRequestId",
+        "PledgeApplicationId",
+        "SupportReference"
+      ]
+    },
+    {
+      "name": "UserInfoClaims",
+      "kind": "enum",
+      "values": [
+        "CoreIdentityJWT",
+        "Address",
+        "Passport",
+        "DrivingPermit",
+        "ReturnCode"
+      ]
+    },
+    {
+      "name": "PolicyConcern",
+      "kind": "enum",
+      "values": [
+        "HttpResponse"
+      ]
+    },
+    {
+      "name": "WageType",
+      "kind": "enum",
+      "values": [
+        "ApprenticeshipMinimum",
+        "CompetitiveSalary",
+        "Custom",
+        "CustomRange",
+        "NationalMinimum",
+        "Text",
+        "ToBeAgreedUponAppointment",
+        "Unwaged"
+      ]
+    },
+    {
+      "name": "WageUnit",
+      "kind": "enum",
+      "values": [
+        "NotApplicable",
+        "Weekly",
+        "Monthly",
+        "Annually"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,185 @@
+{
+  "database": {
+    "name": null,
+    "engine": null
+  },
+  "tables": [
+    {
+      "name": "ClientOutboxData",
+      "schema": "dbo",
+      "entity": null,
+      "columns": [
+        {
+          "name": "MessageId",
+          "type": "UNIQUEIDENTIFIER",
+          "nullable": false,
+          "primaryKey": true,
+          "generated": false,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "EndpointName",
+          "type": "NVARCHAR(150)",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "CreatedAt",
+          "type": "DATETIME",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "Dispatched",
+          "type": "BIT",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": false,
+          "default": "0",
+          "ordinal": null
+        },
+        {
+          "name": "DispatchedAt",
+          "type": "DATETIME",
+          "nullable": true,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "Operations",
+          "type": "NVARCHAR(MAX)",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "PersistenceVersion",
+          "type": "VARCHAR(23)",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": false,
+          "default": "'1.0.0'",
+          "ordinal": null
+        }
+      ],
+      "relationships": [],
+      "indexes": [
+        {
+          "name": "IX_CreatedAt",
+          "type": "btree",
+          "columns": [
+            "CreatedAt"
+          ],
+          "unique": false,
+          "filter": "[Dispatched] = 0"
+        },
+        {
+          "name": "IX_DispatchedAt",
+          "type": "btree",
+          "columns": [
+            "DispatchedAt"
+          ],
+          "unique": false,
+          "filter": "[Dispatched] = 1"
+        }
+      ],
+      "hasPii": false
+    },
+    {
+      "name": "OutboxData",
+      "schema": "dbo",
+      "entity": null,
+      "columns": [
+        {
+          "name": "MessageId",
+          "type": "NVARCHAR(200)",
+          "nullable": false,
+          "primaryKey": true,
+          "generated": false,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "Dispatched",
+          "type": "BIT",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": false,
+          "default": "0",
+          "ordinal": null
+        },
+        {
+          "name": "DispatchedAt",
+          "type": "DATETIME",
+          "nullable": true,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "PersistenceVersion",
+          "type": "VARCHAR(23)",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "Operations",
+          "type": "NVARCHAR(MAX)",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": null
+        }
+      ],
+      "relationships": [],
+      "indexes": [
+        {
+          "name": "IX_DispatchedAt",
+          "type": "btree",
+          "columns": [
+            "DispatchedAt"
+          ],
+          "unique": false,
+          "filter": "[Dispatched] = 1"
+        }
+      ],
+      "hasPii": false
+    }
+  ],
+  "types": [
+    {
+      "name": "NotificationFormat",
+      "kind": "enum",
+      "values": [
+        "Email",
+        "Sms"
+      ]
+    },
+    {
+      "name": "NotificationStatus",
+      "kind": "enum",
+      "values": [
+        "New",
+        "Sending",
+        "Sent",
+        "Failed"
+      ]
+    }
+  ]
+}

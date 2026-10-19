@@ -1,0 +1,824 @@
+{
+  "database": {
+    "name": null,
+    "engine": null
+  },
+  "tables": [
+    {
+      "name": "Attendance",
+      "schema": null,
+      "entity": "Attendance",
+      "columns": [
+        {
+          "name": "Id",
+          "type": "Guid",
+          "nullable": false,
+          "primaryKey": true,
+          "generated": false,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "MemberId",
+          "type": "Guid",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "IsAttending",
+          "type": "bool",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "AddedDate",
+          "type": "DateTime",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "CalendarEventId",
+          "type": "Guid",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": null
+        }
+      ],
+      "relationships": [
+        {
+          "name": "FK_Attendance_CalendarEvent",
+          "type": "many-to-one",
+          "fromColumns": [
+            "CalendarEventId"
+          ],
+          "targetTable": "CalendarEvent",
+          "targetColumns": [
+            "Id"
+          ],
+          "onDelete": null
+        }
+      ],
+      "indexes": [],
+      "hasPii": false
+    },
+    {
+      "name": "Audit",
+      "schema": null,
+      "entity": "Audit",
+      "columns": [
+        {
+          "name": "Id",
+          "type": "long",
+          "nullable": false,
+          "primaryKey": true,
+          "generated": false,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "ActionedBy",
+          "type": "Guid",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "Resource",
+          "type": "string",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": null
+        }
+      ],
+      "relationships": [],
+      "indexes": [],
+      "hasPii": false
+    },
+    {
+      "name": "Calendar",
+      "schema": null,
+      "entity": "Calendar",
+      "columns": [
+        {
+          "name": "Id",
+          "type": "int",
+          "nullable": false,
+          "primaryKey": true,
+          "generated": false,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "CalendarName",
+          "type": "string",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "EffectiveFromDate",
+          "type": "DateTime",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "EffectiveToDate",
+          "type": "DateTime",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "Ordering",
+          "type": "int",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": null
+        }
+      ],
+      "relationships": [],
+      "indexes": [],
+      "hasPii": false
+    },
+    {
+      "name": "CalendarEvent",
+      "schema": null,
+      "entity": "CalendarEvent",
+      "columns": [
+        {
+          "name": "Id",
+          "type": "Guid",
+          "nullable": false,
+          "primaryKey": true,
+          "generated": false,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "StartDate",
+          "type": "DateTime",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "EndDate",
+          "type": "DateTime",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "EventFormat",
+          "type": "string",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "Title",
+          "type": "string",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "CalendarId",
+          "type": "int",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "CreatedByMemberId",
+          "type": "Guid",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": null
+        }
+      ],
+      "relationships": [
+        {
+          "name": "FK_CalendarEvent_Member",
+          "type": "many-to-one",
+          "fromColumns": [
+            "CreatedByMemberId"
+          ],
+          "targetTable": "Member",
+          "targetColumns": [
+            "Id"
+          ],
+          "onDelete": null
+        },
+        {
+          "name": "FK_CalendarEvent_Calendar",
+          "type": "many-to-one",
+          "fromColumns": [
+            "CalendarId"
+          ],
+          "targetTable": "Calendar",
+          "targetColumns": [
+            "Id"
+          ],
+          "onDelete": null
+        }
+      ],
+      "indexes": [],
+      "hasPii": true
+    },
+    {
+      "name": "Employer",
+      "schema": null,
+      "entity": "Employer",
+      "columns": [
+        {
+          "name": "MemberId",
+          "type": "Guid",
+          "nullable": false,
+          "primaryKey": true,
+          "generated": false,
+          "default": null,
+          "ordinal": null
+        }
+      ],
+      "relationships": [
+        {
+          "name": "FK_Employer_Member",
+          "type": "one-to-one",
+          "fromColumns": [
+            "MemberId"
+          ],
+          "targetTable": "Member",
+          "targetColumns": [
+            "Id"
+          ],
+          "onDelete": null
+        }
+      ],
+      "indexes": [],
+      "hasPii": true
+    },
+    {
+      "name": "JobAudit",
+      "schema": null,
+      "entity": "JobAudit",
+      "columns": [
+        {
+          "name": "Id",
+          "type": "int",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": null,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "JobName",
+          "type": "string",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": null,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "StartTime",
+          "type": "DateTime",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": null,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "EndTime",
+          "type": "DateTime",
+          "nullable": true,
+          "primaryKey": false,
+          "generated": null,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "Notes",
+          "type": "string",
+          "nullable": true,
+          "primaryKey": false,
+          "generated": null,
+          "default": null,
+          "ordinal": null
+        }
+      ],
+      "relationships": [],
+      "indexes": [],
+      "hasPii": false
+    },
+    {
+      "name": "Member",
+      "schema": null,
+      "entity": "Member",
+      "columns": [
+        {
+          "name": "Id",
+          "type": "Guid",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": null,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "UserType",
+          "type": "UserType",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": null,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "Email",
+          "type": "string",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": null,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "Status",
+          "type": "MemberStatus",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": null,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "FirstName",
+          "type": "string",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": null,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "LastName",
+          "type": "string",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": null,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "OrganisationName",
+          "type": "string",
+          "nullable": true,
+          "primaryKey": false,
+          "generated": null,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "LastUpdatedDate",
+          "type": "DateTime",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": null,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "IsRegionalChair",
+          "type": "bool",
+          "nullable": true,
+          "primaryKey": false,
+          "generated": null,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "EndDate",
+          "type": "DateTime",
+          "nullable": true,
+          "primaryKey": false,
+          "generated": null,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "ReceiveNotifications",
+          "type": "bool",
+          "nullable": true,
+          "primaryKey": false,
+          "generated": null,
+          "default": null,
+          "ordinal": null
+        }
+      ],
+      "relationships": [],
+      "indexes": [],
+      "hasPii": true
+    },
+    {
+      "name": "MemberNotificationEventFormat",
+      "schema": null,
+      "entity": "MemberNotificationEventFormat",
+      "columns": [
+        {
+          "name": "Id",
+          "type": "long",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": null,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "MemberId",
+          "type": "Guid",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": null,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "EventFormat",
+          "type": "string",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": null,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "ReceiveNotifications",
+          "type": "bool",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": null,
+          "default": null,
+          "ordinal": null
+        }
+      ],
+      "relationships": [
+        {
+          "name": "MemberNotificationEventFormat_Member",
+          "type": "many-to-one",
+          "fromColumns": [
+            "MemberId"
+          ],
+          "targetTable": "Member",
+          "targetColumns": [
+            "Id"
+          ],
+          "onDelete": null
+        }
+      ],
+      "indexes": [],
+      "hasPii": false
+    },
+    {
+      "name": "MemberNotificationLocation",
+      "schema": null,
+      "entity": "MemberNotificationLocation",
+      "columns": [
+        {
+          "name": "Id",
+          "type": "long",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": null,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "MemberId",
+          "type": "Guid",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": null,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "Name",
+          "type": "string",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": null,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "Radius",
+          "type": "int",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": null,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "Latitude",
+          "type": "double",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": null,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "Longitude",
+          "type": "double",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": null,
+          "default": null,
+          "ordinal": null
+        }
+      ],
+      "relationships": [
+        {
+          "name": "MemberNotificationLocation_Member",
+          "type": "many-to-one",
+          "fromColumns": [
+            "MemberId"
+          ],
+          "targetTable": "Member",
+          "targetColumns": [
+            "Id"
+          ],
+          "onDelete": null
+        }
+      ],
+      "indexes": [],
+      "hasPii": false
+    },
+    {
+      "name": "MemberPreference",
+      "schema": null,
+      "entity": "SFA.DAS.AAN.Hub.Data.Entities.MemberPreference",
+      "columns": [
+        {
+          "name": "Id",
+          "type": "bigint",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "MemberId",
+          "type": "uniqueidentifier",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": null
+        }
+      ],
+      "relationships": [
+        {
+          "name": "MemberPreference_Member",
+          "type": "many-to-one",
+          "fromColumns": [
+            "MemberId"
+          ],
+          "targetTable": "Member",
+          "targetColumns": [
+            "Id"
+          ],
+          "onDelete": null
+        }
+      ],
+      "indexes": [],
+      "hasPii": false
+    },
+    {
+      "name": "MemberProfile",
+      "schema": null,
+      "entity": "SFA.DAS.AAN.Hub.Data.Entities.MemberProfile",
+      "columns": [
+        {
+          "name": "Id",
+          "type": "bigint",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "MemberId",
+          "type": "uniqueidentifier",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": null
+        }
+      ],
+      "relationships": [
+        {
+          "name": "MemberProfile_Member",
+          "type": "many-to-one",
+          "fromColumns": [
+            "MemberId"
+          ],
+          "targetTable": "Member",
+          "targetColumns": [
+            "Id"
+          ],
+          "onDelete": null
+        }
+      ],
+      "indexes": [],
+      "hasPii": false
+    },
+    {
+      "name": "Notification",
+      "schema": null,
+      "entity": "SFA.DAS.AAN.Hub.Data.Entities.Notification",
+      "columns": [
+        {
+          "name": "Id",
+          "type": "uniqueidentifier",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "MemberId",
+          "type": "uniqueidentifier",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "TemplateName",
+          "type": "nvarchar",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "Tokens",
+          "type": "nvarchar",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "CreatedBy",
+          "type": "uniqueidentifier",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "CreatedDate",
+          "type": "datetime",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "SendAfterTime",
+          "type": "datetime",
+          "nullable": true,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "SentTime",
+          "type": "datetime",
+          "nullable": true,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "IsSystem",
+          "type": "bit",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "ReferenceId",
+          "type": "nvarchar",
+          "nullable": true,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": null
+        }
+      ],
+      "relationships": [
+        {
+          "name": "Notification_Member",
+          "type": "many-to-one",
+          "fromColumns": [
+            "MemberId"
+          ],
+          "targetTable": "Member",
+          "targetColumns": [
+            "Id"
+          ],
+          "onDelete": null
+        }
+      ],
+      "indexes": [],
+      "hasPii": true
+    }
+  ],
+  "types": [
+    {
+      "name": "EventFormat",
+      "kind": "enum",
+      "values": [
+        "InPerson",
+        "Online",
+        "Hybrid",
+        "All"
+      ]
+    },
+    {
+      "name": "MemberStatus",
+      "kind": "enum",
+      "values": [
+        "Live",
+        "Withdrawn",
+        "Deleted",
+        "Removed"
+      ]
+    },
+    {
+      "name": "UserType",
+      "kind": "enum",
+      "values": [
+        "Apprentice",
+        "Employer",
+        "Admin"
+      ]
+    }
+  ]
+}
