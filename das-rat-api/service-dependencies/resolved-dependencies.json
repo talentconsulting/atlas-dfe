@@ -1,0 +1,139 @@
+{
+  "repository": "SkillsFundingAgency/das-rat-api",
+  "ref": "main",
+  "path": "src",
+  "systemName": "Request Apprentice Training",
+  "containers": [
+    {
+      "id": "request-apprentice-training",
+      "name": "Request Apprentice Training",
+      "type": "api",
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Api/Startup.cs",
+          "reason": "ASP.NET MVC setup, controllers mapping, and Swagger endpoint configuration"
+        },
+        {
+          "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Api/SFA.DAS.RequestApprenticeTraining.Api.csproj",
+          "reason": "ASP.NET Web SDK project file for API entry point"
+        },
+        {
+          "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Api/Program.cs",
+          "reason": "ASP.NET web project's entry point with web service setup"
+        }
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "sourceId": "request-apprentice-training",
+      "name": "Azure Key Vault",
+      "kind": "cloud-service",
+      "classification": "unknown",
+      "direction": "outbound",
+      "client": "ChainedTokenCredential",
+      "technology": "Azure.Identity",
+      "configurationKeys": [],
+      "authentication": {
+        "type": "Azure Managed Identity",
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Data/RequestApprenticeTrainingDataContext.cs",
+          "reason": "Azure.Identity ChainedTokenCredential used in DbContext for authentication"
+        },
+        {
+          "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Api/AppStart/AddDatabaseRegistrations.cs",
+          "reason": "ChainedTokenCredential configured for Azure resources including Key Vault"
+        }
+      ],
+      "confidence": "medium",
+      "targetId": "cloud-service-azure-key-vault",
+      "description": "Uses"
+    },
+    {
+      "sourceId": "request-apprentice-training",
+      "name": "SQL Server Database",
+      "kind": "database",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": null,
+      "technology": "Microsoft.EntityFrameworkCore.SqlServer",
+      "configurationKeys": [
+        "ApplicationSettings:DbConnectionString"
+      ],
+      "authentication": {
+        "type": "Azure Managed Identity",
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [
+        {
+          "type": "database",
+          "name": "ApplicationSettings:DbConnectionString",
+          "direction": "outbound",
+          "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Api/AppStart/AddDatabaseRegistrations.cs"
+        }
+      ],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Data/RequestApprenticeTrainingDataContext.cs",
+          "reason": "DbContext implementation using SQL Server with potential Azure Managed Identity authentication"
+        },
+        {
+          "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Api/AppStart/AddDatabaseRegistrations.cs",
+          "reason": "DbContext registration for SQL Server using Entity Framework"
+        },
+        {
+          "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Api/AppStart/NServiceBusRegistration.cs",
+          "reason": "SQL Server connection used in NServiceBus configuration"
+        }
+      ],
+      "confidence": "high",
+      "targetId": "database-sql-server-database",
+      "description": "Reads from and writes to"
+    },
+    {
+      "sourceId": "request-apprentice-training",
+      "name": "Azure Service Bus",
+      "kind": "message-broker",
+      "classification": "unknown",
+      "direction": "outbound",
+      "client": null,
+      "technology": "NServiceBus",
+      "configurationKeys": [
+        "ApplicationSettings:NServiceBusConnectionString"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [
+        {
+          "type": "message-broker",
+          "name": "ApplicationSettings:NServiceBusConnectionString",
+          "direction": "outbound",
+          "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Api/AppStart/NServiceBusRegistration.cs"
+        }
+      ],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Api/AppStart/NServiceBusRegistration.cs",
+          "reason": "Azure Service Bus transport configured with NServiceBus"
+        }
+      ],
+      "confidence": "high",
+      "targetId": "message-broker-azure-service-bus",
+      "description": "Publishes messages to and consumes messages from"
+    }
+  ],
+  "resolution": {
+    "overlay": "dfe-overlay/apim-routing.json",
+    "apimCommit": "2741b3f0d208f1080829bb57a3b72facc12371d4",
+    "precision": "area"
+  }
+}
