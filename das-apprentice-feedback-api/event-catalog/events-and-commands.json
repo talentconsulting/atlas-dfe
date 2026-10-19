@@ -12,25 +12,25 @@
         {
           "name": "AllowContact",
           "type": "bool",
-          "required": null,
+          "required": true,
           "description": null
         },
         {
           "name": "ApprenticeFeedbackTargetId",
           "type": "Guid",
-          "required": null,
+          "required": true,
           "description": null
         },
         {
           "name": "FeedbackAttributes",
           "type": "List<FeedbackAttribute>",
-          "required": null,
+          "required": true,
           "description": null
         },
         {
           "name": "OverallRating",
           "type": "OverallRating",
-          "required": null,
+          "required": true,
           "description": null
         },
         {
@@ -45,6 +45,12 @@
           "name": "CreateApprenticeFeedbackHandler",
           "sourceFile": "src/SFA.DAS.ApprenticeFeedback.Application/Commands/CreateApprenticeFeedback/CreateApprenticeFeedbackHandler.cs"
         }
+      ],
+      "senders": [
+        {
+          "name": "ApprenticeFeedbackResultController.Post",
+          "sourceFile": "src/SFA.DAS.ApprenticeFeedback.Api/Controllers/ApprenticeFeedbackResultController.cs"
+        }
       ]
     },
     {
@@ -56,26 +62,32 @@
         {
           "name": "ApprenticeId",
           "type": "Guid",
-          "required": null,
-          "description": null
+          "required": true,
+          "description": "Apprentice Accounts Id, The guid representing the apprentice ID as stored in the Apprentice Login database"
         },
         {
           "name": "ApprenticeshipId",
           "type": "long",
-          "required": null,
-          "description": null
+          "required": true,
+          "description": "Apprentice Commitments Apprentice Id, the integer id assigned as part of apprentice commitments in CMAD database"
         },
         {
           "name": "CommitmentApprenticeshipId",
           "type": "long",
-          "required": null,
-          "description": null
+          "required": true,
+          "description": "Apprenticeship Id in Commitments database / apprenticeship table"
         }
       ],
       "handlers": [
         {
           "name": "CreateApprenticeFeedbackTargetCommandHandler",
           "sourceFile": "src/SFA.DAS.ApprenticeFeedback.Application/Commands/CreateApprenticeFeedbackTarget/CreateApprenticeFeedbackTargetCommandHandler.cs"
+        }
+      ],
+      "senders": [
+        {
+          "name": "ApprenticeFeedbackTargetController.Create",
+          "sourceFile": "src/SFA.DAS.ApprenticeFeedback.Api/Controllers/ApprenticeFeedbackTargetController.cs"
         }
       ]
     },
@@ -88,42 +100,44 @@
         {
           "name": "AllowContact",
           "type": "bool",
-          "required": null,
+          "required": true,
           "description": null
         },
         {
           "name": "ApprenticeFeedbackTargetId",
           "type": "Guid",
-          "required": null,
+          "required": true,
           "description": null
         },
         {
           "name": "AttributeIds",
           "type": "List<int>",
-          "required": null,
+          "required": true,
           "description": null
         },
         {
           "name": "DidNotCompleteApprenticeship",
           "type": "bool",
-          "required": null,
+          "required": true,
           "description": null
         },
         {
           "name": "PrimaryReason",
           "type": "int",
-          "required": null,
+          "required": true,
           "description": null
         }
       ],
       "handlers": [
         {
-          "name": "CreateExitSurvey",
-          "sourceFile": "src/SFA.DAS.ApprenticeFeedback.Api/Controllers/ExitSurveyController.cs"
-        },
-        {
           "name": "CreateExitSurveyCommandHandler",
           "sourceFile": "src/SFA.DAS.ApprenticeFeedback.Application/Commands/CreateExitSurvey/CreateExitSurveyCommandHandler.cs"
+        }
+      ],
+      "senders": [
+        {
+          "name": "ExitSurveyController.CreateExitSurvey",
+          "sourceFile": "SFA.DAS.ApprenticeFeedback.Api/Controllers/ExitSurveyController.cs"
         }
       ]
     },
@@ -138,7 +152,8 @@
           "name": "GenerateFeedbackSummariesCommandHandler",
           "sourceFile": "src/SFA.DAS.ApprenticeFeedback.Application/Commands/GenerateFeedbackSummaries/GenerateFeedbackSummariesCommandHandler.cs"
         }
-      ]
+      ],
+      "senders": []
     },
     {
       "name": "GenerateFeedbackTransactionsCommand",
@@ -148,12 +163,18 @@
       "fields": [],
       "handlers": [
         {
-          "name": "GenerateEmailTransactions",
-          "sourceFile": "src/SFA.DAS.ApprenticeFeedback.Api/Controllers/FeedbackTransactionController.cs"
-        },
-        {
           "name": "GenerateFeedbackTransactionsCommandHandler",
           "sourceFile": "src/SFA.DAS.ApprenticeFeedback.Application/Commands/GenerateFeedbackTransactions/GenerateFeedbackTransactionsCommandHandler.cs"
+        }
+      ],
+      "senders": [
+        {
+          "name": "FeedbackTransactionController.GenerateEmailTransactions",
+          "sourceFile": "SFA.DAS.ApprenticeFeedback.Api/Controllers/FeedbackTransactionController.cs"
+        },
+        {
+          "name": "TaskQueueHostedService.ExecuteAsync",
+          "sourceFile": "SFA.DAS.ApprenticeFeedback.Api/TaskQueue/TaskQueueHostedService.cs"
         }
       ]
     },
@@ -194,14 +215,11 @@
           "description": null
         }
       ],
-      "handlers": [
+      "handlers": [],
+      "senders": [
         {
-          "name": "ProcessEmailTransaction",
-          "sourceFile": "src/SFA.DAS.ApprenticeFeedback.Api/Controllers/FeedbackTransactionController.cs"
-        },
-        {
-          "name": "ProcessEmailTransactionCommandHandler",
-          "sourceFile": "src/SFA.DAS.ApprenticeFeedback.Application/Commands/ProcessEmailTransaction/ProcessEmailTransactionCommandHandler.cs"
+          "name": "FeedbackTransactionController.ProcessEmailTransaction",
+          "sourceFile": "SFA.DAS.ApprenticeFeedback.Api/Controllers/FeedbackTransactionController.cs"
         }
       ]
     },
@@ -218,14 +236,14 @@
           "description": null
         },
         {
-          "name": "MergeStaging",
-          "type": "bool",
+          "name": "FeedbackTargetVariants",
+          "type": "List<FeedbackTargetVariant>",
           "required": true,
           "description": null
         },
         {
-          "name": "FeedbackTargetVariants",
-          "type": "List<FeedbackTargetVariant>",
+          "name": "MergeStaging",
+          "type": "bool",
           "required": true,
           "description": null
         }
@@ -235,7 +253,8 @@
           "name": "ProcessFeedbackTargetVariantsCommandHandler",
           "sourceFile": "src/SFA.DAS.ApprenticeFeedback.Application/Commands/ProcessFeedbackTargetVariants/ProcessFeedbackTargetVariantsCommandHandler.cs"
         }
-      ]
+      ],
+      "senders": []
     },
     {
       "name": "TrackEmailTransactionClickCommand",
@@ -276,12 +295,14 @@
       ],
       "handlers": [
         {
-          "name": "TrackEmailTransactionClick",
-          "sourceFile": "src/SFA.DAS.ApprenticeFeedback.Api/Controllers/FeedbackTransactionController.cs"
-        },
-        {
           "name": "TrackEmailTransactionClickCommandHandler",
           "sourceFile": "src/SFA.DAS.ApprenticeFeedback.Application/Commands/TrackEmailTransactionClick/TrackEmailTransactionClickCommandHandler.cs"
+        }
+      ],
+      "senders": [
+        {
+          "name": "FeedbackTransactionController.TrackEmailTransactionClick",
+          "sourceFile": "SFA.DAS.ApprenticeFeedback.Api/Controllers/FeedbackTransactionController.cs"
         }
       ]
     },
@@ -315,6 +336,12 @@
           "name": "UpdateApprenticeFeedbackTargetCommandHandler",
           "sourceFile": "src/SFA.DAS.ApprenticeFeedback.Application/Commands/UpdateApprenticeFeedbackTarget/UpdateApprenticeFeedbackTargetCommandHandler.cs"
         }
+      ],
+      "senders": [
+        {
+          "name": "ApprenticeFeedbackTargetController.ProcessUpdate",
+          "sourceFile": "src/SFA.DAS.ApprenticeFeedback.Api/Controllers/ApprenticeFeedbackTargetController.cs"
+        }
       ]
     },
     {
@@ -334,6 +361,12 @@
         {
           "name": "UpdateApprenticeFeedbackTargetDeferCommandHandler",
           "sourceFile": "src/SFA.DAS.ApprenticeFeedback.Application/Commands/UpdateApprenticeFeedbackTargetDefer/UpdateApprenticeFeedbackTargetDeferCommandHandler.cs"
+        }
+      ],
+      "senders": [
+        {
+          "name": "ApprenticeFeedbackTargetController.ProcessDeferUpdate",
+          "sourceFile": "src/SFA.DAS.ApprenticeFeedback.Api/Controllers/ApprenticeFeedbackTargetController.cs"
         }
       ]
     },
@@ -366,6 +399,30 @@
         {
           "name": "UpdateApprenticeFeedbackTargetStatusCommandHandler",
           "sourceFile": "src/SFA.DAS.ApprenticeFeedback.Application/Commands/UpdateApprenticeFeedbackTargetStatusCommand/UpdateApprenticeFeedbackTargetStatusCommandHandler.cs"
+        }
+      ],
+      "senders": [
+        {
+          "name": "ApprenticeFeedbackTargetController.UpdateStatus",
+          "sourceFile": "src/SFA.DAS.ApprenticeFeedback.Api/Controllers/ApprenticeFeedbackTargetController.cs"
+        }
+      ]
+    },
+    {
+      "name": "SendEmailCommand",
+      "namespace": "SFA.DAS.Notifications.Messages.Commands",
+      "sourceFile": "src/SFA.DAS.ApprenticeFeedback.Api/AppStart/RoutingSettingsExtensions.cs",
+      "description": null,
+      "fields": [],
+      "handlers": [],
+      "senders": [
+        {
+          "name": "RoutingSettingsExtensions",
+          "sourceFile": "src/SFA.DAS.ApprenticeFeedback.Api/AppStart/RoutingSettingsExtensions.cs"
+        },
+        {
+          "name": "ProcessEmailTransactionCommandHandler",
+          "sourceFile": "src/SFA.DAS.ApprenticeFeedback.Application/Commands/ProcessEmailTransaction/ProcessEmailTransactionCommandHandler.cs"
         }
       ]
     }
@@ -408,7 +465,8 @@
           "description": null
         }
       ],
-      "handlers": []
+      "handlers": [],
+      "senders": []
     }
   ]
 }

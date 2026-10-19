@@ -2,45 +2,40 @@
   "repository": "SkillsFundingAgency/das-reservations-jobs",
   "ref": "master",
   "path": "src",
-  "commands": [],
+  "commands": [
+    {
+      "name": "SendEmailCommand",
+      "namespace": "SFA.DAS.Notifications.Messages.Commands",
+      "sourceFile": "src/SFA.DAS.Reservations.Functions.Reservations/ConfigureNServiceBusExtension.cs",
+      "description": null,
+      "fields": [],
+      "handlers": [],
+      "senders": [
+        {
+          "name": "NotifyEmployerOfReservationEventAction",
+          "sourceFile": "src/SFA.DAS.Reservations.Application/Reservations/Handlers/NotifyEmployerOfReservationEventAction.cs"
+        },
+        {
+          "name": "ConfigureNServiceBusExtension",
+          "sourceFile": "src/SFA.DAS.Reservations.Functions.Reservations/ConfigureNServiceBusExtension.cs"
+        }
+      ]
+    }
+  ],
   "events": [
     {
       "name": "DraftApprenticeshipCreatedEvent",
       "namespace": "SFA.DAS.CommitmentsV2.Messages.Events",
       "sourceFile": "src/SFA.DAS.Reservations.Application/Reservations/Handlers/ConfirmReservationHandler.cs",
       "description": null,
-      "fields": [
-        {
-          "name": "ReservationId",
-          "type": "Guid?",
-          "required": null,
-          "description": null
-        },
-        {
-          "name": "CohortId",
-          "type": "long",
-          "required": null,
-          "description": null
-        },
-        {
-          "name": "CreatedOn",
-          "type": "DateTime",
-          "required": null,
-          "description": null
-        },
-        {
-          "name": "DraftApprenticeshipId",
-          "type": "long",
-          "required": null,
-          "description": null
-        }
-      ],
+      "fields": [],
       "handlers": [
         {
           "name": "ConfirmReservationHandler",
           "sourceFile": "src/SFA.DAS.Reservations.Application/Reservations/Handlers/ConfirmReservationHandler.cs"
         }
-      ]
+      ],
+      "senders": []
     },
     {
       "name": "DraftApprenticeshipDeletedEvent",
@@ -53,7 +48,8 @@
           "name": "HandleApprenticeshipDeletedEvent",
           "sourceFile": "src/SFA.DAS.Reservations.Functions.Reservations/Functions/HandleApprenticeshipDeletedEvent.cs"
         }
-      ]
+      ],
+      "senders": []
     },
     {
       "name": "AddedLegalEntityEvent",
@@ -67,10 +63,11 @@
           "sourceFile": "src/SFA.DAS.Reservations.Application/AccountLegalEntities/Handlers/AddAccountLegalEntityHandler.cs"
         },
         {
-          "name": "Handle",
+          "name": "HandleAddedLegalEntityEvent",
           "sourceFile": "src/SFA.DAS.Reservations.Functions.LegalEntities/Functions/HandleAddedLegalEntityEvent.cs"
         }
-      ]
+      ],
+      "senders": []
     },
     {
       "name": "ApprenticeshipEmployerTypeChangeEvent",
@@ -84,10 +81,11 @@
           "sourceFile": "src/SFA.DAS.Reservations.Application/AccountLegalEntities/Handlers/ApprenticeshipEmployerTypeChangeHandler.cs"
         },
         {
-          "name": "Handle",
+          "name": "HandleApprenticeshipEmployerTypeChangeEvent",
           "sourceFile": "src/SFA.DAS.Reservations.Functions.LegalEntities/Functions/HandleApprenticeshipEmployerTypeChangeEvent.cs"
         }
-      ]
+      ],
+      "senders": []
     },
     {
       "name": "ChangedAccountNameEvent",
@@ -101,40 +99,29 @@
           "sourceFile": "src/SFA.DAS.Reservations.Application/Accounts/Handlers/AccountNameUpdatedHandler.cs"
         },
         {
-          "name": "Handle",
+          "name": "HandleAccountNameUpdatedEvent",
           "sourceFile": "src/SFA.DAS.Reservations.Functions.LegalEntities/Functions/HandleAccountNameUpdatedEvent.cs"
         }
-      ]
+      ],
+      "senders": []
     },
     {
       "name": "CreatedAccountEvent",
       "namespace": "SFA.DAS.EmployerAccounts.Messages.Events",
       "sourceFile": "src/SFA.DAS.Reservations.Application/Accounts/Handlers/AddAccountHandler.cs",
       "description": null,
-      "fields": [
-        {
-          "name": "AccountId",
-          "type": "Guid",
-          "required": null,
-          "description": null
-        },
-        {
-          "name": "Name",
-          "type": "string",
-          "required": null,
-          "description": null
-        }
-      ],
+      "fields": [],
       "handlers": [
         {
           "name": "AddAccountHandler",
           "sourceFile": "src/SFA.DAS.Reservations.Application/Accounts/Handlers/AddAccountHandler.cs"
         },
         {
-          "name": "Handle",
+          "name": "HandleAccountAddedEvent",
           "sourceFile": "src/SFA.DAS.Reservations.Functions.LegalEntities/Functions/HandleAccountAddedEvent.cs"
         }
-      ]
+      ],
+      "senders": []
     },
     {
       "name": "RemovedLegalEntityEvent",
@@ -144,14 +131,15 @@
       "fields": [],
       "handlers": [
         {
-          "name": "Handle",
-          "sourceFile": "src/SFA.DAS.Reservations.Functions.LegalEntities/Functions/HandleRemovedLegalEntityEvent.cs"
-        },
-        {
           "name": "RemoveLegalEntityHandler",
           "sourceFile": "src/SFA.DAS.Reservations.Application/AccountLegalEntities/Handlers/RemoveLegalEntityHandler.cs"
+        },
+        {
+          "name": "HandleRemovedLegalEntityEvent",
+          "sourceFile": "src/SFA.DAS.Reservations.Functions.LegalEntities/Functions/HandleRemovedLegalEntityEvent.cs"
         }
-      ]
+      ],
+      "senders": []
     },
     {
       "name": "SignedAgreementEvent",
@@ -161,14 +149,15 @@
       "fields": [],
       "handlers": [
         {
-          "name": "Handle",
+          "name": "HandleSignedAgreementEvent",
           "sourceFile": "src/SFA.DAS.Reservations.Functions.LegalEntities/Functions/HandleSignedAgreementEvent.cs"
         },
         {
           "name": "SignedLegalAgreementHandler",
           "sourceFile": "src/SFA.DAS.Reservations.Application/AccountLegalEntities/Handlers/SignedLegalAgreementHandler.cs"
         }
-      ]
+      ],
+      "senders": []
     },
     {
       "name": "LevyAddedToAccountEvent",
@@ -178,40 +167,22 @@
       "fields": [],
       "handlers": [
         {
-          "name": "Handle",
+          "name": "HandleLevyAddedToAccountEvent",
           "sourceFile": "src/SFA.DAS.Reservations.Functions.LegalEntities/Functions/HandleLevyAddedToAccountEvent.cs"
         },
         {
           "name": "LevyAddedToAccountHandler",
           "sourceFile": "src/SFA.DAS.Reservations.Application/AccountLegalEntities/Handlers/LevyAddedToAccountHandler.cs"
         }
-      ]
+      ],
+      "senders": []
     },
     {
       "name": "UpdatedPermissionsEvent",
       "namespace": "SFA.DAS.ProviderRelationships.Messages.Events",
       "sourceFile": "src/SFA.DAS.Reservations.Application/ProviderPermissions/Handlers/ProviderPermissionsUpdatedHandler.cs",
       "description": null,
-      "fields": [
-        {
-          "name": "AccountId",
-          "type": "Guid",
-          "required": null,
-          "description": null
-        },
-        {
-          "name": "AccountLegalEntityId",
-          "type": "long",
-          "required": null,
-          "description": null
-        },
-        {
-          "name": "Ukprn",
-          "type": "long",
-          "required": null,
-          "description": null
-        }
-      ],
+      "fields": [],
       "handlers": [
         {
           "name": "HandleProviderPermissionUpdatedEvent",
@@ -221,7 +192,8 @@
           "name": "ProviderPermissionsUpdatedHandler",
           "sourceFile": "src/SFA.DAS.Reservations.Application/ProviderPermissions/Handlers/ProviderPermissionsUpdatedHandler.cs"
         }
-      ]
+      ],
+      "senders": []
     },
     {
       "name": "ReservationCreatedNotificationEvent",
@@ -232,77 +204,78 @@
         {
           "name": "Id",
           "type": "Guid",
-          "required": true,
+          "required": null,
           "description": null
         },
         {
           "name": "AccountId",
           "type": "long",
-          "required": true,
+          "required": null,
           "description": null
         },
         {
           "name": "AccountLegalEntityId",
           "type": "long",
-          "required": true,
+          "required": null,
           "description": null
         },
         {
           "name": "AccountLegalEntityName",
           "type": "string",
-          "required": true,
+          "required": null,
           "description": null
         },
         {
           "name": "StartDate",
           "type": "DateTime",
-          "required": true,
+          "required": null,
           "description": null
         },
         {
           "name": "EndDate",
           "type": "DateTime",
-          "required": true,
+          "required": null,
           "description": null
         },
         {
           "name": "CreatedDate",
           "type": "DateTime",
-          "required": true,
+          "required": null,
           "description": null
         },
         {
           "name": "CourseId",
           "type": "string",
-          "required": true,
+          "required": null,
           "description": null
         },
         {
           "name": "CourseName",
           "type": "string",
-          "required": true,
+          "required": null,
           "description": null
         },
         {
           "name": "CourseLevel",
           "type": "string",
-          "required": true,
+          "required": null,
           "description": null
         },
         {
           "name": "ProviderId",
           "type": "uint?",
-          "required": false,
+          "required": null,
           "description": null
         },
         {
           "name": "EmployerDeleted",
           "type": "bool",
-          "required": true,
+          "required": null,
           "description": null
         }
       ],
-      "handlers": []
+      "handlers": [],
+      "senders": []
     },
     {
       "name": "ReservationDeletedNotificationEvent",
@@ -311,84 +284,80 @@
       "description": null,
       "fields": [
         {
+          "name": "Id",
+          "type": "Guid",
+          "required": null,
+          "description": null
+        },
+        {
           "name": "AccountId",
           "type": "long",
-          "required": true,
+          "required": null,
           "description": null
         },
         {
           "name": "AccountLegalEntityId",
           "type": "long",
-          "required": true,
+          "required": null,
           "description": null
         },
         {
           "name": "AccountLegalEntityName",
           "type": "string",
-          "required": true,
-          "description": null
-        },
-        {
-          "name": "CourseId",
-          "type": "string",
-          "required": true,
-          "description": null
-        },
-        {
-          "name": "CourseLevel",
-          "type": "string",
-          "required": true,
-          "description": null
-        },
-        {
-          "name": "CourseName",
-          "type": "string",
-          "required": true,
-          "description": null
-        },
-        {
-          "name": "CreatedDate",
-          "type": "DateTime",
-          "required": true,
-          "description": null
-        },
-        {
-          "name": "EmployerDeleted",
-          "type": "bool",
-          "required": true,
-          "description": null
-        },
-        {
-          "name": "EndDate",
-          "type": "DateTime",
-          "required": true,
-          "description": null
-        },
-        {
-          "name": "Id",
-          "type": "Guid",
-          "required": true,
-          "description": null
-        },
-        {
-          "name": "ProviderId",
-          "type": "uint?",
-          "required": false,
+          "required": null,
           "description": null
         },
         {
           "name": "StartDate",
           "type": "DateTime",
-          "required": true,
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "EndDate",
+          "type": "DateTime",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "CreatedDate",
+          "type": "DateTime",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "CourseId",
+          "type": "string",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "CourseName",
+          "type": "string",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "CourseLevel",
+          "type": "string",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "ProviderId",
+          "type": "uint?",
+          "required": null,
+          "description": null
+        },
+        {
+          "name": "EmployerDeleted",
+          "type": "bool",
+          "required": null,
           "description": null
         }
       ],
-      "handlers": [
-        {
-          "name": "ReservationDeletedHandler",
-          "sourceFile": "src/SFA.DAS.Reservations.Application/Reservations/Handlers/ReservationDeletedHandler.cs"
-        }
-      ]
+      "handlers": [],
+      "senders": []
     },
     {
       "name": "ReservationCreatedEvent",
@@ -405,21 +374,15 @@
           "name": "ReservationCreatedHandler",
           "sourceFile": "src/SFA.DAS.Reservations.Application/Reservations/Handlers/ReservationCreatedHandler.cs"
         }
-      ]
+      ],
+      "senders": []
     },
     {
       "name": "ReservationDeletedEvent",
       "namespace": "SFA.DAS.Reservations.Messages",
       "sourceFile": "src/SFA.DAS.Reservations.Application/Reservations/Handlers/ReservationDeletedHandler.cs",
       "description": null,
-      "fields": [
-        {
-          "name": "Id",
-          "type": "Guid",
-          "required": null,
-          "description": null
-        }
-      ],
+      "fields": [],
       "handlers": [
         {
           "name": "HandleReservationDeletedEvent",
@@ -429,7 +392,8 @@
           "name": "ReservationDeletedHandler",
           "sourceFile": "src/SFA.DAS.Reservations.Application/Reservations/Handlers/ReservationDeletedHandler.cs"
         }
-      ]
+      ],
+      "senders": []
     }
   ]
 }

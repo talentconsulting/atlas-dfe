@@ -4,43 +4,18 @@
   "path": "",
   "commands": [
     {
-      "name": "PollAsync",
-      "namespace": "PubSubSampleGui.SubSystems",
-      "sourceFile": "Messaging/PubSubSampleGui/SubSystems/SubSystemBase.cs",
+      "name": "PublishMessage",
+      "namespace": null,
+      "sourceFile": "Messaging/PublishReceiveSample/Program.cs",
       "description": null,
       "fields": [],
-      "handlers": []
-    },
-    {
-      "name": "PublishAsync",
-      "namespace": "PubSubSampleGui.SubSystems",
-      "sourceFile": "Messaging/PubSubSampleGui/SubSystems/SubSystemBase.cs",
-      "description": null,
-      "fields": [
+      "handlers": [],
+      "senders": [
         {
-          "name": "message",
-          "type": "SampleMessage",
-          "required": true,
-          "description": null
+          "name": "Publish",
+          "sourceFile": "Messaging/PublishReceiveSample/Program.cs"
         }
-      ],
-      "handlers": []
-    },
-    {
-      "name": "StartListening",
-      "namespace": "PubSubSampleGui.SubSystems",
-      "sourceFile": "Messaging/PubSubSampleGui/SubSystems/SubSystemBase.cs",
-      "description": null,
-      "fields": [],
-      "handlers": []
-    },
-    {
-      "name": "StopListening",
-      "namespace": "PubSubSampleGui.SubSystems",
-      "sourceFile": "Messaging/PubSubSampleGui/SubSystems/SubSystemBase.cs",
-      "description": null,
-      "fields": [],
-      "handlers": []
+      ]
     },
     {
       "name": "ProcessClientOutboxMessageCommand",
@@ -53,7 +28,8 @@
           "name": "ProcessClientOutboxMessageCommandHandler",
           "sourceFile": "SFA.DAS.NServiceBus/SFA.DAS.NServiceBus/Features/ClientOutbox/MessageHandlers/ProcessClientOutboxMessageCommandHandler.cs"
         }
-      ]
+      ],
+      "senders": []
     },
     {
       "name": "ProcessClientOutboxMessageCommandV2",
@@ -61,7 +37,26 @@
       "sourceFile": "SFA.DAS.NServiceBus/SFA.DAS.NServiceBus/Features/ClientOutbox/Messages/Commands/ProcessClientOutboxMessageCommandV2.cs",
       "description": null,
       "fields": [],
-      "handlers": []
+      "handlers": [],
+      "senders": []
+    },
+    {
+      "name": "SendEmailCommand",
+      "namespace": "SFA.DAS.Notifications.Messages.Commands",
+      "sourceFile": "SFA.DAS.Apim.Shared/SFA.DAS.Apim.Shared/AppStart/RoutingSettingsExtensions.cs",
+      "description": null,
+      "fields": [],
+      "handlers": [],
+      "senders": [
+        {
+          "name": "RoutingSettingsExtensions",
+          "sourceFile": "SFA.DAS.Apim.Shared/SFA.DAS.Apim.Shared/AppStart/RoutingSettingsExtensions.cs"
+        },
+        {
+          "name": "NotificationService",
+          "sourceFile": "SFA.DAS.Apim.Shared/SFA.DAS.Apim.Shared/Services/NotificationService.cs"
+        }
+      ]
     },
     {
       "name": "CacheKsbsCommand",
@@ -74,30 +69,64 @@
           "name": "CacheKsbsCommandHandler",
           "sourceFile": "SFA.DAS.NServiceBus/SFA.DAS.NServiceBus.AzureFunctions.Extensions.Example/Handlers/CacheKsbsCommandHandler.cs"
         }
+      ],
+      "senders": [
+        {
+          "name": "Program",
+          "sourceFile": "SFA.DAS.NServiceBus/SFA.DAS.NServiceBus.AzureFunctions.Extensions.MessagePublisher/Program.cs"
+        }
       ]
     }
   ],
   "events": [
     {
-      "name": "SampleMessageReceived",
+      "name": "SampleEvent",
+      "namespace": null,
+      "sourceFile": "Messaging/PublishReceiveSample/Program.cs",
+      "description": null,
+      "fields": [],
+      "handlers": [],
+      "senders": [
+        {
+          "name": "Publish",
+          "sourceFile": "Messaging/PublishReceiveSample/Program.cs"
+        }
+      ]
+    },
+    {
+      "name": "SampleMessageReceivedEvent",
+      "namespace": null,
+      "sourceFile": "Messaging/PubSubSampleGui/Form1.cs",
+      "description": null,
+      "fields": [],
+      "handlers": [
+        {
+          "name": "System_SampleMessageReceived",
+          "sourceFile": "Messaging/PubSubSampleGui/Form1.cs"
+        }
+      ],
+      "senders": []
+    },
+    {
+      "name": "SampleMessageReceivedEventArgs",
       "namespace": "PubSubSampleGui.SubSystems",
-      "sourceFile": "Messaging/PubSubSampleGui/SubSystems/SubSystemBase.cs",
+      "sourceFile": "Messaging/PubSubSampleGui/SubSystems/SampleMessageReceivedEventArgs.cs",
       "description": null,
       "fields": [
         {
-          "name": "sender",
-          "type": "object",
-          "required": true,
-          "description": null
-        },
-        {
-          "name": "e",
-          "type": "SampleMessageReceivedEventArgs",
-          "required": true,
+          "name": "Message",
+          "type": "SampleMessage",
+          "required": null,
           "description": null
         }
       ],
-      "handlers": []
+      "handlers": [],
+      "senders": [
+        {
+          "name": "SubSystemBase",
+          "sourceFile": "Messaging/PubSubSampleGui/SubSystems/SubSystemBase.cs"
+        }
+      ]
     },
     {
       "name": "SampleEvent",
@@ -108,17 +137,18 @@
         {
           "name": "Timestamp",
           "type": "DateTimeOffset",
-          "required": true,
+          "required": null,
           "description": null
         },
         {
           "name": "Id",
           "type": "string",
-          "required": true,
+          "required": null,
           "description": null
         }
       ],
-      "handlers": []
+      "handlers": [],
+      "senders": []
     },
     {
       "name": "SampleEvent",
@@ -142,18 +172,25 @@
           "name": "SampleEventHandler",
           "sourceFile": "SFA.DAS.NServiceBus/SFA.DAS.NServiceBus.TestEndpoint/SampleEventHandler.cs"
         }
-      ]
+      ],
+      "senders": []
     },
     {
       "name": "NewProgressAddedEvent",
       "namespace": "SFA.DAS.TrackProgress.Messages.Events",
-      "sourceFile": "SFA.DAS.NServiceBus/SFA.DAS.NServiceBus.AzureFunctions.Extensions.Example/Handlers/NewProgressAddedEventHandler.cs",
+      "sourceFile": "SFA.DAS.NServiceBus/SFA.DAS.NServiceBus.AzureFunctions.Extensions.MessagePublisher/Program.cs",
       "description": null,
       "fields": [],
       "handlers": [
         {
           "name": "NewProgressAddedEventHandler",
           "sourceFile": "SFA.DAS.NServiceBus/SFA.DAS.NServiceBus.AzureFunctions.Extensions.Example/Handlers/NewProgressAddedEventHandler.cs"
+        }
+      ],
+      "senders": [
+        {
+          "name": "Program",
+          "sourceFile": "SFA.DAS.NServiceBus/SFA.DAS.NServiceBus.AzureFunctions.Extensions.MessagePublisher/Program.cs"
         }
       ]
     },
@@ -166,13 +203,13 @@
         {
           "name": "Id",
           "type": "int",
-          "required": null,
+          "required": true,
           "description": null
         },
         {
           "name": "Created",
           "type": "DateTime",
-          "required": null,
+          "required": true,
           "description": null
         }
       ],
@@ -181,7 +218,8 @@
           "name": "FoobarCreatedEventHandler",
           "sourceFile": "SFA.DAS.UnitOfWork/SFA.DAS.UnitOfWork.Sample.MessageHandlers/EventHandlers/FoobarCreatedEventHandler.cs"
         }
-      ]
+      ],
+      "senders": []
     }
   ]
 }
