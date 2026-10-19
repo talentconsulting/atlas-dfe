@@ -1,26 +1,62 @@
 # User journeys: SkillsFundingAgency/das-digital-certification-web
 
-Generated from `main/src`: 45 pages, 78 transitions, 7 journeys. 🔒 means sign-in is required. Dotted arrows return to a hub.
+Generated from `main/src`: 45 pages, 78 transitions, 5 journeys. 🔒 means sign-in is required. Dotted arrows return to a hub.
 
-## View and Manage Your Certificates
+## Access My Certificates
 
-The user enters the service and views their available certificates, with options to contact support or select a certificate to manage.
+The user enters the system and accesses their available certificates.
 
 Complete the sections in any order, returning to the hub.
 
 ```mermaid
 flowchart LR
   p0["StartPage"] --> p1["CertificatesList 🔒"]
-  p1["CertificatesList 🔒"] -->|"if there is only one standard certificate and no frameworks"| p2["CertificateStandard 🔒"]
-  p1["CertificatesList 🔒"] -->|"if there is only one framework certificate and no standards"| p3["CertificateFramework 🔒"]
+  p1["CertificatesList 🔒"] -->|"if the user has exactly one standard certificate and no frameworks"| p2["CertificateStandard 🔒"]
+  p1["CertificatesList 🔒"] -->|"if the user has exactly one framework certificate and no standards"| p3["CertificateFramework 🔒"]
   p3["CertificateFramework 🔒"] -.-> p1["CertificatesList 🔒"]
   p1["CertificatesList 🔒"] --> p4["ContactUsCreate 🔒"]
-  p4["ContactUsCreate 🔒"] -.->|"if referenceNumber is missing"| p1["CertificatesList 🔒"]
+  p4["ContactUsCreate 🔒"] -.-> p1["CertificatesList 🔒"]
 ```
 
-## Download a Shared Framework Certificate PDF
+## Verify Identity to Access Certificates
 
-A third party downloads the PDF of a shared framework certificate after accessing the sharing link.
+The user completes an identity and apprenticeship matching process to gain access to certificates.
+
+```mermaid
+flowchart LR
+  p0["KnowYourUln 🔒"] -->|"if match outcome is NoData or NoMatch"| p1["SelectCourse 🔒"]
+  p1["SelectCourse 🔒"] -->|"if match outcome is NoMatch"| p2["KnowYear 🔒"]
+  p2["KnowYear 🔒"] -->|"in all other cases after saving the year"| p3["SelectProvider 🔒"]
+  p3["SelectProvider 🔒"] --> p4["CheckAnswers 🔒"]
+  p4["CheckAnswers 🔒"] -->|"when answers are matched to one or more certificates"| p5["CertificatesList 🔒"]
+```
+
+## Request Delivery of a Certificate
+
+A user requests postal delivery of a certificate, including address selection and confirmation.
+
+```mermaid
+flowchart LR
+  p0["SelectAddress 🔒"] -->|"after a valid address is selected and saved"| p1["CheckAndSubmit 🔒"]
+  p1["CheckAndSubmit 🔒"] -->|"after creating a print request"| p2["PrintRequestConfirmation 🔒"]
+  p2["PrintRequestConfirmation 🔒"] --> p3["CertificateStandard 🔒"]
+```
+
+## Share a Certificate with Others
+
+The user creates or manages sharing links for their certificate and shares it by email.
+
+```mermaid
+flowchart LR
+  p0["CreateCertificateSharing 🔒"] --> p1["CertificateSharingLink 🔒"]
+  p1["CertificateSharingLink 🔒"] --> p2["ShareByEmail 🔒"]
+  p2["ShareByEmail 🔒"] --> p3["ConfirmShareByEmail 🔒"]
+  p3["ConfirmShareByEmail 🔒"] --> p4["EmailSent 🔒"]
+```
+
+## Download a Shared Framework Certificate
+
+An external user views a shared framework certificate and downloads a PDF copy.
 
 ```mermaid
 flowchart LR
@@ -28,107 +64,113 @@ flowchart LR
   p1["SharedCertificateFramework"] --> p2["DownloadSharedCertificateFrameworkPdf"]
 ```
 
-## Contact Support
-
-The user starts from the certificates list or a specific certificate and submits a support request.
-
-```mermaid
-flowchart LR
-  p0["CertificatesList 🔒"] --> p1["ContactUsCreate 🔒"]
-  p1["ContactUsCreate 🔒"] -->|"after creating the contact request"| p2["ContactUs 🔒"]
-```
-
-## Authorise and Match to Results
-
-The user enters personal details to try to match their records and, if successful, sees their certificates.
-
-```mermaid
-flowchart LR
-  p0["KnowYourUln 🔒"] -->|"if match outcome is NoData or NoMatch"| p1["SelectCourse 🔒"]
-  p1["SelectCourse 🔒"] -->|"if match outcome is NoMatch"| p2["KnowYear 🔒"]
-  p2["KnowYear 🔒"] -->|"otherwise"| p3["SelectProvider 🔒"]
-  p3["SelectProvider 🔒"] -->|"after saving selected provider"| p4["CheckAnswers 🔒"]
-  p4["CheckAnswers 🔒"] -->|"after successful match submission"| p5["CertificatesList 🔒"]
-```
-
-## Initiate Print Request for a Certificate
-
-The user selects an address, reviews the delivery request, and confirms the print request for their certificate.
-
-```mermaid
-flowchart LR
-  p0["SelectAddress 🔒"] -->|"after successfully selecting an address"| p1["CheckAndSubmit 🔒"]
-  p1["CheckAndSubmit 🔒"] -->|"after creating print request"| p2["PrintRequestConfirmation 🔒"]
-```
-
-## Create and Share a Certificate Digitally
-
-The user creates a sharing link for a certificate, proceeds to share it by email, and receives email confirmation.
-
-```mermaid
-flowchart LR
-  p0["CreateCertificateSharing 🔒"] --> p1["CertificateSharingLink 🔒"]
-  p1["CertificateSharingLink 🔒"] --> p2["ShareByEmail 🔒"]
-  p2["ShareByEmail 🔒"] -->|"after email address is set successfully"| p3["ConfirmShareByEmail 🔒"]
-  p3["ConfirmShareByEmail 🔒"] -->|"after creating the sharing email"| p4["EmailSent 🔒"]
-```
-
-## Contact Support About a Specific Framework Certificate
-
-The user contacts support regarding a specific framework certificate and submits a help request.
-
-```mermaid
-flowchart LR
-  p0["CertificateFramework 🔒"] --> p1["ContactUsForCertificateCreate 🔒"]
-  p1["ContactUsForCertificateCreate 🔒"] -->|"after creating the contact request for certificate"| p2["ContactUsForCertificate 🔒"]
-```
-
 ## Pages
 
 | Page | Route | Sign-in | Purpose |
 | --- | --- | --- | --- |
-| `AuthoriseController.CannotMatch` | `authorise/cannot-match` | No | Notifies the user that their information could not be matched to any results and provides a reference number. |
-| `AuthoriseController.CheckAnswers` | `authorise/check-answers` | Yes | Lets the user review and confirm their entered details for matching. |
-| `AuthoriseController.KnowYear` | `authorise/know-year` | Yes | Allows the user to specify the year of their qualification or result. |
-| `AuthoriseController.KnowYourUln` | `authorise/know-your-uln` | Yes | Allows the user to enter their Unique Learner Number (ULN) to try to match their results. |
-| `AuthoriseController.NeedMoreInformation` | `authorise/need-more-information` | Yes | Informs the user that more information is needed to attempt a match with their results. |
-| `AuthoriseController.NeedMoreInformationContinue` | `authorise/need-more-information` | Yes | Processes the user's action to continue after being informed more information is needed. |
-| `AuthoriseController.NotFound` | `authorise/not-found` | No | Informs the user that no relevant results were found for their information. |
-| `AuthoriseController.SelectCourse` | `authorise/select-course` | Yes | Lets the user select their course from a list to help match their results. |
-| `AuthoriseController.SelectProvider` | `authorise/select-provider` | Yes | Lets the user select their training provider to assist with matching. |
-| `CertificatesController.AddAddress` | `{certificateId}/delivery-request/add-address` | Yes | Allows the user to add a delivery address for their certificate. |
-| `CertificatesController.CertificateFramework` | `{certificateId}/framework` | Yes | Displays details of a framework certificate to the user. |
-| `CertificatesController.CertificateSharingLink` | `{certificateId}/sharing/{sharingId}` | Yes | Shows the sharing link for a certificate and options for sharing. |
-| `CertificatesController.CertificateStandard` | `{certificateId}/standard` | Yes | Displays details of a standard certificate to the user. |
-| `CertificatesController.CertificatesList` | `list` | Yes | Shows a list of certificates available to the user. |
-| `CertificatesController.CheckAndSubmit` | `{certificateId}/delivery-request/check-and-submit` | Yes | Lets the user check and confirm their certificate delivery request before submission. |
-| `CertificatesController.CheckQualification` | `sharing/{sharingLinkCode}/check-code` | No | Lets users check the qualification linked to a certificate sharing link. |
-| `CertificatesController.CheckQualificationExpired` | `/certificates/expired` | No | Shows that the certificate sharing link has expired or cannot be used. |
-| `CertificatesController.ConfirmShareByEmail` | `{certificateId}/sharing/{sharingId}/confirm-email` | Yes | Allows users to confirm sharing a certificate by email. |
-| `CertificatesController.ContactUs` | `contact` | Yes | Lets users contact support or request help. |
-| `CertificatesController.ContactUsCreate` | `contact/create` | Yes | Creates a new contact request for non-specific help. |
-| `CertificatesController.ContactUsForCertificate` | `{certificateId}/contact` | Yes | Lets users contact support about a specific certificate. |
-| `CertificatesController.ContactUsForCertificateCreate` | `{certificateId}/contact/create` | Yes | Creates a new contact request related to a specific certificate. |
-| `CertificatesController.CreateCertificateSharing` | `{certificateId}/sharing` | Yes | Allows users to create and manage certificate sharing links. |
-| `CertificatesController.DeleteSharing` | `{certificateId}/sharing/{sharingId}/delete` | Yes | Lets users delete a certificate sharing link. |
-| `CertificatesController.DownloadCertificateFrameworkPdf` | `{certificateId}/framework/download` | Yes | Lets users download the PDF version of a framework certificate. |
-| `CertificatesController.DownloadCertificateStandardPdf` | `{certificateId}/standard/download` | Yes | Lets users download the PDF version of a standard certificate. |
-| `CertificatesController.DownloadSharedCertificateFrameworkPdf` | `shared/{sharingLinkCode}/framework/download` | No | Allows download of a shared framework certificate PDF via a sharing link. |
-| `CertificatesController.DownloadSharedCertificateStandardPdf` | `shared/{sharingLinkCode}/standard/download` | No | Allows download of a shared standard certificate PDF via a sharing link. |
-| `CertificatesController.EmailSent` | `{certificateId}/sharing/{sharingId}/email-sent/{sharingEmailId}` | Yes | Displays confirmation that the certificate sharing email has been sent. |
-| `CertificatesController.PrintRequestConfirmation` | `{certificateId}/delivery-request/confirmation` | Yes | Shows confirmation that a print request for a certificate has been made. |
-| `CertificatesController.SelectAddress` | `{certificateId}/delivery-request/select-address` | Yes | Lets the user select an address for certificate delivery. |
-| `CertificatesController.ShareByEmail` | `{certificateId}/sharing/{sharingId}/send-email` | Yes | Lets the user send a certificate sharing link to someone's email address. |
-| `CertificatesController.SharedCertificateFramework` | `shared/{sharingLinkCode}/framework` | No | Shows a shared certificate for a framework once a sharing link is used. |
-| `CertificatesController.SharedCertificateStandard` | `shared/{sharingLinkCode}/standard` | No | Shows a shared certificate for a standard once a sharing link is used. |
-| `Home.AccessDenied` | `error/403` | No | Informs the user they do not have access to the requested resource. |
+| `AuthoriseController.CannotMatch` | `authorise/cannot-match` | No | Shows a message when the system cannot match the user's information to any results. |
+| `AuthoriseController.CheckAnswers` | `authorise/check-answers` | Yes | Allows the user to review the information they have entered before submitting. |
+| `AuthoriseController.KnowYear` | `authorise/know-year` | Yes | Asks the user if they know the year they completed their apprenticeship and to enter the year if so. |
+| `AuthoriseController.KnowYourUln` | `authorise/know-your-uln` | Yes | Asks the user if they know their unique learner number (ULN) and to enter it if so. |
+| `AuthoriseController.NeedMoreInformation` | `authorise/need-more-information` | Yes | Informs the user that more information is needed to try to match them with their apprenticeship results. |
+| `AuthoriseController.NeedMoreInformationContinue` | `authorise/need-more-information` | Yes | Clears previous answers and starts the identification process again. |
+| `AuthoriseController.NotFound` | `authorise/not-found` | No | Shows a message when the system cannot find any user data for the provided details. |
+| `AuthoriseController.SelectCourse` | `authorise/select-course` | Yes | Lets the user select their course from a list. |
+| `AuthoriseController.SelectProvider` | `authorise/select-provider` | Yes | Lets the user select their training provider from a list. |
+| `CertificatesController.AddAddress` | `{certificateId}/delivery-request/add-address` | Yes | Lets the user manually add a delivery address for a certificate. |
+| `CertificatesController.CertificateFramework` | `{certificateId}/framework` | Yes | Displays the user's framework certificate. |
+| `CertificatesController.CertificateSharingLink` | `{certificateId}/sharing/{sharingId}` | Yes | Displays a sharing link for a certificate and allows input of an email address to share by email. |
+| `CertificatesController.CertificateStandard` | `{certificateId}/standard` | Yes | Displays the user's standard certificate. |
+| `CertificatesController.CertificatesList` | `list` | Yes | Shows a list of certificates available for the user. |
+| `CertificatesController.CheckAndSubmit` | `{certificateId}/delivery-request/check-and-submit` | Yes | Lets the user check and confirm their delivery address before requesting certificate delivery. |
+| `CertificatesController.CheckQualification` | `sharing/{sharingLinkCode}/check-code` | No | Lets a visitor check a certificate's details using a sharing code. |
+| `CertificatesController.CheckQualificationExpired` | `/certificates/expired` | No | Informs the user that the certificate sharing link or qualification has expired. |
+| `CertificatesController.ConfirmShareByEmail` | `{certificateId}/sharing/{sharingId}/confirm-email` | Yes | Lets the user confirm sharing their certificate by email before sending. |
+| `CertificatesController.ContactUs` | `contact` | Yes | Lets the user view or interact with a contact/support page related to certificates. |
+| `CertificatesController.ContactUsCreate` | `contact/create` | Yes | Initiates a new contact/support request related to certificates. |
+| `CertificatesController.ContactUsForCertificate` | `{certificateId}/contact` | Yes | Lets the user contact support about a specific certificate. |
+| `CertificatesController.ContactUsForCertificateCreate` | `{certificateId}/contact/create` | Yes | Initiates a new contact/support request about a specific certificate. |
+| `CertificatesController.CreateCertificateSharing` | `{certificateId}/sharing` | Yes | Allows the user to manage sharing options and links for a certificate. |
+| `CertificatesController.DeleteSharing` | `{certificateId}/sharing/{sharingId}/delete` | Yes | Lets the user confirm or view the deletion of a certificate sharing link. |
+| `CertificatesController.DownloadCertificateFrameworkPdf` | `{certificateId}/framework/download` | Yes | Enables the user to download the framework version of their certificate as a PDF. |
+| `CertificatesController.DownloadCertificateStandardPdf` | `{certificateId}/standard/download` | Yes | Enables the user to download the standard version of their certificate as a PDF. |
+| `CertificatesController.DownloadSharedCertificateFrameworkPdf` | `shared/{sharingLinkCode}/framework/download` | No | Allows an external user with a sharing link to download a shared framework certificate as a PDF. |
+| `CertificatesController.DownloadSharedCertificateStandardPdf` | `shared/{sharingLinkCode}/standard/download` | No | Allows an external user with a sharing link to download a shared standard certificate as a PDF. |
+| `CertificatesController.EmailSent` | `{certificateId}/sharing/{sharingId}/email-sent/{sharingEmailId}` | Yes | Shows the user confirmation and details after a certificate sharing email has been sent. |
+| `CertificatesController.PrintRequestConfirmation` | `{certificateId}/delivery-request/confirmation` | Yes | Provides confirmation that a print (delivery) request for a certificate has been made. |
+| `CertificatesController.SelectAddress` | `{certificateId}/delivery-request/select-address` | Yes | Lets the user search for and select an existing address for delivery of a certificate. |
+| `CertificatesController.ShareByEmail` | `{certificateId}/sharing/{sharingId}/send-email` | Yes | Lets the user submit an email address to share their certificate. |
+| `CertificatesController.SharedCertificateFramework` | `shared/{sharingLinkCode}/framework` | No | Displays a shared copy of a framework apprenticeship certificate to users with a sharing link. |
+| `CertificatesController.SharedCertificateStandard` | `shared/{sharingLinkCode}/standard` | No | Displays a shared copy of a standard apprenticeship certificate to users with a sharing link. |
+| `Home.AccessDenied` | `error/403` | No | Informs the user that they do not have permission to access this resource. |
 | `HomeController.AccessibilityStatement` | `accessibility-statement` | No | Displays the accessibility statement for the service. |
-| `HomeController.Check` | `check` | Yes | Lets the user check their identity before accessing digital certificates. |
-| `HomeController.CookieDetails` | `cookie-details` | No | Shows details about cookies used by the website. |
-| `HomeController.Cookies` | `cookies` | No | Lets the user view and manage their cookie settings. |
-| `HomeController.Help` | `help` | No | Provides help and information about digital certificates. |
-| `HomeController.StartPage` | `start-page` | No | Serves as the starting page for digital certificates. |
-| `HomeController.Verified` | `verified` | Yes | Redirects the user after their account has been verified. |
-| `Locations.Get` | `locations` | Yes | Lets the user search for locations, usually for address entry. |
-| `Service.ServiceSignOut` | `service/signout` | Yes | Signs the user out of the digital certificates service. |
-| `ServiceController.SignedOut` | `service/signed-out` | Unknown | Shows confirmation that the user has signed out. |
+| `HomeController.Check` | `check` | Yes | Lets the user confirm they wish to continue and checks account status before proceeding. |
+| `HomeController.CookieDetails` | `cookie-details` | No | Shows details about the service's use of cookies. |
+| `HomeController.Cookies` | `cookies` | No | Lets the user select their preferences for analytics cookies. |
+| `HomeController.Help` | `help` | No | Provides help information for using the service. |
+| `HomeController.StartPage` | `start-page` | No | The start page for the digital certificates service. |
+| `HomeController.Verified` | `verified` | Yes | Redirects the user to their certificates list after verification. |
+| `Locations.Get` | `locations` | Yes | Returns locations matching the search term for address selection via JSON. |
+| `Service.ServiceSignOut` | `service/signout` | Yes | Signs the user out of the service and clears session data. |
+| `ServiceController.SignedOut` | `service/signed-out` | Unknown | Informs the user they have signed out of the service. |
+
+## Form fields
+
+Field definitions only: no values a user enters are recorded.
+
+### `AuthoriseController.KnowYear`
+
+| Field | Type | Label | Required | Rules | Options |
+| --- | --- | --- | --- | --- | --- |
+| `KnowYear` | radios | Do you know the year you completed your apprenticeship? | — | required | Yes, No |
+| `YearCompleted` | text | Year you completed your apprenticeship, for example 2017 | — | required when KnowYear is true; must be a 4-digit number between 2012 and the current year | — |
+
+### `AuthoriseController.KnowYourUln`
+
+| Field | Type | Label | Required | Rules | Options |
+| --- | --- | --- | --- | --- | --- |
+| `KnowUln` | radios | Do you know your unique learner number? | — | required | Yes, No, I'll answer more questions |
+| `Uln` | text | Unique learner number | — | required when KnowUln is true; must be a 10-digit number | — |
+
+### `AuthoriseController.SelectCourse`
+
+| Field | Type | Label | Required | Rules | Options |
+| --- | --- | --- | --- | --- | --- |
+| `SelectedCourseCode` | radios | Select your course | — | required | — |
+
+### `AuthoriseController.SelectProvider`
+
+| Field | Type | Label | Required | Rules | Options |
+| --- | --- | --- | --- | --- | --- |
+| `SelectedProviderName` | radios | Who was your training provider? | — | required unless SelectedProviderUnknown is true | — |
+
+### `CertificatesController.AddAddress`
+
+| Field | Type | Label | Required | Rules | Options |
+| --- | --- | --- | --- | --- | --- |
+| `Organisation` | text | Organisation (optional) | — | optional; at most 200 characters; must not contain HTML tags | — |
+| `AddressLine1` | text | Address line 1 | — | required; at most 200 characters; must not contain HTML tags | — |
+| `AddressLine2` | text | Address line 2 (optional) | — | optional; at most 200 characters; must not contain HTML tags | — |
+| `TownOrCity` | text | Town or city | — | required; at most 200 characters; must not contain HTML tags | — |
+| `County` | text | County (optional) | — | optional; at most 200 characters; must not contain HTML tags | — |
+| `Postcode` | text | Postcode | — | required; must not contain HTML tags; must match full UK postcode format; must exist in the postcode lookup | — |
+
+### `CertificatesController.CertificateSharingLink`
+
+| Field | Type | Label | Required | Rules | Options |
+| --- | --- | --- | --- | --- | --- |
+| `secureWebLink` | text | — | — | — | — |
+| `EmailAddress` | email | Share by email | — | — | — |
+
+### `CertificatesController.SelectAddress`
+
+| Field | Type | Label | Required | Rules | Options |
+| --- | --- | --- | --- | --- | --- |
+| `SearchTerm` | text | Select the address that you’d like us to send your certificate to | — | required; at least 3 characters; must not contain HTML tags; must match a valid address from postcode lookup | — |
+
+### `HomeController.Cookies`
+
+| Field | Type | Label | Required | Rules | Options |
+| --- | --- | --- | --- | --- | --- |
+| `ConsentAnalyticsCookie` | radios | Do you want to accept analytics cookies? | — | optional | Yes, No |
+

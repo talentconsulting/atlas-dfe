@@ -17,7 +17,69 @@
       "line": 1,
       "requiresAuthentication": true,
       "isEntryPoint": true,
-      "purpose": "Allows the user to create or update their personal account details, such as name and date of birth."
+      "purpose": "Lets the apprentice create or update their account personal details, including name and date of birth.",
+      "fields": [
+        {
+          "name": "FirstName",
+          "control": "text",
+          "label": "First name",
+          "options": [],
+          "dataType": "string",
+          "required": null,
+          "constraints": [],
+          "validation": "required; must be valid as determined by domain validation (details not shown)",
+          "line": 43,
+          "sourceFile": "src/SFA.DAS.ApprenticeAccounts.Web/Pages/Account.cshtml"
+        },
+        {
+          "name": "LastName",
+          "control": "text",
+          "label": "Last name",
+          "options": [],
+          "dataType": "string",
+          "required": null,
+          "constraints": [],
+          "validation": "required; must be valid as determined by domain validation (details not shown)",
+          "line": 51,
+          "sourceFile": "src/SFA.DAS.ApprenticeAccounts.Web/Pages/Account.cshtml"
+        },
+        {
+          "name": "DateOfBirth.Day",
+          "control": "text",
+          "label": "Day",
+          "options": [],
+          "dataType": null,
+          "required": null,
+          "constraints": [],
+          "validation": "required; must be valid as part of a complete date according to domain validation",
+          "line": 69,
+          "sourceFile": "src/SFA.DAS.ApprenticeAccounts.Web/Pages/Account.cshtml"
+        },
+        {
+          "name": "DateOfBirth.Month",
+          "control": "text",
+          "label": "Month",
+          "options": [],
+          "dataType": null,
+          "required": null,
+          "constraints": [],
+          "validation": "required; must be valid as part of a complete date according to domain validation",
+          "line": 75,
+          "sourceFile": "src/SFA.DAS.ApprenticeAccounts.Web/Pages/Account.cshtml"
+        },
+        {
+          "name": "DateOfBirth.Year",
+          "control": "text",
+          "label": "Year",
+          "options": [],
+          "dataType": null,
+          "required": null,
+          "constraints": [],
+          "validation": "required; must be valid as part of a complete date according to domain validation",
+          "line": 81,
+          "sourceFile": "src/SFA.DAS.ApprenticeAccounts.Web/Pages/Account.cshtml"
+        }
+      ]
     },
     {
       "id": "/ChangeYourSignInDetails",
@@ -30,7 +92,8 @@
       "line": 1,
       "requiresAuthentication": true,
       "isEntryPoint": true,
-      "purpose": "Informs the user how to change their sign-in details via GOV.UK One Login."
+      "purpose": "Informs the user that sign-in details can be changed via GOV.UK One Login and provides a link to do so.",
+      "fields": []
     },
     {
       "id": "/NotificationSettings",
@@ -43,7 +106,21 @@
       "line": 1,
       "requiresAuthentication": true,
       "isEntryPoint": true,
-      "purpose": "Lets the user update their notification preferences."
+      "purpose": "Allows the apprentice to update their notification preferences.",
+      "fields": [
+        {
+          "name": "Model[i].Status",
+          "control": "radios",
+          "label": null,
+          "options": [],
+          "dataType": null,
+          "required": null,
+          "constraints": [],
+          "validation": null,
+          "line": 24,
+          "sourceFile": "src/SFA.DAS.ApprenticeAccounts.Web/Pages/_NotificationSettingsQuestions.cshtml"
+        }
+      ]
     },
     {
       "id": "/SignOut",
@@ -56,7 +133,8 @@
       "line": 1,
       "requiresAuthentication": true,
       "isEntryPoint": true,
-      "purpose": "Signs the user out and clears relevant authentication cookies."
+      "purpose": "Signs the user out of the application.",
+      "fields": []
     },
     {
       "id": "/TermsOfUse",
@@ -69,7 +147,21 @@
       "line": 1,
       "requiresAuthentication": false,
       "isEntryPoint": false,
-      "purpose": "Lets the user review and accept the service's terms and conditions."
+      "purpose": "Lets the apprentice accept the terms and conditions required to use the service.",
+      "fields": [
+        {
+          "name": "TermsOfUseAccepted",
+          "control": "checkboxes",
+          "label": null,
+          "options": [],
+          "dataType": "bool",
+          "required": true,
+          "constraints": [],
+          "validation": "required",
+          "line": 94,
+          "sourceFile": "src/SFA.DAS.ApprenticeAccounts.Web/Pages/TermsOfUse.cshtml"
+        }
+      ]
     },
     {
       "id": "Profile.AcceptTermsOfUse",
@@ -84,7 +176,8 @@
       "line": 30,
       "requiresAuthentication": true,
       "isEntryPoint": true,
-      "purpose": "Redirects the user to the terms of use page to review and accept them."
+      "purpose": "Redirects the user to the terms of use page for acceptance.",
+      "fields": []
     },
     {
       "id": "Profile.Confirm",
@@ -99,7 +192,8 @@
       "line": 20,
       "requiresAuthentication": true,
       "isEntryPoint": true,
-      "purpose": "Redirects the user for confirming an email change as part of their profile management."
+      "purpose": "Redirects the user to a confirmation endpoint after changing their email address.",
+      "fields": []
     }
   ],
   "transitions": [
@@ -107,7 +201,7 @@
       "from": "/Account",
       "to": "/TermsOfUse",
       "trigger": "redirect",
-      "condition": "if terms of use have not been accepted",
+      "condition": "if terms of use are not accepted",
       "evidence": [
         "src/SFA.DAS.ApprenticeAccounts.Web/Pages/Account.cshtml.cs:169"
       ]
@@ -118,6 +212,11 @@
   "selfLinkCount": 0,
   "journeys": [],
   "journeyWarnings": [
-    "Journey 'Review and Accept Terms of Use' was dropped: a linear journey needs at least 3 steps and no hub, sections or then."
+    "Journey 'Update personal account details' was dropped: a linear journey needs at least 3 steps and no hub, sections or then.",
+    "Journey 'Accept terms of use' was dropped: a linear journey needs at least 3 steps and no hub, sections or then.",
+    "Journey 'Update notification preferences' was dropped: a linear journey needs at least 3 steps and no hub, sections or then.",
+    "Journey 'Change sign-in details' was dropped: a linear journey needs at least 3 steps and no hub, sections or then.",
+    "Journey 'Confirm email change' was dropped: a linear journey needs at least 3 steps and no hub, sections or then.",
+    "Journey 'Accept terms when prompted from account' was dropped: a linear journey needs at least 3 steps and no hub, sections or then."
   ]
 }

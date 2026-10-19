@@ -2,58 +2,24 @@
 
 Generated from `main/src`: 111 pages, 96 transitions, 8 journeys. 🔒 means sign-in is required. Dotted arrows return to a hub.
 
-## Create a new employer account
+## Create a New Employer Account
 
-The user creates a new employer account by completing all tasks in the account creation task list.
+Guides a new employer through the process of account creation, including naming the account, adding an organisation and PAYE scheme, confirming agreements, and setting up the account.
 
 Complete the sections in any order, returning to the hub.
 
 ```mermaid
 flowchart LR
-  p0["Index"] -->|"if the user does not have a single account"| p1["NewEmployerAccountTaskList 🔒"]
+  p0["Index"] -->|"if the user has no accounts or other conditions apply"| p1["NewEmployerAccountTaskList 🔒"]
   p1["NewEmployerAccountTaskList 🔒"] --> p2["AccountName 🔒"]
   p1["NewEmployerAccountTaskList 🔒"] --> p3["AboutYourAgreement 🔒"]
   p1["NewEmployerAccountTaskList 🔒"] --> p4["TrainingProviderTriage 🔒"]
-  p1["NewEmployerAccountTaskList 🔒"] -->|"if all tasks in the task list are completed"| p5["EmployerTeamIndex 🔒"]
+  p1["NewEmployerAccountTaskList 🔒"] -->|"if task list is complete"| p5["EmployerTeamIndex 🔒"]
 ```
 
-## Set or change employer account name
+## Manage Employer Team Members
 
-The user sets or updates their employer account name during account management or creation.
-
-```mermaid
-flowchart LR
-  p0["AccountName 🔒"] -->|"if the user opts to change the account name"| p1["RenameAccount 🔒"]
-  p1["RenameAccount 🔒"] --> p2["EmployerTeamIndex 🔒"]
-```
-
-## Remove an organisation from account agreements
-
-The user confirms and completes the removal of an organisation from their account agreements.
-
-```mermaid
-flowchart LR
-  p0["ConfirmRemoveOrganisation 🔒"] -->|"when the user submits the confirmation to remove the organisation"| p1["PostConfirmRemoveOrganisation 🔒"]
-  p1["PostConfirmRemoveOrganisation 🔒"] -->|"after successful removal or if removal is not confirmed"| p2["EmployerAgreementIndex 🔒"]
-```
-
-## Manage PAYE schemes
-
-The user manages PAYE schemes for their employer account, including confirming, viewing details, and removing a scheme.
-
-Complete the sections in any order, returning to the hub.
-
-```mermaid
-flowchart LR
-  p0["EmployerAccountPaye 🔒"] --> p1["EmployerAccountPayeGatewayInform 🔒"]
-  p0["EmployerAccountPaye 🔒"] --> p2["PayeDetails 🔒"]
-  p2["PayeDetails 🔒"] -.-> p0["EmployerAccountPaye 🔒"]
-  p0["EmployerAccountPaye 🔒"] --> p3["EmployerTeamIndex 🔒"]
-```
-
-## Manage employer team members
-
-The user manages team members of their employer account, including inviting, reviewing, removing, and changing roles.
+Allows an employer to view, invite, update, and remove team members associated with their account.
 
 Complete the sections in any order, returning to the hub.
 
@@ -66,150 +32,378 @@ flowchart LR
   p3["EmployerAccountPaye 🔒"] -.-> p0["EmployerTeamIndex 🔒"]
 ```
 
-## Invite a team member
+## Add and Manage PAYE Schemes
 
-The user invites a new team member and completes the invitation process.
+Lets an employer add, confirm, manage, and remove PAYE schemes linked to their account.
+
+Complete the sections in any order, returning to the hub.
 
 ```mermaid
 flowchart LR
-  p0["EmployerTeamIndex 🔒"] --> p1["EmployerTeamView 🔒"]
-  p1["EmployerTeamView 🔒"] -->|"after submitting the invite form"| p2["EmployerTeamInvite 🔒"]
+  p0["EmployerAccountPaye 🔒"] --> p1["EmployerAccountPayeGatewayInform 🔒"]
+  p0["EmployerAccountPaye 🔒"] --> p2["PayeDetails 🔒"]
+  p2["PayeDetails 🔒"] -.-> p0["EmployerAccountPaye 🔒"]
+  p0["EmployerAccountPaye 🔒"] --> p3["EmployerTeamIndex 🔒"]
 ```
 
-## Review and change a team member's role
+## Review Details of a Team Member
 
-The user reviews a team member and proceeds to update their role.
+Allows an employer to review, change the role, resend the invite, cancel invitation, or remove a team member.
+
+Complete the sections in any order, returning to the hub.
 
 ```mermaid
 flowchart LR
   p0["EmployerTeamReview 🔒"] --> p1["EmployerTeamGetChangeRole 🔒"]
-  p1["EmployerTeamGetChangeRole 🔒"] -->|"after submitting the role change form"| p2["EmployerTeamChangeRole 🔒"]
-  p2["EmployerTeamChangeRole 🔒"] --> p3["EmployerTeamView 🔒"]
+  p0["EmployerTeamReview 🔒"] --> p2["EmployerTeamResendInvite 🔒"]
+  p0["EmployerTeamReview 🔒"] --> p3["EmployerTeamCancelInvitation 🔒"]
+  p0["EmployerTeamReview 🔒"] --> p4["RemoveTeamMember 🔒"]
+  p0["EmployerTeamReview 🔒"] --> p5["EmployerTeamView 🔒"]
 ```
 
-## Remove a team member
+## Confirm Organisation Details During Creation
 
-The user removes a team member from their employer account.
+Lets an employer review and confirm the organisation's details before finalising account creation.
 
 ```mermaid
 flowchart LR
-  p0["EmployerTeamReview 🔒"] -->|"when confirming the removal of a team member"| p1["RemoveTeamMember 🔒"]
-  p1["RemoveTeamMember 🔒"] -->|"after submitting the removal confirmation form"| p2["ConfirmRemoveTeamMember 🔒"]
-  p2["ConfirmRemoveTeamMember 🔒"] --> p3["EmployerTeamView 🔒"]
+  p0["Summary 🔒"] -->|"after submitting the organisation summary form"| p1["Summary 🔒"]
+  p1["Summary 🔒"] --> p2["NewEmployerAccountTaskList 🔒"]
+```
+
+## Remove an Organisation from Account
+
+Enables the employer to confirm and process the removal of an organisation from their account.
+
+```mermaid
+flowchart LR
+  p0["ConfirmRemoveOrganisation 🔒"] -->|"after submitting the removal confirmation form"| p1["PostConfirmRemoveOrganisation 🔒"]
+  p1["PostConfirmRemoveOrganisation 🔒"] -->|"after removal action completes"| p2["EmployerAgreementIndex 🔒"]
+```
+
+## Change Account Name
+
+Allows an employer to begin the process to change the account name and save the new name.
+
+```mermaid
+flowchart LR
+  p0["AccountName 🔒"] -->|"when the user chooses to change the account name"| p1["RenameAccount 🔒"]
+  p1["RenameAccount 🔒"] --> p2["EmployerTeamIndex 🔒"]
+```
+
+## Invite and View Team Members
+
+Enables an employer to view the team, invite a new member, and return to the team list.
+
+```mermaid
+flowchart LR
+  p0["EmployerTeamView 🔒"] --> p1["EmployerTeamInvite 🔒"]
+  p1["EmployerTeamInvite 🔒"] --> p0["EmployerTeamView 🔒"]
 ```
 
 ## Pages
 
 | Page | Route | Sign-in | Purpose |
 | --- | --- | --- | --- |
-| `AboutYourAgreement` | `accounts/{HashedAccountId}/agreements/{hashedAgreementId}/about-your-agreement` | Yes | Provides information about a specific employer agreement. |
-| `AccessDenied.Index` | — | Unknown | Displays an access denied message to users who are not authorized. |
-| `AccessibilityStatement` | `service/accessibility-statement` | No | Provides information about the service's accessibility features. |
-| `AccountName` | `accounts/{HashedAccountId}/create/accountName` | Yes | Lets the user set or change the employer account name during account creation. |
-| `AccountNameConfirm` | `accounts/{HashedAccountId}/create/accountName/confirm` | Yes | Allows the user to confirm their choice of a new employer account name. |
-| `AccountNameConfirmSuccess` | `accounts/{HashedAccountId}/create/accountName/confirm/success` | Yes | Shows a success message after the account name is confirmed. |
-| `AccountNameSuccess` | `accounts/{HashedAccountId}/create/accountName/success` | Yes | Shows a summary or confirmation of the newly set account name. |
-| `AccountsIndex` | `service/accounts` | Yes | Displays a list or overview of employer accounts for the signed-in user. |
-| `AddPayeShutter` | `accounts/{HashedAccountId}/cannotAddPaye` | Yes | Informs the user that they cannot add a PAYE scheme at this time. |
-| `AgreementView` | `accounts/{HashedAccountId}/agreements/{hashedAgreementId}/view` | Yes | Displays the signed employer agreement to the user. |
-| `ConfirmRemoveTeamMember` | `accounts/{HashedAccountId}/teams/{hashedUserId}/remove` | Yes | Lets the user confirm the removal of a team member. |
-| `CookieConsent.Details` | `accounts/{HashedAccountId}/cookieConsent/details` | Unknown | Shows details about the site's cookie consent policy. |
-| `CookieConsent.Settings` | `accounts/{HashedAccountId}/cookieConsent` | Unknown | Allows users to configure their cookie consent preferences. |
-| `CreateAccountSuccess` | `accounts/{HashedAccountId}/create/success` | Yes | Shows a success message after the employer account creation process is complete. |
-| `CreateAdvert` | `accounts/{HashedAccountId}/teams/continuesetupcreateadvert` | Yes | Allows the user to decide whether they need to create an advert during the account setup process. |
-| `EmployerAccount.AmendOrganisation` | `accounts/amendOrganisation` | Yes | Directs the user to amend or update their selected organisation details. |
-| `EmployerAccount.GateWayResponse` | `accounts/gatewayResponse` | Yes | Processes and responds to HMRC gateway authentication responses. |
-| `EmployerAccount.Gateway` | `accounts/gateway` | Yes | Redirects the user to the HMRC authentication gateway. |
-| `EmployerAccount.GatewayInform` | `accounts/{hashedAccountId}/gatewayInform` | Yes | Provides information and next steps after HMRC authentication. |
-| `EmployerAccount.Summary` | `accounts/summary` | Yes | Displays a summary of entered employer account details before final creation. |
-| `EmployerAccountGetApprenticeshipFundingInAccount` | `accounts/{HashedAccountId}/getApprenticeshipFunding` | Yes | Shows information about apprenticeship funding for the employer account. |
-| `EmployerAccountPayBillTriage` | `accounts/payBill` | Yes | Lets the employer determine their status regarding paying the apprenticeship levy. |
-| `EmployerAccountPaye` | `accounts/{HashedAccountId}/schemes` | Yes | Displays a list of PAYE schemes associated with the employer account. |
-| `EmployerAccountPaye.ConfirmPayeScheme` | `accounts/{HashedAccountId}/schemes/confirm` | Yes | Lets the employer confirm adding a PAYE scheme after HMRC gateway authentication. |
-| `EmployerAccountPaye.NextSteps` | `accounts/{HashedAccountId}/schemes/next` | Yes | Shows the next actions the employer can take after managing PAYE schemes. |
-| `EmployerAccountPaye.Remove` | `accounts/{HashedAccountId}/schemes/{empRef}/remove` | Yes | Lets the employer start removing a PAYE scheme from the account. |
-| `EmployerAccountPayeGateway` | `accounts/{HashedAccountId}/schemes/gateway` | Yes | Redirects the user to the Government Gateway for PAYE scheme authentication. |
-| `EmployerAccountPayeGatewayInform` | `accounts/{HashedAccountId}/schemes/gatewayInform` | Yes | Informs the user about needing to use the Government Gateway for PAYE schemes. |
-| `EmployerAccountPostApprenticeshipFundingInAccount` | `accounts/{hashedAccountId}/getApprenticeshipFunding` | Yes | Lets the employer choose how to add a PAYE scheme for apprenticeship funding to their account. |
-| `EmployerAccountTransactions.Index` | `accounts/{HashedAccountId}/finance` | Yes | Displays the financial transactions and balance for the employer's account. |
-| `EmployerAgreement.ConfirmRemoveOrganisation` | `accounts/{HashedAccountId}/agreements/{accountLegalEntityHashedId}/remove` | Yes | Lets the user confirm whether they wish to remove an organisation from their account agreements. |
-| `EmployerAgreement.Details` | `accounts/{HashedAccountId}/agreements/{hashedAgreementId}/details` | Yes | Shows detailed information about a specific employer agreement. |
-| `EmployerAgreement.ViewUnsignedAgreements` | `accounts/{HashedAccountId}/agreements/unsigned/view` | Yes | Redirects the user to the next unsigned employer agreement or back to the agreements page. |
-| `EmployerAgreement.WhenDoYouWantToView` | `accounts/{HashedAccountId}/agreements/{hashedAgreementId}/whenDoYouWantToView` | Yes | Allows the user to choose when they want to view the employer agreement. |
-| `EmployerAgreementIndex` | `accounts/{HashedAccountId}/agreements` | Yes | Lists all employer agreements associated with the account. |
-| `EmployerAgreementSign` | `accounts/{HashedAccountId}/agreements/{hashedAgreementId}/sign` | Yes | Allows the user to sign an employer agreement or acknowledge it for review later. |
-| `EmployerAgreementSignYourAgreement` | `accounts/{HashedAccountId}/agreements/{hashedAgreementId}/sign-your-agreement` | Yes | Displays the agreement document for the user to sign. |
-| `EmployerTeam.AddedProvider` | `accounts/{HashedAccountId}/teams/AddedProvider/{providerName}` | Yes | Notifies the user that a provider has been added to the account and updates permissions. |
-| `EmployerTeam.NextSteps` | `accounts/{HashedAccountId}/teams/invite/next` | Yes | Shows next step instructions to the user after inviting a team member. |
-| `EmployerTeamCancelInvitation` | `accounts/{HashedAccountId}/teams/{hashedInvitationId}/cancel` | Yes | Lets the user review or cancel a sent team member invitation. |
-| `EmployerTeamChangeRole` | `accounts/{HashedAccountId}/teams/{hashedUserId}/role/change` | Yes | Handles the role change for a team member after submission. |
-| `EmployerTeamGetChangeRole` | `accounts/{HashedAccountId}/teams/{hashedUserId}/role/change` | Yes | Shows the form for changing a team member's role. |
-| `EmployerTeamIndex` | `accounts/{HashedAccountId}/teams` | Yes | Displays the dashboard and main page for managing an employer's team. |
-| `EmployerTeamInvite` | `accounts/{HashedAccountId}/teams/invite` | Yes | Allows the user to invite a new team member to the employer account. |
-| `EmployerTeamInviteNext` | `accounts/{HashedAccountId}/teams/invite/next` | Yes | Shows instructions or options after inviting a team member. |
-| `EmployerTeamResendInvite` | `accounts/{HashedAccountId}/teams/resend` | Yes | Lets the user resend an invitation to a team member. |
-| `EmployerTeamReview` | `accounts/{HashedAccountId}/teams/{hashedUserId}/review` | Yes | Provides a review of a team member's details and potential invitation status. |
-| `EmployerTeamView` | `accounts/{HashedAccountId}/teams/view` | Yes | Shows the team members for an employer account. |
-| `GetPdfAgreement` | `accounts/{HashedAccountId}/agreements/{hashedAgreementId}/agreement-pdf` | Yes | Allows the user to download the PDF version of their employer agreement. |
-| `GetSignedPdfAgreement` | `accounts/{HashedAccountId}/agreements/{hashedAgreementId}/signed-agreement-pdf` | Yes | Allows the user to download the signed PDF version of their employer agreement. |
-| `Home.GovSignIn` | `service` | Yes | Redirects the user to the sign-in process. |
-| `Home.HandleEmailChanged` | `service/email/change` | Yes | Handles the process after a user changes their email address. |
-| `Home.HandleNewRegistration` | `service/register/new/{correlationId?}` | Yes | Handles actions after a new user registration. |
-| `Home.HandlePasswordChanged` | `service/password/change` | Yes | Handles the process after a user changes their password. |
-| `Home.Help` | `service/help` | Unknown | Redirects the user to the help or support centre. |
-| `Home.Index` | `service/~/` | Unknown | The entry point for the service; shows the start page or redirects to an appropriate dashboard or task list. |
-| `Home.Privacy` | `service/{HashedAccountId}/privacy` | Unknown | Displays the privacy policy for the employer service. |
-| `Home.RegisterUser` | `service/register` | Unknown | Redirects the user to add their profile details to register for the service. |
-| `Home.ServiceStartPage` | `service/start` | Unknown | Shows the start page for the employer service, including links for sign-in. |
-| `Home.ShowLegalAgreement` | `service/CreateLegalAgreement/{showSubFields}` | Unknown | Displays the legal agreement content for review. |
-| `Home.SignIn` | `service/signIn` | Yes | Redirects the user to initiate the sign-in process. |
-| `Home.TermsAndConditions` | `service/termsAndConditions` | Yes | Displays the terms and conditions for the user to review and accept. |
+| `AboutYourAgreement` | `accounts/{HashedAccountId}/agreements/{hashedAgreementId}/about-your-agreement` | Yes | Shows information about a specific employer agreement. |
+| `AccessDenied.Index` | — | Unknown | Shows an access denied message. |
+| `AccessibilityStatement` | `service/accessibility-statement` | No | Shows the accessibility statement for the service. |
+| `AccountName` | `accounts/{HashedAccountId}/create/accountName` | Yes | Lets you choose whether to change your account name and enter a new name if desired. |
+| `AccountNameConfirm` | `accounts/{HashedAccountId}/create/accountName/confirm` | Yes | Lets the employer confirm the new account name before proceeding. |
+| `AccountNameConfirmSuccess` | `accounts/{HashedAccountId}/create/accountName/confirm/success` | Yes | Confirms that your account name change was successful. |
+| `AccountNameSuccess` | `accounts/{HashedAccountId}/create/accountName/success` | Yes | Shows confirmation that your account name was saved. |
+| `AccountsIndex` | `service/accounts` | Yes | Displays the accounts available to the signed-in user. |
+| `AddPayeShutter` | `accounts/{HashedAccountId}/cannotAddPaye` | Yes | Informs you that you cannot add a PAYE scheme. |
+| `AgreementView` | `accounts/{HashedAccountId}/agreements/{hashedAgreementId}/view` | Yes | Displays a signed employer agreement for review. |
+| `ConfirmRemoveTeamMember` | `accounts/{HashedAccountId}/teams/{hashedUserId}/remove` | Yes | Shows a page to confirm removal of a team member. |
+| `CookieConsent.Details` | `accounts/{HashedAccountId}/cookieConsent/details` | Unknown | Shows details about your cookie consent choices. |
+| `CookieConsent.Settings` | `accounts/{HashedAccountId}/cookieConsent` | Unknown | Lets you set your preferences for website analytic cookies. |
+| `CreateAccountSuccess` | `accounts/{HashedAccountId}/create/success` | Yes | Shows confirmation that your account was successfully created. |
+| `CreateAdvert` | `accounts/{HashedAccountId}/teams/continuesetupcreateadvert` | Yes | Lets the user choose whether an advert is required for recruiting. |
+| `EmployerAccount.AmendOrganisation` | `accounts/amendOrganisation` | Yes | Lets you amend organisation details if necessary. |
+| `EmployerAccount.GateWayResponse` | `accounts/gatewayResponse` | Yes | Processes the response from the government gateway after PAYE authentication. |
+| `EmployerAccount.Gateway` | `accounts/gateway` | Yes | Redirects to the government gateway for authentication. |
+| `EmployerAccount.GatewayInform` | `accounts/{hashedAccountId}/gatewayInform` | Yes | Shows information after returning from the government gateway. |
+| `EmployerAccount.Summary` | `accounts/summary` | Yes | Lets you confirm your organisation and address details before creating an account. |
+| `EmployerAccountGetApprenticeshipFundingInAccount` | `accounts/{HashedAccountId}/getApprenticeshipFunding` | Yes | Lets you choose how to add your PAYE scheme for apprenticeship funding. |
+| `EmployerAccountPayBillTriage` | `accounts/payBill` | Yes | Lets you specify your organisation's annual pay bill. |
+| `EmployerAccountPaye` | `accounts/{HashedAccountId}/schemes` | Yes | Shows PAYE schemes associated with the employer account. |
+| `EmployerAccountPaye.ConfirmPayeScheme` | `accounts/{HashedAccountId}/schemes/confirm` | Yes | Lets the employer confirm adding a new PAYE scheme. |
+| `EmployerAccountPaye.NextSteps` | `accounts/{HashedAccountId}/schemes/next` | Yes | Shows next steps after adding or managing PAYE schemes. |
+| `EmployerAccountPaye.Remove` | `accounts/{HashedAccountId}/schemes/{empRef}/remove` | Yes | Lets the employer choose to remove a PAYE scheme from their account. |
+| `EmployerAccountPayeGateway` | `accounts/{HashedAccountId}/schemes/gateway` | Yes | Redirects the user to the HMRC Government Gateway for PAYE scheme linking. |
+| `EmployerAccountPayeGatewayInform` | `accounts/{HashedAccountId}/schemes/gatewayInform` | Yes | Informs the user about the process to add a PAYE scheme through Government Gateway. |
+| `EmployerAccountPostApprenticeshipFundingInAccount` | `accounts/{hashedAccountId}/getApprenticeshipFunding` | Yes | Lets the employer choose how to add a PAYE scheme for apprenticeship funding. |
+| `EmployerAccountTransactions.Index` | `accounts/{HashedAccountId}/finance` | Yes | Redirects the user to the finance section for their employer account. |
+| `EmployerAgreement.ConfirmRemoveOrganisation` | `accounts/{HashedAccountId}/agreements/{accountLegalEntityHashedId}/remove` | Yes | Lets the employer confirm removal of an organisation from the account. |
+| `EmployerAgreement.Details` | `accounts/{HashedAccountId}/agreements/{hashedAgreementId}/details` | Yes | Shows detailed information about an employer agreement. |
+| `EmployerAgreement.ViewUnsignedAgreements` | `accounts/{HashedAccountId}/agreements/unsigned/view` | Yes | Displays unsigned employer agreements or redirects to the next step if none remain. |
+| `EmployerAgreement.WhenDoYouWantToView` | `accounts/{HashedAccountId}/agreements/{hashedAgreementId}/whenDoYouWantToView` | Yes | Lets the employer choose whether to view or acknowledge the agreement now or later. |
+| `EmployerAgreementIndex` | `accounts/{HashedAccountId}/agreements` | Yes | Shows a list of employer agreements for the account. |
+| `EmployerAgreementSign` | `accounts/{HashedAccountId}/agreements/{hashedAgreementId}/sign` | Yes | Lets the user sign or acknowledge the employer agreement. |
+| `EmployerAgreementSignYourAgreement` | `accounts/{HashedAccountId}/agreements/{hashedAgreementId}/sign-your-agreement` | Yes | Shows the agreement ready to be signed by the employer. |
+| `EmployerTeam.AddedProvider` | `accounts/{HashedAccountId}/teams/AddedProvider/{providerName}` | Yes | Confirms that your account has been created and provider permissions have been updated. |
+| `EmployerTeam.NextSteps` | `accounts/{HashedAccountId}/teams/invite/next` | Yes | Lets you decide what to do next after inviting a team member. |
+| `EmployerTeamCancelInvitation` | `accounts/{HashedAccountId}/teams/{hashedInvitationId}/cancel` | Yes | Lets you cancel a pending team member invitation. |
+| `EmployerTeamChangeRole` | `accounts/{HashedAccountId}/teams/{hashedUserId}/role/change` | Yes | Lets you change a team member's role. |
+| `EmployerTeamGetChangeRole` | `accounts/{HashedAccountId}/teams/{hashedUserId}/role/change` | Yes | Lets you view and set a team member's role. |
+| `EmployerTeamIndex` | `accounts/{HashedAccountId}/teams` | Yes | Shows the dashboard or home page for your team/account. |
+| `EmployerTeamInvite` | `accounts/{HashedAccountId}/teams/invite` | Yes | Lets you invite a new team member by entering their details. |
+| `EmployerTeamInviteNext` | `accounts/{HashedAccountId}/teams/invite/next` | Yes | Lets you select the next step after sending a team invitation. |
+| `EmployerTeamResendInvite` | `accounts/{HashedAccountId}/teams/resend` | Yes | Lets you resend an invitation to a team member. |
+| `EmployerTeamReview` | `accounts/{HashedAccountId}/teams/{hashedUserId}/review` | Yes | Lets you review details of a team member including options to resend invite, cancel invitation or remove. |
+| `EmployerTeamView` | `accounts/{HashedAccountId}/teams/view` | Yes | Shows the list of current team members. |
+| `GetPdfAgreement` | `accounts/{HashedAccountId}/agreements/{hashedAgreementId}/agreement-pdf` | Yes | Provides a PDF version of the employer agreement for download. |
+| `GetSignedPdfAgreement` | `accounts/{HashedAccountId}/agreements/{hashedAgreementId}/signed-agreement-pdf` | Yes | Provides a PDF version of the signed employer agreement. |
+| `Home.GovSignIn` | `service` | Yes | Redirects the user to the GOV.UK sign-in process. |
+| `Home.HandleEmailChanged` | `service/email/change` | Yes | Handles the process after a user's email address is changed. |
+| `Home.HandleNewRegistration` | `service/register/new/{correlationId?}` | Yes | Handles new user registration completion. |
+| `Home.HandlePasswordChanged` | `service/password/change` | Yes | Handles the process after a user's password is changed. |
+| `Home.Help` | `service/help` | Unknown | Provides help or support information. |
+| `Home.Index` | `service/~/` | Unknown | Landing page for the service; routes the user depending on authentication and account status. |
+| `Home.Privacy` | `service/{HashedAccountId}/privacy` | Unknown | Shows the privacy policy for the service. |
+| `Home.RegisterUser` | `service/register` | Unknown | Initiates the registration process for a new user. |
+| `Home.ServiceStartPage` | `service/start` | Unknown | Allows users to start the service and begin their journey, especially if not signed in. |
+| `Home.ShowLegalAgreement` | `service/CreateLegalAgreement/{showSubFields}` | Unknown | Displays a legal agreement for review, primarily for debugging purposes. |
+| `Home.SignIn` | `service/signIn` | Yes | Redirects the user to the main page after authentication. |
+| `Home.TermsAndConditions` | `service/termsAndConditions` | Yes | Lets the user review and accept the terms and conditions for using the service. |
 | `Home.TermsAndConditionsOverview` | `service/termsAndConditions/overview` | Unknown | Shows an overview of the service's terms and conditions. |
-| `Invitation.AcceptInvitationExistingUser` | `invitations/accept` | Unknown | Handles existing users accepting an invitation to join an account. |
-| `Invitation.AcceptInvitationNewUser` | `invitations/register-and-accept` | Unknown | Directs new users to accept an invitation after registering. |
-| `Invitation.All` | `invitations` | Yes | Shows all invitations the user has received to join employer accounts. |
-| `Invitation.Create` | `invitations/create` | Yes | Allows a user to send an invitation to another team member. |
+| `Invitation.AcceptInvitationExistingUser` | `invitations/accept` | Unknown | Redirects an existing user to the main dashboard after accepting an invitation. |
+| `Invitation.AcceptInvitationNewUser` | `invitations/register-and-accept` | Unknown | Redirects a new user to the main dashboard after accepting an invitation. |
+| `Invitation.All` | `invitations` | Yes | Allows users to view all pending invitations addressed to them. |
+| `Invitation.Create` | `invitations/create` | Yes | Lets a user create a new invitation for someone to join the account. |
 | `Invitation.Details` | `invitations/view` | Yes | Displays the details of a specific invitation. |
-| `Invitation.Invite` | `invitations/invite` | Unknown | Lets a user start the process to invite someone to their team. |
-| `InvitationAccept` | `invitations/accept` | Yes | Lets the user accept an invitation to join an employer account. |
-| `NewAccountSaveProgress` | `accounts/create/progress-saved` | Yes | Shows confirmation that the progress of creating a new employer account has been saved. |
-| `NewEmployerAccountTaskList` | `accounts/create/tasklist` | Yes | Displays the list of tasks required to complete employer account creation. |
-| `Organisation.OrganisationAddedNextSteps` | `accounts/{HashedAccountId}/organisations/nextStep` | Yes | Shows what to do next after successfully adding a new organisation. |
-| `Organisation.OrganisationAddedNextStepsSearch` | `accounts/{HashedAccountId}/organisations/nextStepSearch` | Yes | Shows next steps after adding a new organisation from a search flow. |
-| `Organisation.Review` | `accounts/{HashedAccountId}/organisations/review` | Yes | Lets the user review and update organisation details. |
-| `OrganisationAgreements` | `accounts/{HashedAccountId}/organisations/{accountLegalEntityHashedId}/agreements` | Yes | Shows all agreements associated with a specific organisation for the user's account. |
-| `OrganisationAndPayeAddedSuccess` | `accounts/{HashedAccountId}/create/orgAndPaye/success` | Yes | Shows a success message after both organisation details and PAYE have been added to the account. |
-| `OrganisationConfirm` | `accounts/{HashedAccountId}/organisations/confirm` | Yes | Lets the user confirm adding a new organisation to the account. |
-| `OrganisationGoToNextStep` | `accounts/{HashedAccountId}/organisations/nextStep` | Yes | Handles user selection of what to do after adding an organisation. |
-| `OrganisationPostUpdateSelection` | `accounts/{HashedAccountId}/organisations/PostUpdateSelection` | Yes | Handles the user's choice after updating organisation details. |
-| `OrganisationWrongAddress` | `accounts/organisation-wrong-address` | Yes | Allows the employer to proceed if their organisation's address was recorded incorrectly. |
-| `PayeDetails` | `accounts/{HashedAccountId}/schemes/{empRef}/details` | Yes | Shows details of a specific PAYE scheme registered to the employer's account. |
-| `PayePostNextSteps` | `accounts/{HashedAccountId}/schemes/next` | Yes | Handles the user's next steps after managing PAYE schemes and redirects based on their selection. |
-| `PayePostRemove` | `accounts/{HashedAccountId}/schemes/remove` | Yes | Processes the user's request to remove a PAYE scheme from their account. |
-| `PostConfirmRemoveOrganisation` | `accounts/{HashedAccountId}/agreements/{accountLegalEntityHashedId}/remove` | Yes | Lets the user confirm and complete the removal of an organisation from their account agreements. |
-| `PreviewEmployerAgreement.Index` | `agreements/preview` | Yes | Shows a preview of the employer agreement for the organisation. |
-| `ProcessOrganisationReview` | `accounts/{HashedAccountId}/organisations/review` | Yes | Processes the user's review and update choices for organisation details. |
-| `RemoveTeamMember` | `accounts/{HashedAccountId}/teams/{hashedUserId}/remove` | Yes | Supports the review or initial confirmation before removing a team member. |
+| `Invitation.Invite` | `invitations/invite` | Unknown | Starts the invitation process for inviting someone to join. |
+| `InvitationAccept` | `invitations/accept` | Yes | Processes the acceptance of an invitation. |
+| `NewAccountSaveProgress` | `accounts/create/progress-saved` | Yes | Informs the user that their account creation progress has been saved. |
+| `NewEmployerAccountTaskList` | `accounts/create/tasklist` | Yes | Shows the task list for creating a new employer account. |
+| `Organisation.OrganisationAddedNextSteps` | `accounts/{HashedAccountId}/organisations/nextStep` | Yes | Lets the user choose their next step after adding an organisation. |
+| `Organisation.OrganisationAddedNextStepsSearch` | `accounts/{HashedAccountId}/organisations/nextStepSearch` | Yes | Shows options for what to do after adding an organisation. |
+| `Organisation.Review` | `accounts/{HashedAccountId}/organisations/review` | Yes | Lets the user review an organisation's details and choose how to proceed. |
+| `OrganisationAgreements` | `accounts/{HashedAccountId}/organisations/{accountLegalEntityHashedId}/agreements` | Yes | Lists all agreements associated with an organisation. |
+| `OrganisationAndPayeAddedSuccess` | `accounts/{HashedAccountId}/create/orgAndPaye/success` | Yes | Confirms successful addition of organisation and PAYE scheme to the account. |
+| `OrganisationConfirm` | `accounts/{HashedAccountId}/organisations/confirm` | Yes | Processes confirmation of organisation details before adding. |
+| `OrganisationGoToNextStep` | `accounts/{HashedAccountId}/organisations/nextStep` | Yes | Carries out selected next step after adding organisation. |
+| `OrganisationPostUpdateSelection` | `accounts/{HashedAccountId}/organisations/PostUpdateSelection` | Yes | Processes a user's selection after updating an organisation's details. |
+| `OrganisationWrongAddress` | `accounts/organisation-wrong-address` | Yes | Lets the employer address issues if their organisation address is incorrect. |
+| `PayeDetails` | `accounts/{HashedAccountId}/schemes/{empRef}/details` | Yes | Shows the details for a specific PAYE scheme linked to the account. |
+| `PayePostNextSteps` | `accounts/{HashedAccountId}/schemes/next` | Yes | Lets the user choose their next step after managing PAYE schemes. |
+| `PayePostRemove` | `accounts/{HashedAccountId}/schemes/remove` | Yes | Processes the removal of a PAYE scheme from the account. |
+| `PostConfirmRemoveOrganisation` | `accounts/{HashedAccountId}/agreements/{accountLegalEntityHashedId}/remove` | Yes | Processes the confirmation to remove an organisation. |
+| `PreviewEmployerAgreement.Index` | `agreements/preview` | Yes | Lets the user preview the latest employer agreement template. |
+| `ProcessOrganisationReview` | `accounts/{HashedAccountId}/organisations/review` | Yes | Processes the user's review selection for an organisation. |
+| `RemoveTeamMember` | `accounts/{HashedAccountId}/teams/{hashedUserId}/remove` | Yes | Lets you begin the process of removing a team member from the account. |
 | `RenameAccount` | `accounts/{HashedAccountId}/rename` | Yes | Lets the employer change the name of their account. |
-| `SearchOrganisation.Confirm` | `accounts/{HashedAccountId}/organisations/search/confirm` | Yes | Displays confirmation details for an organisation found in search. |
-| `SearchOrganisation.SearchForOrganisation` | `accounts/{HashedAccountId}/organisations/search` | Yes | Lets the user search for an organisation to add to the account. |
-| `SearchOrganisation.SearchForOrganisationResults` | `accounts/{HashedAccountId}/organisations/search/results` | Yes | Displays a list of organisations matching the search criteria. |
-| `SearchPensionRegulator.SearchPensionRegulator` | `accounts/{HashedAccountId}/pensionregulator` | Yes | Allows the user to search the Pension Regulator and view organisation results using a PAYE reference. |
-| `SearchPensionRegulator.SearchPensionRegulatorByAorn` | `accounts/{HashedAccountId}/pensionregulator/aorn` | Yes | Lets the user search the Pension Regulator using an Accounts Office Reference Number (AORN) and PAYE reference. |
-| `SearchPensionRegulatorAddOrganisation` | `accounts/{HashedAccountId}/pensionregulator` | Yes | Lets the user add an organisation found from Pension Regulator search based on PAYE reference. |
-| `Settings.NotificationSettings` | `settings/notifications` | Yes | Allows the user to view and update their notification settings. |
-| `Settings.NotificationUnsubscribe` | `settings/notifications/unsubscribe/{hashedAccountId}` | Yes | Lets the user unsubscribe from notifications for a specific account. |
-| `SignOut` | `service/signout` | Unknown | Signs the user out of the employer service. |
-| `SignedOut` | `service/signed-out` | No | Confirms to the user that they have been signed out of the employer service. |
-| `Summary` | `accounts/summary` | Yes | Displays a summary of the entered account details before final creation. |
-| `TaskListSignedAgreementSuccess` | `accounts/{HashedAccountId}/create/agreement/success` | Yes | Shows confirmation that an agreement has been successfully signed during account creation. |
-| `TrainingProviderSuccess` | `accounts/{HashedAccountId}/training-provider-success` | Yes | Shows confirmation that a training provider has been successfully added. |
-| `TrainingProviderTriage` | `accounts/{HashedAccountId}/training-provider-triage`, `accounts/{hashedAccountId}/training-provider-triage` | Yes | Lets the employer choose how to add a training provider to their account. |
-| `TriageCannotSetupWithoutApproximateStartDate` | `accounts/{HashedAccountId}/teams/triageyoucannotsetupanapprenticeshipyetapproximatestartdate` | Yes | Informs the user that they cannot set up an apprenticeship without an approximate start date. |
-| `TriageCannotSetupWithoutChosenCourseAndProvider` | `accounts/{HashedAccountId}/teams/triageyoucannotsetupanapprenticeshipyetcourseprovider` | Yes | Shows that the user cannot set up an apprenticeship until they have chosen both a course and a training provider. |
-| `TriageCannotSetupWithoutChosenProvider` | `accounts/{HashedAccountId}/teams/triageyoucannotsetupanapprenticeshipyetprovider` | Yes | Informs the user that they cannot set up an apprenticeship yet because they have not chosen a training provider. |
-| `TriageCannotSetupWithoutStartDate` | `accounts/{HashedAccountId}/teams/triageyoucannotsetupanapprenticeshipyetstartdate` | Yes | Explains that the user cannot proceed with setting up an apprenticeship because they have not selected a start date. |
-| `TriageChosenProvider` | `accounts/{HashedAccountId}/teams/triagehaveyouchosenatrainingprovider` | Yes | Lets the user indicate whether they have chosen a training provider. |
-| `TriageCourse` | `accounts/{HashedAccountId}/teams/triagewhichcourseyourapprenticewilltake` | Yes | Lets the user specify which course their apprentice will take. |
-| `TriageWhenApprenticeshipForExistingEmployee` | `accounts/{HashedAccountId}/teams/triageapprenticeforexistingemployee` | Yes | Asks if the apprenticeship training is for an existing employee. |
-| `TriageWhenWillApprenticeshipStart` | `accounts/{HashedAccountId}/teams/triagewillapprenticeshiptrainingstart` | Yes | Lets the user indicate when the apprenticeship training will start. |
+| `SearchOrganisation.Confirm` | `accounts/{HashedAccountId}/organisations/search/confirm` | Yes | Allows the user to confirm the selected organisation's details after searching. |
+| `SearchOrganisation.SearchForOrganisation` | `accounts/{HashedAccountId}/organisations/search` | Yes | Lets the user enter a term to search for an organisation by name. |
+| `SearchOrganisation.SearchForOrganisationResults` | `accounts/{HashedAccountId}/organisations/search/results` | Yes | Displays search results for organisations and allows filtering by organisation type. |
+| `SearchPensionRegulator.SearchPensionRegulator` | `accounts/{HashedAccountId}/pensionregulator` | Yes | Searches organisations using the Pension Regulator using an existing PAYE reference. |
+| `SearchPensionRegulator.SearchPensionRegulatorByAorn` | `accounts/{HashedAccountId}/pensionregulator/aorn` | Yes | Allows the user to search the Pension Regulator using an Accounts Office Reference Number (AORN) and PAYE reference. |
+| `SearchPensionRegulatorAddOrganisation` | `accounts/{HashedAccountId}/pensionregulator` | Yes | Adds an organisation by searching the Pension Regulator using a PAYE reference. |
+| `Settings.NotificationSettings` | `settings/notifications` | Yes | Allows the user to manage and update their notification settings. |
+| `Settings.NotificationUnsubscribe` | `settings/notifications/unsubscribe/{hashedAccountId}` | Yes | Lets the user unsubscribe from notifications for a specific employer account. |
+| `SignOut` | `service/signout` | Unknown | Allows the user to sign out of their account. |
+| `SignedOut` | `service/signed-out` | No | Informs the user that they have signed out. |
+| `Summary` | `accounts/summary` | Yes | Lets the employer confirm if the shown organisation is correct. |
+| `TaskListSignedAgreementSuccess` | `accounts/{HashedAccountId}/create/agreement/success` | Yes | Indicates the agreement has been signed successfully. |
+| `TrainingProviderSuccess` | `accounts/{HashedAccountId}/training-provider-success` | Yes | Indicates a training provider has been successfully added. |
+| `TrainingProviderTriage` | `accounts/{HashedAccountId}/training-provider-triage`, `accounts/{hashedAccountId}/training-provider-triage` | Yes | Lets the employer decide whether to add a training provider now. |
+| `TriageCannotSetupWithoutApproximateStartDate` | `accounts/{HashedAccountId}/teams/triageyoucannotsetupanapprenticeshipyetapproximatestartdate` | Yes | Informs you that you cannot set up an apprenticeship yet because the approximate start date isn't known. |
+| `TriageCannotSetupWithoutChosenCourseAndProvider` | `accounts/{HashedAccountId}/teams/triageyoucannotsetupanapprenticeshipyetcourseprovider` | Yes | Informs you that you cannot set up an apprenticeship yet because neither a course nor provider have been selected. |
+| `TriageCannotSetupWithoutChosenProvider` | `accounts/{HashedAccountId}/teams/triageyoucannotsetupanapprenticeshipyetprovider` | Yes | Informs you that you cannot set up an apprenticeship yet because a provider has not been chosen. |
+| `TriageCannotSetupWithoutStartDate` | `accounts/{HashedAccountId}/teams/triageyoucannotsetupanapprenticeshipyetstartdate` | Yes | Tells the employer they cannot set up an apprenticeship yet because they do not have a planned start date. |
+| `TriageChosenProvider` | `accounts/{HashedAccountId}/teams/triagehaveyouchosenatrainingprovider` | Yes | Asks the employer if they have chosen a training provider for their apprentice. |
+| `TriageCourse` | `accounts/{HashedAccountId}/teams/triagewhichcourseyourapprenticewilltake` | Yes | Asks the employer if they know which course their apprentice will take. |
+| `TriageWhenApprenticeshipForExistingEmployee` | `accounts/{HashedAccountId}/teams/triageapprenticeforexistingemployee` | Yes | Asks the employer if the apprenticeship is for an existing employee. |
+| `TriageWhenWillApprenticeshipStart` | `accounts/{HashedAccountId}/teams/triagewillapprenticeshiptrainingstart` | Yes | Asks the employer when apprenticeship training will start. |
+
+## Form fields
+
+Field definitions only: no values a user enters are recorded.
+
+### `AccountName`
+
+| Field | Type | Label | Required | Rules | Options |
+| --- | --- | --- | --- | --- | --- |
+| `ChangeAccountName` | radios | Do you want to change your apprenticeship service account name? | — | required; must be selected | — |
+| `NewName` | text | Enter new account name. Do not use your own name unless it is the same as your organisation’s trading name | — | required if ChangeAccountName is true; must not be the same as current name; must only include valid free text characters | — |
+
+### `CookieConsent.Settings`
+
+| Field | Type | Label | Required | Rules | Options |
+| --- | --- | --- | --- | --- | --- |
+| `cookies-AnalyticsConsent` | radios | Cookies that measure website use | — | — | Use cookies that measure my service use, Do not use cookies that measure my service use |
+
+### `CreateAdvert`
+
+| Field | Type | Label | Required | Rules | Options |
+| --- | --- | --- | --- | --- | --- |
+| `requiresAdvert` | radios | (!ViewData.ModelState.IsValid) { ["Choice"].Errors[0].ErrorMessage } | — | required; must select an option | — |
+
+### `EmployerAccount.Summary`
+
+| Field | Type | Label | Required | Rules | Options |
+| --- | --- | --- | --- | --- | --- |
+| `isOrganisationWithCorrectAddress` | radios | Is this your organisation? | — | required; must be selected | — |
+
+### `EmployerAccountGetApprenticeshipFundingInAccount`
+
+| Field | Type | Label | Required | Rules | Options |
+| --- | --- | --- | --- | --- | --- |
+| `choice` | radios | How do you want to add your PAYE scheme | — | required; must be selected | Use Government Gateway log in, Use Accounts Office reference and Employer PAYE reference. |
+
+### `EmployerAccountPayBillTriage`
+
+| Field | Type | Label | Required | Rules | Options |
+| --- | --- | --- | --- | --- | --- |
+| `choice` | radios | How much is your organisation's annual pay bill? | — | required; must be selected | Over £3 million, Close to £3 million, Less than £3 million |
+
+### `EmployerAccountPaye.NextSteps`
+
+| Field | Type | Label | Required | Rules | Options |
+| --- | --- | --- | --- | --- | --- |
+| `choice` | radios | What's next? (!string.IsNullOrWhiteSpace(Model.Data.ErrorMessage)) { } | — | optional; must be an integer if present; must select an option to continue | Add another PAYE scheme, Check finances, Return to homepage |
+
+### `EmployerAccountPaye.Remove`
+
+| Field | Type | Label | Required | Rules | Options |
+| --- | --- | --- | --- | --- | --- |
+| `RemoveScheme` | radios | Remove this PAYE scheme | — | optional; must be an integer if present | Yes, remove scheme, No, don't remove |
+
+### `EmployerAccountPostApprenticeshipFundingInAccount`
+
+| Field | Type | Label | Required | Rules | Options |
+| --- | --- | --- | --- | --- | --- |
+| `choice` | radios | How do you want to add your PAYE scheme | — | optional; must be an integer if present | Use Government Gateway log in, Use Accounts Office reference and Employer PAYE reference. |
+
+### `EmployerAgreement.ConfirmRemoveOrganisation`
+
+| Field | Type | Label | Required | Rules | Options |
+| --- | --- | --- | --- | --- | --- |
+| `Remove` | radios | — | — | required; must be true to proceed with removal | Yes, No |
+
+### `EmployerAgreement.WhenDoYouWantToView`
+
+| Field | Type | Label | Required | Rules | Options |
+| --- | --- | --- | --- | --- | --- |
+| `choice` | radios | — | — | required; must be 1 (now) or 2 (later) | I'll view it now, I'll view it later, after I've created an account |
+
+### `EmployerTeam.NextSteps`
+
+| Field | Type | Label | Required | Rules | Options |
+| --- | --- | --- | --- | --- | --- |
+| `choice` | radios | What's next? (!string.IsNullOrWhiteSpace(Model.Data.ErrorMessage)) { } | — | — | Add another team member, View all team members, Return to homepage |
+
+### `EmployerTeamChangeRole`
+
+| Field | Type | Label | Required | Rules | Options |
+| --- | --- | --- | --- | --- | --- |
+| `Role` | radios | Select a role for (!string.IsNullOrWhiteSpace(errorMessage)) { } | — | — | ), ), ), ) |
+
+### `EmployerTeamGetChangeRole`
+
+| Field | Type | Label | Required | Rules | Options |
+| --- | --- | --- | --- | --- | --- |
+| `Role` | radios | Select a role for (!string.IsNullOrWhiteSpace(errorMessage)) { } | — | — | ), ), ), ) |
+
+### `EmployerTeamInvite`
+
+| Field | Type | Label | Required | Rules | Options |
+| --- | --- | --- | --- | --- | --- |
+| `Email` | text | Email | — | — | — |
+| `Name` | text | Full name | — | — | — |
+| `Role` | radios | Team member access | — | — | ), ), ), ) |
+
+### `EmployerTeamInviteNext`
+
+| Field | Type | Label | Required | Rules | Options |
+| --- | --- | --- | --- | --- | --- |
+| `choice` | radios | What's next? (!string.IsNullOrWhiteSpace(Model.Data.ErrorMessage)) { } | — | — | Add another team member, View all team members, Return to homepage |
+
+### `Organisation.OrganisationAddedNextSteps`
+
+| Field | Type | Label | Required | Rules | Options |
+| --- | --- | --- | --- | --- | --- |
+| `nextStep` | radios | What's next? (!string.IsNullOrEmpty(Model.Data.ErrorMessage)) { } | — | null | Sign an agreement to allow to spend funds, Check which team members can sign the agreement, Add another organisation, Return to homepage |
+
+### `Organisation.Review`
+
+| Field | Type | Label | Required | Rules | Options |
+| --- | --- | --- | --- | --- | --- |
+| `updateChoice` | radios | Are these details correct? | — | — | Yes, update my details using this information, No, these details are incorrect |
+| `nextStep` | radios | — | — | — | Go to your organisations and agreements, Go to the homepage |
+
+### `PayePostNextSteps`
+
+| Field | Type | Label | Required | Rules | Options |
+| --- | --- | --- | --- | --- | --- |
+| `choice` | radios | What's next? (!string.IsNullOrWhiteSpace(Model.Data.ErrorMessage)) { } | — | required; must select one of the available options | Add another PAYE scheme, Check finances, Return to homepage |
+
+### `ProcessOrganisationReview`
+
+| Field | Type | Label | Required | Rules | Options |
+| --- | --- | --- | --- | --- | --- |
+| `nextStep` | radios | — | — | — | Go to your organisations and agreements, Go to the homepage |
+
+### `RenameAccount`
+
+| Field | Type | Label | Required | Rules | Options |
+| --- | --- | --- | --- | --- | --- |
+| `NewName` | text | New account name | — | required; must not be whitespace; must not match current name; must use valid free text characters (letters a-z, numbers 0-9, and special characters such as hyphens, spaces, apostrophes) | — |
+
+### `SearchOrganisation.SearchForOrganisation`
+
+| Field | Type | Label | Required | Rules | Options |
+| --- | --- | --- | --- | --- | --- |
+| `searchTerm` | text | — | — | required | — |
+
+### `SearchOrganisation.SearchForOrganisationResults`
+
+| Field | Type | Label | Required | Rules | Options |
+| --- | --- | --- | --- | --- | --- |
+| `searchTerm` | text | Search results | — | required | — |
+| `organisationType` | radios | Filter by Organisation type | — | — | Company, Charity, Public sector |
+
+### `SearchPensionRegulator.SearchPensionRegulatorByAorn`
+
+| Field | Type | Label | Required | Rules | Options |
+| --- | --- | --- | --- | --- | --- |
+| `aorn` | text | Accounts office reference number | — | required; must be 13 characters; uppercase letters and digits only | — |
+| `payeRef` | text | Employer PAYE scheme reference | — | required; must be in the format NNN/XXXXXXX where N and X are uppercase letters or digits | — |
+
+### `Summary`
+
+| Field | Type | Label | Required | Rules | Options |
+| --- | --- | --- | --- | --- | --- |
+| `isOrganisationWithCorrectAddress` | radios | Is this your organisation? | — | optional (validated on submit); required to proceed | — |
+
+### `TrainingProviderTriage`
+
+| Field | Type | Label | Required | Rules | Options |
+| --- | --- | --- | --- | --- | --- |
+| `choice` | radios | Do you want to add a training provider now? | — | optional; must be an integer if present | Yes, I'll add a training provider now, No, I want to finish setting up my account and add one later |
+
+### `TriageChosenProvider`
+
+| Field | Type | Label | Required | Rules | Options |
+| --- | --- | --- | --- | --- | --- |
+| `TriageOption` | radios | — | Yes | required | — |
+
+### `TriageCourse`
+
+| Field | Type | Label | Required | Rules | Options |
+| --- | --- | --- | --- | --- | --- |
+| `TriageOption` | radios | — | Yes | required | — |
+
+### `TriageWhenApprenticeshipForExistingEmployee`
+
+| Field | Type | Label | Required | Rules | Options |
+| --- | --- | --- | --- | --- | --- |
+| `TriageOption` | radios | — | Yes | required | — |
+
+### `TriageWhenWillApprenticeshipStart`
+
+| Field | Type | Label | Required | Rules | Options |
+| --- | --- | --- | --- | --- | --- |
+| `TriageOption` | radios | — | Yes | required | — |
+
