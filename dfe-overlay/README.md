@@ -32,3 +32,13 @@ The `Resolve APIM routing (DfE overlay)` workflow does the same in CI and opens 
 ## Precision
 
 Routing is resolved at **area level**: a caller is linked to every inner API its APIM area calls, so this overstates. For example, `das-commitments` appears to use every API that the Approvals area uses. Making it route-level would mean matching the operations each caller makes (kept in `via.operations`) to APIM controllers, then to handlers, then to inner API clients.
+
+## Using the atlas without this overlay
+
+Nothing outside this overlay is DfE-specific. To use the atlas for another organisation, delete:
+
+- `dfe-overlay/`
+- `.github/workflows/dfe-apim-routing.yml`
+- the files it generates: `*/service-dependencies/resolved-dependencies.json` and `das-apim-endpoints/apim-routes/`
+
+The visualiser then serves the scanned dependencies. No dependency carries `via`, so it draws no gateway areas and does not offer the proxy toggle. The gateway's name ("APIM") and repository come from `gateway.label` and `gateway.repo` in `apim-routing.json`, through each resolved dependency's `via`. An overlay for another gateway only has to write the same `via` and `targetRepo` fields.
