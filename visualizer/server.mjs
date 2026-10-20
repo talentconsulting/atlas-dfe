@@ -46,7 +46,7 @@ function isAuthorized(request) {
 function requireAuth(response) {
   response.writeHead(401, {
     'content-type': 'text/plain; charset=utf-8',
-    'www-authenticate': 'Basic realm="Service catalogue", charset="UTF-8"'
+    'www-authenticate': 'Basic realm="TalentSuite Atlas", charset="UTF-8"'
   });
   response.end('Authentication required');
 }
@@ -343,7 +343,7 @@ export const server = createServer(async (request, response) => {
 
 if (process.env.NODE_ENV !== 'test') {
   server.listen(port, '0.0.0.0', () => {
-    console.log(`Service catalogue viewer listening on http://0.0.0.0:${port}`);
+    console.log(`TalentSuite Atlas viewer listening on http://0.0.0.0:${port}`);
     console.log(`Reading catalogue data from ${dataDir}`);
     console.log(authPassword ? `Basic Auth enabled (user: ${authUser})` : 'Basic Auth disabled — set AUTH_PASSWORD to require credentials');
   });
