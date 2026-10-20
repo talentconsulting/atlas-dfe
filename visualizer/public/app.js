@@ -826,18 +826,18 @@ function destroyCy() {
 const CY_STYLE = [
   { selector: 'node', style: { 'background-opacity': 0, 'border-width': 0, 'label': '', 'shape': 'round-rectangle', 'width': 'data(width)', 'height': 'data(height)' } },
   { selector: 'node:parent', style: {
-      'background-color': '#5ce1b9', 'background-opacity': 0.06,
-      'border-width': 1.5, 'border-style': 'dashed', 'border-color': '#56645f', 'border-opacity': 1,
-      'label': 'data(label)', 'color': '#8fa69d', 'text-valign': 'top', 'text-halign': 'left',
+      'background-color': '#dce8ff', 'background-opacity': 0.04,
+      'border-width': 1.5, 'border-style': 'dashed', 'border-color': '#5a6690', 'border-opacity': 1,
+      'label': 'data(label)', 'color': '#9ba7cc', 'text-valign': 'top', 'text-halign': 'left',
       'font-size': 11, 'text-margin-y': -10, 'text-margin-x': 10, 'padding': '46px'
   } },
   { selector: 'edge', style: {
-      'width': 2, 'line-color': '#42685b', 'target-arrow-color': '#42685b', 'target-arrow-shape': 'triangle',
+      'width': 2, 'line-color': '#4a5f9e', 'target-arrow-color': '#4a5f9e', 'target-arrow-shape': 'triangle',
       'arrow-scale': 1.1, 'curve-style': 'bezier', 'text-rotation': 'autorotate',
-      'label': 'data(label)', 'font-size': 10, 'color': '#8fa69d',
-      'text-background-color': '#08110f', 'text-background-opacity': 0.9, 'text-background-padding': '3px', 'text-background-shape': 'roundrectangle'
+      'label': 'data(label)', 'font-size': 10, 'color': '#9ba7cc',
+      'text-background-color': '#000a2b', 'text-background-opacity': 0.9, 'text-background-padding': '3px', 'text-background-shape': 'roundrectangle'
   } },
-  { selector: 'edge.inbound', style: { 'line-color': '#7db7ff', 'target-arrow-color': '#7db7ff' } },
+  { selector: 'edge.inbound', style: { 'line-color': '#95b9ff', 'target-arrow-color': '#95b9ff' } },
   { selector: 'edge.jumpable', style: { 'line-style': 'solid', 'width': 2.5 } },
   { selector: 'edge.returning', style: { 'line-style': 'dashed', 'width': 1.5 } }
 ];
@@ -1203,7 +1203,7 @@ function setLandscapeHero() {
 }
 
 function setHomeHero() {
-  $('#mode-eyebrow').textContent = 'Service catalogue';
+  $('#mode-eyebrow').textContent = 'TalentSuite Atlas';
   $('#source-title').textContent = 'Dashboard';
   $('#source-stats').innerHTML = '';
 }
