@@ -10,20 +10,26 @@
       "description": null,
       "fields": [
         {
-          "name": "LearningKey",
-          "type": "Guid",
-          "required": true,
-          "description": null
-        },
-        {
-          "name": "EpisodeKey",
-          "type": "Guid",
+          "name": "ApprovalsApprenticeshipId",
+          "type": "long",
           "required": true,
           "description": null
         },
         {
           "name": "EmployerAccountId",
           "type": "long",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "EmployerType",
+          "type": "EmployerType",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "EpisodeKey",
+          "type": "Guid",
           "required": true,
           "description": null
         },
@@ -46,14 +52,8 @@
           "description": null
         },
         {
-          "name": "ApprovalsApprenticeshipId",
-          "type": "long",
-          "required": true,
-          "description": null
-        },
-        {
-          "name": "EmployerType",
-          "type": "EmployerType",
+          "name": "LearningKey",
+          "type": "Guid",
           "required": true,
           "description": null
         }
@@ -64,7 +64,12 @@
           "sourceFile": "src/Command/ApproveLearningCommand/ApproveLearningCommandHandler.cs"
         }
       ],
-      "senders": []
+      "senders": [
+        {
+          "name": "LearningApprovedEventHandler",
+          "sourceFile": "src/MessageHandlers/Handlers/LearningApprovedEventHandler.cs"
+        }
+      ]
     },
     {
       "name": "ArchiveEarningsProfileCommand",
@@ -85,7 +90,38 @@
           "sourceFile": "src/Command/ArchiveEarningsProfileCommand/ArchiveEarningsProfileCommandHandler.cs"
         }
       ],
-      "senders": []
+      "senders": [
+        {
+          "name": "ArchiveEarningsProfileEventHandler",
+          "sourceFile": "src/MessageHandlers/Handlers/ArchiveEarningsProfileEventHandler.cs"
+        }
+      ]
+    },
+    {
+      "name": "ArchiveEnglishAndMathsEarningsProfileCommand",
+      "namespace": "SFA.DAS.Funding.ApprenticeshipEarnings.Command.ArchiveEnglishAndMathsEarningsProfileCommand",
+      "sourceFile": "src/Command/ArchiveEnglishAndMathsEarningsProfileCommand/ArchiveEnglishAndMathsEarningsProfileCommand.cs",
+      "description": null,
+      "fields": [
+        {
+          "name": "EarningsProfileForEnglishAndMathsUpdatedEvent",
+          "type": "EarningsProfileForEnglishAndMathsUpdatedEvent",
+          "required": true,
+          "description": null
+        }
+      ],
+      "handlers": [
+        {
+          "name": "ArchiveEnglishAndMathsEarningsProfileCommandHandler",
+          "sourceFile": "src/Command/ArchiveEnglishAndMathsEarningsProfileCommand/ArchiveEnglishAndMathsEarningsProfileCommandHandler.cs"
+        }
+      ],
+      "senders": [
+        {
+          "name": "ArchiveEnglishAndMathsEarningsProfileEventHandler",
+          "sourceFile": "src/MessageHandlers/Handlers/ArchiveEnglishAndMathsEarningsProfileEventHandler.cs"
+        }
+      ]
     },
     {
       "name": "ArchiveShortCourseEarningsProfileCommand",
@@ -133,7 +169,7 @@
       ],
       "senders": [
         {
-          "name": "LearningController.CreateUnapprovedApprenticeshipLearning",
+          "name": "LearningController",
           "sourceFile": "src/InnerApi/Controllers/LearningController.cs"
         }
       ]
@@ -141,7 +177,7 @@
     {
       "name": "CreateUnapprovedShortCourseLearningCommand",
       "namespace": "SFA.DAS.Funding.ApprenticeshipEarnings.Command.CreateUnapprovedShortCourseLearningCommand",
-      "sourceFile": "src/Command/CreateUnapprovedShortCourseLearningCommand/CreateUnapprovedShortCourseLearningCommand.cs",
+      "sourceFile": "Command/CreateUnapprovedShortCourseLearningCommand/CreateUnapprovedShortCourseLearningCommand.cs",
       "description": null,
       "fields": [
         {
@@ -154,12 +190,12 @@
       "handlers": [
         {
           "name": "CreateUnapprovedShortCourseLearningCommandHandler",
-          "sourceFile": "src/Command/CreateUnapprovedShortCourseLearningCommand/CreateUnapprovedShortCourseLearningCommandHandler.cs"
+          "sourceFile": "Command/CreateUnapprovedShortCourseLearningCommand/CreateUnapprovedShortCourseLearningCommandHandler.cs"
         }
       ],
       "senders": [
         {
-          "name": "ShortCoursesController.CreateUnapprovedShortCourseLearning",
+          "name": "ShortCoursesController",
           "sourceFile": "src/InnerApi/Controllers/ShortCoursesController.cs"
         }
       ]
@@ -167,7 +203,7 @@
     {
       "name": "ReleaseEarningsCommand",
       "namespace": "SFA.DAS.Funding.ApprenticeshipEarnings.Command.ReleaseEarningsCommand",
-      "sourceFile": "src/Command/ReleaseEarningsCommand/ReleaseEarningsCommand.cs",
+      "sourceFile": "Command/ReleaseEarningsCommand/ReleaseEarningsCommand.cs",
       "description": null,
       "fields": [
         {
@@ -185,13 +221,17 @@
       ],
       "handlers": [
         {
+          "name": "ApprenticeshipPayableEarningsUpdatedEventHandler",
+          "sourceFile": "src/MessageHandlers/Handlers/ApprenticeshipPayableEarningsUpdatedEventHandler.cs"
+        },
+        {
           "name": "ReleaseEarningsCommandHandler",
-          "sourceFile": "src/Command/ReleaseEarningsCommand/ReleaseEarningsCommandHandler.cs"
+          "sourceFile": "Command/ReleaseEarningsCommand/ReleaseEarningsCommandHandler.cs"
         }
       ],
       "senders": [
         {
-          "name": "LearningController.ReleaseEarnings",
+          "name": "LearningController",
           "sourceFile": "src/InnerApi/Controllers/LearningController.cs"
         }
       ]
@@ -199,7 +239,7 @@
     {
       "name": "RemoveLearnerCommand",
       "namespace": "SFA.DAS.Funding.ApprenticeshipEarnings.Command.RemoveLearnerCommand",
-      "sourceFile": "src/Command/RemoveLearnerCommand/RemoveLearnerCommand.cs",
+      "sourceFile": "Command/RemoveLearnerCommand/RemoveLearnerCommand.cs",
       "description": null,
       "fields": [
         {
@@ -212,12 +252,12 @@
       "handlers": [
         {
           "name": "RemoveLearnerCommandHandler",
-          "sourceFile": "src/Command/RemoveLearnerCommand/RemoveLearnerCommandHandler.cs"
+          "sourceFile": "Command/RemoveLearnerCommand/RemoveLearnerCommandHandler.cs"
         }
       ],
       "senders": [
         {
-          "name": "LearningController.RemoveLearner",
+          "name": "LearningController",
           "sourceFile": "src/InnerApi/Controllers/LearningController.cs"
         }
       ]
@@ -225,7 +265,7 @@
     {
       "name": "RemoveShortCourseLearningCommand",
       "namespace": "SFA.DAS.Funding.ApprenticeshipEarnings.Command.RemoveShortCourseLearningCommand",
-      "sourceFile": "src/Command/RemoveShortCourseLearningCommand/RemoveShortCourseLearningCommand.cs",
+      "sourceFile": "Command/RemoveShortCourseLearningCommand/RemoveShortCourseLearningCommand.cs",
       "description": null,
       "fields": [
         {
@@ -256,12 +296,12 @@
       "handlers": [
         {
           "name": "RemoveShortCourseLearningCommandHandler",
-          "sourceFile": "src/Command/RemoveShortCourseLearningCommand/RemoveShortCourseLearningCommandHandler.cs"
+          "sourceFile": "Command/RemoveShortCourseLearningCommand/RemoveShortCourseLearningCommandHandler.cs"
         }
       ],
       "senders": [
         {
-          "name": "ShortCoursesController.RemoveShortCourseLearning",
+          "name": "ShortCoursesController",
           "sourceFile": "src/InnerApi/Controllers/ShortCoursesController.cs"
         }
       ]
@@ -269,7 +309,7 @@
     {
       "name": "SendApprenticeshipPayableEarningsToPaymentsCommand",
       "namespace": "SFA.DAS.Funding.ApprenticeshipEarnings.Command.SendApprenticeshipPayableEarningsToPaymentsCommand",
-      "sourceFile": "src/Command/SendApprenticeshipPayableEarningsToPaymentsCommand/SendApprenticeshipPayableEarningsToPaymentsCommand.cs",
+      "sourceFile": "Command/SendApprenticeshipPayableEarningsToPaymentsCommand/SendApprenticeshipPayableEarningsToPaymentsCommand.cs",
       "description": null,
       "fields": [
         {
@@ -296,7 +336,7 @@
         {
           "name": "ShortCoursePayableEarningsUpdatedEvent",
           "type": "ShortCoursePayableEarningsUpdatedEvent",
-          "required": true,
+          "required": null,
           "description": null
         }
       ],
@@ -304,13 +344,14 @@
         {
           "name": "SendShortCoursePayableEarningsToPaymentsCommandHandler",
           "sourceFile": "src/Command/SendShortCoursePayableEarningsToPaymentsCommand/SendShortCoursePayableEarningsToPaymentsCommandHandler.cs"
-        },
+        }
+      ],
+      "senders": [
         {
           "name": "ShortCoursePayableEarningsUpdatedEventHandler",
           "sourceFile": "src/MessageHandlers/Handlers/ShortCoursePayableEarningsUpdatedEventHandler.cs"
         }
-      ],
-      "senders": []
+      ]
     },
     {
       "name": "UpdateEnglishAndMathsCommand",
@@ -321,13 +362,13 @@
         {
           "name": "EnglishAndMathsDetails",
           "type": "List<EnglishAndMathsItem>",
-          "required": true,
+          "required": null,
           "description": null
         },
         {
           "name": "LearningKey",
           "type": "Guid",
-          "required": true,
+          "required": null,
           "description": null
         }
       ],
@@ -339,7 +380,7 @@
       ],
       "senders": [
         {
-          "name": "LearningController.SaveMathsAndEnglish",
+          "name": "LearningController",
           "sourceFile": "src/InnerApi/Controllers/LearningController.cs"
         }
       ]
@@ -353,13 +394,13 @@
         {
           "name": "LearningKey",
           "type": "Guid",
-          "required": true,
+          "required": null,
           "description": null
         },
         {
           "name": "Request",
           "type": "UpdateOnProgrammeRequest",
-          "required": true,
+          "required": null,
           "description": null
         }
       ],
@@ -371,7 +412,7 @@
       ],
       "senders": [
         {
-          "name": "LearningController.UpdateOnProgramme",
+          "name": "LearningController",
           "sourceFile": "src/InnerApi/Controllers/LearningController.cs"
         }
       ]
@@ -385,19 +426,19 @@
         {
           "name": "EpisodeKey",
           "type": "Guid",
-          "required": true,
+          "required": null,
           "description": null
         },
         {
           "name": "LearningKey",
           "type": "Guid",
-          "required": true,
+          "required": null,
           "description": null
         },
         {
           "name": "Request",
           "type": "UpdateShortCourseOnProgrammeRequest",
-          "required": true,
+          "required": null,
           "description": null
         }
       ],
@@ -409,153 +450,33 @@
       ],
       "senders": [
         {
-          "name": "ShortCoursesController.UpdateOnProgramme",
+          "name": "ShortCoursesController",
           "sourceFile": "src/InnerApi/Controllers/ShortCoursesController.cs"
-        }
-      ]
-    },
-    {
-      "name": "CalculateGrowthAndSkillsPayments",
-      "namespace": "SFA.DAS.Payments.EarningEvents.Messages.External.Commands",
-      "sourceFile": "src/Command/ShortCourseCalculateGrowthAndSkillsPaymentsEventBuilder.cs",
-      "description": null,
-      "fields": [
-        {
-          "name": "EarningsId",
-          "type": "object",
-          "required": true,
-          "description": null
-        },
-        {
-          "name": "UKPRN",
-          "type": "object",
-          "required": true,
-          "description": null
-        },
-        {
-          "name": "Learner",
-          "type": "object",
-          "required": true,
-          "description": null
-        },
-        {
-          "name": "Training",
-          "type": "object",
-          "required": true,
-          "description": null
-        },
-        {
-          "name": "EmployerContribution",
-          "type": "object",
-          "required": true,
-          "description": null
-        },
-        {
-          "name": "Earnings",
-          "type": "object",
-          "required": true,
-          "description": null
-        }
-      ],
-      "handlers": [],
-      "senders": [
-        {
-          "name": "ShortCourseCalculateGrowthAndSkillsPaymentsEventBuilder",
-          "sourceFile": "src/Command/ShortCourseCalculateGrowthAndSkillsPaymentsEventBuilder.cs"
         }
       ]
     }
   ],
   "events": [
     {
-      "name": "ApprenticeshipEarningsRecalculatedEvent",
-      "namespace": "SFA.DAS.Funding.ApprenticeshipEarnings.Types",
-      "sourceFile": "src/Types/ApprenticeshipEarningsRecalculatedEvent.cs",
+      "name": "ShortCourseEarningsProfileUpdatedEvent",
+      "namespace": "SFA.DAS.Funding.ApprenticeshipEarnings.Command.ArchiveShortCourseEarningsProfileCommand",
+      "sourceFile": "src/MessageHandlers/Handlers/ArchiveShortCourseEarningsProfileHandler.cs",
       "description": null,
-      "fields": [
+      "fields": [],
+      "handlers": [
         {
-          "name": "ApprenticeshipKey",
-          "type": "Guid",
-          "required": null,
-          "description": null
-        },
-        {
-          "name": "DeliveryPeriods",
-          "type": "List<DeliveryPeriod>",
-          "required": null,
-          "description": null
-        },
-        {
-          "name": "EarningsProfileId",
-          "type": "Guid",
-          "required": null,
-          "description": null
-        },
-        {
-          "name": "StartDate",
-          "type": "DateTime",
-          "required": null,
-          "description": null
-        },
-        {
-          "name": "PlannedEndDate",
-          "type": "DateTime",
-          "required": null,
-          "description": null
-        },
-        {
-          "name": "AgeAtStartOfApprenticeship",
-          "type": "int",
-          "required": null,
-          "description": null
+          "name": "ArchiveShortCourseEarningsProfileHandler",
+          "sourceFile": "src/MessageHandlers/Handlers/ArchiveShortCourseEarningsProfileHandler.cs"
         }
       ],
-      "handlers": [],
       "senders": []
     },
     {
       "name": "ApprenticeshipPayableEarningsUpdatedEvent",
       "namespace": "SFA.DAS.Funding.ApprenticeshipEarnings.Types",
-      "sourceFile": "src/Types/ApprenticeshipPayableEarningsUpdatedEvent.cs",
+      "sourceFile": "src/MessageHandlers/Handlers/ApprenticeshipPayableEarningsUpdatedEventHandler.cs",
       "description": null,
-      "fields": [
-        {
-          "name": "EmployerAccountId",
-          "type": "long",
-          "required": null,
-          "description": null
-        },
-        {
-          "name": "EpisodeKey",
-          "type": "Guid",
-          "required": null,
-          "description": null
-        },
-        {
-          "name": "FundingAccountId",
-          "type": "long",
-          "required": null,
-          "description": null
-        },
-        {
-          "name": "LearnerKey",
-          "type": "Guid",
-          "required": null,
-          "description": null
-        },
-        {
-          "name": "LearnerRef",
-          "type": "string",
-          "required": null,
-          "description": null
-        },
-        {
-          "name": "LearningKey",
-          "type": "Guid",
-          "required": null,
-          "description": null
-        }
-      ],
+      "fields": [],
       "handlers": [
         {
           "name": "ApprenticeshipPayableEarningsUpdatedEventHandler",
@@ -565,11 +486,105 @@
       "senders": []
     },
     {
+      "name": "EarningsProfileForEnglishAndMathsUpdatedEvent",
+      "namespace": "SFA.DAS.Funding.ApprenticeshipEarnings.Types",
+      "sourceFile": "src/Types/EarningsProfileUpdatedEvent.cs",
+      "description": null,
+      "fields": [
+        {
+          "name": "EarningsProfileId",
+          "type": "Guid",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "EnglishAndMathsKey",
+          "type": "Guid",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "Version",
+          "type": "Guid",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "EnglishAndMaths",
+          "type": "EnglishAndMaths",
+          "required": true,
+          "description": null
+        }
+      ],
+      "handlers": [
+        {
+          "name": "ArchiveEnglishAndMathsEarningsProfileEventHandler",
+          "sourceFile": "src/MessageHandlers/Handlers/ArchiveEnglishAndMathsEarningsProfileEventHandler.cs"
+        }
+      ],
+      "senders": []
+    },
+    {
       "name": "EarningsProfileUpdatedEvent",
       "namespace": "SFA.DAS.Funding.ApprenticeshipEarnings.Types",
-      "sourceFile": "src/MessageHandlers/Handlers/ArchiveEarningsProfileEventHandler.cs",
+      "sourceFile": "src/Types/EarningsProfileUpdatedEvent.cs",
       "description": null,
-      "fields": [],
+      "fields": [
+        {
+          "name": "EarningsProfileId",
+          "type": "Guid",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "EpisodeKey",
+          "type": "Guid",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "Version",
+          "type": "Guid",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "OnProgramTotal",
+          "type": "decimal",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "CompletionPayment",
+          "type": "decimal",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "Instalments",
+          "type": "List<Instalment>",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "AdditionalPayments",
+          "type": "List<AdditionalPayment>",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "EnglishAndMaths",
+          "type": "List<EnglishAndMaths>",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "InitialGeneration",
+          "type": "bool",
+          "required": true,
+          "description": null
+        }
+      ],
       "handlers": [
         {
           "name": "ArchiveEarningsProfileEventHandler",
@@ -579,61 +594,22 @@
       "senders": []
     },
     {
-      "name": "ShortCourseEarningsProfileUpdatedEvent",
+      "name": "GrowthAndSkillsPaymentsRecalculatedEvent",
       "namespace": "SFA.DAS.Funding.ApprenticeshipEarnings.Types",
-      "sourceFile": "src/Types/EarningsProfileUpdatedEvent.cs",
+      "sourceFile": "src/Command/SendApprenticeshipPayableEarningsToPaymentsCommand/SendApprenticeshipPayableEarningsToPaymentsCommandHandler.cs",
       "description": null,
-      "fields": [
+      "fields": [],
+      "handlers": [],
+      "senders": [
         {
-          "name": "EarningsProfileId",
-          "type": "Guid",
-          "required": null,
-          "description": null
+          "name": "SendApprenticeshipPayableEarningsToPaymentsCommandHandler",
+          "sourceFile": "src/Command/SendApprenticeshipPayableEarningsToPaymentsCommand/SendApprenticeshipPayableEarningsToPaymentsCommandHandler.cs"
         },
         {
-          "name": "EpisodeKey",
-          "type": "Guid",
-          "required": null,
-          "description": null
-        },
-        {
-          "name": "Version",
-          "type": "Guid",
-          "required": null,
-          "description": null
-        },
-        {
-          "name": "OnProgramTotal",
-          "type": "decimal",
-          "required": null,
-          "description": null
-        },
-        {
-          "name": "CompletionPayment",
-          "type": "decimal",
-          "required": null,
-          "description": null
-        },
-        {
-          "name": "Instalments",
-          "type": "List<Instalment>",
-          "required": null,
-          "description": null
-        },
-        {
-          "name": "InitialGeneration",
-          "type": "bool",
-          "required": null,
-          "description": null
+          "name": "SendShortCoursePayableEarningsToPaymentsCommandHandler",
+          "sourceFile": "src/Command/SendShortCoursePayableEarningsToPaymentsCommand/SendShortCoursePayableEarningsToPaymentsCommandHandler.cs"
         }
-      ],
-      "handlers": [
-        {
-          "name": "ArchiveShortCourseEarningsProfileHandler",
-          "sourceFile": "src/MessageHandlers/Handlers/ArchiveShortCourseEarningsProfileHandler.cs"
-        }
-      ],
-      "senders": []
+      ]
     },
     {
       "name": "ShortCoursePayableEarningsUpdatedEvent",
@@ -644,37 +620,37 @@
         {
           "name": "LearningKey",
           "type": "Guid",
-          "required": null,
+          "required": true,
           "description": null
         },
         {
           "name": "EpisodeKey",
           "type": "Guid",
-          "required": null,
+          "required": true,
           "description": null
         },
         {
           "name": "EmployerAccountId",
           "type": "long",
-          "required": null,
+          "required": true,
           "description": null
         },
         {
           "name": "FundingAccountId",
           "type": "long",
-          "required": null,
+          "required": true,
           "description": null
         },
         {
           "name": "LearnerKey",
           "type": "Guid",
-          "required": null,
+          "required": true,
           "description": null
         },
         {
           "name": "LearnerRef",
           "type": "string",
-          "required": null,
+          "required": true,
           "description": null
         }
       ],
