@@ -1,26 +1,26 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Reservations API",
-    "version": "1.0.0",
-    "description": "API for managing reservations in the DAS system."
+    "title": "Select Reservations API",
+    "version": "1.0.0"
   },
   "paths": {
     "/{ukPrn}/reservations/{accountLegalEntityPublicHashedId}/select": {
       "get": {
-        "tags": [
-          "Reservations"
+        "summary": "Select a reservation (provider route)",
+        "operationId": "GetProviderReservationSelection",
+        "security": [
+          {
+            "OAuth2": []
+          }
         ],
-        "summary": "Get reservation selection page.",
-        "operationId": "getSelectReservation",
         "parameters": [
           {
             "name": "ukPrn",
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int32"
+              "type": "integer"
             }
           },
           {
@@ -30,62 +30,32 @@
             "schema": {
               "type": "string"
             }
-          },
-          {
-            "name": "cohortReference",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "providerId",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "journeyData",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Reservation selection page rendered.",
-            "content": {
-              "text/html": {}
-            }
-          },
-          "403": {
-            "description": "Access forbidden."
-          },
-          "404": {
-            "description": "Resource not found."
+            "description": "Successful response returning the reservation selection view."
           },
           "500": {
-            "description": "Internal server error."
+            "description": "Server error."
           }
         }
       },
       "post": {
-        "tags": [
-          "Reservations"
+        "summary": "Submit reservation selection (provider route)",
+        "operationId": "PostProviderReservationSelection",
+        "security": [
+          {
+            "OAuth2": []
+          }
         ],
-        "summary": "Submit reservation selection.",
-        "operationId": "postSelectReservation",
         "parameters": [
           {
             "name": "ukPrn",
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int32"
+              "type": "integer"
             }
           },
           {
@@ -98,47 +68,37 @@
           }
         ],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/SelectReservationViewModel"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
-          "302": {
-            "description": "Redirect to next step.",
-            "headers": {
-              "Location": {
-                "description": "The URL of the next resource.",
-                "schema": {
-                  "type": "string",
-                  "format": "uri"
-                }
-              }
-            }
+          "200": {
+            "description": "Successfully submitted reservation."
           },
-          "403": {
-            "description": "Access forbidden."
-          },
-          "404": {
-            "description": "Resource not found."
+          "400": {
+            "description": "Validation error."
           },
           "500": {
-            "description": "Internal server error."
+            "description": "Server error."
           }
         }
       }
     },
     "/accounts/{employerAccountId}/reservations/{accountLegalEntityPublicHashedId}/select": {
       "get": {
-        "tags": [
-          "Reservations"
+        "summary": "Select a reservation (employer route)",
+        "operationId": "GetEmployerReservationSelection",
+        "security": [
+          {
+            "OAuth2": []
+          }
         ],
-        "summary": "Get reservation selection for employer.",
-        "operationId": "getEmployerSelectReservation",
         "parameters": [
           {
             "name": "employerAccountId",
@@ -155,54 +115,25 @@
             "schema": {
               "type": "string"
             }
-          },
-          {
-            "name": "cohortReference",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "providerId",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "journeyData",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Reservation selection page for employer rendered.",
-            "content": {
-              "text/html": {}
-            }
-          },
-          "403": {
-            "description": "Access forbidden."
-          },
-          "404": {
-            "description": "Resource not found."
+            "description": "Successful response returning the reservation selection view."
           },
           "500": {
-            "description": "Internal server error."
+            "description": "Server error."
           }
         }
       },
       "post": {
-        "tags": [
-          "Reservations"
+        "summary": "Submit reservation selection (employer route)",
+        "operationId": "PostEmployerReservationSelection",
+        "security": [
+          {
+            "OAuth2": []
+          }
         ],
-        "summary": "Submit reservation selection for employer.",
-        "operationId": "postEmployerSelectReservation",
         "parameters": [
           {
             "name": "employerAccountId",
@@ -222,36 +153,24 @@
           }
         ],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/SelectReservationViewModel"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
-          "302": {
-            "description": "Redirect to next step.",
-            "headers": {
-              "Location": {
-                "description": "The URL of the next resource.",
-                "schema": {
-                  "type": "string",
-                  "format": "uri"
-                }
-              }
-            }
+          "200": {
+            "description": "Successfully submitted reservation."
           },
-          "403": {
-            "description": "Access forbidden."
-          },
-          "404": {
-            "description": "Resource not found."
+          "400": {
+            "description": "Validation error."
           },
           "500": {
-            "description": "Internal server error."
+            "description": "Server error."
           }
         }
       }
@@ -276,8 +195,7 @@
           },
           "SelectedReservationId": {
             "type": "string",
-            "format": "uuid",
-            "nullable": true
+            "format": "uuid"
           },
           "AvailableReservations": {
             "type": "array",
@@ -290,25 +208,20 @@
             "format": "int64"
           },
           "BackLink": {
-            "type": "string",
-            "format": "uri"
+            "type": "string"
           },
           "ProviderId": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
+            "type": "integer"
           },
           "MoreReservationsAvailable": {
             "type": "boolean"
           },
           "ApprenticeshipSessionKey": {
             "type": "string",
-            "format": "uuid",
-            "nullable": true
+            "format": "uuid"
           },
           "BeforeProviderSelected": {
-            "type": "boolean",
-            "nullable": true
+            "type": "boolean"
           }
         }
       },
