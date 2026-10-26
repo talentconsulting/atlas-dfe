@@ -3,6 +3,13 @@
 The generated service catalogue for the repositories listed in `manifest.json`,
 and the viewer that browses it.
 
+This is DfE's **data repository**: in Atlas, each customer (tenant) has its own,
+and the manifest URL a run starts with decides which tenant it is for. Other
+customers' catalogues live in their own data repositories, not here, and model
+usage for runs against this manifest is billed to DfE. Adding a customer is
+described in
+[Adding a tenant](https://github.com/talentconsulting/talentsuite-atlas-backend/blob/main/DEPLOYMENT.md#adding-a-tenant).
+
 Nothing in the per-repository folders is written by hand. The agents and
 scheduled jobs in
 [`talentsuite-atlas-backend`](https://github.com/talentconsulting/talentsuite-atlas-backend)
