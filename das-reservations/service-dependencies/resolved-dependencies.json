@@ -11,11 +11,11 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.Reservations.Web/Program.cs",
-          "reason": "Program entry point suggests web application."
+          "reason": "ASP.NET Core entry point detected through WebHost.CreateDefaultBuilder"
         },
         {
           "sourceFile": "src/SFA.DAS.Reservations.Web/SFA.DAS.Reservations.Web.csproj",
-          "reason": "Uses Microsoft.NET.Sdk.Web, indicating a web application."
+          "reason": "Project SDK 'Microsoft.NET.Sdk.Web' indicates an ASP.NET Core application."
         }
       ]
     }
@@ -25,7 +25,7 @@
       "sourceId": "reservations-web",
       "name": "Redis Cache",
       "kind": "cache",
-      "classification": "unknown",
+      "classification": "internal",
       "direction": "outbound",
       "client": null,
       "technology": "StackExchange.Redis",
@@ -40,12 +40,12 @@
       "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.Reservations.Web/Startup.cs",
-          "reason": "AddStackExchangeRedisCache registration with configuration."
+          "sourceFile": "src/SFA.DAS.Reservations.Web/SFA.DAS.Reservations.Web.csproj",
+          "reason": "StackExchange.Redis package referenced in project file."
         },
         {
-          "sourceFile": "src/SFA.DAS.Reservations.Web/SFA.DAS.Reservations.Web.csproj",
-          "reason": "Dependency on StackExchange.Redis."
+          "sourceFile": "src/SFA.DAS.Reservations.Web/Startup.cs",
+          "reason": "StackExchangeRedisCache registered in dependency injection with a configuration key."
         }
       ],
       "confidence": "high",
@@ -58,17 +58,13 @@
       "kind": "http-api",
       "classification": "internal",
       "direction": "outbound",
-      "client": "IApiClient",
-      "technology": null,
+      "client": "ApiClient",
+      "technology": "HttpClient",
       "configurationKeys": [
-        "ReservationsApiConfiguration:Id",
-        "ReservationsApiConfiguration:Identifier",
-        "ReservationsApiConfiguration:Secret",
-        "ReservationsApiConfiguration:Tenant",
         "ReservationsApiConfiguration:Url"
       ],
       "authentication": {
-        "type": "azure-ad",
+        "type": "Azure AD",
         "configurationKeys": [
           "ReservationsApiConfiguration:Id",
           "ReservationsApiConfiguration:Identifier",
@@ -78,38 +74,32 @@
       },
       "operations": [
         {
+          "method": "DELETE",
+          "methodName": "Delete",
+          "path": null,
+          "sourceFile": "src/SFA.DAS.Reservations.Infrastructure/Api/ApiClientBase.cs"
+        },
+        {
+          "method": "GET",
+          "methodName": "Get",
+          "path": null,
+          "sourceFile": "src/SFA.DAS.Reservations.Infrastructure/Api/ApiClientBase.cs"
+        },
+        {
+          "method": "GET",
+          "methodName": "GetAll",
+          "path": null,
+          "sourceFile": "src/SFA.DAS.Reservations.Infrastructure/Api/ApiClientBase.cs"
+        },
+        {
           "method": "GET",
           "methodName": "Ping",
           "path": "ping",
           "sourceFile": "src/SFA.DAS.Reservations.Infrastructure/Api/ApiClient.cs"
         },
         {
-          "method": null,
+          "method": "POST",
           "methodName": "Create",
-          "path": null,
-          "sourceFile": "src/SFA.DAS.Reservations.Infrastructure/Api/ApiClientBase.cs"
-        },
-        {
-          "method": null,
-          "methodName": "Delete",
-          "path": null,
-          "sourceFile": "src/SFA.DAS.Reservations.Infrastructure/Api/ApiClientBase.cs"
-        },
-        {
-          "method": null,
-          "methodName": "Get",
-          "path": null,
-          "sourceFile": "src/SFA.DAS.Reservations.Infrastructure/Api/ApiClientBase.cs"
-        },
-        {
-          "method": null,
-          "methodName": "GetAll",
-          "path": null,
-          "sourceFile": "src/SFA.DAS.Reservations.Infrastructure/Api/ApiClientBase.cs"
-        },
-        {
-          "method": null,
-          "methodName": "Search",
           "path": null,
           "sourceFile": "src/SFA.DAS.Reservations.Infrastructure/Api/ApiClientBase.cs"
         }
@@ -117,43 +107,18 @@
       "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.Reservations.Web/AppStart/ServiceRegistrationExtension.cs",
-          "reason": "ApiClient registered in service container."
+          "sourceFile": "src/SFA.DAS.Reservations.Infrastructure/Api/ApiClient.cs",
+          "reason": "IApiClient implemented with HttpClient usage and supports access token flow."
         },
         {
-          "sourceFile": "src/SFA.DAS.Reservations.Infrastructure/Api/ApiClient.cs",
-          "reason": "Http client-based API client with configuration for authentication."
+          "sourceFile": "src/SFA.DAS.Reservations.Web/AppStart/ServiceRegistrationExtension.cs",
+          "reason": "IApiClient registered in dependency injection."
         }
       ],
       "confidence": "high",
       "targetId": "http-api-reservations-api",
       "description": "Calls the API of",
       "targetRepo": "das-reservations-api"
-    },
-    {
-      "sourceId": "reservations-web",
-      "name": "Reservations API Health Check",
-      "kind": "http-api",
-      "classification": "internal",
-      "direction": "outbound",
-      "client": null,
-      "technology": null,
-      "configurationKeys": [],
-      "authentication": {
-        "type": null,
-        "configurationKeys": []
-      },
-      "operations": [],
-      "resources": [],
-      "evidence": [
-        {
-          "sourceFile": "src/SFA.DAS.Reservations.Web/Startup.cs",
-          "reason": "Registered health check for 'Reservation Api' in application's health checks."
-        }
-      ],
-      "confidence": "high",
-      "targetId": "http-api-reservations-api-health-check",
-      "description": "Calls the API of"
     },
     {
       "sourceId": "reservations-web",
@@ -649,7 +614,7 @@
   ],
   "resolution": {
     "overlay": "dfe-overlay/apim-routing.json",
-    "apimCommit": "6f5e20af1ca1ec8500972c47d61b2d6691ca4865",
+    "apimCommit": "d1328df5f09731a9cd793013ccb9e50b43b366dc",
     "precision": "area"
   }
 }
