@@ -1,4 +1,4 @@
-# talentsuite-atlas
+# atlas-dfe
 
 The generated service catalogue for the repositories listed in `manifest.json`,
 and the viewer that browses it.
@@ -88,7 +88,7 @@ Run the API tests with `npm test`.
 | `CATALOGUE_REPOSITORY_URL` | Read from the data folder's git remote | GitHub URL of this repository, used to link findings to the generated files on GitHub |
 
 When deployed without a `.git` folder, set `CATALOGUE_REPOSITORY_URL` (for
-example `https://github.com/talentconsulting/talentsuite-atlas`), or the GitHub
+example `https://github.com/talentconsulting/atlas-dfe`), or the GitHub
 links show as plain text. On Render, the server falls back to Render's
 `RENDER_GIT_REPO_SLUG`.
 
