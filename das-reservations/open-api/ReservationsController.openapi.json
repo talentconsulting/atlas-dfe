@@ -2,11 +2,13 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Reservations API",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "description": "API documentation for managing reservations in the DAS system."
   },
   "paths": {
     "/accounts/{employerAccountId}/reservations/{id}/select-course-rule-check": {
       "get": {
+        "operationId": "selectCourseRuleCheckEmployer",
         "tags": [
           "Reservations"
         ],
@@ -24,19 +26,21 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "format": "uuid"
             }
           }
         ],
         "responses": {
           "302": {
-            "description": "Redirect to appropriate route based on rule checks."
+            "description": "Redirect to a different route based on rule check."
           }
         }
       }
     },
     "/{ukPrn}/reservations/{id}/select-course-rule-check": {
       "get": {
+        "operationId": "selectCourseRuleCheckProvider",
         "tags": [
           "Reservations"
         ],
@@ -46,7 +50,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "format": "int64"
             }
           },
           {
@@ -54,19 +59,54 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "format": "uuid"
             }
           }
         ],
         "responses": {
           "302": {
-            "description": "Redirect to appropriate route based on rule checks."
+            "description": "Redirect to a different route based on rule check."
+          }
+        }
+      }
+    },
+    "/accounts/{employerAccountId}/reservations/saveRuleNotificationChoice": {
+      "post": {
+        "operationId": "saveRuleNotificationChoiceEmployerNoReservation",
+        "tags": [
+          "Reservations"
+        ],
+        "parameters": [
+          {
+            "name": "employerAccountId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FundingRestrictionNotificationViewModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "302": {
+            "description": "Redirect to a different route after saving rule notification choice."
           }
         }
       }
     },
     "/accounts/{employerAccountId}/reservations/{id}/saveRuleNotificationChoice": {
       "post": {
+        "operationId": "saveRuleNotificationChoiceEmployer",
         "tags": [
           "Reservations"
         ],
@@ -84,7 +124,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "format": "uuid"
             }
           }
         ],
@@ -100,13 +141,14 @@
         },
         "responses": {
           "302": {
-            "description": "Redirect to the specified route after processing."
+            "description": "Redirect to a different route after saving rule notification choice."
           }
         }
       }
     },
-    "/{ukPrn}/reservations/{id}/saveRuleNotificationChoice": {
-      "post": {
+    "/{ukPrn}/reservations/{id}/apprenticeship-training/{fromReview}": {
+      "get": {
+        "operationId": "apprenticeshipTrainingProvider",
         "tags": [
           "Reservations"
         ],
@@ -116,7 +158,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "format": "int64"
             }
           },
           {
@@ -124,7 +167,81 @@
             "in": "path",
             "required": true,
             "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "fromReview",
+            "in": "path",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Apprenticeship training information retrieved successfully."
+          }
+        }
+      }
+    },
+    "/accounts/{employerAccountId}/reservations/{id}/apprenticeship-training": {
+      "get": {
+        "operationId": "apprenticeshipTrainingEmployer",
+        "tags": [
+          "Reservations"
+        ],
+        "parameters": [
+          {
+            "name": "employerAccountId",
+            "in": "path",
+            "required": true,
+            "schema": {
               "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Apprenticeship training information retrieved successfully."
+          }
+        }
+      }
+    },
+    "/{ukPrn}/reservations/{id}/apprenticeship-training": {
+      "post": {
+        "operationId": "postApprenticeshipTrainingProvider",
+        "tags": [
+          "Reservations"
+        ],
+        "parameters": [
+          {
+            "name": "ukPrn",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
             }
           }
         ],
@@ -133,20 +250,21 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/FundingRestrictionNotificationViewModel"
+                "$ref": "#/components/schemas/ApprenticeshipTrainingFormModel"
               }
             }
           }
         },
         "responses": {
           "302": {
-            "description": "Redirect to the specified route after processing."
+            "description": "Redirect to a different route after posting apprenticeship training details."
           }
         }
       }
     },
     "/accounts/{employerAccountId}/reservations/{id}/review": {
       "get": {
+        "operationId": "reviewEmployer",
         "tags": [
           "Reservations"
         ],
@@ -164,19 +282,21 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "format": "uuid"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Return reservation review view model."
+            "description": "Review details retrieved successfully."
           }
         }
       }
     },
     "/{ukPrn}/reservations/{id}/review": {
-      "get": {
+      "post": {
+        "operationId": "postReviewProvider",
         "tags": [
           "Reservations"
         ],
@@ -186,7 +306,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "format": "int64"
             }
           },
           {
@@ -194,89 +315,24 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "format": "uuid"
             }
           }
         ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PostReviewViewModel"
+              }
+            }
+          }
+        },
         "responses": {
-          "200": {
-            "description": "Return reservation review view model."
-          }
-        }
-      }
-    },
-    "/accounts/{employerAccountId}/reservations/{id}/completed/{accountLegalEntityPublicHashedId}": {
-      "get": {
-        "tags": [
-          "Reservations"
-        ],
-        "parameters": [
-          {
-            "name": "employerAccountId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "accountLegalEntityPublicHashedId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Return reservation completed view model."
-          }
-        }
-      }
-    },
-    "/{ukPrn}/reservations/{id}/completed/{accountLegalEntityPublicHashedId}": {
-      "get": {
-        "tags": [
-          "Reservations"
-        ],
-        "parameters": [
-          {
-            "name": "ukPrn",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer"
-            }
-          },
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "accountLegalEntityPublicHashedId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Return reservation completed view model."
+          "302": {
+            "description": "Redirect to a different route after posting review details."
           }
         }
       }
@@ -284,33 +340,89 @@
   },
   "components": {
     "schemas": {
+      "ApprenticeshipTrainingFormModel": {
+        "type": "object",
+        "properties": {
+          "StartDate": {
+            "type": "string",
+            "description": "The start date of the apprenticeship training."
+          },
+          "SelectedCourseId": {
+            "type": "string",
+            "description": "The ID of the selected course."
+          },
+          "AccountLegalEntityPublicHashedId": {
+            "type": "string",
+            "description": "The public hashed ID of the account legal entity."
+          },
+          "CohortRef": {
+            "type": "string",
+            "description": "The reference for the cohort."
+          },
+          "FromReview": {
+            "type": "boolean",
+            "description": "Flag indicating if the form was submitted from the review page."
+          }
+        }
+      },
       "FundingRestrictionNotificationViewModel": {
         "type": "object",
         "properties": {
           "RuleId": {
-            "type": "integer"
+            "type": "integer",
+            "description": "The ID of the rule being notified."
           },
           "TypeOfRule": {
-            "type": "string"
-          },
-          "RestrictionStartDate": {
             "type": "string",
-            "format": "date-time"
-          },
-          "BackLink": {
-            "type": "string"
-          },
-          "RouteName": {
-            "type": "string"
-          },
-          "IsProvider": {
-            "type": "boolean"
-          },
-          "PostRouteName": {
-            "type": "string"
+            "description": "The type of rule being notified."
           },
           "MarkRuleAsRead": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Flag indicating if the rule notification should be marked as read."
+          },
+          "RouteName": {
+            "type": "string",
+            "description": "The name of the route to redirect after the notification has been read."
+          }
+        }
+      },
+      "PostReviewViewModel": {
+        "type": "object",
+        "properties": {
+          "TrainingDate": {
+            "$ref": "#/components/schemas/TrainingDateModel",
+            "description": "The training date selected or reviewed."
+          },
+          "CourseDescription": {
+            "type": "string",
+            "description": "The description of the selected course."
+          },
+          "AccountLegalEntityName": {
+            "type": "string",
+            "description": "The name of the associated account legal entity."
+          },
+          "AccountLegalEntityPublicHashedId": {
+            "type": "string",
+            "description": "The public hashed ID of the associated account legal entity."
+          },
+          "LearningType": {
+            "type": "string",
+            "description": "The type of learning involved."
+          }
+        }
+      },
+      "TrainingDateModel": {
+        "type": "object",
+        "properties": {
+          "StartDate": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Start date of the training."
+          },
+          "EndDate": {
+            "type": "string",
+            "format": "date-time",
+            "description": "End date of the training."
           }
         }
       }

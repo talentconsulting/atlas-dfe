@@ -1,14 +1,13 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Employer Reservations API",
+    "title": "EmployerReservations API",
     "version": "1.0.0"
   },
   "paths": {
     "/accounts/{employerAccountId}/reservations/start": {
       "get": {
-        "summary": "Start the reservation process for an employer.",
-        "operationId": "EmployerStart",
+        "operationId": "StartReservation",
         "parameters": [
           {
             "name": "employerAccountId",
@@ -21,18 +20,17 @@
         ],
         "responses": {
           "200": {
-            "description": "Operation successful."
+            "description": "Successful response"
           },
           "500": {
-            "description": "Internal server error."
+            "description": "Validation error or server error"
           }
         }
       }
     },
     "/accounts/{employerAccountId}/reservations/select-legal-entity/{id}": {
       "get": {
-        "summary": "Select a legal entity for an employer's reservation.",
-        "operationId": "EmployerSelectLegalEntityGet",
+        "operationId": "SelectLegalEntity",
         "parameters": [
           {
             "name": "employerAccountId",
@@ -47,22 +45,22 @@
             "in": "path",
             "required": false,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "format": "uuid"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Operation successful."
+            "description": "Successful response"
           },
           "500": {
-            "description": "Internal server error."
+            "description": "Server error"
           }
         }
       },
       "post": {
-        "summary": "Submit the selected legal entity.",
-        "operationId": "EmployerSelectLegalEntityPost",
+        "operationId": "PostSelectLegalEntity",
         "parameters": [
           {
             "name": "employerAccountId",
@@ -77,7 +75,8 @@
             "in": "path",
             "required": false,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "format": "uuid"
             }
           }
         ],
@@ -93,21 +92,17 @@
         },
         "responses": {
           "200": {
-            "description": "Operation successful."
-          },
-          "400": {
-            "description": "Bad request."
+            "description": "Successful response"
           },
           "500": {
-            "description": "Internal server error."
+            "description": "Validation error or server error"
           }
         }
       }
     },
     "/accounts/{employerAccountId}/reservations/{id}/select-course": {
       "get": {
-        "summary": "Select an apprenticeship course for a reservation.",
-        "operationId": "EmployerSelectCourseGet",
+        "operationId": "SelectCourse",
         "parameters": [
           {
             "name": "employerAccountId",
@@ -129,16 +124,12 @@
         ],
         "responses": {
           "200": {
-            "description": "Operation successful."
-          },
-          "500": {
-            "description": "Internal server error."
+            "description": "Successful response"
           }
         }
       },
       "post": {
-        "summary": "Submit the selected course.",
-        "operationId": "EmployerSelectCoursePost",
+        "operationId": "PostSelectCourse",
         "parameters": [
           {
             "name": "employerAccountId",
@@ -170,21 +161,20 @@
         },
         "responses": {
           "200": {
-            "description": "Operation successful."
+            "description": "Successful response"
           },
           "400": {
-            "description": "Bad request."
+            "description": "Validation error"
           },
           "500": {
-            "description": "Internal server error."
+            "description": "Server error"
           }
         }
       }
     },
     "/accounts/{employerAccountId}/reservations/{id}/course-guidance": {
       "get": {
-        "summary": "Retrieve guidance for selecting a course.",
-        "operationId": "EmployerCourseGuidance",
+        "operationId": "CourseGuidance",
         "parameters": [
           {
             "name": "employerAccountId",
@@ -206,10 +196,50 @@
         ],
         "responses": {
           "200": {
-            "description": "Operation successful."
+            "description": "Successful response"
+          }
+        }
+      }
+    },
+    "/accounts/{employerAccountId}/reservations/owner-sign-agreement": {
+      "get": {
+        "operationId": "OwnerSignAgreement",
+        "parameters": [
+          {
+            "name": "employerAccountId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        }
+      }
+    },
+    "/accounts/{employerAccountId}/reservations/transactor-sign-agreement": {
+      "get": {
+        "operationId": "TransactorSignAgreement",
+        "parameters": [
+          {
+            "name": "employerAccountId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response"
           },
           "500": {
-            "description": "Internal server error."
+            "description": "Server error"
           }
         }
       }
@@ -221,8 +251,7 @@
         "type": "object",
         "properties": {
           "LegalEntity": {
-            "type": "string",
-            "description": "The selected legal entity for the employer."
+            "type": "string"
           }
         },
         "required": [
@@ -233,17 +262,71 @@
         "type": "object",
         "properties": {
           "SelectedCourseId": {
-            "type": "string",
-            "description": "The ID of the selected apprenticeship course."
+            "type": "string"
           },
           "ApprenticeTrainingKnown": {
-            "type": "boolean",
-            "description": "Whether or not the apprentice training program is known."
+            "type": "boolean"
           }
         },
         "required": [
           "ApprenticeTrainingKnown"
         ]
+      },
+      "ReservationsRouteModel": {
+        "type": "object",
+        "properties": {
+          "UkPrn": {
+            "type": "integer",
+            "format": "uint32"
+          },
+          "EmployerAccountId": {
+            "type": "string"
+          },
+          "PublicHashedEmployerAccountId": {
+            "type": "string"
+          },
+          "Id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "AccountLegalEntityPublicHashedId": {
+            "type": "string"
+          },
+          "FromReview": {
+            "type": "boolean"
+          },
+          "IsFromManage": {
+            "type": "boolean"
+          },
+          "IsFromSelect": {
+            "type": "boolean"
+          },
+          "PreviousPage": {
+            "type": "string"
+          },
+          "CohortReference": {
+            "type": "string"
+          },
+          "ProviderId": {
+            "type": "integer",
+            "format": "uint32"
+          },
+          "JourneyData": {
+            "type": "string"
+          },
+          "SearchTerm": {
+            "type": "string"
+          },
+          "SortField": {
+            "type": "string"
+          },
+          "ReverseSort": {
+            "type": "boolean"
+          },
+          "UseLearnerData": {
+            "type": "boolean"
+          }
+        }
       }
     }
   }

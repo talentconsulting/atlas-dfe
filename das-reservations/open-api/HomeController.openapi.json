@@ -1,7 +1,7 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "SFA DAS Reservations API",
+    "title": "SFA DAS Reservations Web API",
     "version": "1.0.0"
   },
   "paths": {
@@ -20,7 +20,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success."
+            "description": "Successfully signed out."
           }
         }
       }
@@ -40,7 +40,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success."
+            "description": "Successfully signed out."
           }
         }
       }
@@ -60,7 +60,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success."
+            "description": "Successfully signed out."
           }
         }
       }
@@ -70,7 +70,10 @@
         "operationId": "ProviderSignedOut",
         "responses": {
           "200": {
-            "description": "Success."
+            "description": "Provider signed out or redirected to dashboard.",
+            "content": {
+              "text/html": {}
+            }
           }
         }
       }
@@ -79,8 +82,8 @@
       "get": {
         "operationId": "SignOutCleanup",
         "responses": {
-          "200": {
-            "description": "Success."
+          "204": {
+            "description": "Cookies were deleted successfully."
           }
         }
       }
@@ -108,7 +111,7 @@
         ],
         "responses": {
           "302": {
-            "description": "Redirect to Employer Index."
+            "description": "Redirected successfully."
           }
         }
       }
@@ -136,7 +139,7 @@
         ],
         "responses": {
           "302": {
-            "description": "Redirect to Employer Index."
+            "description": "Redirected successfully."
           }
         }
       }
@@ -156,7 +159,10 @@
         ],
         "responses": {
           "200": {
-            "description": "Success."
+            "description": "Feature not available view rendered.",
+            "content": {
+              "text/html": {}
+            }
           }
         }
       }
@@ -176,17 +182,20 @@
         ],
         "responses": {
           "200": {
-            "description": "Success."
+            "description": "Feature not available view rendered.",
+            "content": {
+              "text/html": {}
+            }
           }
         }
       }
     },
     "/dashboard": {
       "get": {
-        "operationId": "Dashboard",
+        "operationId": "DashboardRedirect",
         "responses": {
           "301": {
-            "description": "Permanent redirect to DashboardUrl."
+            "description": "Redirected to permanent dashboard URL."
           }
         }
       }
@@ -196,7 +205,7 @@
         "operationId": "SigninStub",
         "responses": {
           "200": {
-            "description": "Success."
+            "description": "Signin stub view rendered."
           }
         }
       },
@@ -204,7 +213,7 @@
         "operationId": "SigninStubPost",
         "responses": {
           "302": {
-            "description": "Redirect to Signed-in Stub."
+            "description": "Redirected successfully to the signed-in stub route."
           }
         }
       }
@@ -214,7 +223,7 @@
         "operationId": "SignedInStub",
         "responses": {
           "200": {
-            "description": "Success."
+            "description": "Signed-in stub view rendered."
           }
         }
       }
@@ -222,21 +231,39 @@
   },
   "components": {
     "schemas": {
+      "AutoSignOutViewModel": {
+        "type": "object",
+        "properties": {
+          "dashboardUrl": {
+            "type": "string"
+          }
+        }
+      },
       "ReservationsRouteModel": {
         "type": "object",
-        "properties": {}
+        "properties": {
+          "employerAccountId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "employerAccountId"
+        ]
       },
       "StubAuthUserDetails": {
         "type": "object",
         "properties": {
-          "Email": {
-            "type": "string",
-            "format": "email"
+          "email": {
+            "type": "string"
           },
-          "Id": {
+          "id": {
             "type": "string"
           }
-        }
+        },
+        "required": [
+          "email",
+          "id"
+        ]
       }
     }
   }
