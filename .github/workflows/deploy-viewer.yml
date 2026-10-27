@@ -1,0 +1,76 @@
+name: Deploy catalogue viewer
+
+# Rebuilds the hosted viewer whenever the catalogue changes, so merged catalogue pull requests appear in it.
+# The image is built in Azure (ACR Tasks), so the runner needs no Docker. Setup is in HOSTING.md.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: {}
+
+permissions:
+  id-token: write
+  contents: read
+
+# A newer catalogue supersedes one still deploying.
+concurrency:
+  group: deploy-viewer
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: viewer
+    env:
+      RESOURCE_GROUP: ${{ vars.VIEWER_RESOURCE_GROUP }}
+      CONTAINER_APP: ${{ vars.VIEWER_CONTAINER_APP }}
+      REGISTRY: ${{ vars.VIEWER_REGISTRY }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check the configuration
+        shell: bash
+        run: |
+          set -euo pipefail
+          for name in RESOURCE_GROUP CONTAINER_APP REGISTRY; do
+            if [ -z "${!name}" ]; then
+              echo "::error::Set the VIEWER_${name} variable in the viewer environment (see HOSTING.md)."
+              exit 1
+            fi
+          done
+
+      - name: Sign in to Azure
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Build the image
+        shell: bash
+        run: |
+          set -euo pipefail
+          tag="${GITHUB_SHA::12}"
+          az acr build --registry "$REGISTRY" --image "atlas-viewer:$tag" --file Dockerfile . --no-logs --output none
+          echo "IMAGE=$REGISTRY.azurecr.io/atlas-viewer:$tag" >> "$GITHUB_ENV"
+
+      # The first deployment runs a placeholder with no registry configured; point the app at the private
+      # registry, pulling with its managed identity. Repeating it is harmless.
+      - name: Connect the app to the registry
+        shell: bash
+        run: |
+          set -euo pipefail
+          identity=$(az containerapp show --resource-group "$RESOURCE_GROUP" --name "$CONTAINER_APP" \
+            --query "keys(identity.userAssignedIdentities)[0]" --output tsv)
+          az containerapp registry set --resource-group "$RESOURCE_GROUP" --name "$CONTAINER_APP" \
+            --server "$REGISTRY.azurecr.io" --identity "$identity" --output none
+
+      - name: Deploy the new image
+        shell: bash
+        run: |
+          set -euo pipefail
+          az containerapp update --resource-group "$RESOURCE_GROUP" --name "$CONTAINER_APP" --image "$IMAGE" --output none
+          url=$(az containerapp show --resource-group "$RESOURCE_GROUP" --name "$CONTAINER_APP" \
+            --query "properties.configuration.ingress.fqdn" --output tsv)
+          echo "### Viewer deployed" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "\`$IMAGE\` is live at https://$url" >> "$GITHUB_STEP_SUMMARY"

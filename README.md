@@ -33,6 +33,7 @@ scan each repository and open pull requests here.
 | `system-summaries.json` | A short summary of what each system does | System-summary flow |
 | `dfe-overlay/` | DfE-specific APIM routing (see below) | Weekly **Resolve APIM routing (DfE overlay)** workflow in this repository |
 | `visualizer/` | The catalogue viewer | — |
+| `Dockerfile`, `infra/`, `.github/workflows/deploy-viewer.yml` | Hosting the viewer on Azure Container Apps behind Entra sign-in; see [HOSTING.md](HOSTING.md) | — |
 
 The flows and jobs are run from `talentsuite-atlas-backend`, and are not
 triggered by changes here. To rescan a repository, clear its
@@ -57,6 +58,9 @@ includes:
 
 It reads the data at runtime, so regenerated files appear after a page refresh
 without rebuilding the image.
+
+To host it on Azure, behind Microsoft Entra sign-in and redeployed on every
+merge to `main`, see [HOSTING.md](HOSTING.md).
 
 Start it with Docker Compose:
 
