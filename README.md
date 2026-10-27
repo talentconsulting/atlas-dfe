@@ -203,6 +203,10 @@ Talent Consulting's proof of concept uses `infra/viewer.poc.bicepparam`, the
 resource group `atlas-viewer-poc-rg` and the OIDC subject
 `repo:talentconsulting@80040422/atlas-dfe@1321708655:environment:viewer`.
 
+These are all the resources it uses:
+
+![Azure resources for the viewer proof of concept. In Entra ID, the deploy app registration's federated credential trusts atlas-dfe's viewer environment, and its service principal has Contributor on the resource group. In the Development subscription, atlas-viewer-poc-rg in UK South holds the Container Apps environment and its Container App, the managed identity the app pulls with (AcrPull on the registry), the Basic container registry and the Log Analytics workspace.](docs/diagrams/viewer-resources.svg)
+
 ## Security reports
 
 These are produced by scheduled GitHub Actions jobs in `talentsuite-atlas-backend`,

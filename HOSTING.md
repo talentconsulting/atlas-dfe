@@ -163,6 +163,10 @@ Talent Consulting's proof of concept uses [`infra/viewer.poc.bicepparam`](infra/
 This organisation includes owner and repository IDs in its OIDC subject, so it differs from the default
 `repo:talentconsulting/atlas-dfe:environment:viewer`.
 
+Every resource the proof of concept uses, and the only role each identity has:
+
+![Azure resources for the viewer proof of concept. In Entra ID, the deploy app registration's federated credential trusts atlas-dfe's viewer environment, and its service principal has Contributor on the resource group. In the Development subscription, atlas-viewer-poc-rg in UK South holds the Container Apps environment and its Container App, the managed identity the app pulls with (AcrPull on the registry), the Basic container registry and the Log Analytics workspace.](docs/diagrams/viewer-resources.svg)
+
 ## How updates reach the viewer
 
 Every push to `main`, including each merged catalogue pull request, runs **Deploy catalogue viewer**. It
