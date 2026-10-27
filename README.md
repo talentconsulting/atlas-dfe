@@ -60,7 +60,7 @@ It reads the data at runtime, so regenerated files appear after a page refresh
 without rebuilding the image.
 
 To host it on Azure, behind its password login and redeployed on every
-merge to `main`, see [HOSTING.md](HOSTING.md).
+merge to `main`, see [Hosting on Azure](#hosting-on-azure).
 
 Start it with Docker Compose:
 
@@ -112,6 +112,81 @@ docker compose up --build
 Docker Compose reads `.env` automatically. If you run `npm start` instead, export
 the same variables in your shell first. Leaving `AUTH_PASSWORD` unset (or
 deleting `.env`) runs the viewer without authentication.
+
+### Hosting on Azure
+
+The viewer can run on Azure Container Apps, behind its password login, and
+redeploy on every push to `main`, so merged catalogue pull requests appear in
+it a few minutes later. [HOSTING.md](HOSTING.md) has the full guide: what gets
+created, the security controls, changing the password or infrastructure, and
+cost. In short:
+
+You need `az` and `gh` signed in (`az account show`, `gh auth status`),
+Owner (or Contributor plus Role Based Access Control Administrator) on the
+subscription, and permission to create an app registration in Entra ID. Run
+the commands in one terminal, from the root of this repository, replacing the
+`<placeholders>`.
+
+1. **Choose names.** Copy `infra/viewer.poc.bicepparam` to
+   `infra/viewer.bicepparam` and set `namePrefix`, a globally unique
+   `registryName` (`az acr check-name -n <name>`), `catalogueRepositoryUrl`
+   and `tags`.
+
+2. **Create the resource group and deploy the infrastructure.** Keep the
+   generated password in your password manager; the username is `admin`.
+
+   ```bash
+   rg=<resource-group>
+   az group create --name "$rg" --location uksouth
+   export VIEWER_AUTH_PASSWORD=$(LC_ALL=C tr -dc 'A-Za-z0-9' </dev/urandom | head -c 32)
+   az deployment group create --resource-group "$rg" \
+     --template-file infra/viewer.bicep --parameters infra/viewer.bicepparam --query properties.outputs
+   ```
+
+3. **Create the deploy identity** that GitHub Actions signs in with, with
+   Contributor on the resource group only. Its subject must match the
+   repository's OIDC subject exactly; check whether the organisation
+   customises it with
+   `gh api repos/<owner>/<repository>/actions/oidc/customization/sub`.
+
+   ```bash
+   deploy_app=$(az ad app create --display-name "Atlas catalogue viewer deploy" --query appId -o tsv)
+   deploy_sp=$(az ad sp create --id "$deploy_app" --query id -o tsv)
+   az ad app federated-credential create --id "$deploy_app" --parameters '{
+     "name": "github-viewer",
+     "issuer": "https://token.actions.githubusercontent.com",
+     "subject": "<sub_claim_prefix, or repo:<owner>/<repository>>:environment:viewer",
+     "audiences": ["api://AzureADTokenExchange"]
+   }'
+   sleep 20   # let the new identity reach Azure RBAC
+   az role assignment create --assignee-object-id "$deploy_sp" --assignee-principal-type ServicePrincipal \
+     --role Contributor --scope "$(az group show --name "$rg" --query id -o tsv)"
+   ```
+
+4. **Create the GitHub `viewer` environment** and its settings. The viewer's
+   password isn't needed here.
+
+   ```bash
+   R=<owner>/<repository>
+   gh api -X PUT repos/$R/environments/viewer
+   gh secret set AZURE_CLIENT_ID       --env viewer -R $R --body "$deploy_app"
+   gh secret set AZURE_TENANT_ID       --env viewer -R $R --body "$(az account show --query tenantId -o tsv)"
+   gh secret set AZURE_SUBSCRIPTION_ID --env viewer -R $R --body "$(az account show --query id -o tsv)"
+   gh variable set VIEWER_RESOURCE_GROUP --env viewer -R $R --body "$rg"
+   gh variable set VIEWER_CONTAINER_APP  --env viewer -R $R --body <namePrefix>
+   gh variable set VIEWER_REGISTRY       --env viewer -R $R --body <registryName>
+   ```
+
+5. **Deploy.** Run **Deploy catalogue viewer** from the Actions tab, or push
+   to `main`. The run summary shows the viewer's address. If it fails at
+   **Sign in to Azure**, check the federated credential's subject, or wait a
+   minute for the role assignment and re-run it.
+
+6. **Check it.** Open the address, sign in, and confirm the catalogue loads.
+
+Talent Consulting's proof of concept uses `infra/viewer.poc.bicepparam`, the
+resource group `atlas-viewer-poc-rg` and the OIDC subject
+`repo:talentconsulting@80040422/atlas-dfe@1321708655:environment:viewer`.
 
 ## Security reports
 
