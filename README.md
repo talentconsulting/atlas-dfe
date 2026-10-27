@@ -125,51 +125,14 @@ Everything lives in one resource group. People reach the viewer over HTTPS and
 sign in with its username and password; the app pulls its image from a private
 registry with a managed identity, so no registry password is stored anywhere:
 
-```mermaid
-flowchart LR
-    user(["Viewer user<br/>browser"])
-
-    subgraph rg["Resource group"]
-        subgraph env["Container Apps environment<br/>&lt;namePrefix&gt;-env"]
-            app["Container App &lt;namePrefix&gt;<br/>viewer + catalogue image<br/>HTTP Basic login, scales to zero"]
-        end
-        secret[/"Secret auth-password<br/>passed as AUTH_PASSWORD"/]
-        identity["Managed identity<br/>&lt;namePrefix&gt;-pull"]
-        acr[("Container registry<br/>&lt;registryName&gt;<br/>private, admin user off")]
-        logs[("Log Analytics<br/>&lt;namePrefix&gt;-logs")]
-    end
-
-    user -- "HTTPS only<br/>username + password" --> app
-    secret -.-> app
-    app -- "pulls image as" --> identity
-    identity -- "AcrPull" --> acr
-    env -- "app logs" --> logs
-```
+![Hosting: people reach the Container App over HTTPS only and sign in with its username and password. Inside one resource group the app runs in a Container Apps environment, reads its password from a Container App secret, pulls its image from a private registry with a managed identity that has AcrPull, and sends logs to Log Analytics. The deploy workflow pushes new images to the registry.](docs/diagrams/viewer-hosting.svg)
 
 Every push to `main`, including each merged catalogue pull request, rebuilds
 the image and rolls it out. GitHub Actions signs in to Azure with OIDC, so no
 Azure credentials are stored in GitHub, and its identity can only change this
 resource group:
 
-```mermaid
-sequenceDiagram
-    autonumber
-    actor dev as Merger
-    participant gh as GitHub Actions<br/>Deploy catalogue viewer<br/>(viewer environment)
-    participant entra as Entra ID<br/>deploy identity
-    participant acr as Container registry<br/>(ACR Tasks)
-    participant app as Container App
-
-    dev->>gh: Merge to main
-    gh->>entra: OIDC token for ...:environment:viewer
-    entra-->>gh: Azure access token<br/>(Contributor on the resource group)
-    gh->>acr: az acr build, tagged with the commit
-    Note over acr: Builds the Dockerfile in Azure,<br/>so the runner needs no Docker
-    gh->>app: az containerapp update --image
-    app->>acr: Pull the new image with its managed identity
-    app-->>gh: New revision live
-    Note over gh: Run summary shows the viewer's address
-```
+![Deploying: every push to main runs Deploy catalogue viewer in the viewer environment. It signs in to Azure with OIDC as the deploy identity, which has Contributor on the resource group only, builds the image in the registry and updates the Container App, which pulls the new image with its managed identity.](docs/diagrams/viewer-deploy.svg)
 
 In short:
 
