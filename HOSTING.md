@@ -1,7 +1,7 @@
 # Hosting the catalogue viewer on Azure
 
-This repository can host its own catalogue viewer on Azure Container Apps, behind Microsoft Entra sign-in,
-and redeploy it whenever the catalogue changes. Everything needed is here:
+This repository can host its own catalogue viewer on Azure Container Apps, behind the viewer's username and
+password login, and redeploy it whenever the catalogue changes. Everything needed is here:
 
 | File | What it does |
 | --- | --- |
@@ -25,8 +25,6 @@ All in one resource group:
 - **Container registry** `<registryName>` (Basic, private). The admin user is off.
 - **Managed identity** `<namePrefix>-pull`, which the app pulls its image with (`AcrPull` on the registry
   only). No registry password is stored anywhere.
-- **Built-in authentication** on the Container App, with an Entra app registration. Every request must be
-  signed in; no catalogue data is served to anyone who isn't.
 
 ## Security
 
@@ -34,28 +32,36 @@ The catalogue gathers open Dependabot alerts, OWASP API security findings, datab
 flagged as holding personal data) and APIM routing for every service in one place, so it's treated as
 sensitive:
 
-- **Sign-in:** Container Apps built-in authentication with Microsoft Entra ID. The app registration has
-  **Assignment required** on, so only the users and groups assigned to it can sign in, and Conditional
-  Access and MFA apply as for any app in the tenant.
-- **Transport:** HTTPS only; plain HTTP isn't accepted.
+- **Login:** the viewer's HTTP Basic authentication. Every request needs the username and password; without
+  them the viewer returns 401 and the browser asks for them. The password is a Container App secret, passed
+  to the viewer as `AUTH_PASSWORD`, and never stored in the repository or the image.
+- **No lockout:** the viewer doesn't slow down or block repeated wrong passwords, so the password must be
+  long and random. The template rejects one shorter than 20 characters; generate 32 or more (see below).
+  Share it through a password manager, and change it when someone leaves.
+- **One shared login:** everyone uses the same username and password, so the viewer can't tell users apart
+  or remove one person's access without changing the password for everyone. If that matters, put Microsoft
+  Entra sign-in in front instead (Container Apps built-in authentication), which needs no code changes.
+- **Transport:** HTTPS only; plain HTTP isn't accepted, so the password is never sent unencrypted.
 - **Image:** the image contains the catalogue, so the registry is private and is pulled only by the app's
   managed identity.
-- **No secrets:** sign-in uses the ID token flow, so there's no client secret to store or rotate, and the
-  deploy workflow signs in to Azure with OIDC.
+- **Deployment:** the deploy workflow signs in to Azure with OIDC, so no Azure credentials are stored in
+  GitHub.
 
 Not included, because a hosting organisation applies its own standards:
 
 | Control | When you'd add it |
 | --- | --- |
-| Ingress IP restrictions | Users always come from known networks. Container Apps ingress supports allow-lists directly. |
-| Azure Front Door with WAF | It's reachable by people outside your tenant, or policy requires a WAF in front of web apps. |
+| Ingress IP restrictions | Users always come from known networks. Container Apps ingress supports allow-lists directly, and it's the simplest way to stop password guessing from anywhere else. |
+| Microsoft Entra sign-in | Each person should sign in as themselves, with MFA and per-person access. |
+| Azure Front Door with WAF | It's reachable by people outside your organisation, or policy requires a WAF and rate limiting in front of web apps. |
 | VNet-integrated environment with internal ingress | Nothing may be reachable from the internet; users come in over VPN or ExpressRoute. Needs private DNS. |
-| Custom domain | Add it to the Container App with a free managed certificate, then add `https://<domain>/.auth/login/aad/callback` as a redirect URI. |
+| Custom domain | Add it to the Container App with a free managed certificate. |
 
 ## One-time setup
 
-You need `az` (signed in), `gh`, Owner (or Contributor plus Role Based Access Control Administrator) on the
-subscription, and permission to create app registrations in Entra ID.
+You need `az` (signed in), `gh`, and Owner (or Contributor plus Role Based Access Control Administrator) on
+the subscription. Step 4 also needs permission to create an app registration in Entra ID, for the deploy
+workflow's identity.
 
 **1. Choose names** and copy `infra/viewer.poc.bicepparam` (for example to `infra/viewer.bicepparam`), setting
 `namePrefix`, a globally unique `registryName` (`az acr check-name -n <name>`), `catalogueRepositoryUrl` and
@@ -67,38 +73,18 @@ subscription, and permission to create app registrations in Entra ID.
 az group create --name <resource-group> --location uksouth
 ```
 
-**3. Create the sign-in app registration**, with ID tokens enabled and assignment required:
+**3. Generate a password and deploy the infrastructure.** The first deployment runs a placeholder image
+until the workflow builds the real one. Store the password in your password manager straight away:
 
 ```bash
-signin_app=$(az ad app create --display-name "Atlas catalogue viewer" --sign-in-audience AzureADMyOrg \
-  --enable-id-token-issuance true --query appId -o tsv)
-signin_sp=$(az ad sp create --id "$signin_app" --query id -o tsv)
-az ad sp update --id "$signin_sp" --set appRoleAssignmentRequired=true
-```
-
-**4. Deploy the infrastructure.** The first deployment runs a placeholder image:
-
-```bash
-VIEWER_ENTRA_CLIENT_ID=$signin_app az deployment group create --resource-group <resource-group> \
+export VIEWER_AUTH_PASSWORD=$(LC_ALL=C tr -dc 'A-Za-z0-9' </dev/urandom | head -c 32)
+az deployment group create --resource-group <resource-group> \
   --template-file infra/viewer.bicep --parameters infra/viewer.bicepparam --query properties.outputs
 ```
 
-**5. Add the redirect URI** from the `entraRedirectUri` output:
+The username is `admin` unless you set `authUsername`.
 
-```bash
-az ad app update --id "$signin_app" --web-redirect-uris "<entraRedirectUri>"
-```
-
-**6. Let people sign in** by assigning a group (or users) to the app: in the Entra admin centre, open
-**Enterprise applications**, select the app, then **Users and groups**, then **Add user/group**. Or:
-
-```bash
-group=$(az ad group show --group "<group name>" --query id -o tsv)
-az rest --method post --url "https://graph.microsoft.com/v1.0/servicePrincipals/$signin_sp/appRoleAssignedTo" \
-  --body "{\"principalId\": \"$group\", \"resourceId\": \"$signin_sp\", \"appRoleId\": \"00000000-0000-0000-0000-000000000000\"}"
-```
-
-**7. Create the deploy identity** that GitHub Actions uses. It needs Contributor on this resource group only.
+**4. Create the deploy identity** that GitHub Actions uses. It needs Contributor on this resource group only.
 Look up the repository's OIDC subject prefix first, because organisations can customise it:
 
 ```bash
@@ -115,7 +101,7 @@ az role assignment create --assignee-object-id "$deploy_sp" --assignee-principal
   --role Contributor --scope "$(az group show --name <resource-group> --query id -o tsv)"
 ```
 
-**8. Configure GitHub:** create an environment called `viewer` in this repository, and set:
+**5. Configure GitHub:** create an environment called `viewer` in this repository, and set:
 
 | Name | Kind | Value |
 | --- | --- | --- |
@@ -132,7 +118,10 @@ gh secret set AZURE_CLIENT_ID --env viewer --body "$deploy_app"
 # ...and the rest of the table, with gh secret set / gh variable set --env viewer
 ```
 
-**9. Deploy:** run **Deploy catalogue viewer** from the Actions tab. It builds the image in the registry,
+The viewer's password isn't needed here: the workflow only replaces the image, and the password stays in
+the Container App.
+
+**6. Deploy:** run **Deploy catalogue viewer** from the Actions tab. It builds the image in the registry,
 points the app at it and rolls out a new revision; the run summary shows the address.
 
 ## How updates reach the viewer
@@ -141,13 +130,29 @@ Every push to `main`, including each merged catalogue pull request, runs **Deplo
 builds a new image tagged with the commit and replaces the running revision, so the viewer shows the merged
 catalogue a few minutes later. A newer push cancels a deployment still in progress.
 
-To change the infrastructure later, redeploy the template with the current image, so it isn't reset to the
-placeholder:
+## Changing the password
+
+Update the secret and restart the app so it picks the new value up:
 
 ```bash
-VIEWER_IMAGE=$(az containerapp show --resource-group <resource-group> --name <namePrefix> \
-  --query "properties.template.containers[0].image" -o tsv) \
-VIEWER_ENTRA_CLIENT_ID=$signin_app az deployment group create --resource-group <resource-group> \
+new_password=$(LC_ALL=C tr -dc 'A-Za-z0-9' </dev/urandom | head -c 32)
+az containerapp secret set --resource-group <resource-group> --name <namePrefix> \
+  --secrets "auth-password=$new_password"
+az containerapp revision restart --resource-group <resource-group> --name <namePrefix> \
+  --revision "$(az containerapp show --resource-group <resource-group> --name <namePrefix> \
+    --query properties.latestRevisionName -o tsv)"
+```
+
+## Changing the infrastructure
+
+Redeploy the template with the current image, so it isn't reset to the placeholder, and the current
+password (or a new one):
+
+```bash
+export VIEWER_IMAGE=$(az containerapp show --resource-group <resource-group> --name <namePrefix> \
+  --query "properties.template.containers[0].image" -o tsv)
+export VIEWER_AUTH_PASSWORD=<the current password>
+az deployment group create --resource-group <resource-group> \
   --template-file infra/viewer.bicep --parameters infra/viewer.bicepparam
 ```
 

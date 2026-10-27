@@ -1,9 +1,8 @@
-// Hosts the catalogue viewer on Azure Container Apps, behind Microsoft Entra sign-in.
+// Hosts the catalogue viewer on Azure Container Apps, behind the viewer's username and password login.
 //
 // Deploys into an existing resource group: a private container registry, a managed identity the app pulls
-// its image with, a Log Analytics workspace, a Container Apps environment and the viewer app. Sign-in is the
-// Container Apps built-in authentication with an Entra app registration; who may sign in is controlled in
-// Entra by assigning users or groups to that app. HOSTING.md describes the one-time setup around this.
+// its image with, a Log Analytics workspace, a Container Apps environment and the viewer app. The password is
+// a Container App secret, passed to the viewer as AUTH_PASSWORD. HOSTING.md describes the one-time setup.
 targetScope = 'resourceGroup'
 
 @description('Region for every resource.')
@@ -18,11 +17,13 @@ param registryName string
 @description('Image to run, as <registry>.azurecr.io/<repository>:<tag>. Leave empty on the first deployment, before an image has been pushed: a placeholder runs until the deploy workflow replaces it.')
 param image string = ''
 
-@description('Application (client) ID of the Entra app registration users sign in through.')
-param entraClientId string
+@description('Username for the viewer\'s login.')
+param authUsername string = 'admin'
 
-@description('Entra tenant users sign in from.')
-param entraTenantId string = tenant().tenantId
+@secure()
+@minLength(20)
+@description('Password for the viewer\'s login. The viewer doesn\'t lock out repeated failures, so use a long random one.')
+param authPassword string
 
 @description('GitHub URL of the catalogue repository, so findings link to the generated files.')
 param catalogueRepositoryUrl string
@@ -108,6 +109,9 @@ resource viewer 'Microsoft.App/containerApps@2024-03-01' = {
         transport: 'auto'
         allowInsecure: false
       }
+      secrets: [
+        { name: 'auth-password', value: authPassword }
+      ]
       registries: empty(image) ? [] : [
         {
           server: registry.properties.loginServer
@@ -123,6 +127,8 @@ resource viewer 'Microsoft.App/containerApps@2024-03-01' = {
           resources: { cpu: json('0.25'), memory: '0.5Gi' }
           env: [
             { name: 'CATALOGUE_REPOSITORY_URL', value: catalogueRepositoryUrl }
+            { name: 'AUTH_USERNAME', value: authUsername }
+            { name: 'AUTH_PASSWORD', secretRef: 'auth-password' }
           ]
         }
       ]
@@ -135,40 +141,8 @@ resource viewer 'Microsoft.App/containerApps@2024-03-01' = {
   dependsOn: [pullRole]
 }
 
-// Every request must be signed in; unauthenticated visitors are sent to Entra. Sign-in needs no client secret:
-// it uses the ID token flow, so the app registration needs "ID tokens" enabled and the redirect URI output below.
-resource auth 'Microsoft.App/containerApps/authConfigs@2024-03-01' = {
-  parent: viewer
-  name: 'current'
-  properties: {
-    platform: { enabled: true }
-    globalValidation: {
-      unauthenticatedClientAction: 'RedirectToLoginPage'
-      redirectToProvider: 'azureactivedirectory'
-    }
-    identityProviders: {
-      azureActiveDirectory: {
-        enabled: true
-        registration: {
-          clientId: entraClientId
-          openIdIssuer: '${az.environment().authentication.loginEndpoint}${entraTenantId}/v2.0'
-        }
-        validation: {
-          allowedAudiences: [entraClientId, 'api://${entraClientId}']
-        }
-      }
-    }
-    login: {
-      preserveUrlFragmentsForLogins: true
-    }
-  }
-}
-
 @description('The viewer\'s address.')
 output url string = 'https://${viewer.properties.configuration.ingress.fqdn}'
-
-@description('Redirect URI to add to the Entra app registration (Web platform).')
-output entraRedirectUri string = 'https://${viewer.properties.configuration.ingress.fqdn}/.auth/login/aad/callback'
 
 output registryLoginServer string = registry.properties.loginServer
 output containerAppName string = viewer.name

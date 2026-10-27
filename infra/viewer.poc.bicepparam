@@ -4,7 +4,7 @@ using 'viewer.bicep'
 param namePrefix = 'atlas-dfe-viewer'
 param registryName = 'atlasdfeviewerpoc'
 param image = readEnvironmentVariable('VIEWER_IMAGE', '')
-param entraClientId = readEnvironmentVariable('VIEWER_ENTRA_CLIENT_ID')
+param authPassword = readEnvironmentVariable('VIEWER_AUTH_PASSWORD')
 param catalogueRepositoryUrl = 'https://github.com/talentconsulting/atlas-dfe'
 param tags = {
   Owner: 'rgparkins'
