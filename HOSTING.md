@@ -89,16 +89,25 @@ Look up the repository's OIDC subject prefix first, because organisations can cu
 
 ```bash
 gh api repos/<owner>/<repository>/actions/oidc/customization/sub   # sub_claim_prefix, if not using the default
+```
+
+Then run steps 4 and 5 in the same terminal, so `$deploy_app` carries over:
+
+```bash
+rg=<resource-group>
 deploy_app=$(az ad app create --display-name "Atlas catalogue viewer deploy" --query appId -o tsv)
 deploy_sp=$(az ad sp create --id "$deploy_app" --query id -o tsv)
+
 az ad app federated-credential create --id "$deploy_app" --parameters '{
   "name": "github-viewer",
   "issuer": "https://token.actions.githubusercontent.com",
   "subject": "<sub_claim_prefix, or repo:<owner>/<repository>>:environment:viewer",
   "audiences": ["api://AzureADTokenExchange"]
 }'
+
+sleep 20   # let the new identity reach Azure RBAC
 az role assignment create --assignee-object-id "$deploy_sp" --assignee-principal-type ServicePrincipal \
-  --role Contributor --scope "$(az group show --name <resource-group> --query id -o tsv)"
+  --role Contributor --scope "$(az group show --name "$rg" --query id -o tsv)"
 ```
 
 **5. Configure GitHub:** create an environment called `viewer` in this repository, and set:
@@ -113,16 +122,46 @@ az role assignment create --assignee-object-id "$deploy_sp" --assignee-principal
 | `VIEWER_REGISTRY` | Variable | `registryName` |
 
 ```bash
-gh api -X PUT repos/<owner>/<repository>/environments/viewer
-gh secret set AZURE_CLIENT_ID --env viewer --body "$deploy_app"
-# ...and the rest of the table, with gh secret set / gh variable set --env viewer
+R=<owner>/<repository>
+gh api -X PUT repos/$R/environments/viewer
+
+gh secret set AZURE_CLIENT_ID       --env viewer -R $R --body "$deploy_app"
+gh secret set AZURE_TENANT_ID       --env viewer -R $R --body "$(az account show --query tenantId -o tsv)"
+gh secret set AZURE_SUBSCRIPTION_ID --env viewer -R $R --body "$(az account show --query id -o tsv)"
+
+gh variable set VIEWER_RESOURCE_GROUP --env viewer -R $R --body "$rg"
+gh variable set VIEWER_CONTAINER_APP  --env viewer -R $R --body <namePrefix>
+gh variable set VIEWER_REGISTRY       --env viewer -R $R --body <registryName>
 ```
 
 The viewer's password isn't needed here: the workflow only replaces the image, and the password stays in
 the Container App.
 
-**6. Deploy:** run **Deploy catalogue viewer** from the Actions tab. It builds the image in the registry,
-points the app at it and rolls out a new revision; the run summary shows the address.
+**6. Deploy:** run **Deploy catalogue viewer** from the Actions tab, or push to `main`. GitHub only offers a
+workflow in the Actions tab once it's on the default branch, so when the workflow arrives in a pull request,
+merging it is the first run. It builds the image in the registry, points the app at it and rolls out a new
+revision; the run summary shows the address.
+
+If the run fails at **Sign in to Azure**, check the federated credential's `subject` matches the
+repository's OIDC subject exactly, or wait a minute for the role assignment to take effect and re-run it.
+
+**7. Check it:** open the address, sign in with the username and password, and confirm the catalogue loads.
+Then merge a catalogue pull request and watch the viewer pick it up a few minutes later.
+
+### The proof of concept's values
+
+Talent Consulting's proof of concept uses [`infra/viewer.poc.bicepparam`](infra/viewer.poc.bicepparam) and:
+
+| Setting | Value |
+| --- | --- |
+| Resource group | `atlas-viewer-poc-rg` (UK South) |
+| `namePrefix` / Container App | `atlas-dfe-viewer` |
+| `registryName` | `atlasdfeviewerpoc` |
+| Deploy identity | `Atlas DfE viewer deploy (proof of concept)` |
+| OIDC subject | `repo:talentconsulting@80040422/atlas-dfe@1321708655:environment:viewer` |
+
+This organisation includes owner and repository IDs in its OIDC subject, so it differs from the default
+`repo:talentconsulting/atlas-dfe:environment:viewer`.
 
 ## How updates reach the viewer
 
