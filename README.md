@@ -119,7 +119,59 @@ The viewer can run on Azure Container Apps, behind its password login, and
 redeploy on every push to `main`, so merged catalogue pull requests appear in
 it a few minutes later. [HOSTING.md](HOSTING.md) has the full guide: what gets
 created, the security controls, changing the password or infrastructure, and
-cost. In short:
+cost.
+
+Everything lives in one resource group. People reach the viewer over HTTPS and
+sign in with its username and password; the app pulls its image from a private
+registry with a managed identity, so no registry password is stored anywhere:
+
+```mermaid
+flowchart LR
+    user(["Viewer user<br/>browser"])
+
+    subgraph rg["Resource group"]
+        subgraph env["Container Apps environment<br/>&lt;namePrefix&gt;-env"]
+            app["Container App &lt;namePrefix&gt;<br/>viewer + catalogue image<br/>HTTP Basic login, scales to zero"]
+        end
+        secret[/"Secret auth-password<br/>passed as AUTH_PASSWORD"/]
+        identity["Managed identity<br/>&lt;namePrefix&gt;-pull"]
+        acr[("Container registry<br/>&lt;registryName&gt;<br/>private, admin user off")]
+        logs[("Log Analytics<br/>&lt;namePrefix&gt;-logs")]
+    end
+
+    user -- "HTTPS only<br/>username + password" --> app
+    secret -.-> app
+    app -- "pulls image as" --> identity
+    identity -- "AcrPull" --> acr
+    env -- "app logs" --> logs
+```
+
+Every push to `main`, including each merged catalogue pull request, rebuilds
+the image and rolls it out. GitHub Actions signs in to Azure with OIDC, so no
+Azure credentials are stored in GitHub, and its identity can only change this
+resource group:
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor dev as Merger
+    participant gh as GitHub Actions<br/>Deploy catalogue viewer<br/>(viewer environment)
+    participant entra as Entra ID<br/>deploy identity
+    participant acr as Container registry<br/>(ACR Tasks)
+    participant app as Container App
+
+    dev->>gh: Merge to main
+    gh->>entra: OIDC token for ...:environment:viewer
+    entra-->>gh: Azure access token<br/>(Contributor on the resource group)
+    gh->>acr: az acr build, tagged with the commit
+    Note over acr: Builds the Dockerfile in Azure,<br/>so the runner needs no Docker
+    gh->>app: az containerapp update --image
+    app->>acr: Pull the new image with its managed identity
+    app-->>gh: New revision live
+    Note over gh: Run summary shows the viewer's address
+```
+
+In short:
 
 You need `az` and `gh` signed in (`az account show`, `gh auth status`),
 Owner (or Contributor plus Role Based Access Control Administrator) on the
