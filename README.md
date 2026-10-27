@@ -119,7 +119,22 @@ The viewer can run on Azure Container Apps, behind its password login, and
 redeploy on every push to `main`, so merged catalogue pull requests appear in
 it a few minutes later. [HOSTING.md](HOSTING.md) has the full guide: what gets
 created, the security controls, changing the password or infrastructure, and
-cost. In short:
+cost.
+
+Everything lives in one resource group. People reach the viewer over HTTPS and
+sign in with its username and password; the app pulls its image from a private
+registry with a managed identity, so no registry password is stored anywhere:
+
+![Hosting: people reach the Container App over HTTPS only and sign in with its username and password. Inside one resource group the app runs in a Container Apps environment, reads its password from a Container App secret, pulls its image from a private registry with a managed identity that has AcrPull, and sends logs to Log Analytics. The deploy workflow pushes new images to the registry.](docs/diagrams/viewer-hosting.svg)
+
+Every push to `main`, including each merged catalogue pull request, rebuilds
+the image and rolls it out. GitHub Actions signs in to Azure with OIDC, so no
+Azure credentials are stored in GitHub, and its identity can only change this
+resource group:
+
+![Deploying: every push to main runs Deploy catalogue viewer in the viewer environment. It signs in to Azure with OIDC as the deploy identity, which has Contributor on the resource group only, builds the image in the registry and updates the Container App, which pulls the new image with its managed identity.](docs/diagrams/viewer-deploy.svg)
+
+In short:
 
 You need `az` and `gh` signed in (`az account show`, `gh auth status`),
 Owner (or Contributor plus Role Based Access Control Administrator) on the
