@@ -34,7 +34,9 @@ sensitive:
 
 - **Login:** the viewer's HTTP Basic authentication. Every request needs the username and password; without
   them the viewer returns 401 and the browser asks for them. The password is a Container App secret, passed
-  to the viewer as `AUTH_PASSWORD`, and never stored in the repository or the image.
+  to the viewer as `AUTH_PASSWORD`, and never stored in the repository or the image. The hosted image sets
+  `AUTH_REQUIRED=true`, so if the password is ever missing the viewer refuses to start instead of serving
+  the catalogue without a login.
 - **No lockout:** the viewer doesn't slow down or block repeated wrong passwords, so the password must be
   long and random. The template rejects one shorter than 20 characters; generate 32 or more (see below).
   Share it through a password manager, and change it when someone leaves.
@@ -45,7 +47,10 @@ sensitive:
 - **Image:** the image contains the catalogue, so the registry is private and is pulled only by the app's
   managed identity.
 - **Deployment:** the deploy workflow signs in to Azure with OIDC, so no Azure credentials are stored in
-  GitHub.
+  GitHub. Its identity has Contributor on the resource group, which is enough to read the password or change
+  the app, so the `viewer` environment only accepts deployments from `main` (step 5). Anyone who can push to
+  `main` can still change what's deployed: protect `main` with required reviews if more people have write
+  access than should control the viewer.
 
 Not included, because a hosting organisation applies its own standards:
 
@@ -110,7 +115,8 @@ az role assignment create --assignee-object-id "$deploy_sp" --assignee-principal
   --role Contributor --scope "$(az group show --name "$rg" --query id -o tsv)"
 ```
 
-**5. Configure GitHub:** create an environment called `viewer` in this repository, and set:
+**5. Configure GitHub:** create an environment called `viewer` in this repository that only `main` can
+deploy from, and set:
 
 | Name | Kind | Value |
 | --- | --- | --- |
@@ -124,6 +130,9 @@ az role assignment create --assignee-object-id "$deploy_sp" --assignee-principal
 ```bash
 R=<owner>/<repository>
 gh api -X PUT repos/$R/environments/viewer
+# Only main may deploy: the deploy identity can read the password and change the app
+gh api -X PUT repos/$R/environments/viewer --input - <<<'{"deployment_branch_policy":{"protected_branches":false,"custom_branch_policies":true}}'
+gh api -X POST repos/$R/environments/viewer/deployment-branch-policies -f name=main -f type=branch
 
 gh secret set AZURE_CLIENT_ID       --env viewer -R $R --body "$deploy_app"
 gh secret set AZURE_TENANT_ID       --env viewer -R $R --body "$(az account show --query tenantId -o tsv)"

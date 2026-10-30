@@ -10,6 +10,8 @@ COPY --chown=node:node . /data
 ENV PORT=8080
 ENV CATALOGUE_DATA_DIR=/data
 ENV NODE_ENV=production
+# The hosted viewer must never run without its login; see HOSTING.md.
+ENV AUTH_REQUIRED=true
 EXPOSE 8080
 
 USER node
