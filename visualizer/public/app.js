@@ -178,7 +178,7 @@ function combineDependencies(source, dependencies, messages) {
   const data = dependencies || { repository: orgRepoSlug(source.repository), dependencies: [] };
   if (!messages) return data;
   try {
-    return { ...data, dependencies: [...(data.dependencies || []), ...messageDependencies(source, messages, data.dependencies || [])] };
+    return { ...data, dependencies: [...(data.dependencies || []), ...messageDependencies(source, messages, data)] };
   } catch {
     return data;
   }
@@ -211,17 +211,21 @@ function wrappedMessageNames(message) {
 // SFA.DAS.Notifications.Messages.Commands.SendEmailCommand to das-notifications.
 // When the repo also calls that service's API (e.g. events from SFA.DAS.RoATPService and an "RoATP Service"
 // HTTP dependency), the messages share the API dependency's targetId, so the service view draws one node.
-function messageDependencies(source, messages, dependencies = []) {
+// Messages under the repo's own name, system name or a container's name (e.g. in-process commands in
+// SFA.DAS.PAS.Account.Application.Commands for the "PAS Account" container) are its own, not another service's.
+function messageDependencies(source, messages, { dependencies = [], systemName, containers = [] } = {}) {
   const apiDependencies = dependencies.filter((dependency) => dependency.kind === 'http-api' && dependency.targetId);
   const events = (messages.events || []).map((m) => ({ ...m, messageKind: 'event' }));
   const commands = (messages.commands || []).map((m) => ({ ...m, messageKind: 'command' }));
-  const ownTokens = new Set(tokenize(source.name));
+  const ownTokenSets = [source.name, systemName, ...containers.map((container) => container.name)]
+    .filter(Boolean)
+    .map((name) => new Set(tokenize(name)));
   const groups = new Map();
   for (const message of [...events, ...commands].filter((m) => m.namespace)) {
     const segment = namespaceServiceSegment(message.namespace);
     if (!segment) continue;
     const segmentTokens = new Set(tokenize(segment));
-    if (canRelate(segmentTokens, ownTokens)) continue;
+    if (ownTokenSets.some((ownTokens) => canRelate(segmentTokens, ownTokens))) continue;
     const direction = message.handlers?.length ? 'inbound' : 'outbound';
     const key = `${direction}:${segment.toLowerCase()}`;
     if (!groups.has(key)) groups.set(key, { label: segment, tokens: segmentTokens, direction, messages: [] });
@@ -524,7 +528,8 @@ function messageDetail(message) {
 }
 
 function splitPascalCase(value) {
-  return value.replace(/([a-z0-9])([A-Z])/g, '$1 $2').replace(/([A-Z])([A-Z][a-z])/g, '$1 $2');
+  // "DfE" (Department for Education) is one word, not "Df E".
+  return value.replace(/([a-z0-9])([A-Z])/g, '$1 $2').replace(/([A-Z])([A-Z][a-z])/g, '$1 $2').replace(/\bDf E\b/g, 'DfE');
 }
 
 function c4Type(dependency) {
