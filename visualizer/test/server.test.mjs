@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { spawnSync } from 'node:child_process';
 import { readFile } from 'node:fs/promises';
 import { after, before, test } from 'node:test';
 
@@ -120,4 +121,14 @@ test('dependencies endpoint serves the DfE overlay resolution when present', asy
   assert.equal(response.status, 200);
   assert.ok(body.resolution);
   assert.ok(body.dependencies.some((dependency) => dependency.targetRepo === 'das-courses-api' && dependency.via?.area === 'Approvals'));
+});
+
+test('refuses to start when a login is required but no password is set', () => {
+  const result = spawnSync(process.execPath, [new URL('../server.mjs', import.meta.url).pathname], {
+    env: { ...process.env, NODE_ENV: 'production', AUTH_REQUIRED: 'true', AUTH_PASSWORD: '', PORT: '0' },
+    encoding: 'utf8',
+    timeout: 10000
+  });
+  assert.equal(result.status, 1);
+  assert.match(result.stderr, /AUTH_PASSWORD is empty/);
 });

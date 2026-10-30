@@ -19,8 +19,11 @@ let catalogueRepositoryPromise = null;
 // Basic Auth is opt-in: set AUTH_PASSWORD (e.g. in a local, gitignored .env file — never commit
 // it) to require credentials for every request. With no password configured the server stays
 // open, matching today's default so existing setups aren't broken by this change.
+// AUTH_REQUIRED=true (set in the hosted image) refuses to start without a password instead, so a
+// lost secret can't quietly publish the catalogue.
 const authUser = process.env.AUTH_USERNAME || 'admin';
 const authPassword = process.env.AUTH_PASSWORD || '';
+const authRequired = process.env.AUTH_REQUIRED === 'true';
 
 function safeEqual(a, b) {
   const bufA = Buffer.from(a);
@@ -340,6 +343,11 @@ export const server = createServer(async (request, response) => {
     sendJson(response, error.statusCode || 500, { error: error.statusCode ? error.message : 'Unable to read catalogue data' });
   }
 });
+
+if (authRequired && !authPassword) {
+  console.error('AUTH_REQUIRED is set but AUTH_PASSWORD is empty — refusing to serve the catalogue without a login');
+  process.exit(1);
+}
 
 if (process.env.NODE_ENV !== 'test') {
   server.listen(port, '0.0.0.0', () => {

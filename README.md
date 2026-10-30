@@ -89,6 +89,7 @@ Run the API tests with `npm test`.
 | `PORT` | `8080` | Port to listen on |
 | `AUTH_PASSWORD` | Unset (no login) | Require a login; see below |
 | `AUTH_USERNAME` | `admin` | Login username |
+| `AUTH_REQUIRED` | Unset | `true` refuses to start without `AUTH_PASSWORD`; set in the hosted image |
 | `CATALOGUE_REPOSITORY_URL` | Read from the data folder's git remote | GitHub URL of this repository, used to link findings to the generated files on GitHub |
 
 When deployed without a `.git` folder, set `CATALOGUE_REPOSITORY_URL` (for
@@ -178,12 +179,15 @@ the commands in one terminal, from the root of this repository, replacing the
      --role Contributor --scope "$(az group show --name "$rg" --query id -o tsv)"
    ```
 
-4. **Create the GitHub `viewer` environment** and its settings. The viewer's
-   password isn't needed here.
+4. **Create the GitHub `viewer` environment**, restricted to deployments from
+   `main`, and its settings. The viewer's password isn't needed here.
 
    ```bash
    R=<owner>/<repository>
    gh api -X PUT repos/$R/environments/viewer
+   # Only main may deploy: the deploy identity can read the password and change the app
+   gh api -X PUT repos/$R/environments/viewer --input - <<<'{"deployment_branch_policy":{"protected_branches":false,"custom_branch_policies":true}}'
+   gh api -X POST repos/$R/environments/viewer/deployment-branch-policies -f name=main -f type=branch
    gh secret set AZURE_CLIENT_ID       --env viewer -R $R --body "$deploy_app"
    gh secret set AZURE_TENANT_ID       --env viewer -R $R --body "$(az account show --query tenantId -o tsv)"
    gh secret set AZURE_SUBSCRIPTION_ID --env viewer -R $R --body "$(az account show --query id -o tsv)"
