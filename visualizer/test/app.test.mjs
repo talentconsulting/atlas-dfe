@@ -14,7 +14,7 @@ async function loadApp() {
     console
   });
   const source = await readFile(new URL('../public/app.js', import.meta.url), 'utf8');
-  vm.runInContext(`${source}\n;globalThis.app = { state, combineDependencies, namespaceServiceSegment };`, context);
+  vm.runInContext(`${source}\n;globalThis.app = { state, combineDependencies, namespaceServiceSegment, splitPascalCase };`, context);
   return context.app;
 }
 
@@ -58,4 +58,29 @@ test('ESFA namespaces are named after the service, not the organisation', async 
   const app = await loadApp();
   assert.equal(app.namespaceServiceSegment('Esfa.Recruit.Vacancies.Client.Domain.Events'), 'Recruit');
   assert.equal(app.namespaceServiceSegment('SFA.DAS.RoATPService.Application.Events'), 'RoATPService');
+});
+
+test('commands a service sends itself are not drawn as another service', async () => {
+  const app = await loadApp();
+  const pas = { id: 'das-providerapprenticeshipsservice', name: 'das-providerapprenticeshipsservice', repository: 'https://github.com/SkillsFundingAgency/das-providerapprenticeshipsservice' };
+  app.state.catalog = [pas];
+  const own = (name, namespace) => ({ name, namespace, sourceFile: 'Command.cs', handlers: [{ sourceFile: 'Handler.cs' }] });
+  const combined = app.combineDependencies(pas, {
+    systemName: 'Provider Apprenticeships Service',
+    containers: [{ id: 'pas-account-api', name: 'PAS Account' }, { id: 'provider-apprenticeships-service-web', name: 'Provider Apprenticeships Service' }],
+    dependencies: []
+  }, {
+    commands: [
+      own('SendNotificationCommand', 'SFA.DAS.PAS.Account.Application.Commands.SendNotification'),
+      own('UpsertRegisteredUserCommand', 'SFA.DAS.ProviderApprenticeshipsService.Application.Commands.UpsertRegisteredUser'),
+      { name: 'SendEmailCommand', namespace: 'SFA.DAS.Notifications.Messages.Commands', sourceFile: 'Send.cs', handlers: [] }
+    ]
+  });
+  assert.deepEqual([...combined.dependencies.map((dependency) => dependency.name)], ['Notifications']);
+});
+
+test('DfE stays one word when names are split', async () => {
+  const app = await loadApp();
+  assert.equal(app.splitPascalCase('DfESignInAuth'), 'DfE Sign In Auth');
+  assert.equal(app.splitPascalCase('RoATPService'), 'Ro ATP Service');
 });
