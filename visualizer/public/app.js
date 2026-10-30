@@ -178,7 +178,7 @@ function combineDependencies(source, dependencies, messages) {
   const data = dependencies || { repository: orgRepoSlug(source.repository), dependencies: [] };
   if (!messages) return data;
   try {
-    return { ...data, dependencies: [...(data.dependencies || []), ...messageDependencies(source, messages)] };
+    return { ...data, dependencies: [...(data.dependencies || []), ...messageDependencies(source, messages, data.dependencies || [])] };
   } catch {
     return data;
   }
@@ -189,7 +189,7 @@ function orgRepoSlug(repositoryUrl) {
 }
 
 function namespaceServiceSegment(namespace) {
-  const orgPrefixes = new Set(['sfa', 'das']);
+  const orgPrefixes = new Set(['sfa', 'esfa', 'das']);
   const parts = String(namespace || '').split('.');
   let index = 0;
   while (index < parts.length && orgPrefixes.has(parts[index].toLowerCase())) index++;
@@ -209,7 +209,10 @@ function wrappedMessageNames(message) {
 // Another service's messages in this repo's catalogue: handled ones mean that service sends them here (inbound);
 // ones with no handler here mean this repo sends them to that service (outbound), e.g. a job sending
 // SFA.DAS.Notifications.Messages.Commands.SendEmailCommand to das-notifications.
-function messageDependencies(source, messages) {
+// When the repo also calls that service's API (e.g. events from SFA.DAS.RoATPService and an "RoATP Service"
+// HTTP dependency), the messages share the API dependency's targetId, so the service view draws one node.
+function messageDependencies(source, messages, dependencies = []) {
+  const apiDependencies = dependencies.filter((dependency) => dependency.kind === 'http-api' && dependency.targetId);
   const events = (messages.events || []).map((m) => ({ ...m, messageKind: 'event' }));
   const commands = (messages.commands || []).map((m) => ({ ...m, messageKind: 'command' }));
   const ownTokens = new Set(tokenize(source.name));
@@ -226,8 +229,10 @@ function messageDependencies(source, messages) {
   }
   return [...groups.values()].map((group) => {
     const matchedSystem = bestMatchingSystem(group.tokens, state.catalog.filter((candidate) => candidate.id !== source.id), (candidate) => new Set(tokenize(candidate.name)));
+    const matchedApi = bestMatchingSystem(group.tokens, apiDependencies, (dependency) => new Set(tokenize(dependency.name)));
     const sends = group.direction === 'outbound';
     return {
+      ...(matchedApi ? { targetId: matchedApi.targetId } : {}),
       name: matchedSystem ? titleCase(matchedSystem.name) : splitPascalCase(group.label),
       kind: 'message',
       classification: matchedSystem ? 'internal' : 'unknown',
