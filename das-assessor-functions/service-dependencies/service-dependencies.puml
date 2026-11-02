@@ -1,0 +1,27 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+LAYOUT_WITH_LEGEND()
+
+System_Boundary(sys_SkillsFundingAgency_das_assessor_functions, "Assessor Functions") {
+  Container(c_assessor, "Assessor", "Background Job")
+  Container(c_assessor_functions, "Assessor Functions", "Component")
+}
+
+SystemDb_Ext(d_database_azure_sql_database, "Azure SQL Database", "SQL Server")
+System_Ext(d_http_api_assessor_service, "Assessor Service", "HttpClient")
+System_Ext(d_http_api_data_collection_service, "Data Collection Service", "HttpClient")
+System_Ext(d_http_api_ofqual_organisations, "Ofqual Organisations", "HttpClient")
+System_Ext(d_http_api_ofqual_qualifications, "Ofqual Qualifications", "HttpClient")
+System_Ext(d_http_api_outer_api, "Outer API", "HttpClient")
+System_Ext(d_http_api_secure_message_service, "Secure Message Service", "HttpClient")
+
+Rel(c_assessor_functions, d_database_azure_sql_database, "Reads from and writes to", "SQL Server")
+Rel(c_assessor, d_database_azure_sql_database, "Reads from and writes to", "System.Data.SqlClient")
+Rel(c_assessor, d_http_api_assessor_service, "Calls the API of", "HttpClient")
+Rel(c_assessor, d_http_api_data_collection_service, "Calls the API of", "HttpClient")
+Rel(c_assessor, d_http_api_ofqual_organisations, "Calls the API of", "HttpClient")
+Rel(c_assessor, d_http_api_ofqual_qualifications, "Calls the API of", "HttpClient")
+Rel(c_assessor, d_http_api_outer_api, "Calls the API of", "HttpClient")
+Rel(c_assessor, d_http_api_secure_message_service, "Calls the API of", "HttpClient")
+
+@enduml
