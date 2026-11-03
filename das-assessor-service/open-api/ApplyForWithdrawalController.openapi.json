@@ -1,0 +1,287 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Assessor Service API",
+    "version": "1.0.0",
+    "description": "API documentation for the DAS Assessor Service."
+  },
+  "paths": {
+    "/withdrawal/requests": {
+      "get": {
+        "summary": "Get withdrawal applications",
+        "operationId": "WithdrawalApplicationsRouteGet",
+        "tags": [
+          "Withdrawal"
+        ],
+        "responses": {
+          "200": {
+            "description": "List of user's withdrawal applications",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Application"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/withdrawal/type": {
+      "get": {
+        "summary": "Get type of withdrawal",
+        "operationId": "TypeofWithdrawalRouteGet",
+        "tags": [
+          "Withdrawal"
+        ],
+        "responses": {
+          "200": {
+            "description": "Displays type of withdrawal view",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Submit type of withdrawal",
+        "operationId": "TypeofWithdrawalRoutePost",
+        "tags": [
+          "Withdrawal"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TypeOfWithdrawalViewModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "302": {
+            "description": "Redirects based on withdrawal type",
+            "headers": {
+              "Location": {
+                "description": "Redirection URL"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/withdrawal/choose-standard": {
+      "get": {
+        "summary": "Get standards for withdrawal",
+        "operationId": "ChooseStandardForWithdrawalRouteGet",
+        "tags": [
+          "Withdrawal"
+        ],
+        "parameters": [
+          {
+            "name": "pageIndex",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Pagination index"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of registered standards for withdrawal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChooseStandardForWithdrawalViewModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/withdrawal/check/{ifateReferenceNumber}": {
+      "get": {
+        "summary": "Check withdrawal request",
+        "operationId": "CheckWithdrawalRequestRouteGet",
+        "tags": [
+          "Withdrawal"
+        ],
+        "parameters": [
+          {
+            "name": "ifateReferenceNumber",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Reference number of standard (optional)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Displays check withdrawal request view",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CheckWithdrawalRequestViewModel"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Submit withdrawal request",
+        "operationId": "CheckWithdrawalRequestRoutePost",
+        "tags": [
+          "Withdrawal"
+        ],
+        "parameters": [
+          {
+            "name": "ifateReferenceNumber",
+            "in": "path",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Reference number of standard (optional)"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CheckWithdrawalRequestViewModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "302": {
+            "description": "Redirects to the withdrawal sequence",
+            "headers": {
+              "Location": {
+                "description": "Redirection URL"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Application": {
+        "type": "object",
+        "properties": {
+          "applicationId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "applicationStatus": {
+            "type": "string"
+          },
+          "earliestDateOfWithdrawal": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "applyingOrganisation": {
+            "$ref": "#/components/schemas/Organisation"
+          }
+        }
+      },
+      "Organisation": {
+        "type": "object",
+        "properties": {
+          "organisationName": {
+            "type": "string"
+          },
+          "organisationType": {
+            "type": "string"
+          },
+          "referenceNumber": {
+            "type": "string"
+          }
+        }
+      },
+      "TypeOfWithdrawalViewModel": {
+        "type": "object",
+        "properties": {
+          "typeOfWithdrawal": {
+            "type": "string",
+            "enum": [
+              "OrganisationWithdrawal",
+              "StandardWithdrawal"
+            ]
+          }
+        },
+        "required": [
+          "typeOfWithdrawal"
+        ]
+      },
+      "ChooseStandardForWithdrawalViewModel": {
+        "type": "object",
+        "properties": {
+          "standards": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RegisteredStandard"
+            }
+          }
+        }
+      },
+      "RegisteredStandard": {
+        "type": "object",
+        "properties": {
+          "standardName": {
+            "type": "string"
+          },
+          "level": {
+            "type": "integer"
+          },
+          "referenceNumber": {
+            "type": "string"
+          },
+          "applicationId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      },
+      "CheckWithdrawalRequestViewModel": {
+        "type": "object",
+        "properties": {
+          "ifateReferenceNumber": {
+            "type": "string"
+          },
+          "level": {
+            "type": "integer"
+          },
+          "standardName": {
+            "type": "string"
+          },
+          "organisationName": {
+            "type": "string"
+          },
+          "continue": {
+            "type": "string",
+            "enum": [
+              "yes",
+              "no"
+            ]
+          }
+        },
+        "required": [
+          "continue"
+        ]
+      }
+    }
+  }
+}

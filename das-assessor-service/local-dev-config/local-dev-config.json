@@ -1,0 +1,518 @@
+{
+  "repository": "SkillsFundingAgency/das-assessor-service",
+  "ref": "master",
+  "path": "src",
+  "localServices": [
+    {
+      "name": "Redis",
+      "kind": "cache",
+      "technology": "redis",
+      "configurationKeys": [
+        "ConnectionStrings:Redis",
+        "SessionRedisConnectionString"
+      ],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.AssessorService.Application.Api.External/appsettings.Development.json",
+          "reason": "Redis connection string found in appsettings.Development.json under ConnectionStrings."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.AssessorService.Application.Api.External/appsettings.json",
+          "reason": "Redis connection string found in appsettings.json under ConnectionStrings."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.AssessorService.Settings/IWebConfiguration.cs",
+          "reason": "The 'SessionRedisConnectionString' property is required for session caching."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.AssessorService.Web/StartupConfiguration/ServiceCollectionExtensions.cs",
+          "reason": "Redis connection string used in AddDataProtectionConfiguration method"
+        }
+      ]
+    },
+    {
+      "name": "SQL Server",
+      "kind": "database",
+      "technology": "sqlserver",
+      "configurationKeys": [
+        "ApiConfiguration:SandboxSqlConnectionString",
+        "ApiConfiguration:SqlConnectionString",
+        "ConnectionStrings:Redis",
+        "SandboxSqlConnectionString",
+        "SqlConnectionString"
+      ],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.AssessorService.Settings/ApiConfiguration.cs",
+          "reason": "Contains configuration keys for SQL Server connection strings."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.AssessorService.Settings/IApiConfiguration.cs",
+          "reason": "The 'SqlConnectionString' and 'SandboxSqlConnectionString' properties are required for database connectivity."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.AssessorService.Web/appsettings.json",
+          "reason": "The \"ConnectionStrings\" section contains a key for \"Redis\", which likely stores the SQL Server connection string when properly configured."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.AssessorService.Application.Api/Services/OrganisationMergingService.cs",
+          "reason": "_dbContext is an instance of AssessorDbContext, which is accessed via Entity Framework. By convention, this implies a SQL Server dependency."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.AssessorService.Data/SandboxDbRepository.cs",
+          "reason": "SandboxSqlConnection uses SandboxSqlConnectionString to establish a connection to SQL Server."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.AssessorService.Application.Api/StartupConfiguration/DatabaseExtensions.cs",
+          "reason": "The AddDatabaseRegistration method registers SQL Server connections using configuration settings for SqlConnectionString and SandboxSqlConnectionString."
+        }
+      ]
+    },
+    {
+      "name": "Azure Storage Emulator",
+      "kind": "object-storage",
+      "technology": "azurite",
+      "configurationKeys": [
+        "ConfigurationStorageConnectionString"
+      ],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.AssessorService.Web/appsettings.json",
+          "reason": "The \"ConfigurationStorageConnectionString\" key in appsettings.json is set to \"UseDevelopmentStorage=true\", which indicates a dependency on the Azure Storage Emulator (such as Azurite) for local development."
+        }
+      ]
+    }
+  ],
+  "configurationKeys": [
+    {
+      "key": "ApiBaseAddress",
+      "sourceFile": "src/SFA.DAS.AssessorService.Api.Common/Settings/ICompaniesHouseApiClientConfiguration.cs",
+      "reason": "ApiBaseAddress is a property of the ICompaniesHouseApiClientConfiguration interface, which may suggest the need for configuration."
+    },
+    {
+      "key": "ApiConfiguration:Environment",
+      "sourceFile": "src/SFA.DAS.AssessorService.Settings/ApiConfiguration.cs",
+      "reason": "Specifies the environment for the API configuration."
+    },
+    {
+      "key": "ApiConfiguration:SandboxSqlConnectionString",
+      "sourceFile": "src/SFA.DAS.AssessorService.Application.Api/StartupConfiguration/DatabaseExtensions.cs",
+      "reason": "Used in the AddDatabaseRegistration method for sandbox environment database configuration."
+    },
+    {
+      "key": "ApiConfiguration:SandboxSqlConnectionString",
+      "sourceFile": "src/SFA.DAS.AssessorService.Data/SandboxDbRepository.cs",
+      "reason": "Used in SandboxSqlConnection method to connect to SQL Server."
+    },
+    {
+      "key": "ApiConfiguration:SandboxSqlConnectionString",
+      "sourceFile": "src/SFA.DAS.AssessorService.Settings/ApiConfiguration.cs",
+      "reason": "Required SQL Server connection string for a sandbox environment database."
+    },
+    {
+      "key": "ApiConfiguration:SqlConnectionString",
+      "sourceFile": "src/SFA.DAS.AssessorService.Application.Api/StartupConfiguration/DatabaseExtensions.cs",
+      "reason": "Used in the AddDatabaseRegistration method to configure the data access layer."
+    },
+    {
+      "key": "ApiConfiguration:SqlConnectionString",
+      "sourceFile": "src/SFA.DAS.AssessorService.Settings/ApiConfiguration.cs",
+      "reason": "Required SQL Server connection string for the primary database."
+    },
+    {
+      "key": "ApiKey",
+      "sourceFile": "src/SFA.DAS.AssessorService.Api.Common/Settings/ICompaniesHouseApiClientConfiguration.cs",
+      "reason": "ApiKey is a property of the ICompaniesHouseApiClientConfiguration interface, which may suggest the need for configuration."
+    },
+    {
+      "key": "APPLICATIONINSIGHTS_CONNECTION_STRING",
+      "sourceFile": "src/SFA.DAS.AssessorService.Application.Api/appsettings.json",
+      "reason": "Key is evidenced but value is not provided; may be required for local telemetry setup."
+    },
+    {
+      "key": "APPLICATIONINSIGHTS_CONNECTION_STRING",
+      "sourceFile": "src/SFA.DAS.AssessorService.Web/appsettings.json",
+      "reason": "Key present in appsettings.json for Application Insights telemetry, though currently empty."
+    },
+    {
+      "key": "AssessorApiAuthentication",
+      "sourceFile": "src/SFA.DAS.AssessorService.Web/StartupConfiguration/ServiceCollectionExtensions.cs",
+      "reason": "Bound to AssessorApiClientConfiguration via singleton registration"
+    },
+    {
+      "key": "AuthSettings:MetadataAddress",
+      "sourceFile": "src/SFA.DAS.AssessorService.Settings/AuthSettings.cs",
+      "reason": "Determines the metadata address for authentication."
+    },
+    {
+      "key": "AuthSettings:Role",
+      "sourceFile": "src/SFA.DAS.AssessorService.Settings/AuthSettings.cs",
+      "reason": "Defines the role for authentication settings."
+    },
+    {
+      "key": "AuthSettings:WtRealm",
+      "sourceFile": "src/SFA.DAS.AssessorService.Settings/AuthSettings.cs",
+      "reason": "Defines the WT Realm for authentication settings."
+    },
+    {
+      "key": "AzureAdOptions:Audience",
+      "sourceFile": "src/SFA.DAS.AssessorService.Application.Api/Extensions/AzureAdOptions.cs",
+      "reason": "Defines the audience for Azure AD authentication."
+    },
+    {
+      "key": "AzureAdOptions:ClientId",
+      "sourceFile": "src/SFA.DAS.AssessorService.Application.Api/Extensions/AzureAdOptions.cs",
+      "reason": "Client ID for Azure AD authentication is required."
+    },
+    {
+      "key": "AzureAdOptions:ClientSecret",
+      "sourceFile": "src/SFA.DAS.AssessorService.Application.Api/Extensions/AzureAdOptions.cs",
+      "reason": "Client secret for Azure AD authentication is required."
+    },
+    {
+      "key": "AzureAdOptions:Domain",
+      "sourceFile": "src/SFA.DAS.AssessorService.Application.Api/Extensions/AzureAdOptions.cs",
+      "reason": "Specifies the domain for Azure AD integration."
+    },
+    {
+      "key": "AzureAdOptions:Instance",
+      "sourceFile": "src/SFA.DAS.AssessorService.Application.Api/Extensions/AzureAdOptions.cs",
+      "reason": "Defines the Azure AD instance URI."
+    },
+    {
+      "key": "AzureAdOptions:TenantId",
+      "sourceFile": "src/SFA.DAS.AssessorService.Application.Api/Extensions/AzureAdOptions.cs",
+      "reason": "Tenant ID for Azure AD authentication is required."
+    },
+    {
+      "key": "AzureApiAuthentication",
+      "sourceFile": "src/SFA.DAS.AssessorService.Web/StartupConfiguration/ServiceCollectionExtensions.cs",
+      "reason": "Bound to AzureApiClientConfiguration via Configure method"
+    },
+    {
+      "key": "AzureApiClientConfiguration:ApiBaseAddress",
+      "sourceFile": "src/SFA.DAS.AssessorService.Api.Common/Settings/AzureApiClientConfiguration.cs",
+      "reason": "The 'ApiBaseAddress' property is part of the AzureApiClientConfiguration class, which requires configuration."
+    },
+    {
+      "key": "AzureApiClientConfiguration:GroupId",
+      "sourceFile": "src/SFA.DAS.AssessorService.Api.Common/Settings/AzureApiClientConfiguration.cs",
+      "reason": "The 'GroupId' property is part of the AzureApiClientConfiguration class, which requires configuration."
+    },
+    {
+      "key": "AzureApiClientConfiguration:Id",
+      "sourceFile": "src/SFA.DAS.AssessorService.Api.Common/Settings/AzureApiClientConfiguration.cs",
+      "reason": "The 'Id' property is part of the AzureApiClientConfiguration class, which requires configuration."
+    },
+    {
+      "key": "AzureApiClientConfiguration:Key",
+      "sourceFile": "src/SFA.DAS.AssessorService.Api.Common/Settings/AzureApiClientConfiguration.cs",
+      "reason": "The 'Key' property is part of the AzureApiClientConfiguration class, which requires configuration."
+    },
+    {
+      "key": "AzureApiClientConfiguration:ProductId",
+      "sourceFile": "src/SFA.DAS.AssessorService.Api.Common/Settings/AzureApiClientConfiguration.cs",
+      "reason": "The 'ProductId' property is part of the AzureApiClientConfiguration class, which requires configuration."
+    },
+    {
+      "key": "AzureApiClientConfiguration:RequestBaseAddress",
+      "sourceFile": "src/SFA.DAS.AssessorService.Api.Common/Settings/AzureApiClientConfiguration.cs",
+      "reason": "The 'RequestBaseAddress' property is part of the AzureApiClientConfiguration class, which requires configuration."
+    },
+    {
+      "key": "BaseUrl",
+      "sourceFile": "src/SFA.DAS.AssessorService.Api.Common/Settings/IOuterApiClientConfiguration.cs",
+      "reason": "BaseUrl is a property of the IOuterApiClientConfiguration interface, which may suggest the need for configuration."
+    },
+    {
+      "key": "CharityCommissionApiClientConfiguration:ApiBaseAddress",
+      "sourceFile": "src/SFA.DAS.AssessorService.Api.Common/Settings/CharityCommissionApiClientConfiguration.cs",
+      "reason": "The 'ApiBaseAddress' property is part of the CharityCommissionApiClientConfiguration class, which requires configuration."
+    },
+    {
+      "key": "CharityCommissionApiClientConfiguration:ApiKey",
+      "sourceFile": "src/SFA.DAS.AssessorService.Api.Common/Settings/CharityCommissionApiClientConfiguration.cs",
+      "reason": "The 'ApiKey' property is part of the CharityCommissionApiClientConfiguration class, which requires configuration."
+    },
+    {
+      "key": "CompaniesHouseApiClientConfiguration:ApiBaseAddress",
+      "sourceFile": "src/SFA.DAS.AssessorService.Api.Common/Settings/CompaniesHouseApiClientConfiguration.cs",
+      "reason": "The 'ApiBaseAddress' property is part of the CompaniesHouseApiClientConfiguration class, which requires configuration."
+    },
+    {
+      "key": "CompaniesHouseApiClientConfiguration:ApiKey",
+      "sourceFile": "src/SFA.DAS.AssessorService.Api.Common/Settings/CompaniesHouseApiClientConfiguration.cs",
+      "reason": "The 'ApiKey' property is part of the CompaniesHouseApiClientConfiguration class, which requires configuration."
+    },
+    {
+      "key": "ConfigNames",
+      "sourceFile": "src/SFA.DAS.AssessorService.Web/appsettings.json",
+      "reason": "Key present in appsettings.json for configuration settings related to the application."
+    },
+    {
+      "key": "ConfigurationStorageConnectionString",
+      "sourceFile": "src/SFA.DAS.AssessorService.Application.Api.External/appsettings.Development.json",
+      "reason": "ConfigurationStorageConnectionString found in appsettings.Development.json."
+    },
+    {
+      "key": "ConfigurationStorageConnectionString",
+      "sourceFile": "src/SFA.DAS.AssessorService.Application.Api.External/appsettings.json",
+      "reason": "ConfigurationStorageConnectionString found in appsettings.json."
+    },
+    {
+      "key": "ConfigurationStorageConnectionString",
+      "sourceFile": "src/SFA.DAS.AssessorService.Application.Api/appsettings.json",
+      "reason": "Key is required for connecting to local storage configuration."
+    },
+    {
+      "key": "ConfigurationStorageConnectionString",
+      "sourceFile": "src/SFA.DAS.AssessorService.Web/appsettings.json",
+      "reason": "Key present in appsettings.json for local development, set to \"UseDevelopmentStorage=true;\", indicating an Azure storage emulator dependency."
+    },
+    {
+      "key": "ConnectionStrings:Redis",
+      "sourceFile": "src/SFA.DAS.AssessorService.Application.Api.External/appsettings.Development.json",
+      "reason": "Redis connection string found in appsettings.Development.json under ConnectionStrings."
+    },
+    {
+      "key": "ConnectionStrings:Redis",
+      "sourceFile": "src/SFA.DAS.AssessorService.Application.Api.External/appsettings.json",
+      "reason": "Redis connection string found in appsettings.json under ConnectionStrings."
+    },
+    {
+      "key": "ConnectionStrings:Redis",
+      "sourceFile": "src/SFA.DAS.AssessorService.Application.Api/appsettings.json",
+      "reason": "Key is required for connecting to a Redis instance locally."
+    },
+    {
+      "key": "ConnectionStrings:Redis",
+      "sourceFile": "src/SFA.DAS.AssessorService.Web/appsettings.json",
+      "reason": "Key for \"Redis\" under the \"ConnectionStrings\" section in appsettings.json, likely used for a local SQL Server database connection string."
+    },
+    {
+      "key": "Environment",
+      "sourceFile": "src/SFA.DAS.AssessorService.Settings/IApiConfiguration.cs",
+      "reason": "The 'Environment' property is needed for application environment configuration."
+    },
+    {
+      "key": "EnvironmentName",
+      "sourceFile": "src/SFA.DAS.AssessorService.Application.Api.External/appsettings.Development.json",
+      "reason": "EnvironmentName found in appsettings.Development.json."
+    },
+    {
+      "key": "EnvironmentName",
+      "sourceFile": "src/SFA.DAS.AssessorService.Application.Api.External/appsettings.json",
+      "reason": "EnvironmentName found in appsettings.json."
+    },
+    {
+      "key": "EnvironmentName",
+      "sourceFile": "src/SFA.DAS.AssessorService.Application.Api/appsettings.json",
+      "reason": "Specifies the local environment setting for the application."
+    },
+    {
+      "key": "EnvironmentName",
+      "sourceFile": "src/SFA.DAS.AssessorService.Web/appsettings.json",
+      "reason": "Key present in appsettings.json to define the environment for the application, set to \"LOCAL\" for local development."
+    },
+    {
+      "key": "FeedbackUrl",
+      "sourceFile": "src/SFA.DAS.AssessorService.Settings/IWebConfiguration.cs",
+      "reason": "The 'FeedbackUrl' property is needed for providing feedback functionality."
+    },
+    {
+      "key": "FindAnEPAOUrl",
+      "sourceFile": "src/SFA.DAS.AssessorService.Settings/IWebConfiguration.cs",
+      "reason": "The 'FindAnEPAOUrl' provides a URL for the 'Find an EPAO' service."
+    },
+    {
+      "key": "InstanceName",
+      "sourceFile": "src/SFA.DAS.AssessorService.Application.Api.External/appsettings.json",
+      "reason": "InstanceName found in appsettings.json."
+    },
+    {
+      "key": "Key",
+      "sourceFile": "src/SFA.DAS.AssessorService.Api.Common/Settings/IOuterApiClientConfiguration.cs",
+      "reason": "Key is a property of the IOuterApiClientConfiguration interface, which may suggest the need for configuration."
+    },
+    {
+      "key": "MetadataAddress",
+      "sourceFile": "src/SFA.DAS.AssessorService.Settings/IAuthSettings.cs",
+      "reason": "The 'MetadataAddress' property is required for authentication metadata configuration."
+    },
+    {
+      "key": "NotificationsApiClientConfiguration:ApiBaseUrl",
+      "sourceFile": "src/SFA.DAS.AssessorService.Settings/NotificationsApiClientConfiguration.cs",
+      "reason": "Property named \"ApiBaseUrl\" exists in NotificationsApiClientConfiguration class, which implements external API client settings."
+    },
+    {
+      "key": "NotificationsApiClientConfiguration:ClientId",
+      "sourceFile": "src/SFA.DAS.AssessorService.Settings/NotificationsApiClientConfiguration.cs",
+      "reason": "Property named \"ClientId\" exists in NotificationsApiClientConfiguration class, which implements external API client settings."
+    },
+    {
+      "key": "NotificationsApiClientConfiguration:ClientSecret",
+      "sourceFile": "src/SFA.DAS.AssessorService.Settings/NotificationsApiClientConfiguration.cs",
+      "reason": "Property named \"ClientSecret\" exists in NotificationsApiClientConfiguration class, which implements external API client settings."
+    },
+    {
+      "key": "NotificationsApiClientConfiguration:ClientToken",
+      "sourceFile": "src/SFA.DAS.AssessorService.Settings/NotificationsApiClientConfiguration.cs",
+      "reason": "Property named \"ClientToken\" exists in NotificationsApiClientConfiguration class, which implements external API client settings."
+    },
+    {
+      "key": "NotificationsApiClientConfiguration:IdentifierUri",
+      "sourceFile": "src/SFA.DAS.AssessorService.Settings/NotificationsApiClientConfiguration.cs",
+      "reason": "Property named \"IdentifierUri\" exists in NotificationsApiClientConfiguration class, which implements external API client settings."
+    },
+    {
+      "key": "NotificationsApiClientConfiguration:Tenant",
+      "sourceFile": "src/SFA.DAS.AssessorService.Settings/NotificationsApiClientConfiguration.cs",
+      "reason": "Property named \"Tenant\" exists in NotificationsApiClientConfiguration class, which implements external API client settings."
+    },
+    {
+      "key": "QnaApiAuthentication",
+      "sourceFile": "src/SFA.DAS.AssessorService.Web/StartupConfiguration/ServiceCollectionExtensions.cs",
+      "reason": "Bound to QnaApiClientConfiguration via singleton registration"
+    },
+    {
+      "key": "QnaApiClientConfiguration:ApiBaseUrl",
+      "sourceFile": "src/SFA.DAS.AssessorService.Infrastructure/ApiClients/QnA/QnaApiClientConfiguration.cs",
+      "reason": "Specifies the base URL for the QnA API endpoint."
+    },
+    {
+      "key": "QnaApiClientConfiguration:IdentifierUri",
+      "sourceFile": "src/SFA.DAS.AssessorService.Infrastructure/ApiClients/QnA/QnaApiClientConfiguration.cs",
+      "reason": "Indicates the URI for managed identity authentication for the QnA API client."
+    },
+    {
+      "key": "ReferenceFormat",
+      "sourceFile": "src/SFA.DAS.AssessorService.Settings/IWebConfiguration.cs",
+      "reason": "The 'ReferenceFormat' property is used to define the format of references."
+    },
+    {
+      "key": "ResourceEnvironmentName",
+      "sourceFile": "src/SFA.DAS.AssessorService.Web/StartupConfiguration/ServiceCollectionExtensions.cs",
+      "reason": "Key used to determine local environment mode in AddAuthenticationAndAuthorization method"
+    },
+    {
+      "key": "Role",
+      "sourceFile": "src/SFA.DAS.AssessorService.Settings/IAuthSettings.cs",
+      "reason": "The 'Role' property is required for role-based access control in authentication settings."
+    },
+    {
+      "key": "SandboxSqlConnectionString",
+      "sourceFile": "src/SFA.DAS.AssessorService.Settings/IApiConfiguration.cs",
+      "reason": "The 'SandboxSqlConnectionString' property is required for sandbox database connectivity."
+    },
+    {
+      "key": "ServiceLink",
+      "sourceFile": "src/SFA.DAS.AssessorService.Settings/IApiConfiguration.cs",
+      "reason": "The 'ServiceLink' property provides a URL for the service link."
+    },
+    {
+      "key": "ServiceLink",
+      "sourceFile": "src/SFA.DAS.AssessorService.Web/StartupConfiguration/ServiceCollectionExtensions.cs",
+      "reason": "Key used to define cookie domain and login redirects in AddAuthenticationAndAuthorization method"
+    },
+    {
+      "key": "SessionRedisConnectionString",
+      "sourceFile": "src/SFA.DAS.AssessorService.Settings/IWebConfiguration.cs",
+      "reason": "The 'SessionRedisConnectionString' property is required for session caching."
+    },
+    {
+      "key": "SessionRedisConnectionString",
+      "sourceFile": "src/SFA.DAS.AssessorService.Web/StartupConfiguration/ServiceCollectionExtensions.cs",
+      "reason": "Redis connection string used in AddDataProtectionConfiguration method"
+    },
+    {
+      "key": "SqlConnectionString",
+      "sourceFile": "src/SFA.DAS.AssessorService.Settings/IApiConfiguration.cs",
+      "reason": "The 'SqlConnectionString' property is required for database connectivity."
+    },
+    {
+      "key": "StubAuth",
+      "sourceFile": "src/SFA.DAS.AssessorService.Web/appsettings.json",
+      "reason": "Key present in appsettings.json indicating stub authentication configuration for development purposes."
+    },
+    {
+      "key": "UseSandboxServices",
+      "sourceFile": "src/SFA.DAS.AssessorService.Application.Api.External/appsettings.json",
+      "reason": "UseSandboxServices found in appsettings.json."
+    },
+    {
+      "key": "WebConfiguration:AssessorApiAuthentication",
+      "sourceFile": "src/SFA.DAS.AssessorService.Settings/WebConfiguration.cs",
+      "reason": "AssessorApiAuthentication is a required property in the WebConfiguration class."
+    },
+    {
+      "key": "WebConfiguration:AzureApiAuthentication",
+      "sourceFile": "src/SFA.DAS.AssessorService.Settings/WebConfiguration.cs",
+      "reason": "AzureApiAuthentication is a required property in the WebConfiguration class."
+    },
+    {
+      "key": "WebConfiguration:FeedbackUrl",
+      "sourceFile": "src/SFA.DAS.AssessorService.Settings/WebConfiguration.cs",
+      "reason": "FeedbackUrl is marked as [JsonRequired] in the WebConfiguration class, indicating it is a necessary configuration."
+    },
+    {
+      "key": "WebConfiguration:FindAnEPAOUrl",
+      "sourceFile": "src/SFA.DAS.AssessorService.Settings/WebConfiguration.cs",
+      "reason": "FindAnEPAOUrl is marked as [JsonRequired] in the WebConfiguration class, indicating it is a necessary configuration."
+    },
+    {
+      "key": "WebConfiguration:QnaApiAuthentication",
+      "sourceFile": "src/SFA.DAS.AssessorService.Settings/WebConfiguration.cs",
+      "reason": "QnaApiAuthentication is a required property in the WebConfiguration class."
+    },
+    {
+      "key": "WebConfiguration:ReferenceFormat",
+      "sourceFile": "src/SFA.DAS.AssessorService.Settings/WebConfiguration.cs",
+      "reason": "ReferenceFormat is marked as [JsonRequired] in the WebConfiguration class, indicating it is a necessary configuration."
+    },
+    {
+      "key": "WebConfiguration:ServiceLink",
+      "sourceFile": "src/SFA.DAS.AssessorService.Settings/WebConfiguration.cs",
+      "reason": "ServiceLink is marked as [JsonRequired] in the WebConfiguration class, indicating it is a necessary configuration."
+    },
+    {
+      "key": "WebConfiguration:SessionRedisConnectionString",
+      "sourceFile": "src/SFA.DAS.AssessorService.Settings/WebConfiguration.cs",
+      "reason": "SessionRedisConnectionString is marked as [JsonRequired] in the WebConfiguration class, indicating it is a necessary configuration."
+    },
+    {
+      "key": "WebConfiguration:ZenDeskCobrowsingSnippetKey",
+      "sourceFile": "src/SFA.DAS.AssessorService.Settings/WebConfiguration.cs",
+      "reason": "ZenDeskCobrowsingSnippetKey is marked as [JsonRequired] in the WebConfiguration class, indicating it is a necessary configuration."
+    },
+    {
+      "key": "WebConfiguration:ZenDeskSectionId",
+      "sourceFile": "src/SFA.DAS.AssessorService.Settings/WebConfiguration.cs",
+      "reason": "ZenDeskSectionId is marked as [JsonRequired] in the WebConfiguration class, indicating it is a necessary configuration."
+    },
+    {
+      "key": "WebConfiguration:ZenDeskSnippetKey",
+      "sourceFile": "src/SFA.DAS.AssessorService.Settings/WebConfiguration.cs",
+      "reason": "ZenDeskSnippetKey is marked as [JsonRequired] in the WebConfiguration class, indicating it is a necessary configuration."
+    },
+    {
+      "key": "WtRealm",
+      "sourceFile": "src/SFA.DAS.AssessorService.Settings/IAuthSettings.cs",
+      "reason": "The 'WtRealm' property is required for authentication settings."
+    },
+    {
+      "key": "ZenDeskCobrowsingSnippetKey",
+      "sourceFile": "src/SFA.DAS.AssessorService.Settings/IWebConfiguration.cs",
+      "reason": "The 'ZenDeskCobrowsingSnippetKey' is required for co-browsing functionality with ZenDesk."
+    },
+    {
+      "key": "ZenDeskSectionId",
+      "sourceFile": "src/SFA.DAS.AssessorService.Settings/IWebConfiguration.cs",
+      "reason": "The 'ZenDeskSectionId' is used for identification in ZenDesk integration."
+    },
+    {
+      "key": "ZenDeskSnippetKey",
+      "sourceFile": "src/SFA.DAS.AssessorService.Settings/IWebConfiguration.cs",
+      "reason": "The 'ZenDeskSnippetKey' is required for integration with ZenDesk."
+    }
+  ]
+}

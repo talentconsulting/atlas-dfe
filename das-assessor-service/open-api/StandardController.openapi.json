@@ -1,0 +1,420 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "StandardController API",
+    "version": "1.0.0",
+    "description": "API for managing standards and applications in the Assessor Service Web."
+  },
+  "paths": {
+    "/standard/add-standard/{search}": {
+      "get": {
+        "summary": "Search for standards to add.",
+        "operationId": "AddStandardSearchRouteGet",
+        "parameters": [
+          {
+            "name": "search",
+            "in": "path",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Rendered search view."
+          }
+        }
+      }
+    },
+    "/standard/add-standard": {
+      "post": {
+        "summary": "Post search data for standards.",
+        "operationId": "AddStandardSearchRoutePost",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddStandardSearchViewModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "302": {
+            "description": "Redirect to search results or error page."
+          }
+        }
+      }
+    },
+    "/standard/add-standard/{search}/results": {
+      "get": {
+        "summary": "Get results for standard search.",
+        "operationId": "AddStandardSearchResultsRouteGet",
+        "parameters": [
+          {
+            "name": "search",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Rendered search results view."
+          }
+        }
+      }
+    },
+    "/standard/add-standard/{search}/{referenceNumber}/choose-versions": {
+      "get": {
+        "summary": "Choose versions for a standard.",
+        "operationId": "AddStandardChooseVersionsRouteGet",
+        "parameters": [
+          {
+            "name": "search",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "referenceNumber",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Rendered versions view."
+          }
+        }
+      }
+    },
+    "/standard/add-standard/choose-versions": {
+      "post": {
+        "summary": "Post selected versions for a standard.",
+        "operationId": "AddStandardChooseVersionsRoutePost",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddStandardConfirmViewModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "302": {
+            "description": "Redirect to confirmation view."
+          }
+        }
+      }
+    },
+    "/standard/add-standard/{search}/{referenceNumber}/confirm": {
+      "get": {
+        "summary": "Confirm selected versions for a standard.",
+        "operationId": "AddStandardConfirmRouteGet",
+        "parameters": [
+          {
+            "name": "search",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "referenceNumber",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "versions",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Rendered confirmation view."
+          }
+        }
+      }
+    },
+    "/standard/add-standard/confirm": {
+      "post": {
+        "summary": "Submit confirmed standard versions.",
+        "operationId": "AddStandardConfirmRoutePost",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddStandardConfirmViewModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "302": {
+            "description": "Redirect to completion view."
+          }
+        }
+      }
+    },
+    "/standard/add-standard/{referenceNumber}/confirmation": {
+      "get": {
+        "summary": "Display confirmation for added standards.",
+        "operationId": "AddStandardConfirmationRouteGet",
+        "parameters": [
+          {
+            "name": "referenceNumber",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Rendered confirmation view."
+          }
+        }
+      }
+    },
+    "/standard/standard-details/{referenceNumber}": {
+      "get": {
+        "summary": "Get details for a specific standard.",
+        "operationId": "StandardDetailsRouteGet",
+        "parameters": [
+          {
+            "name": "referenceNumber",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "backRouteName",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Rendered standard details view."
+          }
+        }
+      }
+    },
+    "/standard/{id}/apply-standard/{search}": {
+      "get": {
+        "summary": "Search standards for application.",
+        "operationId": "ApplyStandardSearchRouteGet",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "search",
+            "in": "path",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Rendered search view."
+          }
+        }
+      }
+    },
+    "/standard/{id}/apply-standard": {
+      "post": {
+        "summary": "Post search data for application standards.",
+        "operationId": "ApplyStandardSearchRoutePost",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApplyStandardSearchViewModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "302": {
+            "description": "Redirect to search results or error page."
+          }
+        }
+      }
+    },
+    "/standard/{id}/apply-standard/{search}/results": {
+      "get": {
+        "summary": "Get application standard search results.",
+        "operationId": "ApplyStandardSearchResultsRouteGet",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "search",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Rendered search results view."
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AddStandardSearchViewModel": {
+        "type": "object",
+        "properties": {
+          "Search": {
+            "type": "string"
+          },
+          "Results": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StandardVersion"
+            }
+          },
+          "Approved": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StandardVersion"
+            }
+          }
+        },
+        "required": [
+          "Search"
+        ]
+      },
+      "AddStandardConfirmViewModel": {
+        "type": "object",
+        "properties": {
+          "Search": {
+            "type": "string"
+          },
+          "StandardReference": {
+            "type": "string"
+          },
+          "Standard": {
+            "$ref": "#/components/schemas/StandardVersion"
+          },
+          "StandardVersions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StandardVersion"
+            }
+          },
+          "SelectedVersions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "IsConfirmed": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "Search",
+          "StandardReference",
+          "Standard",
+          "SelectedVersions",
+          "IsConfirmed"
+        ]
+      },
+      "ApplyStandardSearchViewModel": {
+        "type": "object",
+        "properties": {
+          "Id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "Search": {
+            "type": "string"
+          },
+          "Results": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StandardVersion"
+            }
+          }
+        },
+        "required": [
+          "Id",
+          "Search"
+        ]
+      },
+      "StandardVersion": {
+        "type": "object",
+        "properties": {
+          "Title": {
+            "type": "string"
+          },
+          "StandardUId": {
+            "type": "string"
+          },
+          "Version": {
+            "type": "string"
+          },
+          "Options": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}

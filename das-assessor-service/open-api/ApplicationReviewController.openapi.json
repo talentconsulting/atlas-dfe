@@ -1,0 +1,432 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Assessor Service API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/Review/ApplicationReviewStatusCounts": {
+      "get": {
+        "summary": "Get application review status counts",
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/Review/OrganisationApplications": {
+      "post": {
+        "summary": "Fetch applications for organizations",
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrganisationApplicationsRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedList_ApplicationSummaryItem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Review/WithdrawalApplications": {
+      "post": {
+        "summary": "Fetch withdrawal applications",
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WithdrawalApplicationsRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedList_ApplicationSummaryItem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Review/StandardApplications": {
+      "post": {
+        "summary": "Fetch applications for specific standards",
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StandardApplicationsRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedList_ApplicationSummaryItem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Review/Applications/{Id}/Sequences/{sequenceId}/Return": {
+      "post": {
+        "summary": "Return an application sequence",
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "Id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "sequenceId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReturnApplicationSequenceRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Review/Applications/{Id}/Sequences/{sequenceNo}/Sections/{sectionNo}/StartReview": {
+      "post": {
+        "summary": "Start review of a section in an application",
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "Id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "sequenceNo",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "sectionNo",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StartApplicationSectionReviewRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        }
+      }
+    },
+    "/Review/Applications/{Id}/Sequences/{sequenceNo}/Sections/{sectionNo}/Evaluate": {
+      "post": {
+        "summary": "Evaluate a review section",
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "Id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "sequenceNo",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "sectionNo",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EvaluateApplicationSectionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "OrganisationApplicationsRequest": {
+        "type": "object",
+        "properties": {
+          "reviewStatus": {
+            "type": "string"
+          },
+          "sortColumn": {
+            "type": "string"
+          },
+          "sortAscending": {
+            "type": "integer"
+          },
+          "pageSize": {
+            "type": "integer"
+          },
+          "pageIndex": {
+            "type": "integer"
+          },
+          "pageSetSize": {
+            "type": "integer"
+          }
+        }
+      },
+      "WithdrawalApplicationsRequest": {
+        "type": "object",
+        "properties": {
+          "organisationId": {
+            "type": "string"
+          },
+          "reviewStatus": {
+            "type": "string"
+          },
+          "sortColumn": {
+            "type": "string"
+          },
+          "sortAscending": {
+            "type": "integer"
+          },
+          "pageSize": {
+            "type": "integer"
+          },
+          "pageIndex": {
+            "type": "integer"
+          },
+          "pageSetSize": {
+            "type": "integer"
+          }
+        }
+      },
+      "StandardApplicationsRequest": {
+        "type": "object",
+        "properties": {
+          "organisationId": {
+            "type": "string"
+          },
+          "reviewStatus": {
+            "type": "string"
+          },
+          "sortColumn": {
+            "type": "string"
+          },
+          "sortAscending": {
+            "type": "integer"
+          },
+          "pageSize": {
+            "type": "integer"
+          },
+          "pageIndex": {
+            "type": "integer"
+          },
+          "pageSetSize": {
+            "type": "integer"
+          }
+        }
+      },
+      "PaginatedList_ApplicationSummaryItem": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "applicationId": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "pageIndex": {
+            "type": "integer"
+          },
+          "pageSize": {
+            "type": "integer"
+          },
+          "totalRecordCount": {
+            "type": "integer"
+          }
+        }
+      },
+      "ReturnApplicationSequenceRequest": {
+        "type": "object",
+        "properties": {
+          "returnType": {
+            "type": "string"
+          },
+          "returnedBy": {
+            "type": "string"
+          }
+        }
+      },
+      "StartApplicationSectionReviewRequest": {
+        "type": "object",
+        "properties": {
+          "reviewer": {
+            "type": "string"
+          }
+        }
+      },
+      "EvaluateApplicationSectionRequest": {
+        "type": "object",
+        "properties": {
+          "isSectionComplete": {
+            "type": "boolean"
+          },
+          "evaluatedBy": {
+            "type": "string"
+          }
+        }
+      },
+      "ApiResponse": {
+        "type": "object",
+        "properties": {
+          "statusCode": {
+            "type": "integer"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
