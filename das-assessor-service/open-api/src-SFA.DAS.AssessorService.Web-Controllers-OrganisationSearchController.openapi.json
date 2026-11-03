@@ -1,0 +1,410 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Organisation Search API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/api/v1/organisation-search": {
+      "get": {
+        "operationId": "getOrganisationSearchIndex",
+        "summary": "Render the organisation search index page.",
+        "tags": [
+          "organisation-search"
+        ],
+        "responses": {
+          "200": {
+            "description": "HTML response showing the organisation search index page."
+          }
+        }
+      }
+    },
+    "/api/v1/organisation-search/results": {
+      "get": {
+        "operationId": "getOrganisationSearchResults",
+        "summary": "Search for organisations based on the search criteria.",
+        "tags": [
+          "organisation-search"
+        ],
+        "parameters": [
+          {
+            "name": "searchString",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Search string for organisation."
+          },
+          {
+            "name": "pageIndex",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "description": "Page index for pagination."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Results of the organisation search.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrganisationSearchViewModel"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid search criteria."
+          }
+        }
+      }
+    },
+    "/api/v1/organisation-search/next-results": {
+      "get": {
+        "operationId": "getNextOrganisationSearchResults",
+        "summary": "Get paginated search results for organisations.",
+        "tags": [
+          "organisation-search"
+        ],
+        "parameters": [
+          {
+            "name": "searchString",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Search string for the organisations."
+          },
+          {
+            "name": "pageIndex",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "description": "Page index for pagination."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Results retrieved successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrganisationSearchViewModel"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid pagination request."
+          }
+        }
+      }
+    },
+    "/api/v1/organisation-search/confirm": {
+      "post": {
+        "operationId": "postOrganisationSearchConfirm",
+        "summary": "Confirm the selection of the organisation.",
+        "tags": [
+          "organisation-search"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrganisationSearchViewModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Organisation confirmed successfully."
+          },
+          "400": {
+            "description": "Validation errors occurred."
+          }
+        }
+      }
+    },
+    "/api/v1/organisation-search/no-access": {
+      "get": {
+        "operationId": "getOrganisationNoAccess",
+        "summary": "Render the 'no access' page.",
+        "tags": [
+          "organisation-search"
+        ],
+        "responses": {
+          "200": {
+            "description": "HTML response showing the 'no access' page."
+          }
+        }
+      }
+    },
+    "/api/v1/organisation-search/chosen": {
+      "get": {
+        "operationId": "getOrganisationChosen",
+        "summary": "Retrieve the organisation chosen in the previous session.",
+        "tags": [
+          "organisation-search"
+        ],
+        "responses": {
+          "200": {
+            "description": "Organisation chosen details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrganisationSearchViewModel"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "postOrganisationChosen",
+        "summary": "Finalize the selection of the chosen organisation.",
+        "tags": [
+          "organisation-search"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrganisationSearchViewModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully finalized the chosen organisation."
+          },
+          "400": {
+            "description": "Validation errors occurred."
+          }
+        }
+      }
+    },
+    "/api/v1/organisation-search/request": {
+      "post": {
+        "operationId": "postDealingWithRequest",
+        "summary": "Handle applicant requests related to organisations.",
+        "tags": [
+          "organisation-search"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrganisationSearchViewModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Request handled successfully."
+          },
+          "400": {
+            "description": "Validation errors."
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "OrganisationSearchViewModel": {
+        "type": "object",
+        "properties": {
+          "SearchString": {
+            "type": "string",
+            "description": "String to search for organisations."
+          },
+          "Name": {
+            "type": "string",
+            "description": "Name of the organisation."
+          },
+          "Ukprn": {
+            "type": "integer",
+            "description": "UKPRN of the organisation."
+          },
+          "Postcode": {
+            "type": "string",
+            "description": "Postcode associated with the organisation."
+          },
+          "OrganisationType": {
+            "type": "string",
+            "description": "Type of the organisation."
+          },
+          "OrganisationTypeId": {
+            "type": "integer",
+            "description": "ID of the organisation type."
+          },
+          "PageIndex": {
+            "type": "integer",
+            "description": "Page index for the organisation search results."
+          },
+          "Organisations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OrganisationSearchResult"
+            },
+            "description": "List of organisations matching the search criteria."
+          },
+          "OrganisationTypes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OrganisationType"
+            },
+            "description": "List of available organisation types."
+          }
+        }
+      },
+      "OrganisationSearchResult": {
+        "type": "object",
+        "properties": {
+          "Id": {
+            "type": "string",
+            "description": "Unique identifier for the organisation."
+          },
+          "Ukprn": {
+            "type": "integer",
+            "description": "UKPRN of the organisation."
+          },
+          "Name": {
+            "type": "string",
+            "description": "Name of the organisation."
+          },
+          "Email": {
+            "type": "string",
+            "format": "email",
+            "description": "Email address of the organisation."
+          },
+          "Address": {
+            "$ref": "#/components/schemas/OrganisationAddress"
+          },
+          "OrganisationType": {
+            "type": "string",
+            "description": "Type of the organisation."
+          },
+          "OrganisationReferenceType": {
+            "type": "string",
+            "description": "Type of the organisation reference."
+          },
+          "OrganisationReferenceId": {
+            "type": "string",
+            "description": "Reference ID of the organisation."
+          },
+          "TradingName": {
+            "type": "string",
+            "description": "Trading name of the organisation."
+          },
+          "LegalName": {
+            "type": "string",
+            "description": "Legal name of the organisation."
+          },
+          "ProviderName": {
+            "type": "string",
+            "description": "Provider name of the organisation."
+          },
+          "CompanyNumber": {
+            "type": "string",
+            "description": "Company registration number."
+          },
+          "CharityNumber": {
+            "type": "string",
+            "description": "Charity registration number."
+          },
+          "RoEPAOApproved": {
+            "type": "boolean",
+            "description": "Indicates if the organisation is approved for RoEPAO."
+          },
+          "RoATPApproved": {
+            "type": "boolean",
+            "description": "Indicates if the organisation is approved for RoATP."
+          },
+          "EasApiOrganisationType": {
+            "type": "string",
+            "description": "EAS API organisation type."
+          },
+          "FinancialDueDate": {
+            "type": "string",
+            "format": "date",
+            "description": "Financial due date of the organisation."
+          },
+          "FinancialExempt": {
+            "type": "boolean",
+            "description": "Indicates if the organisation is financially exempt."
+          },
+          "OrganisationIsLive": {
+            "type": "boolean",
+            "description": "Indicates if the organisation is live."
+          }
+        }
+      },
+      "OrganisationType": {
+        "type": "object",
+        "properties": {
+          "Id": {
+            "type": "integer",
+            "description": "ID of the organisation type."
+          },
+          "Type": {
+            "type": "string",
+            "description": "Type of the organisation."
+          },
+          "TypeDescription": {
+            "type": "string",
+            "description": "Description of the organisation type."
+          },
+          "Status": {
+            "type": "string",
+            "description": "Status of the organisation type."
+          },
+          "FinancialExempt": {
+            "type": "boolean",
+            "description": "Indicates if the organisation type is financially exempt."
+          }
+        }
+      },
+      "OrganisationAddress": {
+        "type": "object",
+        "properties": {
+          "Address1": {
+            "type": "string",
+            "description": "First line of the address."
+          },
+          "Address2": {
+            "type": "string",
+            "description": "Second line of the address."
+          },
+          "Address3": {
+            "type": "string",
+            "description": "Third line of the address."
+          },
+          "City": {
+            "type": "string",
+            "description": "City of the address."
+          },
+          "Postcode": {
+            "type": "string",
+            "description": "Postcode of the address."
+          }
+        }
+      }
+    }
+  }
+}

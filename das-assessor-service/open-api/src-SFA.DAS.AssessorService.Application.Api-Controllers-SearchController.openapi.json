@@ -1,0 +1,307 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Assessor Service API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/api/v1/search/learners": {
+      "post": {
+        "operationId": "SearchLearners",
+        "summary": "Search for learners",
+        "description": "Search for learners using specified criteria.",
+        "tags": [
+          "Search"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LearnerSearchRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "List of learners matching search criteria",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/LearnerSearchResponse"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "LearnerSearchRequest": {
+        "type": "object",
+        "properties": {
+          "Uln": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "Surname": {
+            "type": "string"
+          },
+          "EpaOrgId": {
+            "type": "string"
+          },
+          "Username": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "Uln",
+          "Surname",
+          "EpaOrgId",
+          "Username"
+        ]
+      },
+      "LearnerSearchResponse": {
+        "type": "object",
+        "properties": {
+          "Uln": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "GivenNames": {
+            "type": "string"
+          },
+          "FamilyName": {
+            "type": "string"
+          },
+          "DateOfBirth": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "StdCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "StandardReferenceNumber": {
+            "type": "string"
+          },
+          "Versions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StandardVersion"
+            }
+          },
+          "Standard": {
+            "type": "string"
+          },
+          "Level": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "CoronationEmblem": {
+            "type": "boolean"
+          },
+          "FundingModel": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "UkPrn": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Version": {
+            "type": "string"
+          },
+          "VersionConfirmed": {
+            "type": "boolean"
+          },
+          "StandardUId": {
+            "type": "string"
+          },
+          "Option": {
+            "type": "string"
+          },
+          "LearnStartDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "OverallGrade": {
+            "type": "string"
+          },
+          "AchDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "CertificateId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "CertificateReference": {
+            "type": "string"
+          },
+          "CertificateStatus": {
+            "type": "string"
+          },
+          "IsPrivatelyFunded": {
+            "type": "boolean"
+          },
+          "CreatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "CreatedBy": {
+            "type": "string"
+          },
+          "SubmittedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "SubmittedBy": {
+            "type": "string"
+          },
+          "UpdatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "UpdatedBy": {
+            "type": "string"
+          },
+          "ShowExtraInfo": {
+            "type": "boolean"
+          },
+          "UlnAlreadyExits": {
+            "type": "boolean"
+          },
+          "IsNoMatchingFamilyName": {
+            "type": "boolean"
+          }
+        }
+      },
+      "StandardVersion": {
+        "type": "object",
+        "properties": {
+          "StandardUId": {
+            "type": "string"
+          },
+          "Title": {
+            "type": "string"
+          },
+          "Version": {
+            "type": "string"
+          },
+          "IFateReferenceNumber": {
+            "type": "string"
+          },
+          "LarsCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Level": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "CoronationEmblem": {
+            "type": "boolean"
+          },
+          "EffectiveFrom": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "EffectiveTo": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "LastDateStarts": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "VersionEarliestStartDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "VersionLatestStartDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "VersionLatestEndDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "Options": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "EPAChanged": {
+            "type": "boolean"
+          },
+          "StandardPageUrl": {
+            "type": "string"
+          },
+          "EpaoMustBeApprovedByRegulatorBody": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ApiResponse": {
+        "type": "object",
+        "properties": {
+          "StatusCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Message": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      }
+    }
+  }
+}

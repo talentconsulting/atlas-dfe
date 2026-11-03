@@ -1,0 +1,289 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Certificate Version Service",
+    "description": "API for managing certificate versions and related operations.",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/certificate/version": {
+      "get": {
+        "summary": "Get Certificate Version",
+        "description": "Retrieve the certificate version view or redirect to other views based on session information.",
+        "parameters": [
+          {
+            "name": "redirectToCheck",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "View rendered successfully"
+          },
+          "302": {
+            "description": "Redirected to another page"
+          }
+        },
+        "security": [
+          {
+            "OAuth2": []
+          }
+        ]
+      },
+      "post": {
+        "summary": "Select Certificate Version",
+        "description": "Submit the selected certificate version details.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CertificateVersionViewModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully processed the certificate version"
+          },
+          "400": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CertificateVersionViewModel": {
+        "type": "object",
+        "properties": {
+          "versions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StandardVersionViewModel"
+            }
+          },
+          "selectedStandardVersion": {
+            "$ref": "#/components/schemas/StandardVersion"
+          },
+          "selectedStandardOptions": {
+            "$ref": "#/components/schemas/StandardOptions"
+          },
+          "previousFailData": {
+            "$ref": "#/components/schemas/CertificateData"
+          }
+        }
+      },
+      "StandardVersionViewModel": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "standardUId": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "options": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "StandardVersion": {
+        "type": "object",
+        "properties": {
+          "standardUId": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "iFateReferenceNumber": {
+            "type": "string"
+          },
+          "larsCode": {
+            "type": "integer"
+          },
+          "level": {
+            "type": "integer"
+          },
+          "coronationEmblem": {
+            "type": "boolean"
+          },
+          "effectiveFrom": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "effectiveTo": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "options": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "CertificateData": {
+        "type": "object",
+        "properties": {
+          "learnerGivenNames": {
+            "type": "string"
+          },
+          "learnerFamilyName": {
+            "type": "string"
+          },
+          "employerAccountId": {
+            "type": "integer"
+          },
+          "employerName": {
+            "type": "string"
+          },
+          "standardReference": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "standardName": {
+            "type": "string"
+          },
+          "standardLevel": {
+            "type": "integer"
+          },
+          "coronationEmblem": {
+            "type": "boolean"
+          },
+          "standardPublicationDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "contactName": {
+            "type": "string"
+          },
+          "contactOrganisation": {
+            "type": "string"
+          },
+          "contactAddLine1": {
+            "type": "string"
+          },
+          "contactAddLine2": {
+            "type": "string"
+          },
+          "contactAddLine3": {
+            "type": "string"
+          },
+          "contactAddLine4": {
+            "type": "string"
+          },
+          "contactPostCode": {
+            "type": "string"
+          },
+          "providerName": {
+            "type": "string"
+          },
+          "registration": {
+            "type": "string"
+          },
+          "learningStartDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "achievementDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "courseOption": {
+            "type": "string"
+          },
+          "overallGrade": {
+            "type": "string"
+          },
+          "department": {
+            "type": "string"
+          },
+          "fullName": {
+            "type": "string"
+          },
+          "incidentNumber": {
+            "type": "string"
+          }
+        }
+      },
+      "StandardOptions": {
+        "type": "object",
+        "properties": {
+          "standardUId": {
+            "type": "string"
+          },
+          "standardCode": {
+            "type": "integer"
+          },
+          "standardReference": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "courseOption": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "statusCode": {
+            "type": "integer"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "OAuth2": {
+        "type": "oauth2",
+        "flows": {
+          "authorizationCode": {
+            "authorizationUrl": "https://example.com/auth",
+            "tokenUrl": "https://example.com/token",
+            "scopes": {}
+          }
+        }
+      }
+    }
+  }
+}

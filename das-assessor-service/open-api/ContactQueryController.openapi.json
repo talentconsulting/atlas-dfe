@@ -1,0 +1,295 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Assessor Service API",
+    "version": "1.0.0",
+    "description": "API for managing assessor-related operations."
+  },
+  "paths": {
+    "/api/v1/contacts/privileges": {
+      "get": {
+        "operationId": "GetAllPrivileges",
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved privileges.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PrivilegeResponse"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Contacts"
+        ]
+      }
+    },
+    "/api/v1/contacts/user/{userId}/privileges": {
+      "get": {
+        "operationId": "GetPrivilegesForContact",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved privileges for a specific user.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PrivilegeResponse"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Contacts"
+        ]
+      }
+    },
+    "/api/v1/contacts/{endPointAssessorOrganisationId}": {
+      "get": {
+        "operationId": "SearchContactsForAnOrganisation",
+        "parameters": [
+          {
+            "name": "endPointAssessorOrganisationId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved contacts for an organisation.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ContactResponse"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Contacts"
+        ]
+      }
+    },
+    "/api/v1/contacts/getAllWhoCanBePrimary/{endPointAssessorOrganisationId}": {
+      "get": {
+        "operationId": "GetAllContactsWhoCanBePrimaryForOrganisation",
+        "parameters": [
+          {
+            "name": "endPointAssessorOrganisationId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved all contacts who can be primary for the organisation.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ContactResponse"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Contacts"
+        ]
+      }
+    },
+    "/api/v1/contacts/email/{email}": {
+      "get": {
+        "operationId": "SearchContactByEmail",
+        "parameters": [
+          {
+            "name": "email",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "email"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved contact by email.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContactResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Contacts"
+        ]
+      }
+    },
+    "/api/v1/contacts/govidentifier/{govIdentifier}": {
+      "get": {
+        "operationId": "SearchContactByGovIdentifier",
+        "parameters": [
+          {
+            "name": "govIdentifier",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved contact by government identifier.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContactResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Contacts"
+        ]
+      }
+    },
+    "/api/v1/contacts/user/{id}/haveprivileges": {
+      "get": {
+        "operationId": "DoesContactHavePrivileges",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Determination of whether the contact has privileges.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContactBoolResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Contacts"
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ContactResponse": {
+        "type": "object",
+        "properties": {
+          "endPointAssessorOrganisationId": {
+            "type": "string"
+          },
+          "organisationId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "username": {
+            "type": "string"
+          },
+          "displayName": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "title": {
+            "type": "string"
+          },
+          "signInType": {
+            "type": "string"
+          },
+          "familyName": {
+            "type": "string"
+          },
+          "givenNames": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "phoneNumber": {
+            "type": "string"
+          },
+          "govUkIdentifier": {
+            "type": "string"
+          }
+        }
+      },
+      "PrivilegeResponse": {
+        "type": "object",
+        "properties": {
+          "userPrivilege": {
+            "type": "string"
+          },
+          "key": {
+            "type": "string"
+          }
+        }
+      },
+      "ContactBoolResponse": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "type": "boolean"
+          }
+        }
+      }
+    }
+  }
+}

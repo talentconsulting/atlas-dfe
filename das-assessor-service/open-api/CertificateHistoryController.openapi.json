@@ -1,0 +1,159 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Certificate History API",
+    "version": "1.0.0",
+    "description": "API for managing certificate history."
+  },
+  "paths": {
+    "/certificateHistory": {
+      "get": {
+        "operationId": "CertificateHistory_Index",
+        "summary": "Retrieve certificate history index page.",
+        "responses": {
+          "200": {
+            "description": "Successful retrieval of the certificate history page.",
+            "content": {
+              "text/html": {}
+            }
+          }
+        }
+      }
+    },
+    "/certificateHistory/ResetSession": {
+      "get": {
+        "operationId": "CertificateHistory_ResetSession",
+        "summary": "Reset the session data for certificate history.",
+        "responses": {
+          "302": {
+            "description": "Redirects to the Index page."
+          }
+        }
+      }
+    },
+    "/certificateHistory/Search": {
+      "get": {
+        "operationId": "CertificateHistory_Search",
+        "summary": "Search certificate history by a term.",
+        "parameters": [
+          {
+            "name": "searchTerm",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Search term for filtering certificate history."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful search results displayed on the certificate history page.",
+            "content": {
+              "text/html": {}
+            }
+          }
+        }
+      }
+    },
+    "/certificateHistory/SortCertificateHistory": {
+      "get": {
+        "operationId": "CertificateHistory_SortCertificateHistory",
+        "summary": "Sort certificate history by a specified column and direction.",
+        "parameters": [
+          {
+            "name": "sortColumn",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Column to sort by."
+          },
+          {
+            "name": "sortDirection",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "Asc",
+                "Desc"
+              ]
+            },
+            "description": "Direction to sort (Asc or Desc)."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sorted certificate history displayed on the certificate history page.",
+            "content": {
+              "text/html": {}
+            }
+          }
+        }
+      }
+    },
+    "/certificateHistory/ChangePageCertificateHistory": {
+      "get": {
+        "operationId": "CertificateHistory_ChangePage",
+        "summary": "Change the page index for certificate history.",
+        "parameters": [
+          {
+            "name": "pageIndex",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1
+            },
+            "description": "Page index to navigate to."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Certificate history displayed for the specified page.",
+            "content": {
+              "text/html": {}
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CertificateHistoryViewModel": {
+        "type": "object",
+        "properties": {
+          "searchTerm": {
+            "type": "string"
+          },
+          "sortColumn": {
+            "type": "string",
+            "enum": [
+              "DateRequested",
+              "AnotherSortColumn"
+            ]
+          },
+          "sortDirection": {
+            "type": "string",
+            "enum": [
+              "Asc",
+              "Desc"
+            ]
+          },
+          "pageIndex": {
+            "type": "integer"
+          },
+          "certificates": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          }
+        }
+      }
+    }
+  }
+}

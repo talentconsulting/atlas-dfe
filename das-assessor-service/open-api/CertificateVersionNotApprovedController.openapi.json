@@ -1,0 +1,77 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Certificate Version Not Approved API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/certificate/version/not-approved": {
+      "get": {
+        "summary": "Retrieve information regarding not approved certificate versions.",
+        "operationId": "getNotApprovedCertificateVersion",
+        "parameters": [
+          {
+            "name": "redirectToCheck",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "Indicates whether to redirect back to the check page."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response with the view model.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CertificateVersionNotApprovedViewModel"
+                }
+              }
+            }
+          },
+          "302": {
+            "description": "Redirect to another page."
+          }
+        },
+        "security": [
+          {
+            "oauth2": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CertificateVersionNotApprovedViewModel": {
+        "type": "object",
+        "properties": {
+          "AttemptedVersion": {
+            "type": "string",
+            "description": "The version of the standard that was attempted."
+          },
+          "BackToCheckPage": {
+            "type": "boolean",
+            "description": "Flag indicating whether to navigate back to the check page."
+          },
+          "StandardName": {
+            "type": "string",
+            "description": "The name of the standard that was attempted."
+          },
+          "IFateReferenceNumber": {
+            "type": "string",
+            "description": "The iFate reference number of the standard."
+          }
+        },
+        "required": [
+          "AttemptedVersion",
+          "BackToCheckPage",
+          "StandardName",
+          "IFateReferenceNumber"
+        ]
+      }
+    }
+  }
+}
