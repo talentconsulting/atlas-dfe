@@ -1,0 +1,97 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "UKPRN Validation API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/Validations/UkPrn/{id}": {
+      "get": {
+        "summary": "Validate UKPRN",
+        "description": "Validates a UKPRN (Unique Provider Reference Number).",
+        "operationId": "validateUkPrn",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "The identifier (Guid) associated with the validation request.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "required": true,
+            "description": "The UKPRN to validate.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Validation result for the UKPRN.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiValidationResult"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "AssessorServiceInternalAPI": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ApiValidationResult": {
+        "type": "object",
+        "properties": {
+          "isValid": {
+            "type": "boolean",
+            "description": "Indicates whether the validation passed."
+          },
+          "errorMessages": {
+            "type": "array",
+            "description": "List of error messages, if any.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "key": {
+                  "type": "string",
+                  "description": "The error message key."
+                },
+                "value": {
+                  "type": "string",
+                  "description": "The error message content."
+                }
+              }
+            }
+          }
+        },
+        "required": [
+          "isValid",
+          "errorMessages"
+        ]
+      }
+    },
+    "securitySchemes": {
+      "AssessorServiceInternalAPI": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Requires a bearer token with the `AssessorServiceInternalAPI` role."
+      }
+    }
+  }
+}

@@ -1,0 +1,347 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Certificate Address API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/certificate/address/enter": {
+      "get": {
+        "tags": [
+          "Certificate Address"
+        ],
+        "summary": "Retrieve address form.",
+        "description": "Retrieves the form to enter or edit the address.",
+        "operationId": "getCertificateAddressEnter",
+        "parameters": [
+          {
+            "name": "edit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "hasPreviousAddress",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "redirectToCheck",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "nullable": true
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Certificate Address"
+        ],
+        "summary": "Submit address form.",
+        "description": "Submits the address form and performs required actions based on the provided address data.",
+        "operationId": "postCertificateAddressEnter",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CertificateAddressViewModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful submission response."
+          }
+        }
+      }
+    },
+    "/certificate/address/select-previous": {
+      "get": {
+        "tags": [
+          "Certificate Address"
+        ],
+        "summary": "Retrieve form for selecting previous address.",
+        "description": "Retrieves the form to select a previous address or directs to the address form if no previous address is available.",
+        "operationId": "getCertificateAddressSelectPrevious",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "302": {
+            "description": "Redirect to /certificate/address/enter if no previous addresses exist."
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Certificate Address"
+        ],
+        "summary": "Submit previous address selection.",
+        "description": "Allows the user to select or deny use of a previous address.",
+        "operationId": "postCertificateAddressSelectPrevious",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CertificatePreviousAddressViewModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful submission response."
+          }
+        }
+      }
+    },
+    "/certificate/address/recipient": {
+      "get": {
+        "tags": [
+          "Certificate Address"
+        ],
+        "summary": "Retrieve recipient form.",
+        "description": "Loads the form for the certificate recipient details.",
+        "operationId": "getCertificateAddressRecipient",
+        "parameters": [
+          {
+            "name": "edit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "usePreviousAddress",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Certificate Address"
+        ],
+        "summary": "Submit recipient form.",
+        "description": "Submits the recipient form and performs required actions based on the provided recipient data.",
+        "operationId": "postCertificateAddressRecipient",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CertificateRecipientViewModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful submission response."
+          }
+        }
+      }
+    },
+    "/certificate/address/confirm": {
+      "get": {
+        "tags": [
+          "Certificate Address"
+        ],
+        "summary": "Retrieve confirmation form.",
+        "description": "Retrieves the form to confirm the certificate address.",
+        "operationId": "getCertificateAddressConfirm",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Certificate Address"
+        ],
+        "summary": "Submit confirmation form.",
+        "description": "Submits the confirmation of certificate recipient's address.",
+        "operationId": "postCertificateAddressConfirm",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CertificateRecipientViewModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful submission response."
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CertificateAddressViewModel": {
+        "type": "object",
+        "properties": {
+          "Employer": {
+            "type": "string"
+          },
+          "AddressLine1": {
+            "type": "string"
+          },
+          "AddressLine2": {
+            "type": "string"
+          },
+          "AddressLine3": {
+            "type": "string"
+          },
+          "City": {
+            "type": "string"
+          },
+          "Postcode": {
+            "type": "string"
+          },
+          "EditForm": {
+            "type": "boolean"
+          },
+          "EmployerAccountId": {
+            "type": "integer",
+            "nullable": true
+          },
+          "EmployerName": {
+            "type": "string"
+          },
+          "HasPreviousAddress": {
+            "type": "boolean"
+          },
+          "UsePreviousAddress": {
+            "type": "boolean"
+          },
+          "PreviousAddress": {
+            "$ref": "#/components/schemas/CertificateAddress"
+          }
+        },
+        "required": [
+          "AddressLine1",
+          "City",
+          "Postcode"
+        ]
+      },
+      "CertificatePreviousAddressViewModel": {
+        "type": "object",
+        "properties": {
+          "EmployerAccountId": {
+            "type": "integer",
+            "nullable": true
+          },
+          "EmployerName": {
+            "type": "string"
+          },
+          "HasPreviousAddress": {
+            "type": "boolean"
+          },
+          "UsePreviousAddress": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "PreviousAddress": {
+            "$ref": "#/components/schemas/CertificateAddress"
+          }
+        }
+      },
+      "CertificateRecipientViewModel": {
+        "type": "object",
+        "properties": {
+          "Name": {
+            "type": "string"
+          },
+          "Dept": {
+            "type": "string"
+          },
+          "UsePreviousAddress": {
+            "type": "boolean"
+          },
+          "EditForm": {
+            "type": "boolean"
+          },
+          "AddressLine1": {
+            "type": "string"
+          },
+          "AddressLine2": {
+            "type": "string"
+          },
+          "AddressLine3": {
+            "type": "string"
+          },
+          "City": {
+            "type": "string"
+          },
+          "Postcode": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "AddressLine1",
+          "City",
+          "Postcode"
+        ]
+      },
+      "CertificateAddress": {
+        "type": "object",
+        "properties": {
+          "ContactOrganisation": {
+            "type": "string"
+          },
+          "AddressLine1": {
+            "type": "string"
+          },
+          "AddressLine2": {
+            "type": "string"
+          },
+          "AddressLine3": {
+            "type": "string"
+          },
+          "City": {
+            "type": "string"
+          },
+          "PostCode": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "AddressLine1",
+          "City",
+          "PostCode"
+        ]
+      }
+    }
+  }
+}

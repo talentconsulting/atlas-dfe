@@ -1,0 +1,126 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Request Access API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/RequestAccess": {
+      "post": {
+        "summary": "Request access for a privilege",
+        "operationId": "RequestAccess",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AccessDeniedViewModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "302": {
+            "description": "Redirects to the appropriate route or action based on user management status and privilege ID."
+          }
+        },
+        "security": [
+          {
+            "oauth2": []
+          }
+        ]
+      }
+    },
+    "/RequestAccess/RequestSent/{privilegeId}": {
+      "get": {
+        "summary": "View confirmation of a privilege access request",
+        "operationId": "RequestSent",
+        "parameters": [
+          {
+            "name": "privilegeId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns the privilege user details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "UserPrivilege": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AccessDeniedViewModel": {
+        "type": "object",
+        "properties": {
+          "Title": {
+            "type": "string"
+          },
+          "Rights": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "PrivilegeId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "ContactId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "UserHasUserManagement": {
+            "type": "boolean"
+          },
+          "ReturnController": {
+            "type": "string"
+          },
+          "ReturnAction": {
+            "type": "string"
+          },
+          "ReturnRouteName": {
+            "type": "string"
+          },
+          "ReturnRouteValues": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "IsUsersOrganisationLive": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "PrivilegeId",
+          "ContactId",
+          "UserHasUserManagement"
+        ]
+      }
+    }
+  }
+}

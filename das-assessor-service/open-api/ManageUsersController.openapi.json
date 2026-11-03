@@ -1,0 +1,77 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Manage Users API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/ManageUsers": {
+      "get": {
+        "operationId": "GetManageUsersIndex",
+        "tags": [
+          "ManageUsers"
+        ],
+        "summary": "Fetches all contacts for the user's organization including privileges.",
+        "responses": {
+          "200": {
+            "description": "Successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Minimal"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ManageUsers/status/{id}/{status}": {
+      "get": {
+        "operationId": "SetStatusAndNotify",
+        "tags": [
+          "ManageUsers"
+        ],
+        "summary": "Sets the status of a contact and optionally sends a notification.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "The unique identifier for the contact."
+          },
+          {
+            "name": "status",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "Approve",
+                "Reject"
+              ]
+            },
+            "description": "The status to set for the contact."
+          }
+        ],
+        "responses": {
+          "302": {
+            "description": "Redirect to the index page after setting the status."
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Minimal": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    }
+  }
+}

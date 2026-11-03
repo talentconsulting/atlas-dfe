@@ -1,0 +1,485 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Assessor Service API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/api/ao/organisation-types": {
+      "get": {
+        "tags": [
+          "Organisations"
+        ],
+        "operationId": "GetOrganisationTypes",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/OrganisationType"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ao/delivery-areas": {
+      "get": {
+        "tags": [
+          "Areas"
+        ],
+        "operationId": "GetDeliveryAreas",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DeliveryArea"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ao/assessment-organisations": {
+      "get": {
+        "tags": [
+          "Assessment Organisations"
+        ],
+        "operationId": "GetAssessmentOrganisations",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AssessmentOrganisationSummary"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ao/assessment-organisations/{organisationId}": {
+      "get": {
+        "tags": [
+          "Assessment Organisations"
+        ],
+        "operationId": "GetAssessmentOrganisation",
+        "parameters": [
+          {
+            "name": "organisationId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EpaOrganisation"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ao/assessment-organisations/standards/{standardId}": {
+      "get": {
+        "tags": [
+          "Assessment Organisations"
+        ],
+        "operationId": "GetAssessmentOrganisationsByStandard",
+        "parameters": [
+          {
+            "name": "standardId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EpaOrganisation"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "OrganisationType": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "type": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "typeDescription": {
+            "type": "string"
+          },
+          "financialExempt": {
+            "type": "boolean"
+          }
+        }
+      },
+      "DeliveryArea": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "area": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "ordering": {
+            "type": "integer"
+          }
+        }
+      },
+      "ApiResponse": {
+        "type": "object",
+        "properties": {
+          "statusCode": {
+            "type": "integer"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "AssessmentOrganisationSummary": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "ukprn": {
+            "type": "integer",
+            "nullable": true
+          },
+          "organisationData": {
+            "$ref": "#/components/schemas/OrganisationData"
+          },
+          "organisationTypeId": {
+            "type": "integer",
+            "nullable": true
+          },
+          "organisationType": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          }
+        }
+      },
+      "EpaOrganisation": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "deletedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "name": {
+            "type": "string"
+          },
+          "organisationId": {
+            "type": "string"
+          },
+          "ukprn": {
+            "type": "integer",
+            "nullable": true
+          },
+          "organisationTypeId": {
+            "type": "integer",
+            "nullable": true
+          },
+          "primaryContact": {
+            "type": "string"
+          },
+          "primaryContactName": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "organisationData": {
+            "$ref": "#/components/schemas/OrganisationData"
+          },
+          "apiEnabled": {
+            "type": "boolean"
+          },
+          "apiUser": {
+            "type": "string"
+          },
+          "financialReviewStatus": {
+            "type": "string"
+          },
+          "recognitionNumber": {
+            "type": "string"
+          }
+        }
+      },
+      "OrganisationData": {
+        "type": "object",
+        "properties": {
+          "legalName": {
+            "type": "string"
+          },
+          "tradingName": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "phoneNumber": {
+            "type": "string"
+          },
+          "websiteLink": {
+            "type": "string"
+          },
+          "address1": {
+            "type": "string"
+          },
+          "address2": {
+            "type": "string"
+          },
+          "address3": {
+            "type": "string"
+          },
+          "address4": {
+            "type": "string"
+          },
+          "postcode": {
+            "type": "string"
+          },
+          "companyNumber": {
+            "type": "string"
+          },
+          "charityNumber": {
+            "type": "string"
+          },
+          "providerName": {
+            "type": "string"
+          },
+          "organisationReferenceType": {
+            "type": "string"
+          },
+          "organisationReferenceId": {
+            "type": "string"
+          },
+          "roATPApproved": {
+            "type": "boolean"
+          },
+          "roEPAOApproved": {
+            "type": "boolean"
+          },
+          "financialGrades": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "fhaDetails": {
+            "$ref": "#/components/schemas/FHADetails"
+          }
+        }
+      },
+      "FHADetails": {
+        "type": "object",
+        "properties": {
+          "financialDueDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "financialExempt": {
+            "type": "boolean",
+            "nullable": true
+          }
+        }
+      }
+    }
+  }
+}
