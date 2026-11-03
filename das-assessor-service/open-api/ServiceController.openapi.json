@@ -1,0 +1,416 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Assessment Service",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/service/account-details": {
+      "get": {
+        "operationId": "getAccountDetails",
+        "summary": "Retrieve account details for a stub user",
+        "parameters": [
+          {
+            "name": "returnUrl",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "HTML View for account details",
+            "content": {
+              "text/html": {}
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      },
+      "post": {
+        "operationId": "postAccountDetails",
+        "summary": "Sign in a stub user using account details",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StubAuthenticationViewModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "302": {
+            "description": "Redirect to signed-in route",
+            "headers": {
+              "Location": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "URL to redirect to"
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/service/Stub-Auth": {
+      "get": {
+        "operationId": "getStubSignedIn",
+        "summary": "Retrieve signed-in stub user details",
+        "parameters": [
+          {
+            "name": "returnUrl",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "HTML View for signed-in user details",
+            "content": {
+              "text/html": {}
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [
+          {
+            "jwtAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/epa": {
+      "post": {
+        "operationId": "createEpaRecords",
+        "summary": "Create initial EPA records",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/CreateEpaRequest"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Created EPA records or validation errors",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CreateCertificateResponse"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Too many EPA records specified",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "operationId": "updateEpaRecords",
+        "summary": "Update EPA records",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/UpdateEpaRequest"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated EPA records or validation errors",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UpdateEpaResponse"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Too many EPA records specified",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/epa/{uln}/{familyName}/{standard}/{epaReference}": {
+      "delete": {
+        "operationId": "deleteEpaRecord",
+        "summary": "Delete an EPA record",
+        "parameters": [
+          {
+            "name": "uln",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "familyName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "standard",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "epaReference",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "EPA record deleted successfully"
+          },
+          "403": {
+            "description": "Validation errors prevented deletion",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "StubAuthenticationViewModel": {
+        "type": "object",
+        "properties": {
+          "ReturnUrl": {
+            "type": "string"
+          }
+        }
+      },
+      "CreateEpaRequest": {
+        "type": "object",
+        "properties": {
+          "RequestId": {
+            "type": "string"
+          },
+          "Standard": {
+            "$ref": "#/components/schemas/Standard"
+          },
+          "Learner": {
+            "$ref": "#/components/schemas/Learner"
+          },
+          "LearningDetails": {
+            "$ref": "#/components/schemas/LearningDetails"
+          },
+          "EpaDetails": {
+            "$ref": "#/components/schemas/EpaDetails"
+          }
+        }
+      },
+      "UpdateEpaRequest": {
+        "type": "object",
+        "properties": {
+          "RequestId": {
+            "type": "string"
+          },
+          "EpaReference": {
+            "type": "string"
+          },
+          "Standard": {
+            "$ref": "#/components/schemas/Standard"
+          },
+          "Learner": {
+            "$ref": "#/components/schemas/Learner"
+          },
+          "LearningDetails": {
+            "$ref": "#/components/schemas/LearningDetails"
+          },
+          "EpaDetails": {
+            "$ref": "#/components/schemas/EpaDetails"
+          }
+        }
+      },
+      "DeleteBatchEpaRequest": {
+        "type": "object",
+        "properties": {
+          "Uln": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "FamilyName": {
+            "type": "string"
+          },
+          "Standard": {
+            "type": "string"
+          },
+          "EpaReference": {
+            "type": "string"
+          },
+          "UkPrn": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "CreateCertificateResponse": {
+        "type": "object",
+        "properties": {
+          "RequestId": {
+            "type": "string"
+          },
+          "Certificate": {
+            "type": "object"
+          },
+          "ValidationErrors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "UpdateEpaResponse": {
+        "type": "object",
+        "properties": {
+          "RequestId": {
+            "type": "string"
+          },
+          "EpaReference": {
+            "type": "string"
+          },
+          "ValidationErrors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "ApiResponse": {
+        "type": "object",
+        "properties": {
+          "StatusCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Message": {
+            "type": "string"
+          }
+        }
+      },
+      "Learner": {
+        "type": "object",
+        "properties": {
+          "Uln": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "FamilyName": {
+            "type": "string"
+          }
+        }
+      },
+      "LearningDetails": {
+        "type": "object",
+        "properties": {
+          "Version": {
+            "type": "string"
+          },
+          "CourseOption": {
+            "type": "string"
+          }
+        }
+      },
+      "EpaDetails": {
+        "type": "object",
+        "properties": {
+          "Epas": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          }
+        }
+      },
+      "Standard": {
+        "type": "object",
+        "properties": {
+          "StandardCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "StandardReference": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "jwtAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}

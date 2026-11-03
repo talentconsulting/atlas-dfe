@@ -1,0 +1,385 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "External Assessor API",
+    "version": "1.0.0",
+    "description": "API for External Data Synchronization and End Point Assessment (EPA) operations"
+  },
+  "paths": {
+    "/api/v1/externalapidatasync/rebuild-sandbox": {
+      "post": {
+        "summary": "Rebuild External API Sandbox",
+        "operationId": "RebuildExternalApiSandbox",
+        "tags": [
+          "External API Data Sync"
+        ],
+        "responses": {
+          "202": {
+            "description": "Request accepted"
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/epa": {
+      "post": {
+        "summary": "Create EPA Records",
+        "operationId": "CreateEpaRecords",
+        "tags": [
+          "EPA"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/CreateEpaRequest"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "List of created EPA records or validation errors.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CreateCertificateResponse"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Too many EPA records specified.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Update EPA Records",
+        "operationId": "UpdateEpaRecords",
+        "tags": [
+          "EPA"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/UpdateEpaRequest"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "List of updated EPA records or validation errors.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UpdateEpaResponse"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Too many EPA records specified.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/epa/{uln}/{familyName}/{standard}/{epaReference}": {
+      "delete": {
+        "summary": "Delete EPA Record",
+        "operationId": "DeleteEpaRecord",
+        "tags": [
+          "EPA"
+        ],
+        "parameters": [
+          {
+            "name": "uln",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "familyName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "standard",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "epaReference",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "EPA record deleted successfully."
+          },
+          "403": {
+            "description": "Validation errors prevent deletion of the EPA record.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ApiResponse": {
+        "type": "object",
+        "properties": {
+          "statusCode": {
+            "type": "integer"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "CreateEpaRequest": {
+        "type": "object",
+        "properties": {
+          "requestId": {
+            "type": "string"
+          },
+          "standard": {
+            "$ref": "#/components/schemas/Standard"
+          },
+          "learner": {
+            "$ref": "#/components/schemas/Learner"
+          },
+          "learningDetails": {
+            "$ref": "#/components/schemas/LearningDetails"
+          },
+          "epaDetails": {
+            "$ref": "#/components/schemas/EpaDetails"
+          }
+        }
+      },
+      "CreateCertificateResponse": {
+        "type": "object",
+        "properties": {
+          "requestId": {
+            "type": "string"
+          },
+          "certificate": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "validationErrors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "UpdateEpaRequest": {
+        "type": "object",
+        "properties": {
+          "requestId": {
+            "type": "string"
+          },
+          "epaReference": {
+            "type": "string"
+          },
+          "standard": {
+            "$ref": "#/components/schemas/Standard"
+          },
+          "learner": {
+            "$ref": "#/components/schemas/Learner"
+          },
+          "learningDetails": {
+            "$ref": "#/components/schemas/LearningDetails"
+          },
+          "epaDetails": {
+            "$ref": "#/components/schemas/EpaDetails"
+          }
+        }
+      },
+      "UpdateEpaResponse": {
+        "type": "object",
+        "properties": {
+          "requestId": {
+            "type": "string"
+          },
+          "validationErrors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "DeleteBatchEpaRequest": {
+        "type": "object",
+        "properties": {
+          "uln": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "familyName": {
+            "type": "string"
+          },
+          "standard": {
+            "type": "string"
+          },
+          "epaReference": {
+            "type": "string"
+          },
+          "ukPrn": {
+            "type": "integer"
+          }
+        }
+      },
+      "Learner": {
+        "type": "object",
+        "properties": {
+          "uln": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "familyName": {
+            "type": "string"
+          }
+        }
+      },
+      "LearningDetails": {
+        "type": "object",
+        "properties": {
+          "courseOption": {
+            "type": "string"
+          },
+          "overallGrade": {
+            "type": "string"
+          },
+          "achievementDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "version": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "overallGrade",
+          "achievementDate"
+        ]
+      },
+      "EpaDetails": {
+        "type": "object",
+        "properties": {
+          "epas": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EpaRecord"
+            }
+          }
+        },
+        "required": [
+          "epas"
+        ]
+      },
+      "EpaRecord": {
+        "type": "object",
+        "properties": {
+          "epaDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "epaOutcome": {
+            "type": "string"
+          },
+          "resit": {
+            "type": "boolean"
+          },
+          "retake": {
+            "type": "boolean"
+          }
+        }
+      },
+      "Standard": {
+        "type": "object",
+        "properties": {
+          "standardCode": {
+            "type": "integer"
+          },
+          "standardReference": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "Authorization"
+      }
+    }
+  }
+}

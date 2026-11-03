@@ -1,0 +1,144 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Assessor Service API",
+    "description": "API for managing standards and external interactions with the assessor service.",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/api/v1/standards/options": {
+      "get": {
+        "operationId": "GetStandardOptionsForLatestStandardVersions",
+        "summary": "Get Options",
+        "description": "Gets the latest list of course options by Standard.",
+        "responses": {
+          "200": {
+            "description": "The list of options for each Standard.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/StandardOptions"
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service unavailable."
+          }
+        }
+      }
+    },
+    "/api/v1/standards/options/{standard}": {
+      "get": {
+        "operationId": "GetOptionsForStandard",
+        "summary": "Get Options for Standard",
+        "description": "Gets the latest list of course options for the specified Standard.",
+        "parameters": [
+          {
+            "name": "standard",
+            "in": "path",
+            "required": true,
+            "description": "Standard Code or Standard Reference Number",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The list of options.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardOptions"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "The Standard was found, however it has no options."
+          },
+          "404": {
+            "description": "The Standard was not found."
+          }
+        }
+      }
+    },
+    "/api/v1/standards/options/{standard}/{version}": {
+      "get": {
+        "operationId": "GetOptionsForStandardVersion",
+        "summary": "Get Options for a standard version",
+        "description": "Gets the latest list of course options for the specified Standard version.",
+        "parameters": [
+          {
+            "name": "standard",
+            "in": "path",
+            "required": true,
+            "description": "Standard Code or Standard Reference Number",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "description": "Version of the Standard",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The list of options.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardOptions"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "The standard version was found, however it has no options."
+          },
+          "404": {
+            "description": "The standard version was not found."
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "StandardOptions": {
+        "type": "object",
+        "properties": {
+          "StandardCode": {
+            "type": "integer",
+            "nullable": true
+          },
+          "StandardReference": {
+            "type": "string",
+            "nullable": true
+          },
+          "Version": {
+            "type": "string",
+            "nullable": true
+          },
+          "CourseOption": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          }
+        }
+      }
+    }
+  }
+}
