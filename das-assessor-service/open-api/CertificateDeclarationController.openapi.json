@@ -1,0 +1,120 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Certificate Declaration API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/certificate/declaration": {
+      "get": {
+        "operationId": "GetDeclarationViewModel",
+        "description": "Loads the Certificate Declaration View Model.",
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Loaded Certificate Declaration View Model",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CertificateDeclarationViewModel"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "SubmitCertificateDeclaration",
+        "description": "Submit Certificate Declaration form data.",
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "requestBody": {
+          "description": "The Certificate Declaration form data.",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CertificateDeclarationViewModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "302": {
+            "description": "Redirect to next certificate view or back to Declaration view if invalid."
+          }
+        }
+      }
+    },
+    "/certificate/declaration/back": {
+      "get": {
+        "operationId": "HandleBackNavigation",
+        "description": "Handles navigation logic when the 'Back' button is clicked.",
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "responses": {
+          "302": {
+            "description": "Redirects to the appropriate page based on the state of the certificate session."
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CertificateDeclarationViewModel": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "familyName": {
+            "type": "string"
+          },
+          "givenNames": {
+            "type": "string"
+          },
+          "fullName": {
+            "type": "string"
+          },
+          "standardReference": {
+            "type": "string"
+          },
+          "standard": {
+            "type": "string"
+          },
+          "standardUId": {
+            "type": "string"
+          },
+          "uln": {
+            "type": "string"
+          },
+          "level": {
+            "type": "integer"
+          },
+          "backToCheckPage": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "familyName",
+          "givenNames",
+          "uln",
+          "standardReference"
+        ]
+      }
+    }
+  }
+}

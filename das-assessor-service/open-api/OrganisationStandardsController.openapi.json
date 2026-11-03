@@ -1,0 +1,325 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Organisation Standards API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/OrganisationStandards/": {
+      "get": {
+        "operationId": "getOrganisationStandardsIndex",
+        "summary": "Retrieve approved standards and financial review status for an organisation.",
+        "parameters": [
+          {
+            "name": "pageIndex",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApprovedStandardsWithVersionsViewModel"
+                }
+              }
+            }
+          },
+          "302": {
+            "description": "Redirected if organisation is not registered."
+          }
+        }
+      }
+    },
+    "/OrganisationStandards/pipelines": {
+      "get": {
+        "operationId": "getPipeline",
+        "summary": "Retrieve pipeline organisation data based on filters.",
+        "parameters": [
+          {
+            "name": "selectedStandard",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "selectedProvider",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "selectedEPADate",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "pageIndex",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrderedListResultViewModel"
+                }
+              }
+            }
+          },
+          "302": {
+            "description": "Redirected if organisation is not registered."
+          }
+        },
+        "security": [
+          {
+            "Privileges": [
+              "ViewPipeline"
+            ]
+          }
+        ]
+      }
+    },
+    "/OrganisationStandards/pipeline/{orderBy}/{orderDirection}": {
+      "get": {
+        "operationId": "getOrderPipeline",
+        "summary": "Retrieve ordered pipeline data.",
+        "parameters": [
+          {
+            "name": "orderBy",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "orderDirection",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "pageIndex",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrderedListResultViewModel"
+                }
+              }
+            }
+          },
+          "302": {
+            "description": "Redirected if organisation is not registered."
+          }
+        }
+      }
+    },
+    "/OrganisationStandards/DownloadCsv": {
+      "get": {
+        "operationId": "getExportEpaPipelineAsCsv",
+        "summary": "Download organisation pipeline as a CSV file.",
+        "parameters": [
+          {
+            "name": "selectedStandard",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "selectedProvider",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "selectedEPADate",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/csv": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ApprovedStandardsWithVersionsViewModel": {
+        "type": "object",
+        "properties": {
+          "ApprovedStandardsWithVersions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EpaoPipelineStandardsResponse"
+            }
+          },
+          "FinancialInfoStage1Expired": {
+            "type": "boolean"
+          },
+          "FinancialAssessmentUrl": {
+            "type": "string",
+            "format": "uri"
+          }
+        }
+      },
+      "OrderedListResultViewModel": {
+        "type": "object",
+        "properties": {
+          "OrderDirection": {
+            "type": "string"
+          },
+          "OrderedBy": {
+            "type": "string"
+          },
+          "Response": {
+            "$ref": "#/components/schemas/PaginatedList"
+          },
+          "SelectedStandard": {
+            "type": "string"
+          },
+          "SelectedProvider": {
+            "type": "string"
+          },
+          "SelectedEPADate": {
+            "type": "string"
+          },
+          "FilterApplied": {
+            "type": "boolean"
+          },
+          "StandardFilter": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PipelineFilterItem"
+            }
+          },
+          "ProviderFilter": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PipelineFilterItem"
+            }
+          },
+          "EPADateFilter": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PipelineFilterItem"
+            }
+          }
+        }
+      },
+      "EpaoPipelineStandardsResponse": {
+        "type": "object",
+        "properties": {
+          "StandardName": {
+            "type": "string"
+          },
+          "StandardVersion": {
+            "type": "string"
+          },
+          "Pipeline": {
+            "type": "integer"
+          },
+          "ProviderUkPrn": {
+            "type": "string"
+          },
+          "EstimatedDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "ProviderName": {
+            "type": "string"
+          }
+        }
+      },
+      "PaginatedList": {
+        "type": "object",
+        "properties": {
+          "Items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EpaoPipelineStandardsResponse"
+            }
+          },
+          "TotalRecords": {
+            "type": "integer"
+          },
+          "CurrentPage": {
+            "type": "integer"
+          },
+          "PageSize": {
+            "type": "integer"
+          }
+        }
+      },
+      "PipelineFilterItem": {
+        "type": "object",
+        "properties": {
+          "Id": {
+            "type": "string"
+          },
+          "Value": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "Privileges": {
+        "type": "apiKey",
+        "name": "Privileges",
+        "in": "header"
+      }
+    }
+  }
+}

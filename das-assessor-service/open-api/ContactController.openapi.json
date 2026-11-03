@@ -1,0 +1,381 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Assessor Service API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/api/v1/contacts": {
+      "post": {
+        "tags": [
+          "Contact"
+        ],
+        "operationId": "CreateContact",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateContactRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Contact created successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContactBoolResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Contact"
+        ],
+        "operationId": "UpdateContact",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateContactRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Contact updated successfully."
+          },
+          "400": {
+            "description": "Bad Request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Contact"
+        ],
+        "operationId": "DeleteContact",
+        "parameters": [
+          {
+            "name": "userName",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Contact deleted successfully."
+          },
+          "404": {
+            "description": "Resource not found."
+          },
+          "500": {
+            "description": "Internal Server Error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/contacts/status": {
+      "put": {
+        "tags": [
+          "Contact"
+        ],
+        "operationId": "UpdateContactStatus",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateContactStatusRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Contact status updated successfully."
+          },
+          "400": {
+            "description": "Bad Request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/contacts/govlogin": {
+      "put": {
+        "tags": [
+          "Contact"
+        ],
+        "operationId": "UpdateGovLoginContactDetails",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateContactGovLoginRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Contact details updated successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Contact"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CreateContactRequest": {
+        "type": "object",
+        "properties": {
+          "EndPointAssessorOrganisationId": {
+            "type": "string"
+          },
+          "Username": {
+            "type": "string"
+          },
+          "DisplayName": {
+            "type": "string"
+          },
+          "Email": {
+            "type": "string"
+          },
+          "FamilyName": {
+            "type": "string"
+          },
+          "GivenName": {
+            "type": "string"
+          },
+          "GovIdentifier": {
+            "type": "string"
+          }
+        }
+      },
+      "UpdateContactRequest": {
+        "type": "object",
+        "properties": {
+          "UserName": {
+            "type": "string"
+          },
+          "DisplayName": {
+            "type": "string"
+          },
+          "Email": {
+            "type": "string"
+          }
+        }
+      },
+      "UpdateContactStatusRequest": {
+        "type": "object",
+        "properties": {
+          "Id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "Status": {
+            "type": "string"
+          }
+        }
+      },
+      "UpdateContactGovLoginRequest": {
+        "type": "object",
+        "properties": {
+          "GovIdentifier": {
+            "type": "string"
+          },
+          "ContactId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      },
+      "ContactBoolResponse": {
+        "type": "object",
+        "properties": {
+          "Result": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ApiResponse": {
+        "type": "object",
+        "properties": {
+          "StatusCode": {
+            "type": "integer"
+          },
+          "Message": {
+            "type": "string"
+          }
+        }
+      },
+      "Contact": {
+        "type": "object",
+        "properties": {
+          "Email": {
+            "type": "string"
+          },
+          "GivenNames": {
+            "type": "string"
+          },
+          "FamilyName": {
+            "type": "string"
+          },
+          "GovUkIdentifier": {
+            "type": "string"
+          },
+          "SigninType": {
+            "type": "string"
+          },
+          "ApplyOrganisationId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "IsApproved": {
+            "type": "boolean"
+          },
+          "Id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "Status": {
+            "type": "string"
+          },
+          "CreatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "CreatedBy": {
+            "type": "string"
+          },
+          "UpdatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "UpdatedBy": {
+            "type": "string"
+          },
+          "DeletedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "DeletedBy": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

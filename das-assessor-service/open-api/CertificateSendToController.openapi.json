@@ -1,0 +1,68 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "CertificateSendTo API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/certificate/sendto": {
+      "get": {
+        "summary": "Retrieve the 'Send To' form for certificates",
+        "operationId": "getCertificateSendTo",
+        "responses": {
+          "200": {
+            "description": "The 'Send To' form page was successfully loaded."
+          }
+        }
+      },
+      "post": {
+        "summary": "Submit 'Send To' details for a certificate",
+        "operationId": "postCertificateSendTo",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CertificateSendToViewModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The 'Send To' details were successfully processed."
+          },
+          "400": {
+            "description": "Invalid data was submitted for the form."
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CertificateSendToViewModel": {
+        "type": "object",
+        "properties": {
+          "Id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The unique identifier for the certificate."
+          },
+          "SendTo": {
+            "type": "string",
+            "enum": [
+              "Apprentice",
+              "Employer"
+            ],
+            "description": "The recipient details for the certificate (e.g., Apprentice or Employer)."
+          }
+        },
+        "required": [
+          "Id",
+          "SendTo"
+        ]
+      }
+    }
+  }
+}

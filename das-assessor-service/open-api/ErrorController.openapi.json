@@ -1,0 +1,94 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "ErrorController API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/error/403": {
+      "get": {
+        "summary": "Access Denied",
+        "description": "Handles access denied scenarios and displays appropriate views or redirects based on the user's context.",
+        "security": [
+          {
+            "OAuth2": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Access denied view rendered.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccessDeniedViewModel"
+                }
+              }
+            }
+          },
+          "302": {
+            "description": "Redirects to another route based on user context."
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AccessDeniedViewModel": {
+        "type": "object",
+        "properties": {
+          "Title": {
+            "type": "string"
+          },
+          "Rights": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "PrivilegeId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "ContactId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "UserHasUserManagement": {
+            "type": "boolean"
+          },
+          "ReturnController": {
+            "type": "string"
+          },
+          "ReturnAction": {
+            "type": "string"
+          },
+          "ReturnRouteName": {
+            "type": "string"
+          },
+          "ReturnRouteValues": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "IsUsersOrganisationLive": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "Title",
+          "Rights",
+          "PrivilegeId",
+          "ContactId",
+          "UserHasUserManagement",
+          "ReturnController",
+          "ReturnAction",
+          "ReturnRouteName",
+          "ReturnRouteValues",
+          "IsUsersOrganisationLive"
+        ]
+      }
+    }
+  }
+}

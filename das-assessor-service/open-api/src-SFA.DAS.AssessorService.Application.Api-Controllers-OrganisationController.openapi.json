@@ -1,0 +1,427 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Assessor Service API",
+    "description": "API for managing organisations in the Assessor Service",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/api/v1/organisations": {
+      "post": {
+        "operationId": "CreateOrganisation",
+        "summary": "Create a new organisation",
+        "tags": [
+          "Organisations"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateOrganisationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Organisation created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrganisationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "put": {
+        "operationId": "UpdateOrganisation",
+        "summary": "Update an existing organisation",
+        "tags": [
+          "Organisations"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateOrganisationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Organisation updated successfully"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/organisations/{endPointAssessorOrganisationId}": {
+      "delete": {
+        "operationId": "DeleteOrganisation",
+        "summary": "Delete an organisation",
+        "tags": [
+          "Organisations"
+        ],
+        "parameters": [
+          {
+            "name": "endPointAssessorOrganisationId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Organisation deleted successfully"
+          },
+          "404": {
+            "description": "Organisation not found"
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/organisations/NotifyUserManagementUsers": {
+      "put": {
+        "operationId": "NotifyUserManagementUsers",
+        "summary": "Notify user management users",
+        "tags": [
+          "Organisations"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NotifyUserManagementUsersRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Notification sent successfully"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/organisations/withdraw": {
+      "post": {
+        "operationId": "WithdrawOrganisation",
+        "summary": "Withdraw an organisation",
+        "tags": [
+          "Organisations"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WithdrawOrganisationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Organisation withdrawn successfully"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CreateOrganisationRequest": {
+        "type": "object",
+        "properties": {
+          "endPointAssessorOrganisationId": {
+            "type": "string"
+          },
+          "endPointAssessorUkprn": {
+            "type": "integer",
+            "nullable": true
+          },
+          "endPointAssessorName": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "endPointAssessorOrganisationId",
+          "endPointAssessorName"
+        ]
+      },
+      "UpdateOrganisationRequest": {
+        "type": "object",
+        "properties": {
+          "endPointAssessorOrganisationId": {
+            "type": "string"
+          },
+          "endPointAssessorName": {
+            "type": "string"
+          },
+          "primaryContact": {
+            "type": "string"
+          },
+          "endPointAssessorUkprn": {
+            "type": "integer",
+            "nullable": true
+          },
+          "apiEnabled": {
+            "type": "boolean"
+          },
+          "apiUser": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "endPointAssessorOrganisationId",
+          "endPointAssessorName"
+        ]
+      },
+      "WithdrawOrganisationRequest": {
+        "type": "object",
+        "properties": {
+          "applicationId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "endPointAssessorOrganisationId": {
+            "type": "string"
+          },
+          "withdrawalDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedBy": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "applicationId",
+          "withdrawalDate",
+          "updatedBy",
+          "endPointAssessorOrganisationId"
+        ]
+      },
+      "NotifyUserManagementUsersRequest": {
+        "type": "object",
+        "properties": {
+          "displayName": {
+            "type": "string"
+          },
+          "endPointAssessorOrganisationId": {
+            "type": "string"
+          },
+          "serviceLink": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "displayName",
+          "endPointAssessorOrganisationId",
+          "serviceLink"
+        ]
+      },
+      "OrganisationResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "endPointAssessorOrganisationId": {
+            "type": "string"
+          },
+          "endPointAssessorUkprn": {
+            "type": "integer",
+            "nullable": true
+          },
+          "endPointAssessorName": {
+            "type": "string"
+          },
+          "primaryContact": {
+            "type": "string"
+          },
+          "roATPApproved": {
+            "type": "boolean"
+          },
+          "roEPAOApproved": {
+            "type": "boolean"
+          },
+          "organisationType": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "postcode": {
+            "type": "string"
+          },
+          "companySummary": {
+            "type": "object"
+          },
+          "charitySummary": {
+            "type": "object"
+          }
+        }
+      },
+      "ApiResponse": {
+        "type": "object",
+        "properties": {
+          "statusCode": {
+            "type": "integer"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    }
+  }
+}

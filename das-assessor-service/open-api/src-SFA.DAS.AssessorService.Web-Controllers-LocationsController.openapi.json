@@ -1,0 +1,335 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Assessor Service API",
+    "version": "1.0.0",
+    "description": "API for managing locations and EPA (End-Point Assessment) records."
+  },
+  "paths": {
+    "/locations": {
+      "get": {
+        "summary": "Search for locations",
+        "operationId": "getLocations",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "description": "Search query for locations."
+            }
+          },
+          {
+            "name": "includeOrganisations",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "description": "Whether to include organisation details in the response."
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of locations matching the search query.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AddressResponse"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error."
+          }
+        }
+      }
+    },
+    "/api/v1/epa": {
+      "post": {
+        "summary": "Create EPA Records",
+        "operationId": "createEpaRecords",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/CreateEpaRequest"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Created EPA records or validation errors.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CreateCertificateResponse"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Batch exceeds the limit of EPA records.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Update EPA Records",
+        "operationId": "updateEpaRecords",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/UpdateEpaRequest"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated EPA records or validation errors.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UpdateEpaResponse"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Batch exceeds the limit of EPA records.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/epa/{uln}/{familyName}/{standard}/{epaReference}": {
+      "delete": {
+        "summary": "Delete an EPA Record",
+        "operationId": "deleteEpaRecord",
+        "parameters": [
+          {
+            "name": "uln",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "description": "Unique Learner Number (ULN)."
+            }
+          },
+          {
+            "name": "familyName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Family name of the learner."
+            }
+          },
+          {
+            "name": "standard",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Standard code or reference number."
+            }
+          },
+          {
+            "name": "epaReference",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "EPA reference."
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Specified EPA record has been deleted."
+          },
+          "403": {
+            "description": "Validation errors preventing deletion.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AddressResponse": {
+        "type": "object",
+        "properties": {
+          "Uprn": {
+            "type": "string"
+          },
+          "Organisation": {
+            "type": "string"
+          },
+          "Premises": {
+            "type": "string"
+          },
+          "Thoroughfare": {
+            "type": "string"
+          },
+          "Locality": {
+            "type": "string"
+          },
+          "Town": {
+            "type": "string"
+          },
+          "County": {
+            "type": "string"
+          },
+          "Postcode": {
+            "type": "string"
+          },
+          "Longitude": {
+            "type": "number"
+          },
+          "Latitude": {
+            "type": "number"
+          },
+          "Match": {
+            "type": "number"
+          },
+          "Text": {
+            "type": "string"
+          }
+        }
+      },
+      "CreateEpaRequest": {
+        "type": "object",
+        "properties": {
+          "RequestId": {
+            "type": "string"
+          },
+          "Learner": {
+            "type": "object"
+          },
+          "LearningDetails": {
+            "type": "object"
+          },
+          "Standard": {
+            "type": "object"
+          },
+          "EpaDetails": {
+            "type": "object"
+          }
+        }
+      },
+      "CreateCertificateResponse": {
+        "type": "object",
+        "properties": {
+          "RequestId": {
+            "type": "string"
+          },
+          "Status": {
+            "type": "string"
+          },
+          "Errors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "UpdateEpaRequest": {
+        "type": "object",
+        "properties": {
+          "RequestId": {
+            "type": "string"
+          },
+          "EpaReference": {
+            "type": "string"
+          },
+          "Learner": {
+            "type": "object"
+          },
+          "LearningDetails": {
+            "type": "object"
+          },
+          "Standard": {
+            "type": "object"
+          },
+          "EpaDetails": {
+            "type": "object"
+          }
+        }
+      },
+      "UpdateEpaResponse": {
+        "type": "object",
+        "properties": {
+          "RequestId": {
+            "type": "string"
+          },
+          "EpaReference": {
+            "type": "string"
+          },
+          "Status": {
+            "type": "string"
+          },
+          "Errors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "ApiResponse": {
+        "type": "object",
+        "properties": {
+          "StatusCode": {
+            "type": "integer"
+          },
+          "Message": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
