@@ -1,0 +1,626 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Assessor Service API",
+    "description": "Provides APIs for managing learner and EPA (End Point Assessment) records.",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/api/v1/learner/{uln}/{familyName}/{standard}": {
+      "get": {
+        "summary": "Get Learner",
+        "operationId": "GetLearner",
+        "description": "Retrieves the details of a specific learner based on ULN, family name, and standard.",
+        "parameters": [
+          {
+            "name": "uln",
+            "in": "path",
+            "required": true,
+            "description": "Unique Learner Number",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "familyName",
+            "in": "path",
+            "required": true,
+            "description": "Learner's family name",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "standard",
+            "in": "path",
+            "required": true,
+            "description": "Standard Code or Standard Reference Number",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The current learner details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetLearner"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Validation errors prevent retrieving the learner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Learner not found."
+          }
+        }
+      }
+    },
+    "/api/v1/epa": {
+      "post": {
+        "summary": "Create EPA Records",
+        "operationId": "CreateEpaRecords",
+        "description": "Creates an initial EPA record for each valid item in the request.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/CreateEpaRequest"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The created EPA records if valid, otherwise a list of validation errors.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CreateCertificateResponse"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Too many EPA records specified.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Update EPA Records",
+        "operationId": "UpdateEpaRecords",
+        "description": "Updates the specified EPA records with the provided details.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/UpdateEpaRequest"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The updated EPA records if valid, otherwise a list of validation errors.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UpdateEpaResponse"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Too many EPA records specified.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/epa/{uln}/{familyName}/{standard}/{epaReference}": {
+      "delete": {
+        "summary": "Delete EPA Record",
+        "operationId": "DeleteEpaRecord",
+        "description": "Deletes the specified EPA record.",
+        "parameters": [
+          {
+            "name": "uln",
+            "in": "path",
+            "required": true,
+            "description": "Unique Learner Number",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "familyName",
+            "in": "path",
+            "required": true,
+            "description": "Learner's family name",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "standard",
+            "in": "path",
+            "required": true,
+            "description": "Standard Code or Standard Reference Number",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "epaReference",
+            "in": "path",
+            "required": true,
+            "description": "EPA reference identifier",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The specified EPA record has been deleted."
+          },
+          "403": {
+            "description": "Validation errors prevent deleting the EPA record.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ApiResponse": {
+        "type": "object",
+        "properties": {
+          "statusCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "statusCode"
+        ]
+      },
+      "GetLearner": {
+        "type": "object",
+        "properties": {
+          "learnerData": {
+            "$ref": "#/components/schemas/LearnerData"
+          },
+          "status": {
+            "$ref": "#/components/schemas/LearnerStatus"
+          },
+          "epaDetails": {
+            "$ref": "#/components/schemas/EpaDetails"
+          },
+          "certificate": {
+            "$ref": "#/components/schemas/Certificate"
+          }
+        }
+      },
+      "LearnerData": {
+        "type": "object",
+        "properties": {
+          "standard": {
+            "$ref": "#/components/schemas/StandardResponse"
+          },
+          "learner": {
+            "$ref": "#/components/schemas/LearnerResponse"
+          },
+          "learningDetails": {
+            "$ref": "#/components/schemas/LearningDetailsResponse"
+          }
+        }
+      },
+      "LearnerStatus": {
+        "type": "object",
+        "properties": {
+          "completionStatus": {
+            "type": "integer",
+            "nullable": true
+          }
+        }
+      },
+      "EpaDetails": {
+        "type": "object",
+        "properties": {
+          "epaReference": {
+            "type": "string"
+          },
+          "latestEpaDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "latestEpaOutcome": {
+            "type": "string"
+          },
+          "epas": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EpaRecordResponse"
+            }
+          }
+        }
+      },
+      "EpaRecordResponse": {
+        "type": "object",
+        "properties": {
+          "epaDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "epaOutcome": {
+            "type": "string"
+          },
+          "resit": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "retake": {
+            "type": "boolean",
+            "nullable": true
+          }
+        }
+      },
+      "Certificate": {
+        "type": "object",
+        "properties": {
+          "certificateData": {
+            "$ref": "#/components/schemas/CertificateData"
+          },
+          "status": {
+            "$ref": "#/components/schemas/CertificateStatus"
+          },
+          "created": {
+            "$ref": "#/components/schemas/Created"
+          },
+          "submitted": {
+            "$ref": "#/components/schemas/Submitted"
+          },
+          "printed": {
+            "$ref": "#/components/schemas/Printed"
+          },
+          "delivered": {
+            "$ref": "#/components/schemas/Delivered"
+          }
+        }
+      },
+      "CertificateStatus": {
+        "type": "object",
+        "properties": {
+          "currentStatus": {
+            "type": "string"
+          }
+        }
+      },
+      "Created": {
+        "type": "object",
+        "properties": {
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdBy": {
+            "type": "string"
+          }
+        }
+      },
+      "Submitted": {
+        "type": "object",
+        "properties": {
+          "submittedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "submittedBy": {
+            "type": "string"
+          }
+        }
+      },
+      "Printed": {
+        "type": "object",
+        "properties": {
+          "printedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "printedBatch": {
+            "type": "integer",
+            "nullable": true
+          }
+        }
+      },
+      "Delivered": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "deliveryDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        }
+      },
+      "CertificateData": {
+        "type": "object",
+        "properties": {
+          "certificateReference": {
+            "type": "string"
+          },
+          "standard": {
+            "$ref": "#/components/schemas/StandardResponse"
+          },
+          "learner": {
+            "$ref": "#/components/schemas/LearnerResponse"
+          },
+          "learningDetails": {
+            "$ref": "#/components/schemas/LearningDetailsResponse"
+          },
+          "coronationEmblem": {
+            "type": "boolean"
+          }
+        }
+      },
+      "StandardResponse": {
+        "type": "object",
+        "properties": {
+          "standardCode": {
+            "type": "integer",
+            "nullable": true
+          },
+          "standardReference": {
+            "type": "string"
+          },
+          "standardName": {
+            "type": "string"
+          },
+          "level": {
+            "type": "integer"
+          }
+        }
+      },
+      "LearnerResponse": {
+        "type": "object",
+        "properties": {
+          "uln": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "givenNames": {
+            "type": "string"
+          },
+          "familyName": {
+            "type": "string"
+          }
+        }
+      },
+      "LearningDetailsResponse": {
+        "type": "object",
+        "properties": {
+          "learnerReferenceNumber": {
+            "type": "string"
+          },
+          "learningStartDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "plannedEndDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "providerName": {
+            "type": "string"
+          },
+          "providerUkPrn": {
+            "type": "integer"
+          },
+          "courseOption": {
+            "type": "string"
+          }
+        }
+      },
+      "CreateEpaRequest": {
+        "type": "object",
+        "properties": {
+          "requestId": {
+            "type": "string"
+          },
+          "learner": {
+            "$ref": "#/components/schemas/LearnerRequest"
+          },
+          "learningDetails": {
+            "$ref": "#/components/schemas/LearningDetailsRequest"
+          },
+          "standard": {
+            "$ref": "#/components/schemas/StandardRequest"
+          },
+          "epaDetails": {
+            "$ref": "#/components/schemas/EpaDetailsRequest"
+          }
+        }
+      },
+      "LearnerRequest": {
+        "type": "object",
+        "properties": {
+          "uln": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "familyName": {
+            "type": "string"
+          }
+        }
+      },
+      "LearningDetailsRequest": {
+        "type": "object",
+        "properties": {
+          "courseOption": {
+            "type": "string"
+          },
+          "overallGrade": {
+            "type": "string"
+          },
+          "achievementDate": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "StandardRequest": {
+        "type": "object",
+        "properties": {
+          "standardCode": {
+            "type": "integer",
+            "nullable": true
+          },
+          "standardReference": {
+            "type": "string"
+          }
+        }
+      },
+      "EpaDetailsRequest": {
+        "type": "object",
+        "properties": {
+          "epas": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EpaRecordRequest"
+            }
+          }
+        }
+      },
+      "EpaRecordRequest": {
+        "type": "object",
+        "properties": {
+          "epaDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "epaOutcome": {
+            "type": "string"
+          },
+          "resit": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "retake": {
+            "type": "boolean",
+            "nullable": true
+          }
+        }
+      },
+      "CreateCertificateResponse": {
+        "type": "object",
+        "properties": {
+          "requestId": {
+            "type": "string"
+          },
+          "validationErrors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "UpdateEpaRequest": {
+        "type": "object",
+        "properties": {
+          "requestId": {
+            "type": "string"
+          },
+          "epaReference": {
+            "type": "string"
+          },
+          "learner": {
+            "$ref": "#/components/schemas/LearnerRequest"
+          },
+          "learningDetails": {
+            "$ref": "#/components/schemas/LearningDetailsRequest"
+          },
+          "standard": {
+            "$ref": "#/components/schemas/StandardRequest"
+          },
+          "epaDetails": {
+            "$ref": "#/components/schemas/EpaDetailsRequest"
+          }
+        }
+      },
+      "UpdateEpaResponse": {
+        "type": "object",
+        "properties": {
+          "requestId": {
+            "type": "string"
+          },
+          "validationErrors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}

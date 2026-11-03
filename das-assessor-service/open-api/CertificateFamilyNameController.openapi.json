@@ -1,0 +1,137 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Certificate Family Name Management",
+    "version": "1.0.0",
+    "description": "API Endpoints for managing certificate family name changes"
+  },
+  "paths": {
+    "/certificate/familyname": {
+      "get": {
+        "operationId": "getCertificateFamilyName",
+        "summary": "Display certificate family name form",
+        "responses": {
+          "200": {
+            "description": "HTML content for the FamilyName form",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "postCertificateFamilyName",
+        "summary": "Update certificate family name",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CertificateFamilyNameViewModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Redirects to the next action or view",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error message",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CertificateFamilyNameViewModel": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "familyName": {
+            "type": "string"
+          },
+          "givenNames": {
+            "type": "string"
+          },
+          "fullName": {
+            "type": "string"
+          },
+          "standardReference": {
+            "type": "string"
+          },
+          "standard": {
+            "type": "string"
+          },
+          "standardUId": {
+            "type": "string"
+          },
+          "uln": {
+            "type": "string"
+          },
+          "level": {
+            "type": "integer"
+          },
+          "backToCheckPage": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "familyName",
+          "givenNames",
+          "standardReference",
+          "standard",
+          "uln",
+          "level"
+        ]
+      },
+      "ValidationError": {
+        "type": "object",
+        "properties": {
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "propertyName": {
+                  "type": "string"
+                },
+                "errorMessage": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "propertyName",
+                "errorMessage"
+              ]
+            }
+          }
+        }
+      }
+    }
+  }
+}
