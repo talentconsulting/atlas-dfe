@@ -1,0 +1,248 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Manage Users API",
+    "version": "1.0.0",
+    "description": "API endpoints for managing users, including inviting users and handling their related actions."
+  },
+  "paths": {
+    "/ManageUsers/Invite": {
+      "get": {
+        "summary": "Get invitation form for adding a new contact",
+        "parameters": [
+          {
+            "name": "backController",
+            "in": "query",
+            "required": false,
+            "description": "Controller to return after submitting the form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "backAction",
+            "in": "query",
+            "required": false,
+            "description": "Action to return after submitting the form",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns the invitation form view",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InviteContactViewModel"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "User Management"
+        ]
+      },
+      "post": {
+        "summary": "Send an invitation to add a new contact",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InviteContactViewModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully sent an invitation to the contact."
+          },
+          "400": {
+            "description": "Invalid input provided.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InviteContactViewModel"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Failure to invite contact due to API errors or validation issues.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "email": {
+                      "type": "string"
+                    },
+                    "errorMessage": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "User Management"
+        ]
+      }
+    },
+    "/ManageUsers/{contactId}/Invited": {
+      "get": {
+        "summary": "View details after inviting contact",
+        "parameters": [
+          {
+            "name": "contactId",
+            "in": "path",
+            "required": true,
+            "description": "ID of the invited contact",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Displays view with details about the invited contact.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvitedViewModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Contact not found."
+          }
+        },
+        "tags": [
+          "User Management"
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "InviteContactViewModel": {
+        "type": "object",
+        "properties": {
+          "givenName": {
+            "type": "string",
+            "description": "First name of the contact.",
+            "example": "John"
+          },
+          "familyName": {
+            "type": "string",
+            "description": "Surname of the contact.",
+            "example": "Doe"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "description": "Email address of the contact.",
+            "example": "john.doe@example.com"
+          },
+          "privilegesViewModel": {
+            "$ref": "#/components/schemas/EditPrivilegesViewModel"
+          },
+          "backController": {
+            "type": "string",
+            "description": "Controller to redirect after submission.",
+            "example": "ManageUsers"
+          },
+          "backAction": {
+            "type": "string",
+            "description": "Action to redirect after submission.",
+            "example": "Index"
+          }
+        },
+        "required": [
+          "givenName",
+          "familyName",
+          "email"
+        ]
+      },
+      "EditPrivilegesViewModel": {
+        "type": "object",
+        "properties": {
+          "privilegeViewModels": {
+            "type": "array",
+            "description": "List of privilege view models.",
+            "items": {
+              "$ref": "#/components/schemas/PrivilegeViewModel"
+            }
+          }
+        }
+      },
+      "PrivilegeViewModel": {
+        "type": "object",
+        "properties": {
+          "privilege": {
+            "$ref": "#/components/schemas/Privilege"
+          },
+          "selected": {
+            "type": "boolean",
+            "description": "Indicates if the privilege is selected.",
+            "example": true
+          }
+        }
+      },
+      "Privilege": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique identifier of the privilege.",
+            "example": "d9ff835c-1d5e-4f62-ac10-3e270bdeef3c"
+          },
+          "userPrivilege": {
+            "type": "string",
+            "description": "Name of the privilege.",
+            "example": "AdminAccess"
+          },
+          "mustBeAtLeastOneUserAssigned": {
+            "type": "boolean",
+            "description": "Specifies if at least one user must have this privilege."
+          },
+          "key": {
+            "type": "string",
+            "description": "Unique key for the privilege.",
+            "example": "ADMIN_ACCESS"
+          },
+          "enabled": {
+            "type": "boolean",
+            "description": "Indicates if the privilege is enabled.",
+            "example": true
+          }
+        }
+      },
+      "InvitedViewModel": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "description": "Email address of the invited contact.",
+            "example": "john.doe@example.com"
+          },
+          "organisation": {
+            "type": "string",
+            "description": "Organisation to which the contact was invited.",
+            "example": "Tech Solutions Inc."
+          }
+        }
+      }
+    }
+  }
+}

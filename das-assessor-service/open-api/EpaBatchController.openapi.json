@@ -1,0 +1,364 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "EPA Batch API",
+    "version": "1.0.0",
+    "description": "API for managing EPA Batch operations including creation, update, and deletion of records."
+  },
+  "paths": {
+    "/api/v1/epas/batch/": {
+      "post": {
+        "operationId": "CreateBatchEpa",
+        "summary": "Create EPA Batch Records",
+        "description": "Creates multiple EPA records based on the provided batch request.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/CreateBatchEpaRequest"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response with a list of EPA Batch responses.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/BatchEpaResponse"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request with error details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "operationId": "UpdateBatchEpa",
+        "summary": "Update EPA Batch Records",
+        "description": "Updates multiple EPA records based on the provided batch request.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/UpdateBatchEpaRequest"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response with a list of EPA Batch responses.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/BatchEpaResponse"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request with error details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/epas/batch/{uln}/{lastname}/{standard}/{epaReference}/{ukPrn}": {
+      "delete": {
+        "operationId": "DeleteBatchEpa",
+        "summary": "Delete EPA Record",
+        "description": "Deletes a specific EPA record based on the provided parameters.",
+        "parameters": [
+          {
+            "name": "uln",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "lastname",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "standard",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "epaReference",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ukPrn",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content."
+          },
+          "400": {
+            "description": "Bad Request with error details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden due to validation errors.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found. The resource could not be located."
+          },
+          "500": {
+            "description": "Internal Server Error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CreateBatchEpaRequest": {
+        "type": "object",
+        "properties": {
+          "RequestId": {
+            "type": "string"
+          },
+          "Uln": {
+            "type": "integer"
+          },
+          "FamilyName": {
+            "type": "string"
+          },
+          "StandardCode": {
+            "type": "integer"
+          },
+          "StandardReference": {
+            "type": "string"
+          },
+          "Version": {
+            "type": "string"
+          },
+          "CourseOption": {
+            "type": "string"
+          },
+          "UkPrn": {
+            "type": "integer"
+          },
+          "EpaDetails": {
+            "$ref": "#/components/schemas/EpaDetails"
+          }
+        }
+      },
+      "UpdateBatchEpaRequest": {
+        "type": "object",
+        "properties": {
+          "RequestId": {
+            "type": "string"
+          },
+          "EpaReference": {
+            "type": "string"
+          },
+          "Uln": {
+            "type": "integer"
+          },
+          "FamilyName": {
+            "type": "string"
+          },
+          "StandardCode": {
+            "type": "integer"
+          },
+          "StandardReference": {
+            "type": "string"
+          },
+          "Version": {
+            "type": "string"
+          },
+          "CourseOption": {
+            "type": "string"
+          },
+          "UkPrn": {
+            "type": "integer"
+          },
+          "EpaDetails": {
+            "$ref": "#/components/schemas/EpaDetails"
+          }
+        }
+      },
+      "BatchEpaResponse": {
+        "type": "object",
+        "properties": {
+          "RequestId": {
+            "type": "string"
+          },
+          "Uln": {
+            "type": "integer"
+          },
+          "FamilyName": {
+            "type": "string"
+          },
+          "StandardCode": {
+            "type": "integer"
+          },
+          "StandardReference": {
+            "type": "string"
+          },
+          "EpaDetails": {
+            "$ref": "#/components/schemas/EpaDetails"
+          },
+          "ValidationErrors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "EpaDetails": {
+        "type": "object",
+        "properties": {
+          "EpaReference": {
+            "type": "string"
+          },
+          "LatestEpaDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "LatestEpaOutcome": {
+            "type": "string"
+          },
+          "Epas": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EpaRecord"
+            }
+          }
+        }
+      },
+      "EpaRecord": {
+        "type": "object",
+        "properties": {
+          "EpaDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "EpaOutcome": {
+            "type": "string"
+          },
+          "Resit": {
+            "type": "boolean"
+          },
+          "Retake": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ApiResponse": {
+        "type": "object",
+        "properties": {
+          "StatusCode": {
+            "type": "integer"
+          },
+          "Message": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

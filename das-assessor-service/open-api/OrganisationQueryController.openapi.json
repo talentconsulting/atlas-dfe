@@ -1,0 +1,511 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "OrganisationQuery and EPA APIs",
+    "version": "1.0.0",
+    "description": "API for querying organisations and managing EPA records."
+  },
+  "paths": {
+    "/api/v1/organisations/ukprn/{ukprn}": {
+      "get": {
+        "operationId": "SearchOrganisation",
+        "summary": "Search for an Organisation by UKPRN",
+        "parameters": [
+          {
+            "name": "ukprn",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved Organisation.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrganisationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid UKPRN provided.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Organisation not found.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/organisations": {
+      "get": {
+        "operationId": "GetAllOrganisations",
+        "summary": "Retrieve all Organisations.",
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved Organisations.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/OrganisationResponse"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/organisations/organisation/{id}": {
+      "get": {
+        "operationId": "GetOrganisation",
+        "summary": "Retrieve a specific Organisation by ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved Organisation.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Organisation"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/organisations/organisation/{id}/contacts": {
+      "get": {
+        "operationId": "GetOrganisationContacts",
+        "summary": "Retrieve all contacts for a specific Organisation by ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved Organisation contacts.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ContactResponse"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/organisations/forContact/{userId}": {
+      "get": {
+        "operationId": "GetOrganisationForContact",
+        "summary": "Retrieve the Organisation associated with a specific contact User ID.",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved Organisation for Contact.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrganisationResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Organisation not found for the Contact User ID.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/organisations/organisation/earliest-withdrawal/{id}": {
+      "get": {
+        "operationId": "GetOrganisationEarliestWithdrawal",
+        "summary": "Get the earliest withdrawal date for an Organisation by ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved earliest withdrawal date.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/organisations/organisation/earliest-withdrawal/{id}/{standardId}": {
+      "get": {
+        "operationId": "GetOrganisationStandardEarliestWithdrawal",
+        "summary": "Get the earliest withdrawal date for a Standard by Organisation ID and Standard ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "standardId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved earliest withdrawal date for the Standard.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/organisations/is-ofs/{ukprn}": {
+      "get": {
+        "operationId": "CheckIfOfsOrganisation",
+        "summary": "Check if an Organisation is an Office for Students Organisation using UKPRN.",
+        "parameters": [
+          {
+            "name": "ukprn",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Office for Students status check result.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid UKPRN provided.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "OrganisationResponse": {
+        "type": "object",
+        "properties": {
+          "Id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "EndPointAssessorOrganisationId": {
+            "type": "string"
+          },
+          "EndPointAssessorUkprn": {
+            "type": "integer",
+            "nullable": true
+          },
+          "EndPointAssessorName": {
+            "type": "string"
+          },
+          "PrimaryContact": {
+            "type": "string"
+          },
+          "RoATPApproved": {
+            "type": "boolean"
+          },
+          "RoEPAOApproved": {
+            "type": "boolean"
+          },
+          "OrganisationType": {
+            "type": "string"
+          },
+          "Status": {
+            "type": "string"
+          },
+          "City": {
+            "type": "string"
+          },
+          "Postcode": {
+            "type": "string"
+          }
+        }
+      },
+      "ApiResponse": {
+        "type": "object",
+        "properties": {
+          "StatusCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Message": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "Organisation": {
+        "type": "object",
+        "properties": {
+          "Id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "Name": {
+            "type": "string"
+          },
+          "Uri": {
+            "type": "string"
+          },
+          "Email": {
+            "type": "string"
+          },
+          "Phone": {
+            "type": "string"
+          },
+          "Website": {
+            "type": "string"
+          },
+          "OrganisationType": {
+            "type": "string"
+          },
+          "UkPrn": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "ContactResponse": {
+        "type": "object",
+        "properties": {
+          "EndPointAssessorOrganisationId": {
+            "type": "string"
+          },
+          "OrganisationId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "Username": {
+            "type": "string"
+          },
+          "DisplayName": {
+            "type": "string"
+          },
+          "Email": {
+            "type": "string"
+          },
+          "Title": {
+            "type": "string"
+          },
+          "SignInType": {
+            "type": "string"
+          },
+          "FamilyName": {
+            "type": "string"
+          },
+          "GivenNames": {
+            "type": "string"
+          },
+          "Status": {
+            "type": "string"
+          },
+          "Id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "PhoneNumber": {
+            "type": "string"
+          },
+          "GovUkIdentifier": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

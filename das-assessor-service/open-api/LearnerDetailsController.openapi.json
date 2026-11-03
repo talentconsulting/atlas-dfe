@@ -1,0 +1,210 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Assessor Service Learner API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/api/v1/learnerdetails/import": {
+      "post": {
+        "operationId": "ImportLearnerDetail",
+        "summary": "Import Learner Details",
+        "description": "Imports learner details into the system.",
+        "tags": [
+          "Learner Details"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ImportLearnerDetailRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully imported learner detail.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImportLearnerDetailResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ImportLearnerDetailRequest": {
+        "type": "object",
+        "properties": {
+          "ImportLearnerDetails": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ImportLearnerDetail"
+            }
+          }
+        }
+      },
+      "ImportLearnerDetail": {
+        "type": "object",
+        "properties": {
+          "Source": {
+            "type": "string"
+          },
+          "Ukprn": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "Uln": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "StdCode": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "DateOfBirth": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "FundingModel": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "GivenNames": {
+            "type": "string"
+          },
+          "FamilyName": {
+            "type": "string"
+          },
+          "EpaOrgId": {
+            "type": "string"
+          },
+          "LearnStartDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "PlannedEndDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "CompletionStatus": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "LearnRefNumber": {
+            "type": "string"
+          },
+          "DelLocPostCode": {
+            "type": "string"
+          },
+          "LearnActEndDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "WithdrawReason": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "Outcome": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "AchDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "OutGrade": {
+            "type": "string"
+          }
+        }
+      },
+      "ImportLearnerDetailResponse": {
+        "type": "object",
+        "properties": {
+          "LearnerDetailResults": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ImportLearnerDetailResult"
+            }
+          }
+        }
+      },
+      "ImportLearnerDetailResult": {
+        "type": "object",
+        "properties": {
+          "Uln": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "StdCode": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "Outcome": {
+            "type": "string"
+          },
+          "Errors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "ApiResponse": {
+        "type": "object",
+        "properties": {
+          "StatusCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Message": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      }
+    }
+  }
+}

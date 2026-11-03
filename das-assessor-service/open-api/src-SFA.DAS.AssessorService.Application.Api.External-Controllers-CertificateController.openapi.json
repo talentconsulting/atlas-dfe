@@ -1,0 +1,634 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Batch Certificates & EPA Management API",
+    "version": "1.0.0",
+    "description": "API for managing certificates and EPA records in batch."
+  },
+  "paths": {
+    "/api/v1/certificate/{uln}/{familyName}/{standard}": {
+      "get": {
+        "operationId": "GetCertificate",
+        "summary": "Get Certificate",
+        "description": "Gets the specified Certificate.",
+        "parameters": [
+          {
+            "name": "uln",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "familyName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "standard",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Standard Code or Standard Reference Number"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The current Certificate.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Certificate"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "There is no Certificate and you may create one."
+          },
+          "403": {
+            "description": "There are validation errors preventing you from retrieving the Certificate.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/certificate": {
+      "post": {
+        "operationId": "CreateCertificates",
+        "summary": "Create Certificates",
+        "description": "Creates a new Certificate for each valid item within the request.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/CreateCertificateRequest"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "For each item: The created Certificate if valid, else a list of validation errors.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CreateCertificateResponse"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "There are too many certificates specified within the request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "operationId": "UpdateCertificates",
+        "summary": "Update Certificates",
+        "description": "Updates the specified Certificate with the information contained in each valid request.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/UpdateCertificateRequest"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "For each item: The updated Certificate if valid, else a list of validation errors.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UpdateCertificateResponse"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "There are too many certificates specified within the request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/certificate/submit": {
+      "post": {
+        "operationId": "SubmitCertificates",
+        "summary": "Submit Certificates",
+        "description": "Submits the specified Certificate for each valid request.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SubmitCertificateRequest"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "For each item: The submitted Certificate if valid, else a list of validation errors.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SubmitCertificateResponse"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "There are too many certificates specified within the request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/certificate/{uln}/{familyName}/{standard}/{certificateReference}": {
+      "delete": {
+        "operationId": "DeleteCertificate",
+        "summary": "Delete Certificate",
+        "description": "Deletes the specified Certificate.",
+        "parameters": [
+          {
+            "name": "uln",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "familyName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "standard",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Standard Code or Standard Reference Number"
+          },
+          {
+            "name": "certificateReference",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The specified Certificate has been deleted."
+          },
+          "403": {
+            "description": "There are validation errors preventing you from deleting the Certificate.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/certificate/grades": {
+      "get": {
+        "operationId": "GetGrades",
+        "summary": "Get Grades",
+        "description": "Retrieve the list of valid pass grades for creating certificates.",
+        "responses": {
+          "200": {
+            "description": "The list of valid pass grades.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Certificate": {
+        "type": "object",
+        "properties": {
+          "certificateData": {
+            "type": "object",
+            "$ref": "#/components/schemas/CertificateData"
+          },
+          "status": {
+            "type": "object",
+            "$ref": "#/components/schemas/Status"
+          },
+          "created": {
+            "type": "object",
+            "$ref": "#/components/schemas/Created"
+          },
+          "submitted": {
+            "type": "object",
+            "$ref": "#/components/schemas/Submitted"
+          },
+          "printed": {
+            "type": "object",
+            "$ref": "#/components/schemas/Printed"
+          },
+          "delivered": {
+            "type": "object",
+            "$ref": "#/components/schemas/Delivered"
+          }
+        }
+      },
+      "CertificateData": {
+        "type": "object",
+        "properties": {
+          "certificateReference": {
+            "type": "string"
+          },
+          "standard": {
+            "type": "object",
+            "$ref": "#/components/schemas/Standard"
+          },
+          "learner": {
+            "type": "object",
+            "$ref": "#/components/schemas/Learner"
+          },
+          "learningDetails": {
+            "type": "object",
+            "$ref": "#/components/schemas/LearningDetails"
+          },
+          "postalContact": {
+            "type": "object",
+            "$ref": "#/components/schemas/PostalContact"
+          },
+          "coronationEmblem": {
+            "type": "boolean"
+          }
+        }
+      },
+      "CreateCertificateRequest": {
+        "type": "object",
+        "properties": {
+          "requestId": {
+            "type": "string"
+          },
+          "standard": {
+            "type": "object",
+            "$ref": "#/components/schemas/Standard"
+          },
+          "learner": {
+            "type": "object",
+            "$ref": "#/components/schemas/Learner"
+          },
+          "learningDetails": {
+            "type": "object",
+            "$ref": "#/components/schemas/LearningDetails"
+          },
+          "postalContact": {
+            "type": "object",
+            "$ref": "#/components/schemas/PostalContact"
+          }
+        }
+      },
+      "CreateCertificateResponse": {
+        "type": "object",
+        "properties": {
+          "requestId": {
+            "type": "string"
+          },
+          "certificate": {
+            "type": "object",
+            "$ref": "#/components/schemas/Certificate"
+          },
+          "validationErrors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "ApiResponse": {
+        "type": "object",
+        "properties": {
+          "statusCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "UpdateCertificateRequest": {
+        "type": "object",
+        "properties": {
+          "requestId": {
+            "type": "string"
+          },
+          "certificateReference": {
+            "type": "string"
+          },
+          "standard": {
+            "type": "object",
+            "$ref": "#/components/schemas/Standard"
+          },
+          "learner": {
+            "type": "object",
+            "$ref": "#/components/schemas/Learner"
+          },
+          "learningDetails": {
+            "type": "object",
+            "$ref": "#/components/schemas/LearningDetails"
+          },
+          "postalContact": {
+            "type": "object",
+            "$ref": "#/components/schemas/PostalContact"
+          }
+        }
+      },
+      "UpdateCertificateResponse": {
+        "type": "object",
+        "properties": {
+          "requestId": {
+            "type": "string"
+          },
+          "certificate": {
+            "type": "object",
+            "$ref": "#/components/schemas/Certificate"
+          },
+          "validationErrors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "SubmitCertificateRequest": {
+        "type": "object",
+        "properties": {
+          "requestId": {
+            "type": "string"
+          },
+          "uln": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "standardCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "standardReference": {
+            "type": "string"
+          },
+          "familyName": {
+            "type": "string"
+          },
+          "certificateReference": {
+            "type": "string"
+          }
+        }
+      },
+      "SubmitCertificateResponse": {
+        "type": "object",
+        "properties": {
+          "requestId": {
+            "type": "string"
+          },
+          "certificate": {
+            "type": "object",
+            "$ref": "#/components/schemas/Certificate"
+          },
+          "validationErrors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "Standard": {
+        "type": "object",
+        "properties": {
+          "standardCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "standardReference": {
+            "type": "string"
+          },
+          "level": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "standardName": {
+            "type": "string"
+          }
+        }
+      },
+      "Learner": {
+        "type": "object",
+        "properties": {
+          "uln": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "givenNames": {
+            "type": "string"
+          },
+          "familyName": {
+            "type": "string"
+          }
+        }
+      },
+      "LearningDetails": {
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "string"
+          },
+          "courseOption": {
+            "type": "string"
+          },
+          "overallGrade": {
+            "type": "string"
+          },
+          "learningStartDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "achievementDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "providerUkPrn": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "providerName": {
+            "type": "string"
+          }
+        }
+      },
+      "PostalContact": {
+        "type": "object",
+        "properties": {
+          "contactName": {
+            "type": "string"
+          },
+          "department": {
+            "type": "string"
+          },
+          "organisation": {
+            "type": "string"
+          },
+          "addressLine1": {
+            "type": "string"
+          },
+          "addressLine2": {
+            "type": "string"
+          },
+          "addressLine3": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "postCode": {
+            "type": "string"
+          }
+        }
+      },
+      "Status": {
+        "type": "object",
+        "properties": {
+          "currentStatus": {
+            "type": "string"
+          }
+        }
+      },
+      "Created": {
+        "type": "object",
+        "properties": {
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdBy": {
+            "type": "string"
+          }
+        }
+      },
+      "Submitted": {
+        "type": "object",
+        "properties": {
+          "submittedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "submittedBy": {
+            "type": "string"
+          }
+        }
+      },
+      "Printed": {
+        "type": "object",
+        "properties": {
+          "printedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "printedBatch": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "Delivered": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "deliveryDate": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    }
+  }
+}
