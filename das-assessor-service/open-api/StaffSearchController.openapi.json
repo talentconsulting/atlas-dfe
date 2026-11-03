@@ -1,0 +1,451 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Staff Management API",
+    "description": "API for managing staff-related operations in the Assessor Service.",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/api/v1/staffsearch": {
+      "get": {
+        "summary": "Search staff records.",
+        "operationId": "StaffSearch",
+        "tags": [
+          "Staff"
+        ],
+        "parameters": [
+          {
+            "name": "searchQuery",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedList_StaffSearchItems"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/staffsearch/batch": {
+      "get": {
+        "summary": "Search batch of staff records.",
+        "operationId": "StaffBatchSearch",
+        "tags": [
+          "Staff"
+        ],
+        "parameters": [
+          {
+            "name": "batchNumber",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StaffBatchSearchResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/staffsearch/batchlog": {
+      "get": {
+        "summary": "Retrieve staff batch log.",
+        "operationId": "StaffBatchLog",
+        "tags": [
+          "Staff"
+        ],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedList_StaffBatchLogResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/staffsearch/framework-learners": {
+      "post": {
+        "summary": "Search for framework learners.",
+        "operationId": "StaffFrameworkSearch",
+        "tags": [
+          "Staff"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FrameworkLearnerSearchRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FrameworkLearnerSearchResponse"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "PaginatedList_StaffSearchItems": {
+        "type": "object",
+        "properties": {
+          "pageIndex": {
+            "type": "integer"
+          },
+          "pageSize": {
+            "type": "integer"
+          },
+          "totalRecordCount": {
+            "type": "integer"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StaffSearchItems"
+            }
+          }
+        }
+      },
+      "PaginatedList_StaffBatchLogResult": {
+        "type": "object",
+        "properties": {
+          "pageIndex": {
+            "type": "integer"
+          },
+          "pageSize": {
+            "type": "integer"
+          },
+          "totalRecordCount": {
+            "type": "integer"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StaffBatchLogResult"
+            }
+          }
+        }
+      },
+      "StaffBatchSearchResponse": {
+        "type": "object",
+        "properties": {
+          "sentToPrinterDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "printedDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "results": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StaffBatchSearchResult"
+            }
+          }
+        }
+      },
+      "StaffSearchItems": {
+        "type": "object",
+        "properties": {
+          "uln": {
+            "type": "integer"
+          },
+          "endpointAssessorOrganisationId": {
+            "type": "string"
+          },
+          "givenNames": {
+            "type": "string"
+          },
+          "familyName": {
+            "type": "string"
+          },
+          "standardCode": {
+            "type": "integer"
+          },
+          "standard": {
+            "type": "string"
+          },
+          "certificateReference": {
+            "type": "string"
+          },
+          "certificateStatus": {
+            "type": "string"
+          },
+          "lastUpdatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        }
+      },
+      "StaffBatchLogResult": {
+        "type": "object",
+        "properties": {
+          "batchNumber": {
+            "type": "integer"
+          },
+          "scheduledDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "sentToPrinterDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "numberOfCertificatesSent": {
+            "type": "integer"
+          },
+          "printedDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "numberOfCertificatesPrinted": {
+            "type": "integer"
+          }
+        }
+      },
+      "FrameworkLearnerSearchRequest": {
+        "type": "object",
+        "properties": {
+          "firstName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "dateOfBirth": {
+            "type": "string",
+            "format": "date"
+          }
+        }
+      },
+      "FrameworkLearnerSearchResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "frameworkName": {
+            "type": "string"
+          },
+          "apprenticeshipLevelName": {
+            "type": "string"
+          },
+          "certificationYear": {
+            "type": "string"
+          }
+        }
+      },
+      "ApiResponse": {
+        "type": "object",
+        "properties": {
+          "statusCode": {
+            "type": "integer"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "StaffBatchSearchResult": {
+        "type": "object",
+        "properties": {
+          "batchNumber": {
+            "type": "integer",
+            "nullable": true
+          },
+          "statusAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "certificateReference": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "certificateData": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "uln": {
+            "type": "integer"
+          },
+          "standardCode": {
+            "type": "integer"
+          },
+          "frameworkLearnerId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          }
+        }
+      }
+    }
+  }
+}

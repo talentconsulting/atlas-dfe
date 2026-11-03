@@ -1,0 +1,137 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Certificate Options API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/certificate/option": {
+      "get": {
+        "summary": "Retrieve Certificate Option View",
+        "operationId": "getCertificateOption",
+        "parameters": [
+          {
+            "name": "redirectToCheck",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "Indicates whether to redirect to the check page."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved certificate option view."
+          },
+          "302": {
+            "description": "Redirected to Search Index."
+          }
+        }
+      },
+      "post": {
+        "summary": "Update Certificate Option",
+        "operationId": "updateCertificateOption",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CertificateOptionViewModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully updated certificate option."
+          },
+          "400": {
+            "description": "Validation errors in the provided data."
+          },
+          "500": {
+            "description": "Internal server error when updating the certificate."
+          }
+        }
+      }
+    },
+    "/certificate/option/back": {
+      "get": {
+        "summary": "Navigate Back Based on Session State",
+        "operationId": "getCertificateOptionBack",
+        "responses": {
+          "302": {
+            "description": "Redirected based on session state."
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CertificateOptionViewModel": {
+        "type": "object",
+        "properties": {
+          "Option": {
+            "type": "string",
+            "description": "Selected course option."
+          },
+          "Options": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Available course options."
+          },
+          "Id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Identifier of the certificate."
+          },
+          "FamilyName": {
+            "type": "string",
+            "description": "Family name of the learner."
+          },
+          "GivenNames": {
+            "type": "string",
+            "description": "Given names of the learner."
+          },
+          "FullName": {
+            "type": "string",
+            "description": "Full name of the learner."
+          },
+          "StandardReference": {
+            "type": "string",
+            "description": "Reference for the standard."
+          },
+          "Standard": {
+            "type": "string",
+            "description": "Name of the standard."
+          },
+          "StandardUId": {
+            "type": "string",
+            "description": "Unique identifier for the standard."
+          },
+          "Uln": {
+            "type": "string",
+            "description": "Unique Learner Number as a string."
+          },
+          "Level": {
+            "type": "integer",
+            "description": "Level of the standard."
+          },
+          "BackToCheckPage": {
+            "type": "boolean",
+            "description": "Indicates whether to navigate back to the check page."
+          }
+        },
+        "required": [
+          "Option",
+          "Id",
+          "StandardReference",
+          "Uln"
+        ]
+      }
+    }
+  }
+}

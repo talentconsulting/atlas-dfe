@@ -1,0 +1,126 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Certificate Given Names API",
+    "version": "1.0.0",
+    "description": "API for managing certificate given names in the Assessor Service."
+  },
+  "paths": {
+    "/certificate/givennames": {
+      "get": {
+        "operationId": "GetCertificateGivenNames",
+        "summary": "Fetch Certificate Given Names View",
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved the view for certificate given names."
+          }
+        }
+      },
+      "post": {
+        "operationId": "UpdateCertificateGivenNames",
+        "summary": "Update Certificate Given Names",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CertificateGivenNamesViewModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully updated certificate given names."
+          },
+          "400": {
+            "description": "Validation errors occurred.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrors"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CertificateGivenNamesViewModel": {
+        "type": "object",
+        "properties": {
+          "Id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "GivenNames": {
+            "type": "string",
+            "description": "Learner's given names."
+          },
+          "FamilyName": {
+            "type": "string",
+            "description": "Learner's family name."
+          },
+          "FullName": {
+            "type": "string",
+            "description": "Full name of the learner."
+          },
+          "StandardReference": {
+            "type": "string",
+            "description": "Reference of the standard related to the learner."
+          },
+          "Standard": {
+            "type": "string",
+            "description": "Name of the standard related to the learner."
+          },
+          "StandardUId": {
+            "type": "string",
+            "description": "Unique identifier for the standard."
+          },
+          "Uln": {
+            "type": "string",
+            "description": "Unique Learner Number."
+          },
+          "Level": {
+            "type": "integer",
+            "description": "Standard level of the learner."
+          },
+          "BackToCheckPage": {
+            "type": "boolean",
+            "description": "Indicator to navigate back to the check page."
+          }
+        },
+        "required": [
+          "Id",
+          "GivenNames",
+          "FamilyName",
+          "StandardReference"
+        ]
+      },
+      "ValidationErrors": {
+        "type": "object",
+        "properties": {
+          "Errors": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "PropertyName": {
+                  "type": "string",
+                  "description": "Name of the property that failed validation."
+                },
+                "ErrorMessage": {
+                  "type": "string",
+                  "description": "Error message related to validation failure."
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

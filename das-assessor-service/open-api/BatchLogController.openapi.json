@@ -1,0 +1,448 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Batch Log API",
+    "version": "1.0.0",
+    "description": "API for managing batch logs"
+  },
+  "paths": {
+    "/api/v1/batches/create": {
+      "post": {
+        "operationId": "CreateBatchLog",
+        "summary": "Create a new batch log",
+        "tags": [
+          "BatchLogs"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBatchLogRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Batch log created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BatchLogResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/batches/{batchNumber}/update-ready-to-print-add-certificates": {
+      "put": {
+        "operationId": "UpdateBatchLogReadyToPrintAddCertificates",
+        "summary": "Update batch log ready-to-print certificates",
+        "tags": [
+          "BatchLogs"
+        ],
+        "parameters": [
+          {
+            "name": "batchNumber",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateBatchLogReadyToPrintAddCertificatesRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Batch log updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/batches/{batchNumber}/update-sent-to-printer": {
+      "put": {
+        "operationId": "UpdateBatchLogSentToPrinter",
+        "summary": "Update batch log sent to printer",
+        "tags": [
+          "BatchLogs"
+        ],
+        "parameters": [
+          {
+            "name": "batchNumber",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateBatchLogSentToPrinterRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Batch log updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/batches/{batchNumber}/update-printed": {
+      "put": {
+        "operationId": "UpdateBatchLogPrinted",
+        "summary": "Update batch log printed",
+        "tags": [
+          "BatchLogs"
+        ],
+        "parameters": [
+          {
+            "name": "batchNumber",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateBatchLogPrintedRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Batch log updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ApiResponse": {
+        "type": "object",
+        "properties": {
+          "StatusCode": {
+            "type": "integer"
+          },
+          "Message": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "ValidationResponse": {
+        "type": "object",
+        "properties": {
+          "Errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ValidationErrorDetail"
+            }
+          },
+          "IsValid": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ValidationErrorDetail": {
+        "type": "object",
+        "properties": {
+          "Field": {
+            "type": "string"
+          },
+          "ErrorMessage": {
+            "type": "string"
+          },
+          "ValidationStatusCode": {
+            "type": "integer"
+          },
+          "StatusCode": {
+            "type": "string"
+          }
+        }
+      },
+      "BatchLogResponse": {
+        "type": "object",
+        "properties": {
+          "Id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "BatchCreated": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "ScheduledDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "Period": {
+            "type": "string"
+          },
+          "BatchNumber": {
+            "type": "integer"
+          },
+          "NumberOfCertificates": {
+            "type": "integer"
+          },
+          "NumberOfCoverLetters": {
+            "type": "integer"
+          },
+          "CertificatesFileName": {
+            "type": "string"
+          },
+          "FileUploadStartTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "FileUploadEndTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "BatchData": {
+            "$ref": "#/components/schemas/BatchDataResponse"
+          }
+        }
+      },
+      "BatchDataResponse": {
+        "type": "object",
+        "properties": {
+          "BatchNumber": {
+            "type": "string"
+          },
+          "BatchDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "PostalContactCount": {
+            "type": "integer"
+          },
+          "TotalCertificateCount": {
+            "type": "integer"
+          },
+          "PrintedDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "PostedDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "DateOfResponse": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        }
+      },
+      "CreateBatchLogRequest": {
+        "type": "object",
+        "properties": {
+          "ScheduledDate": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "UpdateBatchLogReadyToPrintAddCertificatesRequest": {
+        "type": "object",
+        "properties": {
+          "BatchNumber": {
+            "type": "integer"
+          },
+          "MaxCertificatesToBeAdded": {
+            "type": "integer"
+          }
+        }
+      },
+      "UpdateBatchLogPrintedRequest": {
+        "type": "object",
+        "properties": {
+          "BatchNumber": {
+            "type": "integer"
+          },
+          "BatchDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "PostalContactCount": {
+            "type": "integer",
+            "nullable": true
+          },
+          "TotalCertificateCount": {
+            "type": "integer",
+            "nullable": true
+          },
+          "PrintedDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "DateOfResponse": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        }
+      },
+      "UpdateBatchLogSentToPrinterRequest": {
+        "type": "object",
+        "properties": {
+          "BatchNumber": {
+            "type": "integer"
+          },
+          "BatchCreated": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "NumberOfCertificates": {
+            "type": "integer"
+          },
+          "NumberOfCoverLetters": {
+            "type": "integer"
+          },
+          "CertificatesFileName": {
+            "type": "string"
+          },
+          "FileUploadStartTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "FileUploadEndTime": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    }
+  }
+}
