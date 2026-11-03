@@ -1,0 +1,595 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Certificate Batch API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/api/v1/certificates/batch/{uln}/{lastname}/{standardId}/{ukPrn}": {
+      "get": {
+        "summary": "Retrieve a batch certificate",
+        "parameters": [
+          {
+            "name": "uln",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "lastname",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "standardId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ukPrn",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved certificate",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetBatchCertificateResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/certificates/batch": {
+      "post": {
+        "summary": "Create batch certificates",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/CreateBatchCertificateRequest"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Certificates created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/BatchCertificateResponse"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Update batch certificates",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/UpdateBatchCertificateRequest"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Certificates updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/BatchCertificateResponse"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/certificates/batch/submit": {
+      "post": {
+        "summary": "Submit batch certificates",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SubmitBatchCertificateRequest"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Certificates submitted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SubmitBatchCertificateResponse"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/certificates/batch/{uln}/{lastname}/{standard}/{certificateReference}/{ukPrn}": {
+      "delete": {
+        "summary": "Delete batch certificate",
+        "parameters": [
+          {
+            "name": "uln",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "lastname",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "standard",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "certificateReference",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ukPrn",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Certificate deleted"
+          },
+          "404": {
+            "description": "Certificate not found"
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ApiResponse": {
+        "type": "object",
+        "properties": {
+          "statusCode": {
+            "type": "integer"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "BatchCertificateResponse": {
+        "type": "object",
+        "properties": {
+          "requestId": {
+            "type": "string"
+          },
+          "uln": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "familyName": {
+            "type": "string"
+          },
+          "standardCode": {
+            "type": "integer"
+          },
+          "standardReference": {
+            "type": "string"
+          },
+          "certificate": {
+            "$ref": "#/components/schemas/Certificate"
+          },
+          "validationErrors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "CreateBatchCertificateRequest": {
+        "type": "object",
+        "properties": {
+          "requestId": {
+            "type": "string"
+          },
+          "uln": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "familyName": {
+            "type": "string"
+          },
+          "certificateData": {
+            "$ref": "#/components/schemas/CertificateData"
+          },
+          "ukPrn": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "UpdateBatchCertificateRequest": {
+        "type": "object",
+        "properties": {
+          "requestId": {
+            "type": "string"
+          },
+          "uln": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "familyName": {
+            "type": "string"
+          },
+          "certificateData": {
+            "$ref": "#/components/schemas/CertificateData"
+          },
+          "standardCode": {
+            "type": "integer"
+          },
+          "standardReference": {
+            "type": "string"
+          },
+          "ukPrn": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "SubmitBatchCertificateRequest": {
+        "type": "object",
+        "properties": {
+          "requestId": {
+            "type": "string"
+          },
+          "uln": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "standardCode": {
+            "type": "integer"
+          },
+          "standardReference": {
+            "type": "string"
+          },
+          "familyName": {
+            "type": "string"
+          },
+          "certificateReference": {
+            "type": "string"
+          },
+          "ukPrn": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "SubmitBatchCertificateResponse": {
+        "type": "object",
+        "properties": {
+          "requestId": {
+            "type": "string"
+          },
+          "certificate": {
+            "$ref": "#/components/schemas/Certificate"
+          },
+          "validationErrors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "GetBatchCertificateResponse": {
+        "type": "object",
+        "properties": {
+          "uln": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "familyName": {
+            "type": "string"
+          },
+          "standard": {
+            "type": "string"
+          },
+          "certificate": {
+            "$ref": "#/components/schemas/Certificate"
+          },
+          "validationErrors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "Certificate": {
+        "type": "object",
+        "properties": {
+          "certificateData": {
+            "$ref": "#/components/schemas/CertificateData"
+          },
+          "status": {
+            "$ref": "#/components/schemas/Status"
+          },
+          "created": {
+            "$ref": "#/components/schemas/Created"
+          },
+          "submitted": {
+            "$ref": "#/components/schemas/Submitted"
+          },
+          "delivered": {
+            "$ref": "#/components/schemas/Delivered"
+          },
+          "printed": {
+            "$ref": "#/components/schemas/Printed"
+          }
+        }
+      },
+      "CertificateData": {
+        "type": "object",
+        "properties": {
+          "certificateReference": {
+            "type": "string"
+          },
+          "coronationEmblem": {
+            "type": "boolean"
+          }
+        }
+      },
+      "Status": {
+        "type": "object",
+        "properties": {
+          "currentStatus": {
+            "type": "string"
+          }
+        }
+      },
+      "Created": {
+        "type": "object",
+        "properties": {
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdBy": {
+            "type": "string"
+          }
+        }
+      },
+      "Submitted": {
+        "type": "object",
+        "properties": {
+          "submittedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "submittedBy": {
+            "type": "string"
+          }
+        }
+      },
+      "Delivered": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "deliveryDate": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "Printed": {
+        "type": "object",
+        "properties": {
+          "printedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "printedBatch": {
+            "type": "integer"
+          }
+        }
+      }
+    }
+  }
+}

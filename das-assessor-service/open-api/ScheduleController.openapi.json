@@ -1,0 +1,310 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Assessor Service API",
+    "version": "1.0.0",
+    "description": "API for the Assessor Service Application."
+  },
+  "paths": {
+    "/api/v1/schedule": {
+      "get": {
+        "operationId": "getScheduleRun",
+        "summary": "Fetch a specific schedule run.",
+        "parameters": [
+          {
+            "name": "scheduleRunId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Schedule run details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScheduleRun"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "completeScheduleRun",
+        "summary": "Mark a specific schedule run as completed.",
+        "parameters": [
+          {
+            "name": "scheduleRunId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Schedule run marked as completed."
+          }
+        }
+      },
+      "delete": {
+        "operationId": "deleteScheduleRun",
+        "summary": "Delete a specific schedule run.",
+        "parameters": [
+          {
+            "name": "scheduleRunId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Schedule run deleted successfully."
+          }
+        }
+      }
+    },
+    "/api/v1/schedule/next": {
+      "get": {
+        "operationId": "getNextScheduledRun",
+        "summary": "Fetch the next scheduled run for a specific schedule type.",
+        "parameters": [
+          {
+            "name": "scheduleType",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "enum": [
+                1
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Next scheduled run details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScheduleRun"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/schedule/all": {
+      "get": {
+        "operationId": "getAllScheduledRun",
+        "summary": "Fetch all scheduled runs for a specific schedule type.",
+        "parameters": [
+          {
+            "name": "scheduleType",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "enum": [
+                1
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of all scheduled runs.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ScheduleRun"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/schedule/runnow": {
+      "get": {
+        "operationId": "getNextScheduleToRunNow",
+        "summary": "Fetch the next schedule to run immediately for a specific schedule type.",
+        "parameters": [
+          {
+            "name": "scheduleType",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "enum": [
+                1
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Next schedule to run details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScheduleRun"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "runNow",
+        "summary": "Queue a new immediate run for a specific schedule type.",
+        "parameters": [
+          {
+            "name": "scheduleType",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "enum": [
+                1
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Immediate run queued successfully."
+          }
+        }
+      }
+    },
+    "/api/v1/schedule/create": {
+      "put": {
+        "operationId": "createScheduleRun",
+        "summary": "Create a new schedule run.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ScheduleRun"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Schedule run created successfully."
+          }
+        }
+      }
+    },
+    "/api/v1/schedule/updatelaststatus": {
+      "post": {
+        "operationId": "updateLastRunStatus",
+        "summary": "Update the last run status of a schedule run.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateLastRunStatusRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Last run status updated successfully."
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ScheduleRun": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "runTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "isComplete": {
+            "type": "boolean"
+          },
+          "interval": {
+            "type": "integer",
+            "nullable": true
+          },
+          "isRecurring": {
+            "type": "boolean"
+          },
+          "scheduleType": {
+            "$ref": "#/components/schemas/ScheduleType"
+          },
+          "lastRunStatus": {
+            "$ref": "#/components/schemas/LastRunStatus"
+          }
+        },
+        "required": [
+          "id",
+          "runTime",
+          "isComplete",
+          "isRecurring",
+          "scheduleType"
+        ]
+      },
+      "ScheduleType": {
+        "type": "string",
+        "enum": [
+          "PrintRun"
+        ]
+      },
+      "LastRunStatus": {
+        "type": "string",
+        "enum": [
+          "Restarted",
+          "Started",
+          "Completed",
+          "Failed"
+        ]
+      },
+      "UpdateLastRunStatusRequest": {
+        "type": "object",
+        "properties": {
+          "scheduleRunId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "lastRunStatus": {
+            "$ref": "#/components/schemas/LastRunStatus"
+          }
+        },
+        "required": [
+          "scheduleRunId",
+          "lastRunStatus"
+        ]
+      }
+    }
+  }
+}

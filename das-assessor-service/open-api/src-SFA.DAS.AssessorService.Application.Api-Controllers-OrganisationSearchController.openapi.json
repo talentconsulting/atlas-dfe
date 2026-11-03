@@ -1,0 +1,542 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Organisation Search API",
+    "version": "1.0.0",
+    "description": "API for searching and retrieving details about organisations such as charities, companies, and EPAOs."
+  },
+  "paths": {
+    "/api/v1/organisationsearch/organisations": {
+      "get": {
+        "summary": "Search Organisations",
+        "description": "Search for organisations based on various criteria including name, UKPRN, EPAO ID, company number, or charity number.",
+        "tags": [
+          "Organisation Search"
+        ],
+        "parameters": [
+          {
+            "name": "searchTerm",
+            "in": "query",
+            "description": "Search term for organisation lookup.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Number of items per page.",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "pageIndex",
+            "in": "query",
+            "description": "Page number for paginated results.",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated list of organisation search results.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedListOrganisationSearchResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/organisationsearch/company/{companyNumber}/isActivelyTrading": {
+      "get": {
+        "summary": "Check if Company is Actively Trading",
+        "description": "Determines whether a company with the given company number is actively trading.",
+        "tags": [
+          "Companies"
+        ],
+        "parameters": [
+          {
+            "name": "companyNumber",
+            "in": "path",
+            "description": "Company number.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Boolean value indicating if the company is actively trading.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/organisationsearch/company/{companyNumber}": {
+      "get": {
+        "summary": "Get Company Details",
+        "description": "Retrieves full details of a company with the specified company number.",
+        "tags": [
+          "Companies"
+        ],
+        "parameters": [
+          {
+            "name": "companyNumber",
+            "in": "path",
+            "description": "Company number.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Company details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Company"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/organisationsearch/charity/{charityNumber}": {
+      "get": {
+        "summary": "Get Charity Details",
+        "description": "Retrieves full details of a charity with the specified charity number.",
+        "tags": [
+          "Charities"
+        ],
+        "parameters": [
+          {
+            "name": "charityNumber",
+            "in": "path",
+            "description": "Charity number.",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Charity details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Charity"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "PaginatedListOrganisationSearchResult": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OrganisationSearchResult"
+            }
+          },
+          "pageIndex": {
+            "type": "integer"
+          },
+          "pageSize": {
+            "type": "integer"
+          },
+          "totalRecordCount": {
+            "type": "integer"
+          },
+          "totalPages": {
+            "type": "integer"
+          }
+        }
+      },
+      "OrganisationSearchResult": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "ukprn": {
+            "type": "integer",
+            "nullable": true
+          },
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "address": {
+            "$ref": "#/components/schemas/OrganisationAddress"
+          },
+          "organisationType": {
+            "type": "string",
+            "nullable": true
+          },
+          "organisationReferenceType": {
+            "type": "string",
+            "nullable": true
+          },
+          "organisationReferenceId": {
+            "type": "string",
+            "nullable": true
+          },
+          "tradingName": {
+            "type": "string",
+            "nullable": true
+          },
+          "legalName": {
+            "type": "string",
+            "nullable": true
+          },
+          "providerName": {
+            "type": "string",
+            "nullable": true
+          },
+          "companyNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "charityNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "roEPAOApproved": {
+            "type": "boolean"
+          },
+          "roATPApproved": {
+            "type": "boolean"
+          },
+          "financialDueDate": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "financialExempt": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "organisationIsLive": {
+            "type": "boolean"
+          }
+        }
+      },
+      "OrganisationAddress": {
+        "type": "object",
+        "properties": {
+          "address1": {
+            "type": "string",
+            "nullable": true
+          },
+          "address2": {
+            "type": "string",
+            "nullable": true
+          },
+          "address3": {
+            "type": "string",
+            "nullable": true
+          },
+          "city": {
+            "type": "string",
+            "nullable": true
+          },
+          "postcode": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "Company": {
+        "type": "object",
+        "properties": {
+          "companyNumber": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "registeredOfficeAddress": {
+            "$ref": "#/components/schemas/CompanyAddress"
+          },
+          "natureOfBusiness": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "incorporatedOn": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "dissolvedOn": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "isLiquidated": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "previousNames": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "accounts": {
+            "$ref": "#/components/schemas/CompanyAccounts"
+          },
+          "officers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CompanyOfficer"
+            }
+          },
+          "peopleWithSignificantControl": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PersonWithSignificantControl"
+            }
+          }
+        }
+      },
+      "CompanyAddress": {
+        "type": "object",
+        "properties": {
+          "addressLine1": {
+            "type": "string"
+          },
+          "addressLine2": {
+            "type": "string",
+            "nullable": true
+          },
+          "city": {
+            "type": "string"
+          },
+          "county": {
+            "type": "string",
+            "nullable": true
+          },
+          "country": {
+            "type": "string",
+            "nullable": true
+          },
+          "postalCode": {
+            "type": "string"
+          }
+        }
+      },
+      "CompanyAccounts": {
+        "type": "object",
+        "properties": {
+          "lastAccountsDate": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "lastConfirmationStatementDate": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          }
+        }
+      },
+      "CompanyOfficer": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          },
+          "address": {
+            "$ref": "#/components/schemas/CompanyAddress"
+          },
+          "dateOfBirth": {
+            "type": "string",
+            "format": "date"
+          },
+          "appointedOn": {
+            "type": "string",
+            "format": "date"
+          },
+          "resignedOn": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          }
+        }
+      },
+      "PersonWithSignificantControl": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "address": {
+            "$ref": "#/components/schemas/CompanyAddress"
+          },
+          "dateOfBirth": {
+            "type": "string",
+            "format": "date"
+          },
+          "naturesOfControl": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "notifiedOn": {
+            "type": "string",
+            "format": "date"
+          },
+          "ceasedOn": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          }
+        }
+      },
+      "Charity": {
+        "type": "object",
+        "properties": {
+          "charityNumber": {
+            "type": "string"
+          },
+          "companyNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "registeredOfficeAddress": {
+            "$ref": "#/components/schemas/CharityAddress"
+          },
+          "natureOfBusiness": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "incorporatedOn": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "dissolvedOn": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "accounts": {
+            "$ref": "#/components/schemas/CharityAccounts"
+          },
+          "trustees": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CharityTrustee"
+            }
+          }
+        }
+      },
+      "CharityAddress": {
+        "type": "object",
+        "properties": {
+          "addressLine1": {
+            "type": "string"
+          },
+          "addressLine2": {
+            "type": "string",
+            "nullable": true
+          },
+          "city": {
+            "type": "string"
+          },
+          "county": {
+            "type": "string",
+            "nullable": true
+          },
+          "country": {
+            "type": "string",
+            "nullable": true
+          },
+          "postalCode": {
+            "type": "string"
+          }
+        }
+      },
+      "CharityAccounts": {
+        "type": "object",
+        "properties": {
+          "lastAccountsDate": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          }
+        }
+      },
+      "CharityTrustee": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,94 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Withdrawal Date Validation API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/Validations/WithdrawalDate/{id}": {
+      "get": {
+        "summary": "Validate Withdrawal Date",
+        "operationId": "ValidateWithdrawalDate",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "The ID of the application",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "required": false,
+            "description": "The date to validate, in the format 'dd,MM,yyyy'",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Validation result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiValidationResult"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "AssessorServiceInternalAPI": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ApiValidationResult": {
+        "type": "object",
+        "properties": {
+          "IsValid": {
+            "type": "boolean",
+            "description": "Indicates whether the validation was successful"
+          },
+          "ErrorMessages": {
+            "type": "array",
+            "description": "List of error messages if validation failed",
+            "items": {
+              "type": "object",
+              "properties": {
+                "key": {
+                  "type": "string",
+                  "description": "The key identifying the error"
+                },
+                "value": {
+                  "type": "string",
+                  "description": "The error message"
+                }
+              }
+            }
+          }
+        },
+        "required": [
+          "IsValid",
+          "ErrorMessages"
+        ]
+      }
+    },
+    "securitySchemes": {
+      "AssessorServiceInternalAPI": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "Authentication scheme for Assessor Service internal API"
+      }
+    }
+  }
+}

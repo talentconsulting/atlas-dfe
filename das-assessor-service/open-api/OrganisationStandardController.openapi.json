@@ -1,0 +1,498 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Assessor Service API",
+    "version": "1.0.0",
+    "description": "API for managing organisation standards, versions, and certifications."
+  },
+  "paths": {
+    "/api/v1/organisationstandard": {
+      "post": {
+        "operationId": "AddOrganisationStandard",
+        "summary": "Adds a standard and versions to the given organisation",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrganisationStandardAddRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Standard successfully added to the organisation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EpaoStandardResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Organisation or standard not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request format or data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Standard already exists for the organisation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/organisationstandardversion/opt-in": {
+      "post": {
+        "operationId": "OptInOrganisationStandardVersion",
+        "summary": "Opt in the organisation to a standard version.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrganisationStandardVersionOptInRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Standard version opted in successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrganisationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request format or data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/organisationstandardversion/opt-out": {
+      "post": {
+        "operationId": "OptOutOrganisationStandardVersion",
+        "summary": "Opt out the organisation from a standard version.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrganisationStandardVersionOptOutRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Standard version opted out successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EpaoStandardVersionResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request format or data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/organisationstandardversion/update": {
+      "put": {
+        "operationId": "UpdateOrganisationStandardVersion",
+        "summary": "Update the details of a standard version for an organisation.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateOrganisationStandardVersionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Standard version updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EpaoStandardVersionResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request format or data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/organisationstandard/withdraw": {
+      "post": {
+        "operationId": "WithdrawStandard",
+        "summary": "Withdraw a specific standard from an organisation.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WithdrawStandardRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Standard withdrawn successfully"
+          },
+          "400": {
+            "description": "Invalid request format or data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "OrganisationStandardAddRequest": {
+        "type": "object",
+        "properties": {
+          "OrganisationId": {
+            "type": "string"
+          },
+          "StandardReference": {
+            "type": "string"
+          },
+          "StandardVersions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "ContactId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "OrganisationId",
+          "StandardReference",
+          "StandardVersions",
+          "ContactId"
+        ]
+      },
+      "EpaoStandardResponse": {
+        "type": "object",
+        "properties": {
+          "Details": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "Details"
+        ]
+      },
+      "OrganisationStandardVersionOptInRequest": {
+        "type": "object",
+        "properties": {
+          "EndPointAssessorOrganisationId": {
+            "type": "string"
+          },
+          "StandardReference": {
+            "type": "string"
+          },
+          "Version": {
+            "type": "string"
+          },
+          "EffectiveFrom": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "EffectiveTo": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "ContactId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "OptInRequestedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "EndPointAssessorOrganisationId",
+          "StandardReference",
+          "Version",
+          "ContactId",
+          "OptInRequestedAt"
+        ]
+      },
+      "OrganisationResponse": {
+        "type": "object",
+        "properties": {
+          "Id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "EndPointAssessorOrganisationId": {
+            "type": "string"
+          },
+          "EndPointAssessorUkprn": {
+            "type": "integer",
+            "nullable": true
+          },
+          "EndPointAssessorName": {
+            "type": "string"
+          },
+          "PrimaryContact": {
+            "type": "string"
+          },
+          "RoATPApproved": {
+            "type": "boolean"
+          },
+          "RoEPAOApproved": {
+            "type": "boolean"
+          },
+          "OrganisationType": {
+            "type": "string"
+          },
+          "Status": {
+            "type": "string"
+          },
+          "City": {
+            "type": "string"
+          },
+          "Postcode": {
+            "type": "string"
+          },
+          "CompanySummary": {
+            "type": "object",
+            "nullable": true
+          },
+          "CharitySummary": {
+            "type": "object",
+            "nullable": true
+          }
+        }
+      },
+      "OrganisationStandardVersionOptOutRequest": {
+        "type": "object",
+        "properties": {
+          "EndPointAssessorOrganisationId": {
+            "type": "string"
+          },
+          "StandardReference": {
+            "type": "string"
+          },
+          "Version": {
+            "type": "string"
+          },
+          "EffectiveFrom": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "EffectiveTo": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "ContactId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "OptOutRequestedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "EndPointAssessorOrganisationId",
+          "StandardReference",
+          "Version",
+          "ContactId",
+          "OptOutRequestedAt"
+        ]
+      },
+      "EpaoStandardVersionResponse": {
+        "type": "object",
+        "properties": {
+          "Details": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "Details"
+        ]
+      },
+      "UpdateOrganisationStandardVersionRequest": {
+        "type": "object",
+        "properties": {
+          "OrganisationStandardId": {
+            "type": "integer"
+          },
+          "OrganisationStandardVersion": {
+            "type": "string"
+          },
+          "EffectiveFrom": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "EffectiveTo": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "OrganisationStandardId",
+          "OrganisationStandardVersion"
+        ]
+      },
+      "WithdrawStandardRequest": {
+        "type": "object",
+        "properties": {
+          "EndPointAssessorOrganisationId": {
+            "type": "string"
+          },
+          "StandardCode": {
+            "type": "integer"
+          },
+          "WithdrawalDate": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "EndPointAssessorOrganisationId",
+          "StandardCode",
+          "WithdrawalDate"
+        ]
+      },
+      "ApiResponse": {
+        "type": "object",
+        "properties": {
+          "StatusCode": {
+            "type": "integer"
+          },
+          "Message": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "StatusCode"
+        ]
+      }
+    }
+  }
+}
