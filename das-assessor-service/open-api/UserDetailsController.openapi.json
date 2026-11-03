@@ -1,0 +1,241 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "ManageUsers API",
+    "version": "1.0.0",
+    "description": "API for managing user details and permissions."
+  },
+  "paths": {
+    "/ManageUsers/{contactId}": {
+      "get": {
+        "summary": "Get user details",
+        "parameters": [
+          {
+            "name": "contactId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response. User details are returned."
+          },
+          "401": {
+            "description": "Unauthorized access."
+          }
+        }
+      }
+    },
+    "/ManageUsers/{contactId}/permissions": {
+      "get": {
+        "summary": "Edit user permissions",
+        "parameters": [
+          {
+            "name": "contactId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response. Permission edit view is returned."
+          },
+          "401": {
+            "description": "Unauthorized access."
+          }
+        }
+      },
+      "post": {
+        "summary": "Save or approve user permissions",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EditPrivilegesViewModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully saved or approved permissions."
+          },
+          "400": {
+            "description": "Invalid request data."
+          },
+          "401": {
+            "description": "Unauthorized access."
+          }
+        }
+      }
+    },
+    "/ManageUsers/{contactId}/remove": {
+      "get": {
+        "summary": "View user removal confirmation",
+        "parameters": [
+          {
+            "name": "contactId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response. Removal confirmation view is returned."
+          },
+          "401": {
+            "description": "Unauthorized access."
+          }
+        }
+      },
+      "post": {
+        "summary": "Confirm user removal",
+        "parameters": [
+          {
+            "name": "contactId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User successfully removed."
+          },
+          "400": {
+            "description": "Invalid request data."
+          },
+          "401": {
+            "description": "Unauthorized access."
+          }
+        }
+      }
+    },
+    "/ManageUsers/{contactId}/removedFrom/{organisationId}": {
+      "get": {
+        "summary": "Get user removal acknowledgment",
+        "parameters": [
+          {
+            "name": "contactId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "organisationId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response. User removal acknowledgment view is returned."
+          },
+          "401": {
+            "description": "Unauthorized access."
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "EditPrivilegesViewModel": {
+        "type": "object",
+        "properties": {
+          "ContactId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "PrivilegeViewModels": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PrivilegeViewModel"
+            }
+          },
+          "Button": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "ContactId",
+          "PrivilegeViewModels",
+          "Button"
+        ]
+      },
+      "PrivilegeViewModel": {
+        "type": "object",
+        "properties": {
+          "Privilege": {
+            "$ref": "#/components/schemas/Privilege"
+          },
+          "Selected": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "Privilege",
+          "Selected"
+        ]
+      },
+      "Privilege": {
+        "type": "object",
+        "properties": {
+          "Id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "UserPrivilege": {
+            "type": "string"
+          },
+          "MustBeAtLeastOneUserAssigned": {
+            "type": "boolean"
+          },
+          "PrivilegeData": {
+            "$ref": "#/components/schemas/PrivilegeData"
+          },
+          "Key": {
+            "type": "string"
+          },
+          "Enabled": {
+            "type": "boolean"
+          }
+        }
+      },
+      "PrivilegeData": {
+        "type": "object",
+        "properties": {
+          "Rights": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}

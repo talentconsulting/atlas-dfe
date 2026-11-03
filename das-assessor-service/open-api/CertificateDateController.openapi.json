@@ -1,0 +1,113 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Certificate Date API",
+    "version": "1.0.0",
+    "description": "Endpoints to manage the certificate date."
+  },
+  "paths": {
+    "/certificate/date": {
+      "get": {
+        "summary": "Get the certificate date view",
+        "operationId": "getCertificateDate",
+        "parameters": [
+          {
+            "name": "redirectToCheck",
+            "in": "query",
+            "description": "Flag indicating whether to redirect to the check page.",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The certificate date view is loaded."
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      },
+      "post": {
+        "summary": "Submit the certificate date",
+        "operationId": "postCertificateDate",
+        "requestBody": {
+          "description": "The certificate date view model.",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CertificateDateViewModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The certificate date is processed."
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CertificateDateViewModel": {
+        "type": "object",
+        "properties": {
+          "SelectedGrade": {
+            "type": "string"
+          },
+          "Date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "Day": {
+            "type": "string"
+          },
+          "Month": {
+            "type": "string"
+          },
+          "Year": {
+            "type": "string"
+          },
+          "StartDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "WarningShown": {
+            "type": "string",
+            "enum": [
+              "true",
+              "false"
+            ]
+          }
+        },
+        "required": [
+          "SelectedGrade",
+          "Date",
+          "Day",
+          "Month",
+          "Year",
+          "WarningShown"
+        ]
+      }
+    },
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
