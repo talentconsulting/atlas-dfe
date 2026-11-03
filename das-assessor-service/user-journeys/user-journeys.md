@@ -2,69 +2,60 @@
 
 Generated from `master/src`: 165 pages, 234 transitions, 5 journeys. 🔒 means sign-in is required. Dotted arrows return to a hub.
 
-## Search and add a standard to your organisation
+## Apply for Assessment Approval
 
-A user finds a standard and adds it to their organisation for delivery.
+A user applies to become an approved assessment organisation for a standard.
 
 ```mermaid
 flowchart LR
-  p0["AddStandardSearch 🔒"] --> p1["AddStandardSearchResults 🔒"]
-  p1["AddStandardSearchResults 🔒"] --> p2["AddStandardChooseVersions 🔒"]
-  p2["AddStandardChooseVersions 🔒"] -->|"after submitting the form with valid selections and confirmation"| p3["AddStandardConfirm 🔒"]
-  p3["AddStandardConfirm 🔒"] -->|"after adding selected standard versions to the organisation"| p4["AddStandardConfirmation 🔒"]
+  p0["Index 🔒"] -->|"when user or organisation has status 'Applying'"| p1["Applications 🔒"]
+  p1["Applications 🔒"] --> p2["StartApplication 🔒"]
+  p2["StartApplication 🔒"] -->|"after creating or finding an application"| p3["SequenceSignPost 🔒"]
+  p3["SequenceSignPost 🔒"] --> p4["ApplyStandardSearch 🔒"]
 ```
 
-## Manage organisation details
+## Manage Organisation Details
 
-A user manages the organisation’s details such as contact, address, email, and website.
+A user edits organisation details, such as address, contact or API access.
 
 Complete the sections in any order, returning to the hub.
 
 ```mermaid
 flowchart LR
-  p0["OrganisationDetails 🔒"] --> p1["SelectOrChangeContactName 🔒"]
-  p1["SelectOrChangeContactName 🔒"] -.-> p0["OrganisationDetails 🔒"]
-  p0["OrganisationDetails 🔒"] --> p2["ChangePhoneNumber 🔒"]
-  p2["ChangePhoneNumber 🔒"] -.-> p0["OrganisationDetails 🔒"]
-  p0["OrganisationDetails 🔒"] --> p3["ChangeAddress 🔒"]
-  p3["ChangeAddress 🔒"] -.-> p0["OrganisationDetails 🔒"]
-  p0["OrganisationDetails 🔒"] --> p4["ChangeEmail 🔒"]
-  p4["ChangeEmail 🔒"] -.-> p0["OrganisationDetails 🔒"]
-  p0["OrganisationDetails 🔒"] --> p5["ChangeWebsite 🔒"]
-  p5["ChangeWebsite 🔒"] -.-> p0["OrganisationDetails 🔒"]
-  p0["OrganisationDetails 🔒"] --> p6["ApiSubscriptionRequestAccess 🔒"]
-  p6["ApiSubscriptionRequestAccess 🔒"] -.-> p0["OrganisationDetails 🔒"]
-  p0["OrganisationDetails 🔒"] --> p7["RenewApiKey 🔒"]
-  p7["RenewApiKey 🔒"] -.-> p0["OrganisationDetails 🔒"]
+  p0["OrganisationDetails 🔒"] --> p1["ChangeAddress 🔒"]
+  p1["ChangeAddress 🔒"] -.-> p0["OrganisationDetails 🔒"]
+  p0["OrganisationDetails 🔒"] --> p2["ChangeEmail 🔒"]
+  p2["ChangeEmail 🔒"] -.-> p0["OrganisationDetails 🔒"]
+  p0["OrganisationDetails 🔒"] --> p3["ChangePhoneNumber 🔒"]
+  p3["ChangePhoneNumber 🔒"] -.-> p0["OrganisationDetails 🔒"]
+  p0["OrganisationDetails 🔒"] --> p4["ChangeWebsite 🔒"]
+  p4["ChangeWebsite 🔒"] -.-> p0["OrganisationDetails 🔒"]
+  p0["OrganisationDetails 🔒"] --> p5["ApiSubscriptionRequestAccess 🔒"]
+  p5["ApiSubscriptionRequestAccess 🔒"] -.-> p0["OrganisationDetails 🔒"]
+  p0["OrganisationDetails 🔒"] --> p6["RenewApiKey 🔒"]
+  p6["RenewApiKey 🔒"] -.-> p0["OrganisationDetails 🔒"]
+  p0["OrganisationDetails 🔒"] --> p7["SelectOrChangeContactName 🔒"]
+  p7["SelectOrChangeContactName 🔒"] -.-> p0["OrganisationDetails 🔒"]
   p0["OrganisationDetails 🔒"] --> p8["Index 🔒"]
 ```
 
-## Work through an application to assess a standard
+## Search Assessment Opportunities
 
-A user views their application dashboard, navigates to a sequence, and submits their application.
+A user searches and applies filters for available assessment opportunities.
 
-```mermaid
-flowchart LR
-  p0["Applications 🔒"] -->|"if the application is in progress"| p1["SequenceSignPost 🔒"]
-  p1["SequenceSignPost 🔒"] -->|"when a sequence is active (organisation, standard, withdrawal, etc)"| p2["Sequence 🔒"]
-  p2["Sequence 🔒"] --> p3["Submit 🔒"]
-```
-
-## Add a standard to your organisation
-
-A user searches for a standard to add, selects versions, and confirms the addition, ending with confirmation.
+Complete the sections in any order, returning to the hub.
 
 ```mermaid
 flowchart LR
-  p0["AddStandardSearch 🔒"] --> p1["AddStandardSearchResults 🔒"]
-  p1["AddStandardSearchResults 🔒"] --> p2["AddStandardChooseVersions 🔒"]
-  p2["AddStandardChooseVersions 🔒"] -->|"after submitting the form with valid selections and confirmation"| p3["AddStandardConfirm 🔒"]
-  p3["AddStandardConfirm 🔒"] -->|"after adding selected standard versions to the organisation"| p4["AddStandardConfirmation 🔒"]
+  p0["Index"] --> p1["ApplyFilters"]
+  p0["Index"] --> p2["ShowApprovedStandardDetails"]
+  p0["Index"] --> p3["ShowInDevelopmentStandardDetails"]
+  p0["Index"] --> p4["ShowProposedStandardDetails"]
 ```
 
-## Request withdrawal from a standard
+## Withdraw from an Assessment Standard
 
-A user initiates and confirms a withdrawal request from a standard, then views withdrawal applications.
+A user initiates and completes the process of withdrawing from an approved assessment standard.
 
 ```mermaid
 flowchart LR
@@ -72,175 +63,187 @@ flowchart LR
   p1["TypeOfWithdrawal 🔒"] --> p2["WithdrawalApplications 🔒"]
 ```
 
+## Add a Standard to Your Organisation
+
+A user adds a new assessment standard to their organisation's approved list.
+
+```mermaid
+flowchart LR
+  p0["AddStandardSearch 🔒"] -->|"after saving the form and when the form is valid"| p1["AddStandardSearchResults 🔒"]
+  p1["AddStandardSearchResults 🔒"] --> p2["AddStandardChooseVersions 🔒"]
+  p2["AddStandardChooseVersions 🔒"] --> p3["AddStandardConfirm 🔒"]
+  p3["AddStandardConfirm 🔒"] --> p4["AddStandardConfirmation 🔒"]
+```
+
 ## Pages
 
 | Page | Route | Sign-in | Purpose |
 | --- | --- | --- | --- |
-| `Account.AccessDenied` | — | Unknown | Informs the user they do not have the required access privileges. |
+| `Account.AccessDenied` | — | Unknown | Shows the user they do not have access to a feature or privilege. |
 | `Account.Callback` | — | Unknown | — |
-| `Account.ChangeSignInDetails` | — | Yes | Displays a page for the user to change their sign-in details. |
-| `Account.CreateAnAccount` | — | Yes | Lets a new user create an account by providing their given and family names. |
-| `Account.PostSignIn` | — | Unknown | Handles logic after the user attempts to sign in, redirecting to relevant pages based on account status. |
-| `Account.SignIn` | — | Unknown | Starts the sign-in process for the user. |
-| `Account.SignedOut` | — | Unknown | Shows a page indicating the user has successfully signed out. |
-| `Address` | `certificate/address/enter` | Yes | Lets the user enter the certificate address. |
-| `Application.ApplicationCancelled` | `/Application/{id}/Cancelled` | Yes | Shows confirmation that an application has been cancelled. |
-| `Application.Applications` | `/Application` | Yes | Shows the user's applications or redirects based on application and organisation status. |
-| `Application.ConfirmCancelApplication` | `/Application/{id}/ConfirmCancel` | Yes | Lets the user confirm cancelling their application to assess a standard. |
-| `Application.DeleteAnswer` | `/Application/DeleteAnswer` | Yes | Handles deletion of an answer from an application. |
-| `Application.DeleteFile` | `Application/{Id}/SequenceNo/{sequenceNo}/Section/{sectionId}/Page/{pageId}/Question/{questionId}/Filename/{filename}/RedirectAction/{__redirectAction}` | Yes | Handles deletion of a file from an application page. |
-| `Application.Download` | `Application/{Id}/Section/{sectionId}/Page/{pageId}/Question/{questionId}/{filename}/Download` | Yes | Allows the user to download a file associated with their application. |
-| `Application.Feedback` | `/Application/{id}/Feedback` | Yes | Shows feedback for the user's application and allows submission. |
-| `Application.FinancialExpiredRedir` | — | Yes | Displays a page when financial review has expired, prompting for assessment. |
+| `Account.ChangeSignInDetails` | — | Yes | Lets the user change their sign-in details. |
+| `Account.CreateAnAccount` | — | Yes | Allows a user to create an account by providing given and family name. |
+| `Account.PostSignIn` | — | Unknown | — |
+| `Account.SignIn` | — | Unknown | Initiates the sign-in process for the user. |
+| `Account.SignedOut` | — | Unknown | Shows the user they have signed out. |
+| `Address` | `certificate/address/enter` | Yes | Lets the user enter a certificate delivery address. |
+| `Application.ApplicationCancelled` | `/Application/{id}/Cancelled` | Yes | Shows confirmation that the application has been cancelled. |
+| `Application.Applications` | `/Application` | Yes | Shows the user's applications and routes them based on status or allows starting a new application. |
+| `Application.ConfirmCancelApplication` | `/Application/{id}/ConfirmCancel` | Yes | Allows the user to confirm cancellation of their application. |
+| `Application.DeleteAnswer` | `/Application/DeleteAnswer` | Yes | Handles deletion of an answer in an application. |
+| `Application.DeleteFile` | `Application/{Id}/SequenceNo/{sequenceNo}/Section/{sectionId}/Page/{pageId}/Question/{questionId}/Filename/{filename}/RedirectAction/{__redirectAction}` | Yes | Handles deletion of a file in the application. |
+| `Application.Download` | `Application/{Id}/Section/{sectionId}/Page/{pageId}/Question/{questionId}/{filename}/Download` | Yes | Lets the user download a file associated with their application. |
+| `Application.Feedback` | `/Application/{id}/Feedback` | Yes | Shows feedback for an application sequence. |
+| `Application.FinancialExpiredRedir` | — | Yes | Shows the user that financial assessment is due or expired. |
 | `Application.NotSubmitted` | `/Application/{Id}/NotSubmitted` | Yes | Shows the user that their application was not submitted. |
-| `Application.Page` | `/Application/{Id}/Sequences/{sequenceNo}/Sections/{sectionNo}/Pages/{pageId}` | Yes | Shows a specific page of questions within a section of the user's application. |
-| `Application.SaveAnswers` | `/Application/{Id}/Sequences/{sequenceNo}/Sections/{sectionNo}/Pages/{pageId}` | Yes | — |
-| `Application.SaveMultiplePageAnswers` | `/Application/{Id}/Sequences/{sequenceNo}/Sections/{sectionNo}/Pages/{pageId}/multiple` | Yes | — |
-| `Application.Section` | `/Application/{Id}/Sequences/{sequenceNo}/Sections/{sectionNo}` | Yes | Displays a section within an application sequence for the user to complete. |
-| `Application.SequenceSignPost` | `/Application/{Id}` | Yes | Guides the user to the relevant sequence within their application based on current status. |
-| `Application.StartApplication` | `/Application` | Yes | Starts a new application for the user or resumes an in-progress one. |
-| `Application.StartOrResumeApplication` | — | Yes | Starts or resumes the financial assessment application for the user. |
-| `Application.Submit` | `/Application/{Id}/Submit/{sequenceNo}` | Yes | Handles the submission of a sequence within the user's application. |
+| `Application.Page` | `/Application/{Id}/Sequences/{sequenceNo}/Sections/{sectionNo}/Pages/{pageId}` | Yes | Displays a single application page within a sequence and section for the user to answer questions. |
+| `Application.SaveAnswers` | `/Application/{Id}/Sequences/{sequenceNo}/Sections/{sectionNo}/Pages/{pageId}` | Yes | Processes and saves answers to an application page submitted by the user. |
+| `Application.SaveMultiplePageAnswers` | `/Application/{Id}/Sequences/{sequenceNo}/Sections/{sectionNo}/Pages/{pageId}/multiple` | Yes | Processes and saves answers to an application page that allows multiple answers. |
+| `Application.Section` | `/Application/{Id}/Sequences/{sequenceNo}/Sections/{sectionNo}` | Yes | Shows the user a section of an application sequence. |
+| `Application.SequenceSignPost` | `/Application/{Id}` | Yes | Shows an overview or signpost for a given application, guiding users to the correct sequence or action. |
+| `Application.StartApplication` | `/Application` | Yes | Starts a new application for the user. |
+| `Application.StartOrResumeApplication` | — | Yes | Starts or resumes an application, specifically for financial assessment. |
+| `Application.Submit` | `/Application/{Id}/Submit/{sequenceNo}` | Yes | Submits a sequence of an application for review. |
 | `Application.Submitted` | `/Application/{Id}/Submitted` | Yes | Shows the user that their application has been submitted. |
-| `ApplicationController.Sequence` | `/Application/{Id}/Sequence/{sequenceNo}` | Yes | Displays a sequence within the user's application for completion. |
-| `ApplicationController.StandardApplications` | `/Application/StandardApplications` | Yes | Shows the user's standard applications and their status. |
-| `ApplyForWithdrawal.CheckWithdrawalRequest` | — | Yes | Lets the user confirm whether to continue with a withdrawal request. |
-| `ApplyForWithdrawal.ChooseStandardForWithdrawal` | — | Yes | Lets the user choose a standard to withdraw from. |
-| `ApplyForWithdrawal.Index` | — | Yes | Shows the withdrawal application overview. |
-| `ApplyForWithdrawal.TypeOfWithdrawal` | — | Yes | Lets the user choose what they are withdrawing from. |
-| `ApplyForWithdrawalController.WithdrawalApplications` | `withdrawal/requests` | Yes | Shows all withdrawal requests the user has made. |
-| `ApplyToAssessStandard.GoToApplyToAssessStandard` | — | Unknown | Redirects the user to apply for assessment for a standard. |
-| `ApplyToAssessStandard.Index` | — | Unknown | Starts the process to apply to assess a standard. |
-| `Back` | `certificate/declaration/back` | Yes | Lets the user go back to the relevant previous step in the certificate process. |
-| `Certificate.Start` | `certificate` | Yes | Starts a new certificate process for an apprentice. |
-| `CertificateAddress.Address` | `certificate/address/enter` | Yes | Lets the user enter the certificate address. |
-| `CertificateAddress.ConfirmAddress` | `certificate/address/confirm` | Yes | Lets the user confirm the certificate address details. |
-| `CertificateAddress.PreviousAddress` | `certificate/address/select-previous` | Yes | Lets the user select a previously used certificate address. |
-| `CertificateAddress.Recipient` | `certificate/address/recipient` | Yes | Lets the user choose the recipient of the certificate. |
-| `CertificateCheck.Check` | `certificate/check` | Yes | Lets the user check certificate details before submission. |
-| `CertificateConfirmation.Confirm` | `certificate/confirmation` | Yes | Shows certificate confirmation after successful submission. |
-| `CertificateDate.Date` | `certificate/date` | Yes | Shows or loads the form for entering the achievement date. |
-| `CertificateDeclaration.Declare` | `certificate/declaration` | Yes | Shows the certificate declaration form to declare the accuracy of details. |
-| `CertificateFamilyName.FamilyName` | `certificate/familyname` | Unknown | Lets the user enter the apprentice's last name for the certificate. |
-| `CertificateGivenNames.GivenNames` | `certificate/givennames` | Unknown | Lets the user enter the apprentice's given names for the certificate. |
-| `CertificateGrade.Grade` | `certificate/grade` | Yes | Lets the user select or review the grade for a certificate. |
-| `CertificateHistory.ChangePageCertificateHistory` | — | Unknown | Shows a specific page of certificate history results. |
-| `CertificateHistory.Index` | — | Unknown | Shows a list of completed certificate assessments, with a form for searching. |
-| `CertificateHistory.ResetSession` | — | Unknown | Resets the certificate history search session, starting the history list from the defaults. |
-| `CertificateHistory.Search` | — | Unknown | Shows certificate history search results based on a search term. |
-| `CertificateHistory.SortCertificateHistory` | — | Unknown | Sorts the certificate history results by a selected column and direction. |
-| `CertificateOption.Option` | `certificate/option` | Yes | Lets the user select a course option for a certificate. |
-| `CertificateOptionBack` | `certificate/option/back` | Yes | Handles navigation back from the certificate option selection, returning the user to the previous relevant step. |
-| `CertificateSendTo.SendTo` | `certificate/sendto` | Yes | Lets the user choose who should receive the certificate. |
-| `CertificateVersion.Version` | `certificate/version` | Yes | Lets the user select the version of a certificate standard. |
-| `CertificateVersionNotApproved.NotApprovedToAssess` | `certificate/version/not-approved` | Yes | Informs the user that the selected certificate version is not approved for their organisation. |
-| `Check` | `certificate/check` | Yes | Lets the user check certificate details before submission. |
-| `ConfirmAddress` | `certificate/address/confirm` | Yes | Lets the user confirm the certificate address details. |
-| `Dashboard.Index` | — | Yes | Shows an overview dashboard for the user's organisation. |
-| `Date` | `certificate/date` | Yes | Lets the user enter the achievement date for the certificate. |
-| `Declare` | `certificate/declaration` | Yes | Submits the certificate declaration. |
-| `Grade` | `certificate/grade` | Yes | Lets the user select or review the grade for a certificate. |
-| `Home.AccessDenied` | — | Unknown | Displays a message when the user tries to access a page they do not have permission for. |
-| `Home.Accessibility` | — | Unknown | Provides information about accessibility features of the website. |
-| `Home.ContactUs` | — | Unknown | Allows the user to contact the website administrators. |
-| `Home.CookieDetails` | — | Unknown | Shows information about specific cookies used by the website. |
-| `Home.Cookies` | — | Unknown | Lets the user set cookie preferences regarding analytics and marketing. |
-| `Home.Index` | `/` | Unknown | Displays the home page of the application. |
-| `Home.InvalidRole` | — | Yes | Shows a message when a user's role does not allow access. |
-| `Home.InvitePending` | — | Yes | Tells the user that their invite is pending. |
-| `Home.NotActivated` | — | Yes | Informs the user that their organisation has not been activated. |
-| `Home.NotRegistered` | — | Yes | Informs the user that their organisation is not registered. |
-| `Home.Privacy` | — | Unknown | Provides information about the website's privacy policy. |
-| `Home.Rejected` | — | Yes | Notifies the user that their invite or access request was rejected. |
-| `InviteUser.Invite` | `/ManageUsers/Invite` | Unknown | Lets an existing user invite another user to their organisation. |
-| `InviteUser.Invited` | `/ManageUsers/{contactId}/Invited` | Unknown | Confirms that a user has been successfully invited. |
-| `ManageUsers.Index` | — | Unknown | Displays the list of users for the organisation, including their privileges. |
-| `ManageUsers.SetStatusAndNotify` | — | Unknown | Allows the administrator to approve or reject a user's status and notifies them. |
-| `OppFinder.ApplyFilters` | — | Unknown | Applies the selected filters to the assessment opportunity search results. |
-| `OppFinder.ApplyFiltersPartial` | — | Unknown | Lets the user apply filters (sectors and levels) to standards via a partial view. |
-| `OppFinder.ChangePageApprovedStandards` | — | Unknown | Shows the approved standards page for a specified page index. |
-| `OppFinder.ChangePageApprovedStandardsPartial` | — | Unknown | Shows the approved standards for a specified page index via a partial view. |
-| `OppFinder.ChangePageInDevelopmentStandards` | — | Unknown | Shows the 'in development' standards page for a specified page index. |
-| `OppFinder.ChangePageInDevelopmentStandardsPartial` | — | Unknown | Shows the 'in development' standards for a specified page index via a partial view. |
-| `OppFinder.ChangePageProposedStandards` | — | Unknown | Shows the 'proposed' standards page for a specified page index. |
-| `OppFinder.ChangePageProposedStandardsPartial` | — | Unknown | Shows the 'proposed' standards for a specified page index via a partial view. |
-| `OppFinder.ContactUs` | — | Unknown | Shows contact information for the assessment opportunity finder. |
-| `OppFinder.Cookies` | — | Unknown | Lets the user set website cookie preferences for analytics and marketing. |
-| `OppFinder.ExpressionOfInterest` | — | Unknown | Lets the user submit an expression of interest for a standard, including contact details. |
-| `OppFinder.Index` | — | Unknown | Shows the main search page for assessment opportunities including filters and pagination. |
-| `OppFinder.Privacy` | — | Unknown | Shows the privacy information for the assessment opportunity finder. |
-| `OppFinder.RefreshFiltersPartial` | — | Unknown | Updates the displayed sector and level filters in a partial view. |
-| `OppFinder.ResetFilters` | — | Unknown | Clears all filters applied to the standards search. |
-| `OppFinder.ResetFiltersPartial` | — | Unknown | Lets the user reset sector and level filters in the opportunity finder, shown as a partial view. |
-| `OppFinder.ResetSession` | — | Unknown | Clears all filters and search terms, resetting the opportunity finder session. |
-| `OppFinder.Search` | — | Unknown | Lets the user search for assessment opportunities. |
-| `OppFinder.SearchPartial` | — | Unknown | Lets the user search for assessment opportunities and updates filter values, shown as a partial view. |
-| `OppFinder.ShowApprovedStandardDetails` | — | Unknown | Shows details about an approved apprenticeship standard. |
-| `OppFinder.ShowApprovedStandardsPerPage` | — | Unknown | Lets the user change how many approved standards appear per page. |
-| `OppFinder.ShowApprovedStandardsPerPagePartial` | — | Unknown | Lets the user change how many approved standards appear per page within a partial view. |
-| `OppFinder.ShowInDevelopmentStandardDetails` | — | Unknown | Shows details about an apprenticeship standard in development. |
-| `OppFinder.ShowInDevelopmentStandardsPerPage` | — | Unknown | Lets the user change how many in-development standards appear per page. |
-| `OppFinder.ShowInDevelopmentStandardsPerPagePartial` | — | Unknown | Lets the user change how many in-development standards appear per page within a partial view. |
-| `OppFinder.ShowProposedStandardDetails` | — | Unknown | Shows details about a proposed apprenticeship standard. |
-| `OppFinder.ShowProposedStandardsPerPage` | — | Unknown | Lets the user change how many proposed standards appear per page. |
-| `OppFinder.ShowProposedStandardsPerPagePartial` | — | Unknown | Lets the user change how many proposed standards appear per page within a partial view. |
+| `ApplicationController.Sequence` | `/Application/{Id}/Sequence/{sequenceNo}` | Yes | Shows the user a sequence of their application with available sections. |
+| `ApplicationController.StandardApplications` | `/Application/StandardApplications` | Yes | Displays the user's current standard applications and financial assessment information, if required. |
+| `ApplyForWithdrawal.CheckWithdrawalRequest` | — | Yes | Lets the user confirm if they want to continue with a withdrawal request. |
+| `ApplyForWithdrawal.ChooseStandardForWithdrawal` | — | Yes | Lets the user choose which standard to withdraw from. |
+| `ApplyForWithdrawal.Index` | — | Yes | Shows the withdrawal application dashboard or start page. |
+| `ApplyForWithdrawal.TypeOfWithdrawal` | — | Yes | Lets the user select what they are withdrawing from. |
+| `ApplyForWithdrawalController.WithdrawalApplications` | `withdrawal/requests` | Yes | Shows a list of withdrawal requests/applications. |
+| `ApplyToAssessStandard.GoToApplyToAssessStandard` | — | Unknown | Redirects the user to the application page to apply to assess a standard. |
+| `ApplyToAssessStandard.Index` | — | Unknown | Allows the user to start an application to assess a standard. |
+| `Back` | `certificate/declaration/back` | Yes | Lets the user go back from the certificate declaration page. |
+| `Certificate.Start` | `certificate` | Yes | Starts the certificate creation process. |
+| `CertificateAddress.Address` | `certificate/address/enter` | Yes | Lets the user enter a certificate delivery address. |
+| `CertificateAddress.ConfirmAddress` | `certificate/address/confirm` | Yes | Lets the user confirm the certificate delivery address. |
+| `CertificateAddress.PreviousAddress` | `certificate/address/select-previous` | Yes | Lets the user select a previously used address for certificate delivery. |
+| `CertificateAddress.Recipient` | `certificate/address/recipient` | Yes | Lets the user specify the recipient for certificate delivery. |
+| `CertificateCheck.Check` | `certificate/check` | Yes | Lets the user check certificate details before finalising submission. |
+| `CertificateConfirmation.Confirm` | `certificate/confirmation` | Yes | Confirms the completion of the certificate submission. |
+| `CertificateDate.Date` | `certificate/date` | Yes | Lets the user enter and review the achievement date for the certificate. |
+| `CertificateDeclaration.Declare` | `certificate/declaration` | Yes | Shows the certificate declaration for confirmation. |
+| `CertificateFamilyName.FamilyName` | `certificate/familyname` | Unknown | Lets the user enter the apprentice's last name. |
+| `CertificateGivenNames.GivenNames` | `certificate/givennames` | Unknown | Lets the user enter the apprentice's given names. |
+| `CertificateGrade.Grade` | `certificate/grade` | Yes | Lets the user select or view the grade for a certificate. |
+| `CertificateHistory.ChangePageCertificateHistory` | — | Unknown | Lets the user change which page of certificate history results they are viewing. |
+| `CertificateHistory.Index` | — | Unknown | Displays the user's certificate history and allows searching and navigation. |
+| `CertificateHistory.ResetSession` | — | Unknown | Resets the certificate history session and returns to the certificate history page. |
+| `CertificateHistory.Search` | — | Unknown | Performs a search on the user's certificate history using the provided search term. |
+| `CertificateHistory.SortCertificateHistory` | — | Unknown | Sorts the certificate history records by a selected column and direction. |
+| `CertificateOption.Option` | `certificate/option` | Yes | Lets the user choose an available option for the selected certificate. |
+| `CertificateOptionBack` | `certificate/option/back` | Yes | Handles the back navigation from the certificate option selection process. |
+| `CertificateSendTo.SendTo` | `certificate/sendto` | Yes | Lets the user view and choose who to send the certificate to. |
+| `CertificateVersion.Version` | `certificate/version` | Yes | Lets the user choose a version for the certificate from available versions. |
+| `CertificateVersionNotApproved.NotApprovedToAssess` | `certificate/version/not-approved` | Yes | Informs the user that the selected certificate version is not approved for assessment. |
+| `Check` | `certificate/check` | Yes | Lets the user check certificate details before finalising submission. |
+| `ConfirmAddress` | `certificate/address/confirm` | Yes | Lets the user confirm the certificate delivery address. |
+| `Dashboard.Index` | — | Yes | Displays the user's dashboard, redirecting to other pages if prerequisites are not met. |
+| `Date` | `certificate/date` | Yes | Lets the user input the day, month, and year of achievement. |
+| `Declare` | `certificate/declaration` | Yes | Lets the user confirm the certificate declaration. |
+| `Grade` | `certificate/grade` | Yes | Lets the user submit the selected certificate grade. |
+| `Home.AccessDenied` | — | Unknown | Shows the user that they do not have access to the requested area. |
+| `Home.Accessibility` | — | Unknown | Provides accessibility information for using the site. |
+| `Home.ContactUs` | — | Unknown | Lets the user see information about how to contact support or the organisation. |
+| `Home.CookieDetails` | — | Unknown | Displays details about cookies used on the site. |
+| `Home.Cookies` | — | Unknown | Lets the user manage their cookie preferences. |
+| `Home.Index` | `/` | Unknown | Shows the homepage to the user. |
+| `Home.InvalidRole` | — | Yes | Informs the user that they have an invalid role for the requested action. |
+| `Home.InvitePending` | — | Yes | Shows the user their invitation is pending and displays the organisation name. |
+| `Home.NotActivated` | — | Yes | Informs the user that their organisation has not been activated yet. |
+| `Home.NotRegistered` | — | Yes | Informs the user that they are not registered with an organisation. |
+| `Home.Privacy` | — | Unknown | Displays information about site privacy and data use. |
+| `Home.Rejected` | — | Yes | Lets the user know their registration was rejected and displays the organisation name. |
+| `InviteUser.Invite` | `/ManageUsers/Invite` | Unknown | Allows a user to invite a new user to their organisation by entering their details and assigning privileges. |
+| `InviteUser.Invited` | `/ManageUsers/{contactId}/Invited` | Unknown | Shows confirmation that a user has been invited, including their email and organisation. |
+| `ManageUsers.Index` | — | Unknown | Displays a list of users for the organisation, including their privileges. |
+| `ManageUsers.SetStatusAndNotify` | — | Unknown | Lets the admin approve or reject a user and sends a notification. |
+| `OppFinder.ApplyFilters` | — | Unknown | Lets the user apply filter criteria to search for assessment opportunities. |
+| `OppFinder.ApplyFiltersPartial` | — | Unknown | Lets the user update filters for sectors and levels in part of the assessment opportunity search interface. |
+| `OppFinder.ChangePageApprovedStandards` | — | Unknown | Lets the user change pagination for approved standards. |
+| `OppFinder.ChangePageApprovedStandardsPartial` | — | Unknown | Lets the user update the number of approved standards shown per page in a partial view. |
+| `OppFinder.ChangePageInDevelopmentStandards` | — | Unknown | Lets the user change pagination for in-development standards. |
+| `OppFinder.ChangePageInDevelopmentStandardsPartial` | — | Unknown | Lets the user update the number of in-development standards shown per page in a partial view. |
+| `OppFinder.ChangePageProposedStandards` | — | Unknown | Lets the user change pagination for proposed standards. |
+| `OppFinder.ChangePageProposedStandardsPartial` | — | Unknown | Lets the user update the number of proposed standards shown per page in a partial view. |
+| `OppFinder.ContactUs` | — | Unknown | Provides a page for contacting the service. |
+| `OppFinder.Cookies` | — | Unknown | Lets the user configure cookie preferences for analytics and marketing. |
+| `OppFinder.ExpressionOfInterest` | — | Unknown | Lets the user express interest in an assessment opportunity. |
+| `OppFinder.Index` | — | Unknown | Lets the user search for assessment opportunities and apply filters or paging. |
+| `OppFinder.Privacy` | — | Unknown | Displays the privacy policy. |
+| `OppFinder.RefreshFiltersPartial` | — | Unknown | Lets the user refresh sector and level filter options in a partial view. |
+| `OppFinder.ResetFilters` | — | Unknown | Lets the user reset all filters in the assessment opportunity finder. |
+| `OppFinder.ResetFiltersPartial` | — | Unknown | Lets the user reset sector and level filters when searching for assessment opportunities. |
+| `OppFinder.ResetSession` | — | Unknown | Resets all filters and search terms when searching for assessment opportunities. |
+| `OppFinder.Search` | — | Unknown | Enables the user to search for assessment opportunities using a search term. |
+| `OppFinder.SearchPartial` | — | Unknown | Allows partial updating of search results and filters for assessment opportunities. |
+| `OppFinder.ShowApprovedStandardDetails` | — | Unknown | Displays detailed information about an approved assessment standard. |
+| `OppFinder.ShowApprovedStandardsPerPage` | — | Unknown | Lets the user change how many approved standards are shown per page. |
+| `OppFinder.ShowApprovedStandardsPerPagePartial` | — | Unknown | Updates the partial view for approved standards per page. |
+| `OppFinder.ShowInDevelopmentStandardDetails` | — | Unknown | Displays details about a standard that is still in development. |
+| `OppFinder.ShowInDevelopmentStandardsPerPage` | — | Unknown | Lets the user change how many in-development standards are shown per page. |
+| `OppFinder.ShowInDevelopmentStandardsPerPagePartial` | — | Unknown | Updates the partial view for in-development standards per page. |
+| `OppFinder.ShowProposedStandardDetails` | — | Unknown | Displays details about a proposed standard. |
+| `OppFinder.ShowProposedStandardsPerPage` | — | Unknown | Lets the user change how many proposed standards are shown per page. |
+| `OppFinder.ShowProposedStandardsPerPagePartial` | — | Unknown | Updates the partial view for proposed standards per page. |
 | `OppFinder.SortApprovedStandards` | — | Unknown | Lets the user sort the list of approved standards. |
-| `OppFinder.SortApprovedStandardsPartial` | — | Unknown | Lets the user sort the list of approved standards within a partial view. |
-| `OppFinder.SortInDevelopmentStandards` | — | Unknown | Lets the user sort the list of in-development standards in the Opportunity Finder. |
-| `OppFinder.SortInDevelopmentStandardsPartial` | — | Unknown | Allows updating the partial view for sorted in-development standards in the Opportunity Finder. |
-| `OppFinder.SortProposedStandards` | — | Unknown | Lets the user sort the list of proposed standards in the Opportunity Finder. |
-| `OppFinder.SortProposedStandardsPartial` | — | Unknown | Allows updating the partial view for sorted proposed standards in the Opportunity Finder. |
-| `Option` | `certificate/option` | Yes | Lets the user select a course option for a certificate. |
-| `Organisation.ApiSubscriptionRequestAccess` | — | Yes | Redirects users to request API subscription access for their organisation. |
-| `Organisation.ChangeAddress` | — | Yes | Lets the user change the organisation's address. |
-| `Organisation.ChangeEmail` | — | Yes | Lets the user change the organisation's contact email address. |
-| `Organisation.ChangePhoneNumber` | — | Yes | Lets the user change the organisation's contact phone number. |
-| `Organisation.ChangeWebsite` | — | Yes | Lets the user change the organisation's website address. |
-| `Organisation.Index` | — | Yes | Shows the organisation overview and details to the user. |
-| `Organisation.OrganisationDetails` | — | Yes | Shows detailed information for the user's organisation and enables management options. |
+| `OppFinder.SortApprovedStandardsPartial` | — | Unknown | Updates the sorting of approved standards in a partial view. |
+| `OppFinder.SortInDevelopmentStandards` | — | Unknown | Sorts the list of in-development assessment standards for opportunities. |
+| `OppFinder.SortInDevelopmentStandardsPartial` | — | Unknown | Sorts the list of in-development assessment standards in a partial view for opportunities. |
+| `OppFinder.SortProposedStandards` | — | Unknown | Sorts the list of proposed assessment standards for opportunities. |
+| `OppFinder.SortProposedStandardsPartial` | — | Unknown | Sorts the list of proposed assessment standards in a partial view for opportunities. |
+| `Option` | `certificate/option` | Yes | Lets the user submit the chosen option for the selected certificate. |
+| `Organisation.ApiSubscriptionRequestAccess` | — | Yes | Lets the user request access to an API subscription for the organisation. |
+| `Organisation.ChangeAddress` | — | Yes | Lets the user view and update the organisation's address details. |
+| `Organisation.ChangeEmail` | — | Yes | Lets the user view and update the organisation's contact email. |
+| `Organisation.ChangePhoneNumber` | — | Yes | Lets the user view and update the organisation's phone number. |
+| `Organisation.ChangeWebsite` | — | Yes | Lets the user view and update the organisation's website address. |
+| `Organisation.Index` | — | Yes | Shows the organisation's main information. |
+| `Organisation.OrganisationDetails` | — | Yes | Shows the organisation's detailed information and options for editing details. |
 | `Organisation.RenewApiKey` | — | Yes | Lets the user renew the organisation's API key. |
 | `Organisation.SelectOrChangeContactName` | — | Yes | Lets the user select or change the organisation's primary contact. |
-| `OrganisationSearch.Confirm` | — | Yes | Lets the user confirm details about a searched organisation before proceeding. |
-| `OrganisationSearch.DealingWithRequest` | — | Yes | Lets the user deal with or complete their organisation access request. |
-| `OrganisationSearch.FromResults` | — | Yes | Lets the user view organisation search results again after requesting them from the results page. |
-| `OrganisationSearch.Index` | — | Yes | Lets the user start a search for an organisation by entering a search string. |
-| `OrganisationSearch.NextResults` | — | Yes | Lets the user page through the organisation search results. |
-| `OrganisationSearch.NoAccess` | — | Yes | Shows the user they do not have access to the selected organisation and provides options for next steps. |
-| `OrganisationSearch.OrganisationChosen` | — | Yes | Lets the user select an organisation type for the organisation they've chosen. |
-| `OrganisationSearch.Results` | — | Yes | Displays organisation search results based on the entered search string. |
-| `OrganisationStandards.Index` | — | Yes | Displays the list of standards approved for the user's organisation. |
-| `OrganisationStandards.OrderPipeline` | — | Yes | Displays the pipeline of standards, sorted by the selected order. |
-| `OrganisationStandards.Pipeline` | — | Yes | Displays the pipeline of standards for the organisation with filtering options. |
-| `PreviousAddress` | `certificate/address/select-previous` | Yes | Lets the user select a previously used certificate address. |
-| `Recipient` | `certificate/address/recipient` | Yes | Lets the user choose the recipient of the certificate. |
-| `RequestAccess.RequestAccess` | — | Yes | Lets a user request access to a privilege. |
+| `OrganisationSearch.Confirm` | — | Yes | Lets the user confirm the details of their chosen organisation after searching. |
+| `OrganisationSearch.DealingWithRequest` | — | Yes | Handles the user's access request for the chosen organisation after confirmation. |
+| `OrganisationSearch.FromResults` | — | Yes | Shows search results for organisations from a previous query, allowing the user to refine or select again. |
+| `OrganisationSearch.Index` | — | Yes | Lets the user search for organisations by entering a search string. |
+| `OrganisationSearch.NextResults` | — | Yes | Shows the next page of search results for organisations. |
+| `OrganisationSearch.NoAccess` | — | Yes | Shows access restriction information and provides next steps if the user can't access a selected organisation. |
+| `OrganisationSearch.OrganisationChosen` | — | Yes | Lets the user specify an organisation type after selecting an organisation. |
+| `OrganisationSearch.Results` | — | Yes | Shows search results for organisations based on a search string criteria. |
+| `OrganisationStandards.Index` | — | Yes | Displays a list of approved standards for the user's organisation. |
+| `OrganisationStandards.OrderPipeline` | — | Yes | Lets the user filter and order the pipeline of standards by different criteria (standard, training provider, estimated date). |
+| `OrganisationStandards.Pipeline` | — | Yes | Shows the organisation's pipeline standards with filter and sorting options. |
+| `PreviousAddress` | `certificate/address/select-previous` | Yes | Lets the user select a previously used address for certificate delivery. |
+| `Recipient` | `certificate/address/recipient` | Yes | Lets the user specify the recipient for certificate delivery. |
+| `RequestAccess.RequestAccess` | — | Yes | Allows a user to request access to a privilege. |
 | `RequestAccess.RequestSent` | `/RequestAccess/RequestSent/{privilegeId}` | Yes | Shows confirmation that a privilege access request has been sent. |
-| `Search.Index` | — | Unknown | Allows the user to search for a learner using their surname and unique learner number (ULN). |
-| `Search.PrivatelyFundedDraft` | — | Unknown | Informs the user that a privately funded certificate is in draft status. |
-| `Search.Result` | — | Unknown | Shows the result for the selected standard, allowing the user to review details and grades. |
-| `SendTo` | `certificate/sendto` | Yes | Lets the user choose who should receive the certificate. |
-| `StandardController.AddStandardChooseVersions` | `standard/add-standard/{search}/{referenceNumber}/choose-versions`, `standard/add-standard/choose-versions` | Yes | Lets the user select standard versions to add to their organisation and confirm having read the relevant assessment plan. |
-| `StandardController.AddStandardConfirm` | `standard/add-standard/{search}/{referenceNumber}/confirm`, `standard/add-standard/confirm` | Yes | Confirms the addition of selected versions of a standard to the organisation. |
-| `StandardController.AddStandardConfirmation` | `standard/add-standard/{referenceNumber}/confirmation` | Yes | Shows confirmation after a standard has been added to the organisation. |
+| `Search.Index` | — | Unknown | Lets the user search for a learner by surname and unique learner number (ULN). |
+| `Search.PrivatelyFundedDraft` | — | Unknown | Informs the user about privately funded draft certificates in search results. |
+| `Search.Result` | — | Unknown | Displays the result of a learner search, allowing the user to select a standard if needed. |
+| `SendTo` | `certificate/sendto` | Yes | Lets the user submit the selection of recipient for the certificate. |
+| `StandardController.AddStandardChooseVersions` | `standard/add-standard/{search}/{referenceNumber}/choose-versions`, `standard/add-standard/choose-versions` | Yes | Allows the user to select one or more versions of a standard to add. |
+| `StandardController.AddStandardConfirm` | `standard/add-standard/{search}/{referenceNumber}/confirm`, `standard/add-standard/confirm` | Yes | Lets the user confirm adding the selected standard and versions. |
+| `StandardController.AddStandardConfirmation` | `standard/add-standard/{referenceNumber}/confirmation` | Yes | Shows a confirmation page after the user has added a standard to their organisation. |
 | `StandardController.AddStandardSearch` | `standard/add-standard/{search?}`, `standard/add-standard` | Yes | Lets the user search for a standard to add. |
-| `StandardController.AddStandardSearchResults` | `standard/add-standard/{search}/results` | Yes | Shows the results for the user's search for a standard to add. |
-| `StandardController.ApplyStandardConfirm` | `standard/{id}/apply-standard/{search}/{referenceNumber}/confirm` | Yes | Allows the user to confirm application for a chosen standard. |
-| `StandardController.ApplyStandardConfirmOfqual` | `standard/{id}/apply-standard/{search}/{referenceNumber}/confirm-ofqual` | Yes | Lets the user confirm application for a standard regulated by Ofqual. |
-| `StandardController.ApplyStandardOfsShutterPage` | `standard/{id}/confirm-ofs` | Yes | Informs the user of Office for Students-specific requirements before applying for a standard. |
-| `StandardController.ApplyStandardSearch` | `standard/{id}/apply-standard/{search?}`, `standard/{id}/apply-standard` | Yes | Lets the user search for standards to apply for. |
-| `StandardController.ApplyStandardSearchResults` | `standard/{id}/apply-standard/{search}/results` | Yes | Shows a list of matching standards for the user's search query when applying for a standard. |
-| `StandardController.OptInStandardVersion` | `standard/opt-in/{referenceNumber}/{version}`, `standard/opt-in` | Yes | Lets the user opt-in to a version of a standard. |
-| `StandardController.OptInStandardVersionConfirmation` | `standard/opt-in/{referenceNumber}/{version}/confirmation` | Yes | Confirms the user has opted in to a specified version of a standard. |
-| `StandardController.OptOutStandardVersion` | `standard/opt-out/{referenceNumber}/{version}`, `standard/opt-out` | Yes | Lets the user opt-out of a version of a standard. |
-| `StandardController.OptOutStandardVersionConfirmation` | `standard/opt-out/{referenceNumber}/{version}/confirmation` | Yes | Confirms the user has opted out of a specified version of a standard. |
-| `StandardController.StandardDetails` | `standard/standard-details/{referenceNumber}` | Yes | Displays detailed information about a particular standard and its versions. |
-| `UserDetails.Details` | — | Unknown | Shows details of a selected user, including assigned privileges. |
-| `UserDetails.EditPermissions` | `/ManageUsers/{contactId}/permissions` | Unknown | Allows editing of a user's permissions within the organisation. |
-| `UserDetails.Remove` | — | Unknown | Lets an administrator confirm the removal of a user from the organisation. |
-| `UserDetails.RemoveConfirmed` | — | Unknown | Processes the removal of a user from the organisation. |
-| `UserDetails.Removed` | — | Unknown | Displays confirmation that the user has been removed from the organisation. |
-| `Version` | `certificate/version` | Yes | Lets the user select the version of a certificate standard. |
-| `choose` | — | Unknown | Lets the user choose a standard from multiple search results. |
+| `StandardController.AddStandardSearchResults` | `standard/add-standard/{search}/results` | Yes | Shows the results of the user's standard search. |
+| `StandardController.ApplyStandardConfirm` | `standard/{id}/apply-standard/{search}/{referenceNumber}/confirm` | Yes | Allows the user to confirm applying for a standard, showing standard details. |
+| `StandardController.ApplyStandardConfirmOfqual` | `standard/{id}/apply-standard/{search}/{referenceNumber}/confirm-ofqual` | Yes | Shows confirmation for applying for a standard regulated by Ofqual. |
+| `StandardController.ApplyStandardOfsShutterPage` | `standard/{id}/confirm-ofs` | Yes | Shows information when applying for a standard checked by the Office for Students. |
+| `StandardController.ApplyStandardSearch` | `standard/{id}/apply-standard/{search?}`, `standard/{id}/apply-standard` | Yes | Allows the user to search for a standard to apply for. |
+| `StandardController.ApplyStandardSearchResults` | `standard/{id}/apply-standard/{search}/results` | Yes | Displays matching standards based on the search criteria entered. |
+| `StandardController.OptInStandardVersion` | `standard/opt-in/{referenceNumber}/{version}`, `standard/opt-in` | Yes | Lets the user opt in to a specific version of a standard. |
+| `StandardController.OptInStandardVersionConfirmation` | `standard/opt-in/{referenceNumber}/{version}/confirmation` | Yes | Confirms that the user has opted into a particular version of a standard. |
+| `StandardController.OptOutStandardVersion` | `standard/opt-out/{referenceNumber}/{version}`, `standard/opt-out` | Yes | Lets the user opt out of a specific version of a standard. |
+| `StandardController.OptOutStandardVersionConfirmation` | `standard/opt-out/{referenceNumber}/{version}/confirmation` | Yes | Confirms that the user has opted out of a particular version of a standard. |
+| `StandardController.StandardDetails` | `standard/standard-details/{referenceNumber}` | Yes | Shows details for a specific standard, including its versions and approval status. |
+| `UserDetails.Details` | — | Unknown | Displays detailed information about a user, including assigned privileges. |
+| `UserDetails.EditPermissions` | `/ManageUsers/{contactId}/permissions` | Unknown | Allows editing of a user's permissions. |
+| `UserDetails.Remove` | — | Unknown | Shows a confirmation page before removing a user from the organisation. |
+| `UserDetails.RemoveConfirmed` | — | Unknown | Processes removal of a user from the organisation. |
+| `UserDetails.Removed` | — | Unknown | Shows confirmation that a user has been removed from the organisation. |
+| `Version` | `certificate/version` | Yes | Lets the user submit the chosen version for the certificate. |
+| `choose` | — | Unknown | Lets the user choose a standard from a list of available standards when multiple match their search. |
 
 ## Form fields
 
@@ -257,7 +260,7 @@ Field definitions only: no values a user enters are recorded.
 
 | Field | Type | Label | Required | Rules | Options |
 | --- | --- | --- | --- | --- | --- |
-| `AreYouSure` | radios | Are you sure you want to cancel your application to assess this standard?! Warning If you select yes, we will not take into account any answers you entered as part of your application to assess If you | — | required; must be selected | Yes, No |
+| `AreYouSure` | radios | Are you sure you want to cancel your application to assess this standard?! Warning If you select yes, we will not take into account any answers you entered as part of your application to assess If you | — | required | Yes, No |
 
 ### `ApplyForWithdrawal.CheckWithdrawalRequest`
 
@@ -269,7 +272,7 @@ Field definitions only: no values a user enters are recorded.
 
 | Field | Type | Label | Required | Rules | Options |
 | --- | --- | --- | --- | --- | --- |
-| `TypeOfWithdrawal` | radios | What are you withdrawing from? | — | required; must be either 'StandardWithdrawal' or 'OrganisationWithdrawal' | — |
+| `TypeOfWithdrawal` | radios | What are you withdrawing from? | — | required; must be 'StandardWithdrawal' or 'OrganisationWithdrawal' | — |
 
 ### `CertificateFamilyName.FamilyName`
 
@@ -293,9 +296,9 @@ Field definitions only: no values a user enters are recorded.
 
 | Field | Type | Label | Required | Rules | Options |
 | --- | --- | --- | --- | --- | --- |
-| `Day` | text | Day | — | required; must be a number; must be between 1 and 31 | — |
-| `Month` | text | Month | — | required; must be a number; must be between 1 and 12 | — |
-| `Year` | text | Year | — | required; must be 4 characters; must be a number | — |
+| `Day` | text | Day | — | required; must be a number; must be between 1 and 31; must form a valid date with month and year; date must not be in the future; date must not be before 1 January 2017 | — |
+| `Month` | text | Month | — | required; must be a number; must be between 1 and 12; must form a valid date with day and year; date must not be in the future; date must not be before 1 January 2017 | — |
+| `Year` | text | Year | — | required; must be 4 characters; must be a number; must form a valid date with day and month; date must not be in the future; date must not be before 1 January 2017 | — |
 
 ### `Home.Cookies`
 
@@ -431,19 +434,19 @@ Field definitions only: no values a user enters are recorded.
 
 | Field | Type | Label | Required | Rules | Options |
 | --- | --- | --- | --- | --- | --- |
-| `SearchString` | text | — | — | required; must be at least 2 characters | — |
+| `SearchString` | text | — | — | — | — |
 
 ### `OrganisationSearch.OrganisationChosen`
 
 | Field | Type | Label | Required | Rules | Options |
 | --- | --- | --- | --- | --- | --- |
-| `OrganisationType` | radios | — | — | required; must select an organisation type | — |
+| `OrganisationType` | radios | — | — | — | — |
 
 ### `OrganisationSearch.Results`
 
 | Field | Type | Label | Required | Rules | Options |
 | --- | --- | --- | --- | --- | --- |
-| `SearchString` | text | — | — | required; must be at least 2 characters | — |
+| `SearchString` | text | — | — | required; minimum length 2 characters | — |
 
 ### `OrganisationStandards.OrderPipeline`
 
@@ -472,14 +475,14 @@ Field definitions only: no values a user enters are recorded.
 
 | Field | Type | Label | Required | Rules | Options |
 | --- | --- | --- | --- | --- | --- |
-| `StdCode` | radios | — | — | required; must select a Standard | — |
+| `StdCode` | radios | — | — | required | — |
 
 ### `StandardController.AddStandardChooseVersions`
 
 | Field | Type | Label | Required | Rules | Options |
 | --- | --- | --- | --- | --- | --- |
 | `SelectedVersions` | checkboxes | Select all that apply | — | required; must select at least one version | — |
-| `IsConfirmed` | checkboxes | — | — | required; must be true | — |
+| `IsConfirmed` | checkboxes | — | — | required; must confirm you have read the assessment plan | — |
 
 ### `StandardController.AddStandardSearch`
 
@@ -503,5 +506,5 @@ Field definitions only: no values a user enters are recorded.
 
 | Field | Type | Label | Required | Rules | Options |
 | --- | --- | --- | --- | --- | --- |
-| `StdCode` | radios | — | — | required; must select a Standard | — |
+| `StdCode` | radios | — | — | required | — |
 
