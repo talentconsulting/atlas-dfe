@@ -1,0 +1,202 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Financial Applications API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/Financial/OpenApplications": {
+      "get": {
+        "tags": [
+          "Financial"
+        ],
+        "summary": "Get open financial applications",
+        "responses": {
+          "200": {
+            "description": "Successful response containing open financial applications",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenFinancialApplicationsRequest"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Financial/FeedbackAddedApplications": {
+      "get": {
+        "tags": [
+          "Financial"
+        ],
+        "summary": "Get feedback-added financial applications",
+        "responses": {
+          "200": {
+            "description": "Successful response containing feedback-added financial applications",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FeedbackAddedFinancialApplicationsRequest"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Financial/ClosedApplications": {
+      "get": {
+        "tags": [
+          "Financial"
+        ],
+        "summary": "Get closed financial applications",
+        "responses": {
+          "200": {
+            "description": "Successful response containing closed financial applications",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClosedFinancialApplicationsRequest"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Financial/{Id}/Return": {
+      "post": {
+        "tags": [
+          "Financial"
+        ],
+        "summary": "Return financial review",
+        "parameters": [
+          {
+            "name": "Id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Updated financial grade",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FinancialGrade"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Financial review return confirmed"
+          }
+        }
+      }
+    },
+    "/Financial/{Id}/StartReview": {
+      "post": {
+        "tags": [
+          "Financial"
+        ],
+        "summary": "Start financial review",
+        "parameters": [
+          {
+            "name": "Id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Start review request with reviewer details",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StartFinancialReviewRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Review start confirmed"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "OpenFinancialApplicationsRequest": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "FeedbackAddedFinancialApplicationsRequest": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "ClosedFinancialApplicationsRequest": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "FinancialGrade": {
+        "type": "object",
+        "properties": {
+          "ApplicationReference": {
+            "type": "string"
+          },
+          "SelectedGrade": {
+            "type": "string"
+          },
+          "InadequateMoreInformation": {
+            "type": "string"
+          },
+          "FinancialDueDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "GradedBy": {
+            "type": "string"
+          },
+          "GradedDateTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "FinancialEvidences": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FinancialEvidence"
+            }
+          }
+        }
+      },
+      "FinancialEvidence": {
+        "type": "object",
+        "properties": {
+          "Filename": {
+            "type": "string"
+          }
+        }
+      },
+      "StartFinancialReviewRequest": {
+        "type": "object",
+        "properties": {
+          "Reviewer": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,102 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Certificate Grade API",
+    "version": "1.0.0",
+    "description": "API for managing certificate grades in the assessor service."
+  },
+  "paths": {
+    "/certificate/grade": {
+      "get": {
+        "summary": "Get Certificate Grade",
+        "description": "Retrieve the current certificate grade view model.",
+        "security": [
+          {}
+        ],
+        "parameters": [
+          {
+            "name": "redirectToCheck",
+            "in": "query",
+            "description": "Indicates if the user should be redirected to the check page.",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The certificate grade view model successfully loaded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CertificateGradeViewModel"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Update Certificate Grade",
+        "description": "Save the updated certificate grade.",
+        "security": [
+          {}
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CertificateGradeViewModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The certificate grade has been successfully updated."
+          },
+          "400": {
+            "description": "The provided certificate grade view model is invalid."
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CertificateGradeViewModel": {
+        "type": "object",
+        "properties": {
+          "selectedGrade": {
+            "type": "string",
+            "description": "The selected grade for the certificate."
+          },
+          "grades": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SelectListItem"
+            },
+            "description": "List of available grades for selection."
+          }
+        },
+        "additionalProperties": false
+      },
+      "SelectListItem": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string",
+            "description": "The display text of the grade."
+          },
+          "value": {
+            "type": "string",
+            "description": "The stored value of the grade."
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}
