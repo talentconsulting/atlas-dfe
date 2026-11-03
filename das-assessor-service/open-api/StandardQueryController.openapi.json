@@ -1,0 +1,572 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Assessor Service API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/api/v1/standards/{epaoId}": {
+      "get": {
+        "tags": [
+          "Standards"
+        ],
+        "summary": "Get standards registered by EPAO",
+        "operationId": "GetEpaoRegisteredStandards",
+        "parameters": [
+          {
+            "name": "epaoId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "requireAtLeastOneVersion",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": true
+            }
+          },
+          {
+            "name": "pageIndex",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetEpaoRegisteredStandardsResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/standards/pipelines/{epaoId}": {
+      "get": {
+        "tags": [
+          "Pipelines"
+        ],
+        "summary": "Get pipeline standards by EPAO",
+        "operationId": "GetEpaoPipelineStandards",
+        "parameters": [
+          {
+            "name": "epaoId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "standardFilterId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "providerFilterId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "epaDateFilterId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "orderDirection",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "pageIndex",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EpaoPipelineStandardsResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/standards/pipelines/{epaoId}/filters": {
+      "get": {
+        "tags": [
+          "Pipelines"
+        ],
+        "summary": "Get pipeline filters for an EPAO",
+        "operationId": "GetEpaoPipelineStandardsFilters",
+        "parameters": [
+          {
+            "name": "epaoId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EpaoPipelineStandardsFiltersResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/standards/pipelines/extract/{epaoId}": {
+      "get": {
+        "tags": [
+          "Pipelines"
+        ],
+        "summary": "Extract pipeline standards for EPAO",
+        "operationId": "GetEpaoPipelineStandardsExtract",
+        "parameters": [
+          {
+            "name": "epaoId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "standardFilterId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "providerFilterId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "epaDateFilterId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EpaoPipelineStandardsExtractResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/standards/{standardCode}/organisations": {
+      "get": {
+        "tags": [
+          "Standards"
+        ],
+        "summary": "Get organisations by standard code",
+        "operationId": "GetEpaosByStandard",
+        "parameters": [
+          {
+            "name": "standardCode",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrganisationStandardResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ApiResponse": {
+        "type": "object",
+        "properties": {
+          "statusCode": {
+            "type": "integer"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "GetEpaoRegisteredStandardsResponse": {
+        "type": "object",
+        "properties": {
+          "standardCode": {
+            "type": "integer"
+          },
+          "standardName": {
+            "type": "string"
+          },
+          "level": {
+            "type": "integer"
+          },
+          "referenceNumber": {
+            "type": "string"
+          },
+          "newVersionAvailable": {
+            "type": "boolean"
+          },
+          "numberOfVersions": {
+            "type": "integer"
+          }
+        }
+      },
+      "EpaoPipelineStandardsResponse": {
+        "type": "object",
+        "properties": {
+          "standardName": {
+            "type": "string"
+          },
+          "standardCode": {
+            "type": "string"
+          },
+          "standardVersion": {
+            "type": "string"
+          },
+          "UKPRN": {
+            "type": "string"
+          },
+          "trainingProvider": {
+            "type": "string"
+          },
+          "pipeline": {
+            "type": "integer"
+          },
+          "estimatedDate": {
+            "type": "string"
+          }
+        }
+      },
+      "EpaoPipelineStandardsFiltersResponse": {
+        "type": "object",
+        "properties": {
+          "StandardFilterItems": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EpaoPipelineStandardFilter"
+            }
+          },
+          "ProviderFilterItems": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EpaoPipelineStandardFilter"
+            }
+          },
+          "EPADateFilterItems": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EpaoPipelineStandardFilter"
+            }
+          }
+        }
+      },
+      "EpaoPipelineStandardsExtractResponse": {
+        "type": "object",
+        "properties": {
+          "standardName": {
+            "type": "string"
+          },
+          "standardVersion": {
+            "type": "string"
+          },
+          "pipeline": {
+            "type": "integer"
+          },
+          "providerUkPrn": {
+            "type": "integer"
+          },
+          "providerName": {
+            "type": "string"
+          },
+          "estimatedDate": {
+            "type": "string"
+          }
+        }
+      },
+      "OrganisationStandardResponse": {
+        "type": "object",
+        "properties": {
+          "deliveryAreasDetails": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OrganisationStandardDeliveryArea"
+            }
+          },
+          "organisationStandard": {
+            "$ref": "#/components/schemas/OrganisationStandard"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "endPointAssessorOrganisationId": {
+            "type": "string"
+          },
+          "endPointAssessorUkprn": {
+            "type": "integer"
+          },
+          "endPointAssessorName": {
+            "type": "string"
+          },
+          "primaryContact": {
+            "type": "string"
+          },
+          "roATPApproved": {
+            "type": "boolean"
+          },
+          "roEPAOApproved": {
+            "type": "boolean"
+          },
+          "organisationType": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "postcode": {
+            "type": "string"
+          }
+        }
+      },
+      "EpaoPipelineStandardFilter": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          }
+        }
+      },
+      "OrganisationStandardDeliveryArea": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "organisationStandardId": {
+            "type": "integer"
+          },
+          "deliveryAreaId": {
+            "type": "integer"
+          },
+          "deliveryArea": {
+            "type": "string"
+          },
+          "comments": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          }
+        }
+      },
+      "OrganisationStandard": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "organisationId": {
+            "type": "string"
+          },
+          "organisationName": {
+            "type": "string"
+          },
+          "organisationStatus": {
+            "type": "string"
+          },
+          "ukprn": {
+            "type": "integer"
+          },
+          "standardEffectiveFrom": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "standardEffectiveTo": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "standardLastDateForNewStarts": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "standardId": {
+            "type": "integer"
+          },
+          "iFateReferenceNumber": {
+            "type": "string"
+          },
+          "standardTitle": {
+            "type": "string"
+          },
+          "effectiveFrom": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "effectiveTo": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "dateStandardApprovedOnRegister": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "comments": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "contactId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,751 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "AssessorService Certificate API",
+    "description": "API for managing certificates in AssessorService.",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/api/v1/certificates/start": {
+      "post": {
+        "operationId": "StartCertificate",
+        "summary": "Start a certificate.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StartCertificateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Certificate successfully started.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Certificate"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/certificates/reprint-framework": {
+      "post": {
+        "operationId": "ReprintFrameworkCertificate",
+        "summary": "Reprint a framework certificate.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReprintFrameworkCertificateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Framework certificate successfully reprinted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Certificate"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/certificates/update": {
+      "put": {
+        "operationId": "UpdateCertificate",
+        "summary": "Update a certificate.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCertificateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Certificate successfully updated.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Certificate"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/certificates/update-print-status": {
+      "put": {
+        "operationId": "UpdatePrintStatus",
+        "summary": "Update certificate print status.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CertificatePrintStatusUpdateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Print status successfully updated.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/certificates/{id}/printrequest": {
+      "put": {
+        "operationId": "RequestPrint",
+        "summary": "Submit a print request for a certificate.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "The ID of the certificate.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCertificatePrintRequestCommand"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Print request successfully processed."
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/certificates/request-reprint": {
+      "post": {
+        "operationId": "RequestReprint",
+        "summary": "Request a reprint of the certificate.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCertificateRequestReprintCommand"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Certificate successfully reprinted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Certificate"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/certificates/update-with-amend-reason": {
+      "post": {
+        "operationId": "UpdateCertificateWithAmendReason",
+        "summary": "Update a certificate with an amendment reason.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCertificateWithAmendReasonCommand"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Certificate updated successfully."
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/certificates/update-with-reprint-reason": {
+      "post": {
+        "operationId": "UpdateCertificateWithReprintReason",
+        "summary": "Update a certificate with a reprint reason.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCertificateWithReprintReasonCommand"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Certificate reprint reason updated successfully."
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/certificates/deletecertificate": {
+      "delete": {
+        "operationId": "DeleteCertificate",
+        "summary": "Delete a certificate.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeleteCertificateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Certificate deleted successfully."
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "StartCertificateRequest": {
+        "type": "object",
+        "properties": {
+          "Uln": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "StandardCode": {
+            "type": "integer"
+          },
+          "UkPrn": {
+            "type": "integer"
+          },
+          "Username": {
+            "type": "string"
+          },
+          "CourseOption": {
+            "type": "string"
+          },
+          "StandardUId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "Uln",
+          "StandardCode",
+          "UkPrn",
+          "Username"
+        ]
+      },
+      "Certificate": {
+        "type": "object"
+      },
+      "ApiResponse": {
+        "type": "object",
+        "properties": {
+          "StatusCode": {
+            "type": "integer"
+          },
+          "Message": {
+            "type": "string"
+          }
+        }
+      },
+      "ReprintFrameworkCertificateRequest": {
+        "type": "object",
+        "properties": {
+          "FrameworkLearnerId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "Username": {
+            "type": "string"
+          },
+          "IncidentNumber": {
+            "type": "string"
+          },
+          "Reasons": {
+            "type": "string"
+          },
+          "OtherReason": {
+            "type": "string"
+          },
+          "ContactName": {
+            "type": "string"
+          },
+          "ContactAddLine1": {
+            "type": "string"
+          },
+          "ContactAddLine2": {
+            "type": "string"
+          },
+          "ContactAddLine3": {
+            "type": "string"
+          },
+          "ContactAddLine4": {
+            "type": "string"
+          },
+          "ContactPostcode": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "FrameworkLearnerId",
+          "Username"
+        ]
+      },
+      "UpdateCertificateRequest": {
+        "type": "object",
+        "properties": {
+          "Username": {
+            "type": "string"
+          },
+          "Certificate": {
+            "$ref": "#/components/schemas/Certificate"
+          },
+          "Action": {
+            "type": "string"
+          },
+          "ReasonForChange": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "Username",
+          "Certificate"
+        ]
+      },
+      "CertificatePrintStatusUpdateRequest": {
+        "type": "object",
+        "properties": {
+          "CertificateReference": {
+            "type": "string"
+          },
+          "BatchNumber": {
+            "type": "integer"
+          },
+          "Status": {
+            "type": "string"
+          },
+          "StatusAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "ReasonForChange": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "CertificateReference",
+          "BatchNumber",
+          "Status",
+          "StatusAt"
+        ]
+      },
+      "UpdateCertificatePrintRequestCommand": {
+        "type": "object",
+        "properties": {
+          "CertificateId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "Address": {
+            "$ref": "#/components/schemas/CertificatePrintAddress"
+          },
+          "PrintRequestedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "PrintRequestedBy": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "CertificateId",
+          "Address",
+          "PrintRequestedAt",
+          "PrintRequestedBy"
+        ]
+      },
+      "UpdateCertificateRequestReprintCommand": {
+        "type": "object",
+        "properties": {
+          "CertificateId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "Username": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "CertificateId",
+          "Username"
+        ]
+      },
+      "UpdateCertificateWithAmendReasonCommand": {
+        "type": "object",
+        "properties": {
+          "CertificateReference": {
+            "type": "string"
+          },
+          "Username": {
+            "type": "string"
+          },
+          "IncidentNumber": {
+            "type": "string"
+          },
+          "Reasons": {
+            "type": "string"
+          },
+          "OtherReason": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "CertificateReference",
+          "Username"
+        ]
+      },
+      "UpdateCertificateWithReprintReasonCommand": {
+        "type": "object",
+        "properties": {
+          "CertificateReference": {
+            "type": "string"
+          },
+          "Username": {
+            "type": "string"
+          },
+          "IncidentNumber": {
+            "type": "string"
+          },
+          "Reasons": {
+            "type": "string"
+          },
+          "OtherReason": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "CertificateReference",
+          "Username"
+        ]
+      },
+      "DeleteCertificateRequest": {
+        "type": "object",
+        "properties": {
+          "Uln": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "UserName": {
+            "type": "string"
+          },
+          "StandardCode": {
+            "type": "integer"
+          },
+          "ReasonForChange": {
+            "type": "string"
+          },
+          "IncidentNumber": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "Uln",
+          "UserName"
+        ]
+      },
+      "ValidationResponse": {
+        "type": "object",
+        "properties": {
+          "Errors": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "ErrorMessage": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "IsValid": {
+            "type": "boolean"
+          }
+        }
+      },
+      "CertificatePrintAddress": {
+        "type": "object",
+        "properties": {
+          "ContactName": {
+            "type": "string"
+          },
+          "ContactOrganisation": {
+            "type": "string"
+          },
+          "ContactAddLine1": {
+            "type": "string"
+          },
+          "ContactAddLine2": {
+            "type": "string"
+          },
+          "ContactAddLine3": {
+            "type": "string"
+          },
+          "ContactAddLine4": {
+            "type": "string"
+          },
+          "ContactPostCode": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
