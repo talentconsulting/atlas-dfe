@@ -1,0 +1,525 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Assessor Service API",
+    "version": "1.0.0",
+    "description": "API for managing batch logs, EPA records and other assessor service functionalities"
+  },
+  "paths": {
+    "/api/v1/batches/{batchNumber}": {
+      "get": {
+        "operationId": "GetBatchLog",
+        "summary": "Retrieve batch log details",
+        "security": [
+          {
+            "AssessorServiceInternalAPI": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "batchNumber",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Unique batch number"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Batch log details retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BatchLogResponse"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No content available for the specified batch number"
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/batches/batch-number-ready-to-print": {
+      "get": {
+        "operationId": "GetBatchNumberReadyToPrint",
+        "summary": "Retrieve batch number ready for print",
+        "security": [
+          {
+            "AssessorServiceInternalAPI": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Batch number successfully retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/epa": {
+      "post": {
+        "operationId": "CreateEpaRecords",
+        "summary": "Create new EPA records",
+        "description": "Creates a set of initial EPA records if they are valid.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/CreateEpaRequest"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Created or validation errors",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CreateCertificateResponse"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Request exceeds maximum size or validation errors occurred",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "operationId": "UpdateEpaRecords",
+        "summary": "Update existing EPA records",
+        "description": "Updates EPA records with the information contained in the valid request.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/UpdateEpaRequest"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Updates or validation errors",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UpdateEpaResponse"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Request exceeds maximum size or validation errors occurred",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/epa/{uln}/{familyName}/{standard}/{epaReference}": {
+      "delete": {
+        "operationId": "DeleteEpaRecord",
+        "summary": "Delete a specific EPA record",
+        "description": "Deletes the specified EPA record if valid.",
+        "parameters": [
+          {
+            "name": "uln",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "description": "Unique learner number"
+          },
+          {
+            "name": "familyName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "standard",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Standard code or reference number"
+          },
+          {
+            "name": "epaReference",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "EPA record deleted successfully"
+          },
+          "403": {
+            "description": "Validation errors prevent deletion",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "BatchLogResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "batchCreated": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "scheduledDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "period": {
+            "type": "string"
+          },
+          "batchNumber": {
+            "type": "integer"
+          },
+          "numberOfCertificates": {
+            "type": "integer"
+          },
+          "numberOfCoverLetters": {
+            "type": "integer"
+          },
+          "certificatesFileName": {
+            "type": "string"
+          },
+          "fileUploadStartTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "fileUploadEndTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "batchData": {
+            "$ref": "#/components/schemas/BatchDataResponse"
+          }
+        }
+      },
+      "ApiResponse": {
+        "type": "object",
+        "properties": {
+          "statusCode": {
+            "type": "integer"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "BatchDataResponse": {
+        "type": "object",
+        "properties": {
+          "batchNumber": {
+            "type": "string"
+          },
+          "batchDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "postalContactCount": {
+            "type": "integer",
+            "nullable": true
+          },
+          "totalCertificateCount": {
+            "type": "integer",
+            "nullable": true
+          },
+          "printedDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "postedDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "dateOfResponse": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        }
+      },
+      "CreateEpaRequest": {
+        "type": "object",
+        "properties": {
+          "requestId": {
+            "type": "string"
+          },
+          "standard": {
+            "$ref": "#/components/schemas/Standard"
+          },
+          "learner": {
+            "$ref": "#/components/schemas/Learner"
+          },
+          "learningDetails": {
+            "$ref": "#/components/schemas/LearningDetails"
+          },
+          "epaDetails": {
+            "$ref": "#/components/schemas/EpaDetails"
+          }
+        }
+      },
+      "UpdateEpaRequest": {
+        "type": "object",
+        "properties": {
+          "requestId": {
+            "type": "string"
+          },
+          "epaReference": {
+            "type": "string"
+          },
+          "standard": {
+            "$ref": "#/components/schemas/Standard"
+          },
+          "learner": {
+            "$ref": "#/components/schemas/Learner"
+          },
+          "learningDetails": {
+            "$ref": "#/components/schemas/LearningDetails"
+          },
+          "epaDetails": {
+            "$ref": "#/components/schemas/EpaDetails"
+          }
+        }
+      },
+      "DeleteBatchEpaRequest": {
+        "type": "object",
+        "properties": {
+          "uln": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "familyName": {
+            "type": "string"
+          },
+          "standard": {
+            "type": "string"
+          },
+          "epaReference": {
+            "type": "string"
+          },
+          "ukPrn": {
+            "type": "integer"
+          }
+        }
+      },
+      "CreateCertificateResponse": {
+        "type": "object",
+        "properties": {
+          "requestId": {
+            "type": "string"
+          },
+          "certificate": {
+            "type": "object"
+          },
+          "validationErrors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "UpdateEpaResponse": {
+        "type": "object",
+        "properties": {
+          "epaReference": {
+            "type": "string"
+          },
+          "validationErrors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "Standard": {
+        "type": "object",
+        "properties": {
+          "standardCode": {
+            "type": "integer",
+            "nullable": true
+          },
+          "standardReference": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "Learner": {
+        "type": "object",
+        "properties": {
+          "uln": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "familyName": {
+            "type": "string"
+          }
+        }
+      },
+      "LearningDetails": {
+        "type": "object",
+        "properties": {
+          "courseOption": {
+            "type": "string",
+            "nullable": true
+          },
+          "overallGrade": {
+            "type": "string"
+          },
+          "achievementDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "version": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "EpaDetails": {
+        "type": "object",
+        "properties": {
+          "epas": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "epaDate": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "epaOutcome": {
+                  "type": "string"
+                },
+                "resit": {
+                  "type": "boolean",
+                  "nullable": true
+                },
+                "retake": {
+                  "type": "boolean",
+                  "nullable": true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "AssessorServiceInternalAPI": {
+        "type": "oauth2",
+        "flows": {
+          "clientCredentials": {
+            "tokenUrl": "https://auth.example.com/oauth2/token"
+          }
+        }
+      }
+    }
+  }
+}

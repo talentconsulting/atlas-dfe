@@ -1,0 +1,238 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Assessor Service Account API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/Account/SignIn": {
+      "get": {
+        "summary": "Initiates the sign-in process.",
+        "operationId": "SignIn",
+        "responses": {
+          "302": {
+            "description": "Redirect to authentication provider."
+          }
+        }
+      }
+    },
+    "/Account/PostSignIn": {
+      "get": {
+        "summary": "Handles post-sign-in logic.",
+        "operationId": "PostSignIn",
+        "responses": {
+          "302": {
+            "description": "Redirect based on login status."
+          }
+        }
+      }
+    },
+    "/Account/SignOut": {
+      "get": {
+        "summary": "Sign the user out.",
+        "operationId": "SignOut",
+        "responses": {
+          "302": {
+            "description": "Redirect after signing out."
+          }
+        }
+      }
+    },
+    "/Account/SignedOut": {
+      "get": {
+        "summary": "Handles the signed-out state.",
+        "operationId": "SignedOut",
+        "responses": {
+          "200": {
+            "description": "Returns the signed-out view."
+          },
+          "302": {
+            "description": "Redirect to home if user is authenticated."
+          }
+        }
+      }
+    },
+    "/Account/AccessDenied": {
+      "get": {
+        "summary": "Displays the access denied page.",
+        "operationId": "AccessDenied",
+        "responses": {
+          "200": {
+            "description": "Returns the access denied view."
+          },
+          "302": {
+            "description": "Redirect based on user state."
+          }
+        }
+      }
+    },
+    "/Account/CreateAnAccount": {
+      "get": {
+        "summary": "Displays the create account form.",
+        "operationId": "CreateAnAccount_Get",
+        "security": [
+          {
+            "oauth2": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns the create account view."
+          }
+        }
+      },
+      "post": {
+        "summary": "Processes account creation.",
+        "operationId": "CreateAnAccount_Post",
+        "security": [
+          {
+            "oauth2": []
+          }
+        ],
+        "requestBody": {
+          "description": "Account creation details.",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AccountViewModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "302": {
+            "description": "Redirects after account creation."
+          }
+        }
+      }
+    },
+    "/Account/Callback": {
+      "post": {
+        "summary": "Handles external callback for sign-in.",
+        "operationId": "Callback",
+        "requestBody": {
+          "description": "Callback payload.",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignInCallback"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Callback successfully handled."
+          }
+        }
+      }
+    },
+    "/Account/ChangeSignInDetails": {
+      "get": {
+        "summary": "Displays the change sign-in details page.",
+        "operationId": "ChangeSignInDetails",
+        "security": [
+          {
+            "oauth2": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns the change sign-in details view."
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AccessDeniedViewModel": {
+        "type": "object",
+        "properties": {
+          "Title": {
+            "type": "string"
+          },
+          "Rights": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "PrivilegeId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "ContactId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "UserHasUserManagement": {
+            "type": "boolean"
+          },
+          "ReturnController": {
+            "type": "string"
+          },
+          "ReturnAction": {
+            "type": "string"
+          },
+          "ReturnRouteName": {
+            "type": "string"
+          },
+          "ReturnRouteValues": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "IsUsersOrganisationLive": {
+            "type": "boolean"
+          }
+        }
+      },
+      "AccountViewModel": {
+        "type": "object",
+        "properties": {
+          "GivenName": {
+            "type": "string"
+          },
+          "FamilyName": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "GivenName",
+          "FamilyName"
+        ]
+      },
+      "SignInCallback": {
+        "type": "object",
+        "properties": {
+          "SourceId": {
+            "type": "string"
+          },
+          "GovIdentifier": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "SourceId",
+          "GovIdentifier"
+        ]
+      }
+    },
+    "securitySchemes": {
+      "oauth2": {
+        "type": "oauth2",
+        "flows": {
+          "authorizationCode": {
+            "authorizationUrl": "https://example.com/oauth/authorize",
+            "tokenUrl": "https://example.com/oauth/token",
+            "scopes": {}
+          }
+        }
+      }
+    }
+  }
+}

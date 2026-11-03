@@ -1,0 +1,617 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Learner Details API",
+    "version": "1.0.0",
+    "description": "API for querying learner details and managing learning-related data."
+  },
+  "paths": {
+    "/api/v1/learnerdetails": {
+      "get": {
+        "summary": "Get learner details",
+        "description": "Fetch learner details based on standard code and ULN.",
+        "operationId": "getLearnerDetails",
+        "parameters": [
+          {
+            "name": "stdCode",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "uln",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "allLogs",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully fetched learner details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LearnerDetailResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/learnerdetails/pipelines-count/{epaOrgId}": {
+      "get": {
+        "summary": "Get pipelines count by EPA organization ID",
+        "description": "Fetch the number of pipelines for a given EPA organization ID.",
+        "operationId": "getPipelinesCount",
+        "parameters": [
+          {
+            "name": "epaOrgId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully fetched pipelines count.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/learnerdetails/pipelines-count/{epaOrgId}/{stdCode}": {
+      "get": {
+        "summary": "Get pipelines count for standard by EPA organization ID",
+        "description": "Fetch the number of pipelines for a given EPA organization ID and standard code.",
+        "operationId": "getPipelinesCountForStandard",
+        "parameters": [
+          {
+            "name": "epaOrgId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "stdCode",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully fetched pipelines count.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/learnerdetails/{apprenticeshipId}": {
+      "get": {
+        "summary": "Get apprentice learner details",
+        "description": "Retrieve details for a specific apprentice learner based on the apprenticeship ID.",
+        "operationId": "getApprenticeLearner",
+        "parameters": [
+          {
+            "name": "apprenticeshipId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully fetched apprentice learner details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetApprenticeLearnerResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/learnerdetails/framework-learner/{frameworkLearnerId}": {
+      "get": {
+        "summary": "Get framework learner details",
+        "description": "Retrieve learner details for a specific framework learner.",
+        "operationId": "getFrameworkLearner",
+        "parameters": [
+          {
+            "name": "frameworkLearnerId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "allLogs",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully fetched framework learner details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetFrameworkLearnerResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ApiResponse": {
+        "type": "object",
+        "properties": {
+          "statusCode": {
+            "type": "integer"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "LearnerDetailResult": {
+        "type": "object",
+        "properties": {
+          "uln": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "givenNames": {
+            "type": "string"
+          },
+          "familyName": {
+            "type": "string"
+          },
+          "standardCode": {
+            "type": "integer"
+          },
+          "standard": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "level": {
+            "type": "integer"
+          },
+          "fundingModel": {
+            "type": "integer",
+            "nullable": true
+          },
+          "completionStatus": {
+            "type": "integer",
+            "nullable": true
+          },
+          "completionStatusDescription": {
+            "type": "string"
+          },
+          "isPrivatelyFunded": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "option": {
+            "type": "string"
+          },
+          "organisationName": {
+            "type": "string"
+          },
+          "organisationId": {
+            "type": "string"
+          },
+          "certificateReference": {
+            "type": "string"
+          },
+          "certificateStatus": {
+            "type": "string"
+          },
+          "lastUpdatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "learnStartDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "overallGrade": {
+            "type": "string"
+          },
+          "achievementDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "certificateId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "certificateLogs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CertificateLogSummary"
+            }
+          },
+          "reasonForChange": {
+            "type": "string"
+          },
+          "printStatusAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "certificateSendTo": {
+            "type": "string"
+          }
+        }
+      },
+      "CertificateLogSummary": {
+        "type": "object",
+        "properties": {
+          "eventTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "action": {
+            "type": "string"
+          },
+          "actionBy": {
+            "type": "string"
+          },
+          "actionByEmail": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "certificateData": {
+            "type": "string"
+          },
+          "differencesToPrevious": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Difference"
+            }
+          },
+          "batchNumber": {
+            "type": "integer",
+            "nullable": true
+          },
+          "reasonForChange": {
+            "type": "string"
+          }
+        }
+      },
+      "Difference": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "values": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "isList": {
+            "type": "boolean",
+            "default": false
+          }
+        }
+      },
+      "GetApprenticeLearnerResponse": {
+        "type": "object",
+        "properties": {
+          "apprenticeshipId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "ukprn": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "providerName": {
+            "type": "string"
+          },
+          "learnStartDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "plannedEndDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "standardCode": {
+            "type": "integer"
+          },
+          "standardUId": {
+            "type": "string"
+          },
+          "standardReference": {
+            "type": "string"
+          },
+          "standardName": {
+            "type": "string"
+          },
+          "completionStatus": {
+            "type": "integer",
+            "nullable": true
+          },
+          "approvalsStopDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "approvalsPauseDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "learnActEndDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "estimatedEndDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "uln": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "givenNames": {
+            "type": "string"
+          },
+          "familyName": {
+            "type": "string"
+          },
+          "isTransfer": {
+            "type": "boolean"
+          },
+          "dateTransferIdentified": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        }
+      },
+      "GetFrameworkLearnerResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "frameworkCertificateNumber": {
+            "type": "string"
+          },
+          "apprenticeForename": {
+            "type": "string"
+          },
+          "apprenticeSurname": {
+            "type": "string"
+          },
+          "apprenticeDoB": {
+            "type": "string",
+            "format": "date"
+          },
+          "apprenticeULN": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "frameworkName": {
+            "type": "string"
+          },
+          "pathwayName": {
+            "type": "string"
+          },
+          "apprenticeshipLevelName": {
+            "type": "string"
+          },
+          "qualificationsAndAwardingBodies": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QualificationDetails"
+            }
+          },
+          "providerName": {
+            "type": "string"
+          },
+          "employerName": {
+            "type": "string"
+          },
+          "apprenticeStartdate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "apprenticeLastdateInLearning": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "certificationDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "certificateReference": {
+            "type": "string"
+          },
+          "certificateStatus": {
+            "type": "string"
+          },
+          "certificatePrintStatusAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "certificatePrintReasonForChange": {
+            "type": "string"
+          },
+          "certificateLastUpdatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "certificateLogs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CertificateLogSummary"
+            }
+          }
+        }
+      },
+      "QualificationDetails": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "awardingBody": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,174 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Assessor Service API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/api/v1/oppfinder/expression-of-interest": {
+      "post": {
+        "operationId": "CreateExpressionOfInterest",
+        "summary": "Create Expression Of Interest",
+        "description": "Creates a new expression of interest with specified details.",
+        "tags": [
+          "OppFinder"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OppFinderExpressionOfInterestRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Expression of interest successfully created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict detected",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "AssessorServiceInternalAPI": []
+          }
+        ]
+      }
+    },
+    "/api/v1/oppfinder/update-standard-summary": {
+      "post": {
+        "operationId": "UpdateStandardSummary",
+        "summary": "Update Standard Summary",
+        "description": "Queues a background task to update standard summaries where necessary.",
+        "tags": [
+          "OppFinder"
+        ],
+        "responses": {
+          "202": {
+            "description": "Background task queued successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "AssessorServiceInternalAPI": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "OppFinderExpressionOfInterestRequest": {
+        "type": "object",
+        "properties": {
+          "StandardReference": {
+            "type": "string"
+          },
+          "Email": {
+            "type": "string",
+            "format": "email"
+          },
+          "OrganisationName": {
+            "type": "string"
+          },
+          "ContactName": {
+            "type": "string"
+          },
+          "ContactNumber": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "StandardReference",
+          "Email",
+          "OrganisationName",
+          "ContactName",
+          "ContactNumber"
+        ]
+      },
+      "ApiResponse": {
+        "type": "object",
+        "properties": {
+          "StatusCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "StatusCode"
+        ]
+      }
+    },
+    "securitySchemes": {
+      "AssessorServiceInternalAPI": {
+        "type": "oauth2",
+        "flows": {
+          "clientCredentials": {
+            "tokenUrl": "https://oauth.example.com/token",
+            "scopes": {
+              "internal.read": "Read access to internal API",
+              "internal.write": "Write access to internal API"
+            }
+          }
+        }
+      }
+    }
+  }
+}
