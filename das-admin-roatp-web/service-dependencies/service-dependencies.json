@@ -2,30 +2,30 @@
   "repository": "SkillsFundingAgency/das-admin-roatp-web",
   "ref": "main",
   "path": "src",
-  "systemName": "SFA DAS Admin Roatp",
+  "systemName": "SFA.DAS.Admin.Roatp.Web",
   "containers": [
     {
-      "id": "sfa-das-admin-roatp",
-      "name": "SFA DAS Admin Roatp",
+      "id": "sfa-das-admin-roatp-web",
+      "name": "SFA.DAS.Admin.Roatp.Web",
       "type": "web",
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/Program.cs",
-          "reason": "ASP.NET Core entry point for web application."
+          "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/SFA.DAS.Admin.Roatp.Web.csproj",
+          "reason": "Project file with SDK type Microsoft.NET.Sdk.Web."
         },
         {
-          "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/SFA.DAS.Admin.Roatp.Web.csproj",
-          "reason": "Web SDK and target framework indicated a web project."
+          "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/Program.cs",
+          "reason": "Web application entry point evidenced by WebApplication.Builder and UseEndpoints invocation."
         }
       ]
     }
   ],
   "dependencies": [
     {
-      "sourceId": "sfa-das-admin-roatp",
-      "name": "Redis (Data Protection Keys)",
+      "sourceId": "sfa-das-admin-roatp-web",
+      "name": "Redis Cache",
       "kind": "cache",
-      "classification": "internal",
+      "classification": "unknown",
       "direction": "outbound",
       "client": null,
       "technology": "StackExchange.Redis",
@@ -40,8 +40,8 @@
       "operations": [],
       "resources": [
         {
-          "type": "redis-instance",
-          "name": null,
+          "type": "redis",
+          "name": "RedisConnectionString",
           "direction": "outbound",
           "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/AppStart/AddDataProtectionExtension.cs"
         }
@@ -49,49 +49,19 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/AppStart/AddDataProtectionExtension.cs",
-          "reason": "ConnectionMultiplexer.Connect with Redis used for data protection keys."
-        }
-      ],
-      "confidence": "high",
-      "targetId": "cache-redis-data-protection-keys",
-      "description": "Caches data in"
-    },
-    {
-      "sourceId": "sfa-das-admin-roatp",
-      "name": "Redis (Session Cache)",
-      "kind": "cache",
-      "classification": "internal",
-      "direction": "outbound",
-      "client": null,
-      "technology": "StackExchange.Redis",
-      "configurationKeys": [
-        "ApplicationConfiguration:RedisConnectionString"
-      ],
-      "authentication": {
-        "type": null,
-        "configurationKeys": []
-      },
-      "operations": [],
-      "resources": [
-        {
-          "type": "redis-instance",
-          "name": null,
-          "direction": "outbound",
-          "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/AppStart/AddSessionExtension.cs"
-        }
-      ],
-      "evidence": [
+          "reason": "Redis client configuration and usage in AddDataProtection using StackExchange.Redis."
+        },
         {
           "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/AppStart/AddSessionExtension.cs",
-          "reason": "AddStackExchangeRedisCache indicates Redis configuration using connection string."
+          "reason": "Redis client registration in AddStackExchangeRedisCache."
         }
       ],
       "confidence": "high",
-      "targetId": "cache-redis-session-cache",
+      "targetId": "cache-redis-cache",
       "description": "Caches data in"
     },
     {
-      "sourceId": "sfa-das-admin-roatp",
+      "sourceId": "sfa-das-admin-roatp-web",
       "name": "Outer API",
       "kind": "http-api",
       "classification": "internal",
@@ -99,8 +69,40 @@
       "client": "IOuterApiClient",
       "technology": "Refit",
       "configurationKeys": [
-        "AdminRoatpOuterApiConfiguration:ApiBaseUrl"
+        "AdminRoatpOuterApiConfiguration"
       ],
+      "authentication": {
+        "type": "apim-headers-handler",
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [
+        {
+          "type": "api-base-url",
+          "name": "ApiBaseUrl",
+          "direction": "outbound",
+          "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/AppStart/AddApplicationRegistrationsExtension.cs"
+        }
+      ],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/AppStart/AddApplicationRegistrationsExtension.cs",
+          "reason": "Refit client registration with base address from configuration."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "http-api-outer-api",
+      "description": "Calls the API of"
+    },
+    {
+      "sourceId": "sfa-das-admin-roatp-web",
+      "name": "Outer API Health Check",
+      "kind": "http-api",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "OuterApiHealthCheck",
+      "technology": null,
+      "configurationKeys": [],
       "authentication": {
         "type": null,
         "configurationKeys": []
@@ -109,12 +111,12 @@
       "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/AppStart/AddApplicationRegistrationsExtension.cs",
-          "reason": "Refit client for HTTP API with base address configured."
+          "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/Program.cs",
+          "reason": "Health check registered for Outer API."
         }
       ],
-      "confidence": "high",
-      "targetId": "http-api-outer-api",
+      "confidence": "medium",
+      "targetId": "http-api-outer-api-health-check",
       "description": "Calls the API of"
     }
   ]

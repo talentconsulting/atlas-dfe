@@ -5,38 +5,47 @@
   "systemName": "Apprentice Feedback",
   "containers": [
     {
-      "id": "apprentice-feedback-nservicebuslistener",
-      "name": "Apprentice Feedback NServiceBus Listener",
-      "type": "job",
+      "id": "apprentice-feedback-api",
+      "name": "Apprentice Feedback",
+      "type": "api",
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.ApprenticeFeedback.Web.NServiceBusListener/Program.cs",
-          "reason": "NServiceBus Listener entry point using Endpoint.Start."
+          "sourceFile": "src/SFA.DAS.ApprenticeFeedback.Web/Program.cs",
+          "reason": "ASP.NET Core web entry point detected."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.ApprenticeFeedback.Web/SFA.DAS.ApprenticeFeedback.Web.csproj",
+          "reason": "Project SDK indicates a web app (Microsoft.NET.Sdk.Web)."
         }
       ]
     },
     {
-      "id": "apprentice-feedback-web",
-      "name": "Apprentice Feedback",
-      "type": "web",
+      "id": "apprentice-feedback-jobs",
+      "name": "Apprentice Feedback Jobs",
+      "type": "job",
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.ApprenticeFeedback.Web/Program.cs",
-          "reason": "ASP.NET Core WebHost entry point with UseStartup."
+          "sourceFile": "src/SFA.DAS.ApprenticeFeedback.Web.NServiceBusListener/Program.cs",
+          "reason": "NServiceBus setup for message handling detected."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.ApprenticeFeedback.Web.NServiceBusListener/SFA.DAS.ApprenticeFeedback.Web.NServiceBusListener.csproj",
+          "reason": "Project SDK indicates an executable job (OutputType Exe)."
         }
       ]
     }
   ],
   "dependencies": [
     {
-      "sourceId": "apprentice-feedback-web",
-      "name": "Redis",
+      "sourceId": "apprentice-feedback-api",
+      "name": "StackExchange Redis",
       "kind": "cache",
-      "classification": "unknown",
+      "classification": "third-party",
       "direction": "outbound",
-      "client": null,
-      "technology": "StackExchange.Redis",
+      "client": "StackExchange Redis Client",
+      "technology": "Redis",
       "configurationKeys": [
+        "DataProtectionConnectionStrings:DataProtectionKeysDatabase",
         "DataProtectionConnectionStrings:RedisConnectionString"
       ],
       "authentication": {
@@ -46,8 +55,8 @@
       "operations": [],
       "resources": [
         {
-          "type": "database",
-          "name": null,
+          "type": "cache-database",
+          "name": "DataProtection-Keys",
           "direction": "outbound",
           "sourceFile": "src/SFA.DAS.ApprenticeFeedback.Web/Startup/DataProtectionStartup.cs"
         }
@@ -55,24 +64,20 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.ApprenticeFeedback.Web/Startup/DataProtectionStartup.cs",
-          "reason": "AddStackExchangeRedisCache registration with Redis connection string."
-        },
-        {
-          "sourceFile": "src/SFA.DAS.ApprenticeFeedback.Web/Startup/DataProtectionStartup.cs",
-          "reason": "ConnectionMultiplexer.Connect used with Redis connection string."
+          "reason": "StackExchangeRedisCache registered with connection string."
         }
       ],
       "confidence": "high",
-      "targetId": "cache-redis",
+      "targetId": "cache-stackexchange-redis",
       "description": "Caches data in"
     },
     {
-      "sourceId": "apprentice-feedback-nservicebuslistener",
+      "sourceId": "apprentice-feedback-jobs",
       "name": "Azure Service Bus",
       "kind": "message-broker",
       "classification": "third-party",
       "direction": "outbound",
-      "client": "NServiceBus",
+      "client": "NServiceBus Azure Service Bus Transport",
       "technology": "Azure Service Bus",
       "configurationKeys": [
         "NServiceBusConnectionString"
@@ -84,7 +89,7 @@
       "operations": [],
       "resources": [
         {
-          "type": "message-broker",
+          "type": "topic",
           "name": null,
           "direction": "outbound",
           "sourceFile": "src/SFA.DAS.ApprenticeFeedback.Web.NServiceBusListener/Program.cs"
@@ -93,7 +98,7 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.ApprenticeFeedback.Web.NServiceBusListener/Program.cs",
-          "reason": "UseAzureServiceBusTransport registration for NServiceBus."
+          "reason": "Azure Service Bus transport configured with connection string."
         }
       ],
       "confidence": "high",

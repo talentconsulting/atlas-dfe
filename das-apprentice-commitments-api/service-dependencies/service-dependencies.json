@@ -10,16 +10,12 @@
       "type": "api",
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.ApprenticeCommitments.Api/Startup.cs",
-          "reason": "ASP.NET Startup class with application configuration."
-        },
-        {
           "sourceFile": "src/SFA.DAS.ApprenticeCommitments.Api/Program.cs",
-          "reason": "ASP.NET entry point with web host configuration."
+          "reason": "ASP.NET Core web application entry point using WebHost."
         },
         {
           "sourceFile": "src/SFA.DAS.ApprenticeCommitments.Api/SFA.DAS.ApprenticeCommitments.Api.csproj",
-          "reason": "Project file indicates a web application."
+          "reason": "Project SDK is Microsoft.NET.Sdk.Web."
         }
       ]
     }
@@ -31,8 +27,8 @@
       "kind": "cloud-service",
       "classification": "third-party",
       "direction": "outbound",
-      "client": "Table Storage SDK",
-      "technology": "Azure Table Storage",
+      "client": "ConfigurationBuilder",
+      "technology": null,
       "configurationKeys": [
         "ConfigNames",
         "ConfigurationStorageConnectionString",
@@ -47,7 +43,7 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.ApprenticeCommitments.Api/Startup.cs",
-          "reason": "Azure Table Storage registered for configuration management."
+          "reason": "Client configuration for Azure Table Storage using AddAzureTableStorage."
         }
       ],
       "confidence": "high",
@@ -60,36 +56,32 @@
       "kind": "database",
       "classification": "internal",
       "direction": "outbound",
-      "client": null,
-      "technology": "Microsoft SQL Server",
+      "client": "DbContext",
+      "technology": "Microsoft.EntityFrameworkCore.SqlServer",
       "configurationKeys": [
         "ApplicationSettings:DbConnectionString"
       ],
       "authentication": {
-        "type": "Managed Identity",
+        "type": "managed-identity",
         "configurationKeys": []
       },
       "operations": [],
       "resources": [
         {
           "type": "database",
-          "name": "ApplicationSettings:DbConnectionString",
+          "name": null,
           "direction": "outbound",
-          "sourceFile": "src/SFA.DAS.ApprenticeCommitments/Infrastructure/SqlServerConnectionFactory.cs"
+          "sourceFile": "src/SFA.DAS.ApprenticeCommitments/Infrastructure/ServiceCollectionExtensions.cs"
         }
       ],
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.ApprenticeCommitments/Infrastructure/ServiceCollectionExtensions.cs",
-          "reason": "DbContextOptions configured for SQL Server."
+          "reason": "SQL Server dependency evidenced by UseSqlServer inclusion in DbContext configuration."
         },
         {
           "sourceFile": "src/SFA.DAS.ApprenticeCommitments/Data/Models/ApprenticeCommitmentsDbContext.cs",
-          "reason": "Entity Framework DbContext providing access to SQL Server."
-        },
-        {
-          "sourceFile": "src/SFA.DAS.ApprenticeCommitments.Api/Startup.cs",
-          "reason": "Entity Framework context registered with SQL Server connection string."
+          "reason": "SQL Server evidenced by DbContextOptionsBuilder and database connection."
         }
       ],
       "confidence": "high",
@@ -100,13 +92,42 @@
       "sourceId": "apprentice-commitments",
       "name": "Azure Service Bus",
       "kind": "message-broker",
-      "classification": "internal",
+      "classification": "third-party",
       "direction": "outbound",
       "client": "NServiceBus",
-      "technology": "Azure Service Bus",
+      "technology": null,
       "configurationKeys": [
         "ApplicationSettings:NServiceBusConnectionString",
         "ApplicationSettings:NServiceBusLicense"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": [
+          "ApplicationSettings:NServiceBusConnectionString"
+        ]
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.ApprenticeCommitments/Infrastructure/ServiceCollectionExtensions.cs",
+          "reason": "Message broker dependency evidenced by UseAzureServiceBusTransport in NServiceBus configuration."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "message-broker-azure-service-bus",
+      "description": "Publishes messages to and consumes messages from"
+    },
+    {
+      "sourceId": "apprentice-commitments",
+      "name": "Learning Transport",
+      "kind": "message-broker",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "NServiceBus",
+      "technology": null,
+      "configurationKeys": [
+        "ApplicationSettings:NServiceBusConnectionString"
       ],
       "authentication": {
         "type": null,
@@ -117,11 +138,11 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.ApprenticeCommitments/Infrastructure/ServiceCollectionExtensions.cs",
-          "reason": "NServiceBus endpoint configured with Azure Service Bus transport."
+          "reason": "Message broker dependency evidenced by UseLearningTransport in NServiceBus configuration."
         }
       ],
       "confidence": "high",
-      "targetId": "message-broker-azure-service-bus",
+      "targetId": "message-broker-learning-transport",
       "description": "Publishes messages to and consumes messages from"
     }
   ]

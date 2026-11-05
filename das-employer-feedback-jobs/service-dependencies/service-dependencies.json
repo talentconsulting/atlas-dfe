@@ -1,0 +1,104 @@
+{
+  "repository": "SkillsFundingAgency/das-employer-feedback-jobs",
+  "ref": "main",
+  "path": "src",
+  "systemName": "Employer Feedback",
+  "containers": [
+    {
+      "id": "employer-feedback-jobs",
+      "name": "Employer Feedback Jobs",
+      "type": "job",
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.EmployerFeedback.Jobs/Program.cs",
+          "reason": "Azure Functions Worker entry point with HostBuilder configuration."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.EmployerFeedback.Jobs/SFA.DAS.EmployerFeedback.Jobs.csproj",
+          "reason": "AzureFunctionsVersion property detected in project file."
+        }
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "sourceId": "employer-feedback-jobs",
+      "name": "Azure Application Insights",
+      "kind": "cloud-service",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": "Azure.Monitor.OpenTelemetry.AspNetCore",
+      "technology": "Azure Monitor",
+      "configurationKeys": [
+        "APPLICATIONINSIGHTS_CONNECTION_STRING"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.EmployerFeedback.Jobs/Program.cs",
+          "reason": "OpenTelemetry integration with Azure Application Insights in AddOpenTelemetryRegistration."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "cloud-service-azure-application-insights",
+      "description": "Uses"
+    },
+    {
+      "sourceId": "employer-feedback-jobs",
+      "name": "Azure Table Storage",
+      "kind": "cloud-service",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": "Azure Table Storage",
+      "configurationKeys": [],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.EmployerFeedback.Jobs/SFA.DAS.EmployerFeedback.Jobs.csproj",
+          "reason": "Add reference to SFA.DAS.Configuration.AzureTableStorage."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "cloud-service-azure-table-storage",
+      "description": "Uses"
+    },
+    {
+      "sourceId": "employer-feedback-jobs",
+      "name": "Employer Feedback Outer",
+      "kind": "http-api",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "RestEase",
+      "technology": "HTTP",
+      "configurationKeys": [
+        "EmployerFeedbackOuterApiConfiguration"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.EmployerFeedback.Jobs/Program.cs",
+          "reason": "Outer API client registration via AddOuterApi extension method."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "http-api-employer-feedback-outer",
+      "description": "Calls the API of"
+    }
+  ]
+}

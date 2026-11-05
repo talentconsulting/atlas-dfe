@@ -2,60 +2,43 @@
   "repository": "SkillsFundingAgency/tl-results-and-certification",
   "ref": "master",
   "path": "src",
-  "systemName": "Tl Results And Certification",
+  "systemName": "Results and Certification",
   "containers": [
     {
-      "id": "results-and-certification-api-client",
-      "name": "Results and Certification API Client",
+      "id": "results-and-certification",
+      "name": "Results and Certification",
       "type": "other",
+      "evidence": [
+        {
+          "sourceFile": "src/Sfa.Tl.ResultsAndCertification.Data/Repositories/DataExportRepository.cs",
+          "reason": "Database context directly constructed and used for fetching queries."
+        },
+        {
+          "sourceFile": "src/Sfa.Tl.ResultsAndCertification.Data/Repositories/AdminChangeLogRepository.cs",
+          "reason": "Database context directly constructed and used for queries."
+        },
+        {
+          "sourceFile": "src/Sfa.Tl.ResultsAndCertification.Data/Repositories/AdminDashboardRepository.cs",
+          "reason": "Database context directly constructed and used for queries."
+        },
+        {
+          "sourceFile": "src/Sfa.Tl.ResultsAndCertification.Data/ResultsAndCertificationDbContext.cs",
+          "reason": "Defined ResultsAndCertificationDbContext inheriting from DbContext, evidencing an EF Core database as a dependency."
+        },
+        {
+          "sourceFile": "src/Sfa.Tl.ResultsAndCertification.Data/Sfa.Tl.ResultsAndCertification.Data.csproj",
+          "reason": "Project file indicates usage of EF Core libraries and SqlServer for database interaction."
+        }
+      ]
+    },
+    {
+      "id": "results-and-certification-2",
+      "name": "Results And Certification",
+      "type": "api",
       "evidence": [
         {
           "sourceFile": "src/Sfa.Tl.ResultsAndCertification.Api.Client/Sfa.Tl.ResultsAndCertification.Api.Client.csproj",
-          "reason": "Identified project as a client library."
-        }
-      ]
-    },
-    {
-      "id": "results-and-certification-application",
-      "name": "Results and Certification Application",
-      "type": "other",
-      "evidence": [
-        {
-          "sourceFile": "src/Sfa.Tl.ResultsAndCertification.Application/Sfa.Tl.ResultsAndCertification.Application.csproj",
-          "reason": "Identified project as an application-level library."
-        }
-      ]
-    },
-    {
-      "id": "results-and-certification-common",
-      "name": "Results and Certification Common",
-      "type": "other",
-      "evidence": [
-        {
-          "sourceFile": "src/Sfa.Tl.ResultsAndCertification.Common/Sfa.Tl.ResultsAndCertification.Common.csproj",
-          "reason": "Identified project as a shared common library."
-        }
-      ]
-    },
-    {
-      "id": "results-and-certification-common-services",
-      "name": "Results and Certification Common Services",
-      "type": "other",
-      "evidence": [
-        {
-          "sourceFile": "src/Sfa.Tl.ResultsAndCertification.Common.Services/Sfa.Tl.ResultsAndCertification.Common.Services.csproj",
-          "reason": "Identified project as a shared library for common services."
-        }
-      ]
-    },
-    {
-      "id": "results-and-certification-data",
-      "name": "Results And Certification",
-      "type": "other",
-      "evidence": [
-        {
-          "sourceFile": "src/Sfa.Tl.ResultsAndCertification.Data/Sfa.Tl.ResultsAndCertification.Data.csproj",
-          "reason": "The project file defines a library used for database interaction and dependency registration."
+          "reason": "Project file suggests the primary API container."
         }
       ]
     },
@@ -66,7 +49,7 @@
       "evidence": [
         {
           "sourceFile": "src/Sfa.Tl.ResultsAndCertification.Functions/Sfa.Tl.ResultsAndCertification.Functions.csproj",
-          "reason": "Project file indicates an Azure Functions app."
+          "reason": "FunctionsStartup and <AzureFunctionsVersion>v4</AzureFunctionsVersion> inferred Azure Functions app."
         }
       ]
     },
@@ -77,7 +60,11 @@
       "evidence": [
         {
           "sourceFile": "src/Sfa.Tl.ResultsAndCertification.InternalApi/Program.cs",
-          "reason": "ASP.NET Core web application entry point for Internal API."
+          "reason": "Host.CreateDefaultBuilder and WebHost configuration indicate a web API."
+        },
+        {
+          "sourceFile": "src/Sfa.Tl.ResultsAndCertification.InternalApi/Sfa.Tl.ResultsAndCertification.InternalApi.csproj",
+          "reason": "Project file contains web SDK indicating an API."
         }
       ]
     },
@@ -88,22 +75,11 @@
       "evidence": [
         {
           "sourceFile": "src/Sfa.Tl.ResultsAndCertification.Web/Program.cs",
-          "reason": "ASP.NET Core web application entry point for Web application."
-        }
-      ]
-    },
-    {
-      "id": "tl-results-and-certification",
-      "name": "Tl Results And Certification",
-      "type": "other",
-      "evidence": [
-        {
-          "sourceFile": "src/Sfa.Tl.ResultsAndCertification.Data/Repositories/AdminChangeLogRepository.cs",
-          "reason": "Contains DbContext-based repository logic, indicating a back-end system."
+          "reason": "Host.CreateDefaultBuilder and WebHost configuration indicate a web application."
         },
         {
-          "sourceFile": "src/Sfa.Tl.ResultsAndCertification.Data/Repositories/AdminDashboardRepository.cs",
-          "reason": "Contains DbContext-based repository logic, indicating a back-end system."
+          "sourceFile": "src/Sfa.Tl.ResultsAndCertification.Web/Sfa.Tl.ResultsAndCertification.Web.csproj",
+          "reason": "Project file contains web SDK indicating a web application."
         }
       ]
     }
@@ -111,12 +87,12 @@
   "dependencies": [
     {
       "sourceId": "results-and-certification-web",
-      "name": "Redis Cache",
+      "name": "Redis",
       "kind": "cache",
       "classification": "internal",
       "direction": "outbound",
-      "client": null,
-      "technology": "Redis",
+      "client": "ConnectionMultiplexer",
+      "technology": "StackExchange.Redis",
       "configurationKeys": [
         "RedisSettings.CacheConnection"
       ],
@@ -125,75 +101,113 @@
         "configurationKeys": []
       },
       "operations": [],
-      "resources": [
-        {
-          "type": "connection-string",
-          "name": "RedisSettings.CacheConnection",
-          "direction": "outbound",
-          "sourceFile": "src/Sfa.Tl.ResultsAndCertification.Web/Startup.cs"
-        }
-      ],
+      "resources": [],
       "evidence": [
         {
           "sourceFile": "src/Sfa.Tl.ResultsAndCertification.Web/Startup.cs",
-          "reason": "AddSingleton registration of Redis IConnectionMultiplexer with connection string."
+          "reason": "ConnectionMultiplexer.Connect evidences Redis dependency."
         }
       ],
       "confidence": "high",
-      "targetId": "cache-redis-cache",
+      "targetId": "cache-redis",
       "description": "Caches data in"
     },
     {
-      "sourceId": "tl-results-and-certification",
-      "name": "Results And Certification Database",
+      "sourceId": "results-and-certification",
+      "name": "Results and Certification Database",
       "kind": "database",
       "classification": "internal",
       "direction": "outbound",
       "client": "ResultsAndCertificationDbContext",
-      "technology": "Entity Framework Core",
+      "technology": "EntityFrameworkCore",
       "configurationKeys": [],
       "authentication": {
         "type": null,
         "configurationKeys": []
       },
       "operations": [],
-      "resources": [],
+      "resources": [
+        {
+          "type": "database",
+          "name": "Results And Certification Database",
+          "direction": "outbound",
+          "sourceFile": "src/Sfa.Tl.ResultsAndCertification.Data/ResultsAndCertificationDbContext.cs"
+        },
+        {
+          "type": "database",
+          "name": "ResultsAndCertificationDbContext",
+          "direction": "outbound",
+          "sourceFile": "src/Sfa.Tl.ResultsAndCertification.Data/Repositories/AdminChangeLogRepository.cs"
+        }
+      ],
       "evidence": [
         {
+          "sourceFile": "src/Sfa.Tl.ResultsAndCertification.Data/Repositories/CertificateRepository.cs",
+          "reason": "Database context used for Batch and PrintCertificate insertions/queries."
+        },
+        {
           "sourceFile": "src/Sfa.Tl.ResultsAndCertification.Data/Repositories/PostResultsServiceRepository.cs",
-          "reason": "DbContext is used in LINQ queries for assessments and results."
-        },
-        {
-          "sourceFile": "src/Sfa.Tl.ResultsAndCertification.Data/Repositories/CommonRepository.cs",
-          "reason": "DbContext is used to query AcademicYear and other database entities."
-        },
-        {
-          "sourceFile": "src/Sfa.Tl.ResultsAndCertification.Data/Repositories/AdminDashboardRepository.cs",
-          "reason": "DbContext is used to query AcademicYear and related entities."
-        },
-        {
-          "sourceFile": "src/Sfa.Tl.ResultsAndCertification.Data/Repositories/OverallResultRepository.cs",
-          "reason": "DbContext is used to query OverallResult and related entities for learner results."
-        },
-        {
-          "sourceFile": "src/Sfa.Tl.ResultsAndCertification.Data/Repositories/AssessmentRepository.cs",
-          "reason": "DbContext is used to query TqPathwayAssessment and related entities."
+          "reason": "Database context used for PRS learner record queries."
         },
         {
           "sourceFile": "src/Sfa.Tl.ResultsAndCertification.Data/Repositories/LearnerRepository.cs",
-          "reason": "DbContext is used to query TqRegistrationPathway and related entities."
+          "reason": "Database context used for learner record fetches."
         },
         {
-          "sourceFile": "src/Sfa.Tl.ResultsAndCertification.Data/Repositories/CertificateRepository.cs",
-          "reason": "DbContext is used to query and update certificate-related entities."
+          "sourceFile": "src/Sfa.Tl.ResultsAndCertification.Data/Repositories/DataExportRepository.cs",
+          "reason": "Database context used for registration, pathway, and related queries."
         },
         {
           "sourceFile": "src/Sfa.Tl.ResultsAndCertification.Data/Repositories/AdminChangeLogRepository.cs",
-          "reason": "DbContext is used to query the ChangeLog and associated entities."
+          "reason": "Database context used to query ChangeLog and related tables."
         },
         {
-          "sourceFile": "src/Sfa.Tl.ResultsAndCertification.Data/Repositories/GenericRepository.cs",
-          "reason": "Generic repository implementation for interacting with the DbContext."
+          "sourceFile": "src/Sfa.Tl.ResultsAndCertification.Data/Repositories/OverallResultRepository.cs",
+          "reason": "Database context used to query OverallResult and associated relationships."
+        },
+        {
+          "sourceFile": "src/Sfa.Tl.ResultsAndCertification.Data/Repositories/AdminDashboardRepository.cs",
+          "reason": "Database context used to query TlAwardingOrganisation and AcademicYear tables."
+        },
+        {
+          "sourceFile": "src/Sfa.Tl.ResultsAndCertification.Data/ResultsAndCertificationDbContext.cs",
+          "reason": "ResultsAndCertificationDbContext class evidences database interaction and defines DbSet properties corresponding to database tables."
+        },
+        {
+          "sourceFile": "src/Sfa.Tl.ResultsAndCertification.Data/Repositories/ProviderRegistrationsRepository.cs",
+          "reason": "Usage of ResultsAndCertificationDbContext evidencing interaction with 'AcademicYear' and 'TqRegistrationPathway' tables."
+        },
+        {
+          "sourceFile": "src/Sfa.Tl.ResultsAndCertification.Data/Repositories/SearchRegistrationRepository.cs",
+          "reason": "Usage of ResultsAndCertificationDbContext evidencing interaction with 'AcademicYear', 'TlProvider', and related tables."
+        },
+        {
+          "sourceFile": "src/Sfa.Tl.ResultsAndCertification.Data/Repositories/ProviderRepository.cs",
+          "reason": "Usage of ResultsAndCertificationDbContext evidencing interaction with 'TqAwardingOrganisation', 'TlProvider', and related tables."
+        },
+        {
+          "sourceFile": "src/Sfa.Tl.ResultsAndCertification.Data/Repositories/ResultRepository.cs",
+          "reason": "Usage of ResultsAndCertificationDbContext evidencing interaction with 'TqPathwayAssessment', 'TqPathwayResult', and related tables."
+        },
+        {
+          "sourceFile": "src/Sfa.Tl.ResultsAndCertification.Data/Repositories/StatementOfAchievementRepository.cs",
+          "reason": "Usage of ResultsAndCertificationDbContext evidencing interaction with 'TqRegistrationPathway' and 'PrintCertificate' tables."
+        },
+        {
+          "sourceFile": "src/Sfa.Tl.ResultsAndCertification.Data/Repositories/UcasRepository.cs",
+          "reason": "Usage of ResultsAndCertificationDbContext evidencing interaction with 'TqRegistrationPathway', 'OverallResult', and related tables."
+        },
+        {
+          "sourceFile": "src/Sfa.Tl.ResultsAndCertification.Data/Repositories/TrainingProviderRepository.cs",
+          "reason": "Usage of ResultsAndCertificationDbContext evidencing interaction with 'TqRegistrationPathway', 'TlPathway', and related tables."
+        },
+        {
+          "sourceFile": "src/Sfa.Tl.ResultsAndCertification.Data/Repositories/RegistrationRepository.cs",
+          "reason": "Usage of ResultsAndCertificationDbContext evidencing interaction with 'TqRegistrationPathway', 'TqPathwayAssessment', and related tables."
+        },
+        {
+          "sourceFile": "src/Sfa.Tl.ResultsAndCertification.Data/Repositories/PrintingRepository.cs",
+          "reason": "Usage of ResultsAndCertificationDbContext evidencing interaction with a database for 'Batch' and 'PrintBatchItems' tables."
         }
       ],
       "confidence": "high",
@@ -201,16 +215,15 @@
       "description": "Reads from and writes to"
     },
     {
-      "sourceId": "results-and-certification-data",
-      "name": "Results And Certification Database",
+      "sourceId": "results-and-certification-functions",
+      "name": "Results and Certification Database",
       "kind": "database",
       "classification": "internal",
       "direction": "outbound",
       "client": null,
-      "technology": "EntityFramework Core",
+      "technology": "Entity Framework Core",
       "configurationKeys": [
-        "ConnectionStrings",
-        "DbContextOptions"
+        "SqlConnectionString"
       ],
       "authentication": {
         "type": null,
@@ -220,49 +233,13 @@
       "resources": [
         {
           "type": "database",
-          "name": "ResultsAndCertificationDbContext",
+          "name": "Results And Certification Database",
           "direction": "outbound",
-          "sourceFile": "src/Sfa.Tl.ResultsAndCertification.Data/ResultsAndCertificationDbContext.cs"
-        }
-      ],
-      "evidence": [
-        {
-          "sourceFile": "src/Sfa.Tl.ResultsAndCertification.Data/ResultsAndCertificationDbContext.cs",
-          "reason": "DbContext class interacts with the database using EF Core."
+          "sourceFile": "src/Sfa.Tl.ResultsAndCertification.Functions/HealthCheck.cs"
         },
         {
-          "sourceFile": "src/Sfa.Tl.ResultsAndCertification.Data/Repositories/ProviderRegistrationsRepository.cs",
-          "reason": "Repository implementing business logic involving EF Core queries."
-        },
-        {
-          "sourceFile": "src/Sfa.Tl.ResultsAndCertification.Data/Repositories/PrintingRepository.cs",
-          "reason": "Repository using ResultsAndCertificationDbContext for database interactions."
-        }
-      ],
-      "confidence": "high",
-      "targetId": "database-results-and-certification-database",
-      "description": "Reads from and writes to"
-    },
-    {
-      "sourceId": "results-and-certification-functions",
-      "name": "Results And Certification Database",
-      "kind": "database",
-      "classification": "internal",
-      "direction": "outbound",
-      "client": "ResultsAndCertificationDbContext",
-      "technology": "SQL Server",
-      "configurationKeys": [
-        "SqlConnectionString"
-      ],
-      "authentication": {
-        "type": null,
-        "configurationKeys": []
-      },
-      "operations": [],
-      "resources": [
-        {
-          "type": "connection-string",
-          "name": "SqlConnectionString",
+          "type": "database",
+          "name": "Results And Certification Database",
           "direction": "outbound",
           "sourceFile": "src/Sfa.Tl.ResultsAndCertification.Functions/Startup.cs"
         }
@@ -270,11 +247,11 @@
       "evidence": [
         {
           "sourceFile": "src/Sfa.Tl.ResultsAndCertification.Functions/Startup.cs",
-          "reason": "AddDbContext registration with SQL Server connection string."
+          "reason": "AddDbContext with UseSqlServer indicates an SQL Server dependency."
         },
         {
           "sourceFile": "src/Sfa.Tl.ResultsAndCertification.Functions/HealthCheck.cs",
-          "reason": "Health check queries the database using the DbContext."
+          "reason": "Database.UseSqlRawAsync suggests SQL Server is used."
         }
       ],
       "confidence": "high",
@@ -283,12 +260,12 @@
     },
     {
       "sourceId": "results-and-certification-internalapi",
-      "name": "Results And Certification Database",
+      "name": "Results and Certification Database",
       "kind": "database",
       "classification": "internal",
       "direction": "outbound",
-      "client": "ResultsAndCertificationDbContext",
-      "technology": "SQL Server",
+      "client": null,
+      "technology": "Entity Framework Core",
       "configurationKeys": [
         "SqlConnectionString"
       ],
@@ -299,8 +276,8 @@
       "operations": [],
       "resources": [
         {
-          "type": "connection-string",
-          "name": "SqlConnectionString",
+          "type": "database",
+          "name": "Results And Certification Database",
           "direction": "outbound",
           "sourceFile": "src/Sfa.Tl.ResultsAndCertification.InternalApi/Startup.cs"
         }
@@ -308,7 +285,7 @@
       "evidence": [
         {
           "sourceFile": "src/Sfa.Tl.ResultsAndCertification.InternalApi/Startup.cs",
-          "reason": "AddDbContext registration with SQL Server connection string."
+          "reason": "AddDbContext with UseSqlServer indicates an SQL Server dependency."
         }
       ],
       "confidence": "high",
@@ -316,22 +293,77 @@
       "description": "Reads from and writes to"
     },
     {
-      "sourceId": "results-and-certification-api-client",
-      "name": "Department for Education Sign-In",
+      "sourceId": "results-and-certification-2",
+      "name": "Results and Certification Database",
+      "kind": "database",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "DbContext",
+      "technology": "Entity Framework Core",
+      "configurationKeys": [],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [
+        {
+          "type": "database",
+          "name": "AssessmentSeries",
+          "direction": "outbound",
+          "sourceFile": "src/Sfa.Tl.ResultsAndCertification.Application/Services/AdminAssessmentSeriesDatesService.cs"
+        }
+      ],
+      "evidence": [
+        {
+          "sourceFile": "src/Sfa.Tl.ResultsAndCertification.Application/Services/AdminAssessmentSeriesDatesService.cs",
+          "reason": "ResultsAndCertificationDbContext used to interact with the AssessmentSeries database table via EF Core."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "database-results-and-certification-database",
+      "description": "Reads from and writes to"
+    },
+    {
+      "sourceId": "results-and-certification-web",
+      "name": "DFE Sign In",
       "kind": "http-api",
       "classification": "third-party",
       "direction": "outbound",
       "client": "DfeSignInApiClient",
-      "technology": "HttpClient",
+      "technology": null,
+      "configurationKeys": [],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/Sfa.Tl.ResultsAndCertification.Web/Startup.cs",
+          "reason": "HttpClient registered for IDfeSignInApiClient/DfeSignInApiClient indicates a DFE Sign In API dependency."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "http-api-dfe-sign-in",
+      "description": "Calls the API of"
+    },
+    {
+      "sourceId": "results-and-certification-2",
+      "name": "Dfe Sign In",
+      "kind": "http-api",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": "HttpClient",
+      "technology": null,
       "configurationKeys": [
-        "ResultsAndCertificationConfiguration.DfeSignInSettings.ApiUri"
+        "DfeSignInSettings.ApiUri",
+        "DfeSignInSettings.ClientId"
       ],
       "authentication": {
-        "type": "Bearer Token",
-        "configurationKeys": [
-          "ResultsAndCertificationConfiguration.DfeSignInSettings.ApiUri",
-          "ResultsAndCertificationConfiguration.DfeSignInSettings.ClientId"
-        ]
+        "type": "bearer",
+        "configurationKeys": []
       },
       "operations": [
         {
@@ -341,15 +373,9 @@
           "sourceFile": "src/Sfa.Tl.ResultsAndCertification.Api.Client/Clients/DfeSignInApiClient.cs"
         },
         {
-          "method": "GET",
-          "methodName": "GetOrganisation",
+          "method": null,
+          "methodName": "GetDfeSignInUserInfo",
           "path": "/users/{userId}/organisations",
-          "sourceFile": "src/Sfa.Tl.ResultsAndCertification.Api.Client/Clients/DfeSignInApiClient.cs"
-        },
-        {
-          "method": "GET",
-          "methodName": "GetUserInfo",
-          "path": "/services/{clientId}/organisations/{organisationId}/users/{userId}",
           "sourceFile": "src/Sfa.Tl.ResultsAndCertification.Api.Client/Clients/DfeSignInApiClient.cs"
         }
       ],
@@ -357,61 +383,89 @@
       "evidence": [
         {
           "sourceFile": "src/Sfa.Tl.ResultsAndCertification.Api.Client/Clients/DfeSignInApiClient.cs",
-          "reason": "HttpClient is constructed with BaseAddress from DfeSignInSettings.ApiUri."
+          "reason": "HttpClient setup for Dfe Sign In API, including user and organisation endpoints."
         }
       ],
       "confidence": "high",
-      "targetId": "http-api-department-for-education-sign-in",
+      "targetId": "http-api-dfe-sign-in",
       "description": "Calls the API of"
     },
     {
-      "sourceId": "results-and-certification-api-client",
-      "name": "Printing API",
+      "sourceId": "results-and-certification-2",
+      "name": "Printing",
       "kind": "http-api",
       "classification": "third-party",
       "direction": "outbound",
-      "client": "PrintingApiClient",
-      "technology": "HttpClient",
+      "client": "HttpClient",
+      "technology": null,
       "configurationKeys": [
-        "ResultsAndCertificationConfiguration.PrintingApiSettings.Uri"
+        "PrintingApiSettings.Password",
+        "PrintingApiSettings.Uri",
+        "PrintingApiSettings.Username"
       ],
       "authentication": {
-        "type": "None",
+        "type": null,
         "configurationKeys": []
       },
-      "operations": [],
+      "operations": [
+        {
+          "method": "GET",
+          "methodName": "GetBatchSummaryInfoAsync",
+          "path": "/batch-summary/{batchNumber}/token",
+          "sourceFile": "src/Sfa.Tl.ResultsAndCertification.Api.Client/Clients/PrintingApiClient.cs"
+        },
+        {
+          "method": "GET",
+          "methodName": "GetTrackBatchInfoAsync",
+          "path": "/track-batch/{batchNumber}/token",
+          "sourceFile": "src/Sfa.Tl.ResultsAndCertification.Api.Client/Clients/PrintingApiClient.cs"
+        }
+      ],
       "resources": [],
       "evidence": [
         {
           "sourceFile": "src/Sfa.Tl.ResultsAndCertification.Api.Client/Clients/PrintingApiClient.cs",
-          "reason": "HttpClient is constructed with BaseAddress from PrintingApiSettings.Uri."
+          "reason": "HttpClient setup for the Printing API, including token generation and batch operations."
         }
       ],
       "confidence": "high",
-      "targetId": "http-api-printing-api",
+      "targetId": "http-api-printing",
       "description": "Calls the API of"
     },
     {
-      "sourceId": "results-and-certification-api-client",
-      "name": "Results and Certification Internal API",
+      "sourceId": "results-and-certification-2",
+      "name": "Results And Certification Internal Api",
       "kind": "http-api",
       "classification": "internal",
       "direction": "outbound",
-      "client": "ResultsAndCertificationInternalApiClient",
-      "technology": "HttpClient",
+      "client": "HttpClient",
+      "technology": null,
       "configurationKeys": [
-        "ResultsAndCertificationConfiguration.ResultsAndCertificationInternalApiSettings.Uri"
+        "ResultsAndCertificationInternalApiSettings.Uri"
       ],
       "authentication": {
-        "type": "Bearer Token",
+        "type": "bearer",
         "configurationKeys": []
       },
-      "operations": [],
+      "operations": [
+        {
+          "method": null,
+          "methodName": "GetAllTlevelsByUkprnAsync",
+          "path": "/tlevels/{ukprn}",
+          "sourceFile": "src/Sfa.Tl.ResultsAndCertification.Api.Client/Clients/ResultsAndCertificationInternalApiClient.cs"
+        },
+        {
+          "method": null,
+          "methodName": "GetTlevelDetailsByPathwayIdAsync",
+          "path": "/tlevel/{ukprn}/pathway/{id}",
+          "sourceFile": "src/Sfa.Tl.ResultsAndCertification.Api.Client/Clients/ResultsAndCertificationInternalApiClient.cs"
+        }
+      ],
       "resources": [],
       "evidence": [
         {
           "sourceFile": "src/Sfa.Tl.ResultsAndCertification.Api.Client/Clients/ResultsAndCertificationInternalApiClient.cs",
-          "reason": "HttpClient is constructed with BaseAddress from ResultsAndCertificationInternalApiSettings.Uri."
+          "reason": "HttpClient setup for the Internal API, including endpoints for Tlevels and pathways."
         }
       ],
       "confidence": "high",
@@ -419,39 +473,104 @@
       "description": "Calls the API of"
     },
     {
-      "sourceId": "results-and-certification-common-services",
+      "sourceId": "results-and-certification-2",
+      "name": "Ucas",
+      "kind": "http-api",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": "HttpClient",
+      "technology": null,
+      "configurationKeys": [
+        "UcasApiSettings.GrantType",
+        "UcasApiSettings.Password",
+        "UcasApiSettings.Uri",
+        "UcasApiSettings.Username"
+      ],
+      "authentication": {
+        "type": "bearer",
+        "configurationKeys": []
+      },
+      "operations": [
+        {
+          "method": "POST",
+          "methodName": "GetTokenAsync",
+          "path": "/oauth/token",
+          "sourceFile": "src/Sfa.Tl.ResultsAndCertification.Api.Client/Clients/UcasApiClient.cs"
+        },
+        {
+          "method": "POST",
+          "methodName": "SendDataAsync",
+          "path": "/folders/{folderId}/files",
+          "sourceFile": "src/Sfa.Tl.ResultsAndCertification.Api.Client/Clients/UcasApiClient.cs"
+        }
+      ],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/Sfa.Tl.ResultsAndCertification.Api.Client/Clients/UcasApiClient.cs",
+          "reason": "HttpClient setup for UCAS API, including token and file operations."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "http-api-ucas",
+      "description": "Calls the API of"
+    },
+    {
+      "sourceId": "results-and-certification-web",
       "name": "Azure Blob Storage",
       "kind": "object-storage",
-      "classification": "third-party",
+      "classification": "internal",
       "direction": "outbound",
       "client": "BlobServiceClient",
       "technology": "Azure.Storage.Blobs",
       "configurationKeys": [
-        "ResultsAndCertificationConfiguration.BlobStorageConnectionString"
+        "BlobStorageConnectionString",
+        "DataProtectionSettings.BlobName",
+        "DataProtectionSettings.ContainerName"
       ],
       "authentication": {
-        "type": "Connection String",
-        "configurationKeys": [
-          "ResultsAndCertificationConfiguration.BlobStorageConnectionString"
-        ]
+        "type": null,
+        "configurationKeys": []
       },
       "operations": [],
-      "resources": [
-        {
-          "type": "container",
-          "name": null,
-          "direction": "outbound",
-          "sourceFile": "src/Sfa.Tl.ResultsAndCertification.Common.Services/BlobStorage/Service/BlobStorageService.cs"
-        }
-      ],
+      "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/Sfa.Tl.ResultsAndCertification.Common.Services/BlobStorage/Service/BlobStorageService.cs",
-          "reason": "BlobServiceClient is initialized with connection string from configuration."
+          "sourceFile": "src/Sfa.Tl.ResultsAndCertification.Web/Authentication/DataProtectionExtensions.cs",
+          "reason": "BlobServiceClient evidences Azure Blob Storage dependency."
         }
       ],
       "confidence": "high",
       "targetId": "object-storage-azure-blob-storage",
+      "description": "Stores objects in"
+    },
+    {
+      "sourceId": "results-and-certification-2",
+      "name": "Blob Storage",
+      "kind": "object-storage",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": "BlobServiceClient",
+      "technology": "Azure",
+      "configurationKeys": [
+        "BlobStorageConnectionString"
+      ],
+      "authentication": {
+        "type": "keys",
+        "configurationKeys": [
+          "BlobStorageConnectionString"
+        ]
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/Sfa.Tl.ResultsAndCertification.Common.Services/BlobStorage/Service/BlobStorageService.cs",
+          "reason": "BlobServiceClient used for Azure Blob Storage to handle files."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "object-storage-blob-storage",
       "description": "Stores objects in"
     }
   ]

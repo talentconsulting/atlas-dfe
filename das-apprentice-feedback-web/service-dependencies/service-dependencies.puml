@@ -3,14 +3,14 @@
 LAYOUT_WITH_LEGEND()
 
 System_Boundary(sys_SkillsFundingAgency_das_apprentice_feedback_web, "Apprentice Feedback") {
-  Container(c_apprentice_feedback_nservicebuslistener, "Apprentice Feedback NServiceBus Listener", "Background Job")
-  Container(c_apprentice_feedback_web, "Apprentice Feedback", "Web Application")
+  Container(c_apprentice_feedback_api, "Apprentice Feedback", "API")
+  Container(c_apprentice_feedback_jobs, "Apprentice Feedback Jobs", "Background Job")
 }
 
-SystemDb_Ext(d_cache_redis, "Redis", "StackExchange.Redis")
+SystemDb_Ext(d_cache_stackexchange_redis, "StackExchange Redis", "Redis")
 SystemQueue_Ext(d_message_broker_azure_service_bus, "Azure Service Bus", "Azure Service Bus")
 
-Rel(c_apprentice_feedback_web, d_cache_redis, "Caches data in", "StackExchange.Redis")
-Rel(c_apprentice_feedback_nservicebuslistener, d_message_broker_azure_service_bus, "Publishes messages to and consumes messages from", "Azure Service Bus")
+Rel(c_apprentice_feedback_api, d_cache_stackexchange_redis, "Caches data in", "Redis")
+Rel(c_apprentice_feedback_jobs, d_message_broker_azure_service_bus, "Publishes messages to and consumes messages from", "Azure Service Bus")
 
 @enduml

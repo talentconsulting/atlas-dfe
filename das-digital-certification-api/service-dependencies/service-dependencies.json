@@ -10,12 +10,16 @@
       "type": "api",
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.DigitalCertificates.Api/Program.cs",
-          "reason": "ASP.NET Web API entry point evidenced by `CreateHostBuilder` and `UseStartup` calls."
+          "sourceFile": "src/SFA.DAS.DigitalCertificates.Api/Startup.cs",
+          "reason": "ASP.NET Core Startup class for configuring the web application."
         },
         {
-          "sourceFile": "src/SFA.DAS.DigitalCertificates.Api/Startup.cs",
-          "reason": "ASP.NET Web API setup in Startup class."
+          "sourceFile": "src/SFA.DAS.DigitalCertificates.Api/Program.cs",
+          "reason": "ASP.NET Core entry point with WebHost configuration."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.DigitalCertificates.Api/SFA.DAS.DigitalCertificates.Api.csproj",
+          "reason": "Project SDK indicates a web-application container."
         }
       ]
     }
@@ -23,15 +27,15 @@
   "dependencies": [
     {
       "sourceId": "digital-certificates",
-      "name": "Azure Token Credentials",
+      "name": "Azure Active Directory Identity",
       "kind": "cloud-service",
       "classification": "third-party",
       "direction": "outbound",
       "client": "ChainedTokenCredential",
-      "technology": "Azure.Identity",
+      "technology": "Azure",
       "configurationKeys": [],
       "authentication": {
-        "type": null,
+        "type": "managed-identity",
         "configurationKeys": []
       },
       "operations": [],
@@ -39,30 +43,30 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.DigitalCertificates.Api/AppStart/AddDatabaseRegistrations.cs",
-          "reason": "Azure Credentials constructed for ChainedTokenCredential registration."
+          "reason": "ChainedTokenCredential configuration for Azure services."
         },
         {
           "sourceFile": "src/SFA.DAS.DigitalCertificates.Data/DigitalCertificatesDataContext.cs",
-          "reason": "Azure Credentials used for database authentication."
+          "reason": "ChainedTokenCredential used for obtaining tokens for Azure SQL Database."
         }
       ],
       "confidence": "high",
-      "targetId": "cloud-service-azure-token-credentials",
+      "targetId": "cloud-service-azure-active-directory-identity",
       "description": "Uses"
     },
     {
       "sourceId": "digital-certificates",
-      "name": "Application Database",
+      "name": "Digital Certificates Database",
       "kind": "database",
       "classification": "internal",
       "direction": "outbound",
-      "client": "SqlConnection",
-      "technology": "Microsoft.EntityFrameworkCore.SqlServer",
+      "client": "DigitalCertificatesDataContext",
+      "technology": "Microsoft SQL Server",
       "configurationKeys": [
         "ApplicationSettings:DbConnectionString"
       ],
       "authentication": {
-        "type": "managed",
+        "type": "managed-identity",
         "configurationKeys": []
       },
       "operations": [],
@@ -76,16 +80,16 @@
       ],
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.DigitalCertificates.Api/AppStart/AddDatabaseRegistrations.cs",
-          "reason": "Database connection registered using `AddDbContext` with SQL Server."
+          "sourceFile": "src/SFA.DAS.DigitalCertificates.Data/DigitalCertificatesDataContext.cs",
+          "reason": "DbContext implementation for DigitalCertificatesDataContext."
         },
         {
-          "sourceFile": "src/SFA.DAS.DigitalCertificates.Data/DigitalCertificatesDataContext.cs",
-          "reason": "Entity Framework DbContext subclass for SQL Server with connection configuration from application settings."
+          "sourceFile": "src/SFA.DAS.DigitalCertificates.Api/AppStart/AddDatabaseRegistrations.cs",
+          "reason": "DigitalCertificatesDataContext registered with AddDbContext using ApplicationSettings:DbConnectionString."
         }
       ],
       "confidence": "high",
-      "targetId": "database-application-database",
+      "targetId": "database-digital-certificates-database",
       "description": "Reads from and writes to"
     }
   ]

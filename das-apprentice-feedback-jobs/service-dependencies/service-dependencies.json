@@ -1,0 +1,94 @@
+{
+  "repository": "SkillsFundingAgency/das-apprentice-feedback-jobs",
+  "ref": "main",
+  "path": "src",
+  "systemName": "Apprentice Feedback",
+  "containers": [
+    {
+      "id": "apprentice-feedback-jobs",
+      "name": "Apprentice Feedback",
+      "type": "job",
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.ApprenticeFeedback.Jobs/Program.cs",
+          "reason": "Azure Functions entry point with HostBuilder configuration."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.ApprenticeFeedback.Jobs/SFA.DAS.ApprenticeFeedback.Jobs.csproj",
+          "reason": "Project file declares AzureFunctionsVersion indicating job container."
+        }
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "sourceId": "apprentice-feedback-jobs",
+      "name": "Apprentice Feedback Outer API",
+      "kind": "http-api",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "IApprenticeFeedbackApi",
+      "technology": "RestEase",
+      "configurationKeys": [
+        "ApprenticeFeedbackOuterApi:ApiBaseUrl"
+      ],
+      "authentication": {
+        "type": "ApimHeadersHandler",
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.ApprenticeFeedback.Jobs/Extensions/AddServiceRegistrationsExtension.cs",
+          "reason": "AddRestEaseClient registered with IApprenticeFeedbackApi interface."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "http-api-apprentice-feedback-outer-api",
+      "description": "Calls the API of"
+    },
+    {
+      "sourceId": "apprentice-feedback-jobs",
+      "name": "Blob Storage",
+      "kind": "object-storage",
+      "classification": "unknown",
+      "direction": "outbound",
+      "client": "BlobServiceClient",
+      "technology": "Azure.Storage.Blobs",
+      "configurationKeys": [
+        "FeedbackTargetVariantConfiguration:BlobStorageConnectionString"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [
+        {
+          "type": "container",
+          "name": "FeedbackTargetVariantConfiguration:BlobContainerName",
+          "direction": "outbound",
+          "sourceFile": "src/SFA.DAS.ApprenticeFeedback.Jobs/Helpers/FeedbackTargetVariants/FeedbackTargetVariantBlobProcessor.cs"
+        }
+      ],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.ApprenticeFeedback.Jobs/Extensions/AddServiceRegistrationsExtension.cs",
+          "reason": "BlobServiceClient registered with configuration-driven connection string."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.ApprenticeFeedback.Jobs/Helpers/FeedbackTargetVariants/FeedbackTargetVariantBlobMover.cs",
+          "reason": "BlobServiceClient used for blob operations."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.ApprenticeFeedback.Jobs/Helpers/FeedbackTargetVariants/FeedbackTargetVariantBlobProcessor.cs",
+          "reason": "BlobServiceClient used to access and manipulate container blobs."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "object-storage-blob-storage",
+      "description": "Stores objects in"
+    }
+  ]
+}

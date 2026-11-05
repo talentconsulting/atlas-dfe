@@ -3,25 +3,26 @@
 LAYOUT_WITH_LEGEND()
 
 System_Boundary(sys_SkillsFundingAgency_das_tools_servicebus_support, "Tools Servicebus Support") {
-  Container(c_tools_servicebus_support_functions, "Tools Servicebus Support Functions", "API")
+  Container(c_tools_servicebus_support, "Tools Servicebus Support", "Web Application")
+  Container(c_tools_servicebus_support_api, "Tools Servicebus Support", "API")
   Container(c_tools_servicebus_support_web, "Tools Servicebus Support Web", "Web Application")
-  Container(c_tools_servicebus_support_web_2, "Tools Servicebus Support", "Web Application")
 }
 
+SystemDb_Ext(d_cache_distributed_redis_cache, "Distributed Redis Cache", "Redis")
 SystemDb_Ext(d_cache_redis, "Redis", "Redis")
-System_Ext(d_cloud_service_application_insights, "Application Insights", "Application Insights")
-System_Ext(d_cloud_service_azure_table_storage, "Azure Table Storage", "Azure Table Storage")
-SystemDb_Ext(d_database_cosmos, "Cosmos", "Azure CosmosDB")
-System_Ext(d_http_api_audit, "Audit")
-SystemQueue_Ext(d_message_broker_service_bus, "Service Bus", "Azure Service Bus")
+System_Ext(d_cloud_service_azure_key_vault, "Azure Key Vault", "Azure Key Vault")
+System_Ext(d_cloud_service_azure_table_storage_configuration, "Azure Table Storage Configuration", "Azure Table Storage")
+SystemDb_Ext(d_database_cosmos_db, "Cosmos DB", "Azure Cosmos DB")
+System_Ext(d_http_api_audit_service, "Audit Service")
+SystemQueue_Ext(d_message_broker_azure_service_bus, "Azure Service Bus", "Microsoft.Azure.ServiceBus")
 
+Rel(c_tools_servicebus_support, d_cache_distributed_redis_cache, "Caches data in", "Redis")
 Rel(c_tools_servicebus_support_web, d_cache_redis, "Caches data in", "Redis")
-Rel(c_tools_servicebus_support_web_2, d_cache_redis, "Caches data in", "Redis")
-Rel(c_tools_servicebus_support_web_2, d_cloud_service_application_insights, "Uses", "Application Insights")
-Rel(c_tools_servicebus_support_web_2, d_cloud_service_azure_table_storage, "Uses", "Azure Table Storage")
-Rel(c_tools_servicebus_support_functions, d_database_cosmos, "Reads from and writes to", "Azure CosmosDB")
-Rel(c_tools_servicebus_support_web, d_database_cosmos, "Reads from and writes to", "Azure CosmosDB")
-Rel(c_tools_servicebus_support_functions, d_http_api_audit, "Calls the API of")
-Rel(c_tools_servicebus_support_functions, d_message_broker_service_bus, "Publishes messages to and consumes messages from", "Azure Service Bus")
+Rel(c_tools_servicebus_support_api, d_cloud_service_azure_key_vault, "Uses", "Azure Key Vault")
+Rel(c_tools_servicebus_support, d_cloud_service_azure_table_storage_configuration, "Uses", "Azure Table Storage")
+Rel(c_tools_servicebus_support_api, d_database_cosmos_db, "Reads from and writes to", "Azure Cosmos DB")
+Rel(c_tools_servicebus_support_web, d_database_cosmos_db, "Reads from and writes to", "Azure Cosmos DB")
+Rel(c_tools_servicebus_support_api, d_http_api_audit_service, "Calls the API of")
+Rel(c_tools_servicebus_support_api, d_message_broker_azure_service_bus, "Publishes messages to and consumes messages from", "Microsoft.Azure.ServiceBus")
 
 @enduml

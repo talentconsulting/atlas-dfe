@@ -10,37 +10,33 @@
       "type": "api",
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments/Infrastructure/OuterApi/OuterApiClient.cs",
-          "reason": "The file contains the implementation of an API client, indicating a potential outbound API dependency."
-        },
-        {
           "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments.csproj",
-          "reason": "The project file defines a dependency using the 'Microsoft.NET.Sdk' project type, suggesting it is a deployable application."
+          "reason": "Project file confirms this is the main deployable API container for the system."
         }
       ]
     },
     {
-      "id": "provider-commitments-web",
+      "id": "provider-commitments-2",
       "name": "Provider Commitments",
       "type": "web",
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments.Web/SFA.DAS.ProviderCommitments.Web.csproj",
-          "reason": "Microsoft.NET.Sdk.Web is used in .csproj file"
+          "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments.Web/Program.cs",
+          "reason": "ASP.NET core application entry point."
         },
         {
-          "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments.Web/Program.cs",
-          "reason": "Program.cs with ASP.NET Core Web entry point"
+          "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments.Web/SFA.DAS.ProviderCommitments.Web.csproj",
+          "reason": "Project file specifies it is a web application."
         }
       ]
     }
   ],
   "dependencies": [
     {
-      "sourceId": "provider-commitments-web",
-      "name": "Redis",
+      "sourceId": "provider-commitments-2",
+      "name": "Redis Cache",
       "kind": "cache",
-      "classification": "unknown",
+      "classification": "third-party",
       "direction": "outbound",
       "client": null,
       "technology": "StackExchange.Redis",
@@ -55,7 +51,7 @@
       "resources": [
         {
           "type": "cache",
-          "name": "RedisConnectionString",
+          "name": "DataProtectionConnectionStrings:RedisConnectionString",
           "direction": "outbound",
           "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments.Web/Extensions/CacheStartupExtensions.cs"
         }
@@ -63,55 +59,55 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments.Web/Extensions/CacheStartupExtensions.cs",
-          "reason": "AddStackExchangeRedisCache with external configuration"
+          "reason": "Redis cache client setup via AddStackExchangeRedisCache."
         }
       ],
       "confidence": "high",
-      "targetId": "cache-redis",
+      "targetId": "cache-redis-cache",
       "description": "Caches data in"
     },
     {
       "sourceId": "provider-commitments",
       "name": "Approvals Outer",
       "kind": "http-api",
-      "classification": "internal",
+      "classification": "unknown",
       "direction": "outbound",
-      "client": "OuterApiClient",
+      "client": "IOuterApiClient",
       "technology": "HttpClient",
       "configurationKeys": [
-        "ApprovalsOuterApiConfiguration.ApiBaseUrl",
-        "ApprovalsOuterApiConfiguration.SubscriptionKey"
+        "ApprovalsOuterApiConfiguration:ApiBaseUrl",
+        "ApprovalsOuterApiConfiguration:SubscriptionKey"
       ],
       "authentication": {
-        "type": "Ocp-Apim-Subscription-Key and Authorization (Bearer Token)",
+        "type": "bearer",
         "configurationKeys": [
-          "ApprovalsOuterApiConfiguration.SubscriptionKey"
+          "ApprovalsOuterApiConfiguration:SubscriptionKey"
         ]
       },
       "operations": [
         {
           "method": "GET",
           "methodName": "Get",
-          "path": "{request.GetUrl}",
+          "path": "{GetUrl}",
           "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments/Infrastructure/OuterApi/OuterApiClient.cs"
         },
         {
           "method": "POST",
           "methodName": "Post",
-          "path": "{request.PostUrl}",
+          "path": "{PostUrl}",
           "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments/Infrastructure/OuterApi/OuterApiClient.cs"
         },
         {
           "method": "PUT",
           "methodName": "Put",
-          "path": "{request.PutUrl}",
+          "path": "{PutUrl}",
           "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments/Infrastructure/OuterApi/OuterApiClient.cs"
         }
       ],
       "resources": [
         {
-          "type": "api-base-url",
-          "name": "ApprovalsOuterApiConfiguration.ApiBaseUrl",
+          "type": "Dynamic",
+          "name": "Approvals Outer",
           "direction": "outbound",
           "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments/Infrastructure/OuterApi/OuterApiClient.cs"
         }
@@ -119,11 +115,7 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments/Infrastructure/OuterApi/OuterApiClient.cs",
-          "reason": "An HttpClient is constructed for interaction with the Approvals Outer API, with a base URL defined by ApprovalsOuterApiConfiguration.ApiBaseUrl."
-        },
-        {
-          "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments/Infrastructure/OuterApi/OuterApiClient.cs",
-          "reason": "Authentication headers are added using an API key from ApprovalsOuterApiConfiguration.SubscriptionKey and a bearer token from the HTTP context, confirming this as an outbound API dependency."
+          "reason": "OuterApiClient accesses external Approvals Outer API using HTTP requests."
         }
       ],
       "confidence": "high",
@@ -131,7 +123,7 @@
       "description": "Calls the API of"
     },
     {
-      "sourceId": "provider-commitments-web",
+      "sourceId": "provider-commitments-2",
       "name": "Approvals Outer API",
       "kind": "http-api",
       "classification": "internal",
@@ -139,22 +131,18 @@
       "client": "ApprovalsOuterApiClient",
       "technology": "HttpClient",
       "configurationKeys": [
-        "ApprovalsOuterApiConfiguration:ApiBaseUrl"
+        "ApprovalsOuterApi:ApiBaseUrl"
       ],
       "authentication": {
-        "type": "apim",
-        "configurationKeys": [
-          "ApprovalsOuterApiConfiguration:ClientId",
-          "ApprovalsOuterApiConfiguration:ClientSecret",
-          "ApprovalsOuterApiConfiguration:Tenant"
-        ]
+        "type": "api-key",
+        "configurationKeys": []
       },
       "operations": [],
       "resources": [],
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments/Infrastructure/ApprovalsOuterApiHttpClientFactory.cs",
-          "reason": "HttpClient constructed with ApprovalsOuterApiConfiguration and APIM authorization"
+          "reason": "HTTP client constructed for Approvals Outer API."
         }
       ],
       "confidence": "high",
@@ -162,18 +150,18 @@
       "description": "Calls the API of"
     },
     {
-      "sourceId": "provider-commitments-web",
-      "name": "Commitments",
+      "sourceId": "provider-commitments-2",
+      "name": "Commitments API",
       "kind": "http-api",
       "classification": "internal",
       "direction": "outbound",
       "client": "CommitmentsApiClient",
       "technology": "HttpClient",
       "configurationKeys": [
-        "CommitmentsClientApiConfiguration:ApiBaseUrl"
+        "CommitmentsClient:ApiBaseUrl"
       ],
       "authentication": {
-        "type": "basic",
+        "type": "basic-auth",
         "configurationKeys": []
       },
       "operations": [
@@ -188,59 +176,52 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments.Web/LocalDevRegistry/CommitmentApiClientFactory.cs",
-          "reason": "HttpClient constructed with CommitmentsClientApiConfiguration"
+          "reason": "HTTP client constructed for Commitments API."
         }
       ],
       "confidence": "high",
-      "targetId": "http-api-commitments",
+      "targetId": "http-api-commitments-api",
       "description": "Calls the API of"
     },
     {
-      "sourceId": "provider-commitments-web",
-      "name": "PAS Account",
+      "sourceId": "provider-commitments-2",
+      "name": "Provider Apprenticeships Service Account API",
       "kind": "http-api",
       "classification": "internal",
       "direction": "outbound",
       "client": "PasAccountApiClient",
       "technology": "HttpClient",
       "configurationKeys": [
-        "PasAccountApiConfiguration:ApiBaseUrl"
+        "PasAccountApi:ApiBaseUrl"
       ],
       "authentication": {
-        "type": null,
-        "configurationKeys": []
+        "type": "managed-identity",
+        "configurationKeys": [
+          "PasAccountApi:ClientId",
+          "PasAccountApi:ClientSecret",
+          "PasAccountApi:Tenant"
+        ]
       },
-      "operations": [
-        {
-          "method": null,
-          "methodName": "CreateClient",
-          "path": null,
-          "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments.Web/LocalDevRegistry/LocalDevPasAccountApiClientFactory.cs"
-        }
-      ],
+      "operations": [],
       "resources": [],
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments.Web/ServiceRegistrations/ProviderApprenticeshipsApiClientServiceRegistrations.cs",
-          "reason": "Factory registered for PasAccountApiClient based on PasAccountApiConfiguration"
-        },
-        {
-          "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments.Web/LocalDevRegistry/LocalDevPasAccountApiClientFactory.cs",
-          "reason": "HttpClient constructed with PasAccountApiConfiguration"
+          "reason": "HTTP client factory registration for Provider Apprenticeships Service Account API."
         }
       ],
       "confidence": "high",
-      "targetId": "http-api-pas-account",
+      "targetId": "http-api-provider-apprenticeships-service-account-api",
       "description": "Calls the API of"
     },
     {
-      "sourceId": "provider-commitments-web",
-      "name": "Azure Blob Storage",
+      "sourceId": "provider-commitments-2",
+      "name": "Blob Storage",
       "kind": "object-storage",
       "classification": "third-party",
       "direction": "outbound",
       "client": "BlobServiceClient",
-      "technology": "Azure.Storage.Blobs",
+      "technology": "Azure Blob Storage",
       "configurationKeys": [
         "BlobStorageSettings:BulkuploadContainer",
         "BlobStorageSettings:ConnectionString"
@@ -252,8 +233,8 @@
       "operations": [],
       "resources": [
         {
-          "type": "storage-container",
-          "name": "BulkuploadContainer",
+          "type": "object-storage",
+          "name": "BlobStorageSettings:BulkuploadContainer",
           "direction": "outbound",
           "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments/Infrastructure/BlobFileTransferClient.cs"
         }
@@ -261,11 +242,11 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments/Infrastructure/BlobFileTransferClient.cs",
-          "reason": "BlobServiceClient and BlobContainerClient constructed with external configuration"
+          "reason": "BlobServiceClient constructed for Azure Storage."
         }
       ],
       "confidence": "high",
-      "targetId": "object-storage-azure-blob-storage",
+      "targetId": "object-storage-blob-storage",
       "description": "Stores objects in"
     }
   ]

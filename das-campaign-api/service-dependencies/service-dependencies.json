@@ -11,16 +11,47 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.Campaign.Api/Program.cs",
-          "reason": "ASP.NET Core entry point for the web application."
-        },
-        {
-          "sourceFile": "src/SFA.DAS.Campaign.Api/SFA.DAS.Campaign.Api.csproj",
-          "reason": "Project file uses `Microsoft.NET.Sdk.Web` indicating a web application."
+          "reason": "ASP.NET Core WebHost entry point indicating an API container"
         }
       ]
     }
   ],
   "dependencies": [
+    {
+      "sourceId": "campaign",
+      "name": "Azure Table Storage",
+      "kind": "cloud-service",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "Azure.Data.Tables",
+      "technology": "Azure Table Storage",
+      "configurationKeys": [
+        "ConfigNames",
+        "ConfigurationStorageConnectionString"
+      ],
+      "authentication": {
+        "type": "AzureAD",
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [
+        {
+          "type": "cloud-service",
+          "name": "ConfigurationStorageConnectionString",
+          "direction": "outbound",
+          "sourceFile": "src/SFA.DAS.Campaign.Api/Startup.cs"
+        }
+      ],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Campaign.Api/Startup.cs",
+          "reason": "Azure Table Storage registered for configuration using AzureTableStorage"
+        }
+      ],
+      "confidence": "high",
+      "targetId": "cloud-service-azure-table-storage",
+      "description": "Uses"
+    },
     {
       "sourceId": "campaign",
       "name": "SQL Server",
@@ -33,30 +64,30 @@
         "CampaignConfiguration.SqlConnectionString"
       ],
       "authentication": {
-        "type": "DefaultAzureCredential",
+        "type": "AzureAD",
         "configurationKeys": []
       },
       "operations": [],
       "resources": [
         {
           "type": "database",
-          "name": null,
+          "name": "CampaignConfiguration.SqlConnectionString",
           "direction": "outbound",
           "sourceFile": "src/SFA.DAS.Campaign.Api.Data/CampaignDataContext.cs"
         }
       ],
       "evidence": [
         {
+          "sourceFile": "src/SFA.DAS.Campaign.Api/Startup.cs",
+          "reason": "Database registration via AddDatabaseRegistration method"
+        },
+        {
           "sourceFile": "src/SFA.DAS.Campaign.Api/AppStart/AddDatabaseExtension.cs",
-          "reason": "Database registration using SQL Server configuration."
+          "reason": "Database registration with EF Core DbContext and SQL Server"
         },
         {
           "sourceFile": "src/SFA.DAS.Campaign.Api.Data/CampaignDataContext.cs",
-          "reason": "Entity Framework Core DbContext configured with SQL Server."
-        },
-        {
-          "sourceFile": "src/SFA.DAS.Campaign.Api/Startup.cs",
-          "reason": "Health checks configured for SQL Server database."
+          "reason": "DbContext implementation using SQL Server"
         }
       ],
       "confidence": "high",

@@ -3,17 +3,19 @@
 LAYOUT_WITH_LEGEND()
 
 System_Boundary(sys_SkillsFundingAgency_das_recruit, "Recruit") {
-  Container(c_recruit_employer_web, "Recruit", "Web Application")
-  Container(c_recruit_provider_web, "Recruit Provider Web", "Web Application")
-  Container(c_recruit_vacancies_jobs, "Recruit Vacancies Jobs", "Background Job")
+  Container(c_employer, "Recruit", "Web Application")
+  Container(c_provider, "Recruit Provider", "Web Application")
 }
 
-SystemDb_Ext(d_cache_redis, "Redis", "StackExchange.Redis")
-System_Ext(d_http_api_outer_api, "Outer Api", "HttpClient")
-SystemQueue_Ext(d_message_broker_azure_service_bus, "Azure Service Bus", "Azure.Messaging.ServiceBus")
+SystemDb_Ext(d_cache_stackexchange_redis, "StackExchange Redis", "redis")
+System_Ext(d_cloud_service_azure_key_vault, "Azure Key Vault", "azure-keyvault")
+System_Ext(d_http_api_outer_api, "Outer API", "http")
+SystemQueue_Ext(d_message_broker_azure_service_bus, "Azure Service Bus", "azure-service-bus")
 
-Rel(c_recruit_employer_web, d_cache_redis, "Caches data in", "StackExchange.Redis")
-Rel(c_recruit_employer_web, d_http_api_outer_api, "Calls the API of", "HttpClient")
-Rel(c_recruit_provider_web, d_message_broker_azure_service_bus, "Publishes messages to and consumes messages from", "Azure.Messaging.ServiceBus")
+Rel(c_employer, d_cache_stackexchange_redis, "Caches data in", "redis")
+Rel(c_employer, d_cloud_service_azure_key_vault, "Uses", "azure-keyvault")
+Rel(c_employer, d_http_api_outer_api, "Calls the API of", "http")
+Rel(c_provider, d_http_api_outer_api, "Calls the API of", "http")
+Rel(c_provider, d_message_broker_azure_service_bus, "Publishes messages to and consumes messages from", "azure-service-bus")
 
 @enduml

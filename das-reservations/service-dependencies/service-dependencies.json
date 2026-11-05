@@ -11,11 +11,11 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.Reservations.Web/Program.cs",
-          "reason": "ASP.NET Core entry point detected through WebHost.CreateDefaultBuilder"
+          "reason": "ASP.NET Core web application entry point"
         },
         {
           "sourceFile": "src/SFA.DAS.Reservations.Web/SFA.DAS.Reservations.Web.csproj",
-          "reason": "Project SDK 'Microsoft.NET.Sdk.Web' indicates an ASP.NET Core application."
+          "reason": "Web SDK project"
         }
       ]
     }
@@ -25,10 +25,10 @@
       "sourceId": "reservations-web",
       "name": "Redis Cache",
       "kind": "cache",
-      "classification": "internal",
+      "classification": "third-party",
       "direction": "outbound",
       "client": null,
-      "technology": "StackExchange.Redis",
+      "technology": "StackExchange Redis",
       "configurationKeys": [
         "ReservationsWeb:RedisCacheConnectionString"
       ],
@@ -37,15 +37,18 @@
         "configurationKeys": []
       },
       "operations": [],
-      "resources": [],
+      "resources": [
+        {
+          "type": "cache",
+          "name": null,
+          "direction": "outbound",
+          "sourceFile": "src/SFA.DAS.Reservations.Web/Startup.cs"
+        }
+      ],
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.Reservations.Web/SFA.DAS.Reservations.Web.csproj",
-          "reason": "StackExchange.Redis package referenced in project file."
-        },
-        {
           "sourceFile": "src/SFA.DAS.Reservations.Web/Startup.cs",
-          "reason": "StackExchangeRedisCache registered in dependency injection with a configuration key."
+          "reason": "AddStackExchangeRedisCache registration"
         }
       ],
       "confidence": "high",
@@ -58,61 +61,43 @@
       "kind": "http-api",
       "classification": "internal",
       "direction": "outbound",
-      "client": "ApiClient",
+      "client": "IApiClient",
       "technology": "HttpClient",
       "configurationKeys": [
         "ReservationsApiConfiguration:Url"
       ],
       "authentication": {
-        "type": "Azure AD",
+        "type": "OAuth",
         "configurationKeys": [
           "ReservationsApiConfiguration:Id",
-          "ReservationsApiConfiguration:Identifier",
           "ReservationsApiConfiguration:Secret",
           "ReservationsApiConfiguration:Tenant"
         ]
       },
       "operations": [
         {
-          "method": "DELETE",
-          "methodName": "Delete",
-          "path": null,
-          "sourceFile": "src/SFA.DAS.Reservations.Infrastructure/Api/ApiClientBase.cs"
-        },
-        {
-          "method": "GET",
-          "methodName": "Get",
-          "path": null,
-          "sourceFile": "src/SFA.DAS.Reservations.Infrastructure/Api/ApiClientBase.cs"
-        },
-        {
-          "method": "GET",
-          "methodName": "GetAll",
-          "path": null,
-          "sourceFile": "src/SFA.DAS.Reservations.Infrastructure/Api/ApiClientBase.cs"
-        },
-        {
           "method": "GET",
           "methodName": "Ping",
-          "path": "ping",
+          "path": "/ping",
           "sourceFile": "src/SFA.DAS.Reservations.Infrastructure/Api/ApiClient.cs"
-        },
-        {
-          "method": "POST",
-          "methodName": "Create",
-          "path": null,
-          "sourceFile": "src/SFA.DAS.Reservations.Infrastructure/Api/ApiClientBase.cs"
         }
       ],
-      "resources": [],
+      "resources": [
+        {
+          "type": "http-api",
+          "name": null,
+          "direction": "outbound",
+          "sourceFile": "src/SFA.DAS.Reservations.Infrastructure/Api/ApiClient.cs"
+        }
+      ],
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.Reservations.Infrastructure/Api/ApiClient.cs",
-          "reason": "IApiClient implemented with HttpClient usage and supports access token flow."
+          "reason": "HttpClient direct usage and endpoint configuration"
         },
         {
           "sourceFile": "src/SFA.DAS.Reservations.Web/AppStart/ServiceRegistrationExtension.cs",
-          "reason": "IApiClient registered in dependency injection."
+          "reason": "IApiClient registration"
         }
       ],
       "confidence": "high",

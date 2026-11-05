@@ -1,0 +1,17 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+LAYOUT_WITH_LEGEND()
+
+System_Boundary(sys_SkillsFundingAgency_das_employer_feedback_jobs, "Employer Feedback") {
+  Container(c_employer_feedback_jobs, "Employer Feedback Jobs", "Background Job")
+}
+
+System_Ext(d_cloud_service_azure_application_insights, "Azure Application Insights", "Azure Monitor")
+System_Ext(d_cloud_service_azure_table_storage, "Azure Table Storage", "Azure Table Storage")
+System_Ext(d_http_api_employer_feedback_outer, "Employer Feedback Outer", "HTTP")
+
+Rel(c_employer_feedback_jobs, d_cloud_service_azure_application_insights, "Uses", "Azure Monitor")
+Rel(c_employer_feedback_jobs, d_cloud_service_azure_table_storage, "Uses", "Azure Table Storage")
+Rel(c_employer_feedback_jobs, d_http_api_employer_feedback_outer, "Calls the API of", "HTTP")
+
+@enduml

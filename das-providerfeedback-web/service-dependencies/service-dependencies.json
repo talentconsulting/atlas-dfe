@@ -11,11 +11,7 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.ProviderFeedback.Web/Program.cs",
-          "reason": "ASP.NET Core web application entry point detected."
-        },
-        {
-          "sourceFile": "src/SFA.DAS.ProviderFeedback.Web/SFA.DAS.ProviderFeedback.Web.csproj",
-          "reason": "Project SDK indicates a web application."
+          "reason": "ASP.NET Core entry point"
         }
       ]
     }
@@ -23,29 +19,40 @@
   "dependencies": [
     {
       "sourceId": "provider-feedback",
-      "name": "Redis",
+      "name": "Redis Cache",
       "kind": "cache",
       "classification": "third-party",
       "direction": "outbound",
       "client": null,
       "technology": "StackExchange.Redis",
       "configurationKeys": [
-        "ConnectionStrings:Redis"
+        "ProviderFeedbackWeb:RedisConnectionString"
       ],
       "authentication": {
         "type": null,
         "configurationKeys": []
       },
       "operations": [],
-      "resources": [],
+      "resources": [
+        {
+          "type": "configuration",
+          "name": "Redis",
+          "direction": "outbound",
+          "sourceFile": "src/SFA.DAS.ProviderFeedback.Web/SFA.DAS.ProviderFeedback.Web.csproj"
+        }
+      ],
       "evidence": [
         {
+          "sourceFile": "src/SFA.DAS.ProviderFeedback.Web/Program.cs",
+          "reason": "Redis distributed cache integration configured"
+        },
+        {
           "sourceFile": "src/SFA.DAS.ProviderFeedback.Web/SFA.DAS.ProviderFeedback.Web.csproj",
-          "reason": "StackExchange.Redis used as a cache provider."
+          "reason": "StackExchange.Redis package referenced"
         }
       ],
       "confidence": "medium",
-      "targetId": "cache-redis",
+      "targetId": "cache-redis-cache",
       "description": "Caches data in"
     },
     {
@@ -61,7 +68,7 @@
         "ProviderFeedbackOuterApi:SubscriptionKey"
       ],
       "authentication": {
-        "type": "key",
+        "type": "subscription-key",
         "configurationKeys": [
           "ProviderFeedbackOuterApi:SubscriptionKey"
         ]
@@ -70,19 +77,19 @@
         {
           "method": "GET",
           "methodName": "Get",
-          "path": "{GetUrl}",
+          "path": "{getUrl}",
           "sourceFile": "src/SFA.DAS.ProviderFeedback.Infrastructure/Api/ApiClient.cs"
         },
         {
           "method": "POST",
           "methodName": "Post",
-          "path": "{PostUrl}",
+          "path": "{postUrl}",
           "sourceFile": "src/SFA.DAS.ProviderFeedback.Infrastructure/Api/ApiClient.cs"
         }
       ],
       "resources": [
         {
-          "type": "http-api",
+          "type": "configuration",
           "name": "ProviderFeedbackOuterApi",
           "direction": "outbound",
           "sourceFile": "src/SFA.DAS.ProviderFeedback.Infrastructure/Api/ApiClient.cs"
@@ -91,11 +98,11 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.ProviderFeedback.Infrastructure/Api/ApiClient.cs",
-          "reason": "Custom HttpClient API client defined."
+          "reason": "HttpClient constructed, base address and authentication headers set"
         },
         {
           "sourceFile": "src/SFA.DAS.ProviderFeedback.Web/AppStart/AddServiceRegistrationExtensions.cs",
-          "reason": "HttpClient client 'IApiClient' registered."
+          "reason": "IApiClient registered"
         }
       ],
       "confidence": "high",

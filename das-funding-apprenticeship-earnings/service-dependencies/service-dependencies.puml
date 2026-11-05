@@ -2,21 +2,22 @@
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
 LAYOUT_WITH_LEGEND()
 
-System_Boundary(sys_SkillsFundingAgency_das_funding_apprenticeship_earnings, "Funding Apprenticeship Earnings") {
+System_Boundary(sys_SkillsFundingAgency_das_funding_apprenticeship_earnings, "SFA.DAS.Funding.ApprenticeshipEarnings") {
   Container(c_funding_apprenticeship_earnings, "Funding Apprenticeship Earnings", "API")
-  Container(c_funding_apprenticeship_earnings_jobs, "Funding Apprenticeship Earnings Jobs", "Background Job")
+  Container(c_funding_apprenticeship_earnings_messagehandlers, "SFA.DAS.Funding.ApprenticeshipEarnings", "Background Job")
 }
 
-SystemDb_Ext(d_database_sql_server, "SQL Server", "Entity Framework Core")
+SystemDb_Ext(d_database_apprenticeship_earnings, "Apprenticeship Earnings", "SQL Server")
+System_Ext(d_http_api_earnings_outer, "Earnings Outer")
 System_Ext(d_http_api_earnings_outer_api, "Earnings Outer API", "HttpClient")
-SystemQueue_Ext(d_message_broker_azure_service_bus, "Azure Service Bus")
+SystemQueue_Ext(d_message_broker_azure_service_bus, "Azure Service Bus", "Azure Service Bus")
 SystemQueue_Ext(d_message_broker_nservicebus, "NServiceBus", "Azure Service Bus")
 
-Rel(c_funding_apprenticeship_earnings, d_database_sql_server, "Reads from and writes to", "Entity Framework Core")
-Rel(c_funding_apprenticeship_earnings_jobs, d_database_sql_server, "Reads from and writes to", "Microsoft SQL Server")
+Rel(c_funding_apprenticeship_earnings_messagehandlers, d_database_apprenticeship_earnings, "Reads from and writes to", "SQL Server")
+Rel(c_funding_apprenticeship_earnings, d_database_apprenticeship_earnings, "Reads from and writes to", "Entity Framework Core")
+Rel(c_funding_apprenticeship_earnings_messagehandlers, d_http_api_earnings_outer, "Calls the API of")
 Rel(c_funding_apprenticeship_earnings, d_http_api_earnings_outer_api, "Calls the API of", "HttpClient")
-Rel(c_funding_apprenticeship_earnings_jobs, d_http_api_earnings_outer_api, "Calls the API of")
-Rel(c_funding_apprenticeship_earnings, d_message_broker_azure_service_bus, "Publishes messages to and consumes messages from")
-Rel(c_funding_apprenticeship_earnings_jobs, d_message_broker_nservicebus, "Publishes messages to and consumes messages from", "Azure Service Bus")
+Rel(c_funding_apprenticeship_earnings, d_message_broker_azure_service_bus, "Publishes messages to and consumes messages from", "Azure Service Bus")
+Rel(c_funding_apprenticeship_earnings_messagehandlers, d_message_broker_nservicebus, "Publishes messages to and consumes messages from", "Azure Service Bus")
 
 @enduml

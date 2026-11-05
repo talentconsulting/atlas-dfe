@@ -5,60 +5,45 @@
   "systemName": "Recruit",
   "containers": [
     {
-      "id": "recruit-employer-web",
+      "id": "employer",
       "name": "Recruit",
       "type": "web",
       "evidence": [
         {
           "sourceFile": "src/Employer/Employer.Web/Program.cs",
-          "reason": "ASP.NET Core application entry point with WebHost.CreateDefaultBuilder."
+          "reason": "Entry point file creates a web host builder."
         },
         {
           "sourceFile": "src/Employer/Employer.Web/Employer.Web.csproj",
-          "reason": "Project type detected as ASP.NET Core Web SDK."
+          "reason": "Project SDK specifies a web application."
         }
       ]
     },
     {
-      "id": "recruit-provider-web",
-      "name": "Recruit Provider Web",
+      "id": "provider",
+      "name": "Recruit Provider",
       "type": "web",
       "evidence": [
         {
           "sourceFile": "src/Provider/Provider.Web/Program.cs",
-          "reason": "ASP.NET Core application entry point with WebHost.CreateDefaultBuilder."
+          "reason": "Entry point file creates a web host builder."
         },
         {
           "sourceFile": "src/Provider/Provider.Web/Provider.Web.csproj",
-          "reason": "Project type detected as ASP.NET Core Web SDK."
-        }
-      ]
-    },
-    {
-      "id": "recruit-vacancies-jobs",
-      "name": "Recruit Vacancies Jobs",
-      "type": "job",
-      "evidence": [
-        {
-          "sourceFile": "src/Jobs/Recruit.Vacancies.Jobs/Program.cs",
-          "reason": "Job-style entry point using HostBuilder and Azure WebJobs integration."
-        },
-        {
-          "sourceFile": "src/Jobs/Recruit.Vacancies.Jobs/Recruit.Vacancies.Jobs.csproj",
-          "reason": "Project configuration suggests a background job setup targeting console execution."
+          "reason": "Project SDK specifies a web application."
         }
       ]
     }
   ],
   "dependencies": [
     {
-      "sourceId": "recruit-employer-web",
-      "name": "Redis",
+      "sourceId": "employer",
+      "name": "StackExchange Redis",
       "kind": "cache",
       "classification": "third-party",
       "direction": "outbound",
       "client": null,
-      "technology": "StackExchange.Redis",
+      "technology": "redis",
       "configurationKeys": [],
       "authentication": {
         "type": null,
@@ -68,44 +53,75 @@
       "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/Shared/Recruit.Shared.Web/Recruit.Shared.Web.csproj",
-          "reason": "Detected usage of package StackExchange.Redis."
+          "sourceFile": "src/Employer/Employer.Web/Employer.Web.csproj",
+          "reason": "References Microsoft.AspNetCore.DataProtection.StackExchangeRedis and StackExchange.Redis."
         },
         {
-          "sourceFile": "src/Employer/Employer.Web/Employer.Web.csproj",
-          "reason": "Detected usage of the package Microsoft.AspNetCore.DataProtection.StackExchangeRedis."
+          "sourceFile": "src/Shared/Recruit.Shared.Web/Recruit.Shared.Web.csproj",
+          "reason": "References Microsoft.AspNetCore.DataProtection.StackExchangeRedis and StackExchange.Redis."
         }
       ],
-      "confidence": "high",
-      "targetId": "cache-redis",
+      "confidence": "medium",
+      "targetId": "cache-stackexchange-redis",
       "description": "Caches data in"
     },
     {
-      "sourceId": "recruit-employer-web",
-      "name": "Outer Api",
+      "sourceId": "employer",
+      "name": "Azure Key Vault",
+      "kind": "cloud-service",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": "Azure.Identity",
+      "technology": "azure-keyvault",
+      "configurationKeys": [],
+      "authentication": {
+        "type": "identity",
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/Employer/Employer.Web/Employer.Web.csproj",
+          "reason": "Package reference for Azure.Identity indicates key vault usage."
+        },
+        {
+          "sourceFile": "src/Provider/Provider.Web/Provider.Web.csproj",
+          "reason": "Package reference for Azure.Identity indicates key vault usage."
+        }
+      ],
+      "confidence": "medium",
+      "targetId": "cloud-service-azure-key-vault",
+      "description": "Uses"
+    },
+    {
+      "sourceId": "employer",
+      "name": "Outer API",
       "kind": "http-api",
       "classification": "internal",
       "direction": "outbound",
       "client": "OuterApiClient",
-      "technology": "HttpClient",
+      "technology": "http",
       "configurationKeys": [
         "OuterApiConfiguration:BaseUrl"
       ],
       "authentication": {
-        "type": null,
-        "configurationKeys": []
+        "type": "header",
+        "configurationKeys": [
+          "OuterApiConfiguration:Key"
+        ]
       },
       "operations": [
         {
           "method": "GET",
           "methodName": "Get",
-          "path": "{GetUrl}",
+          "path": null,
           "sourceFile": "src/Shared/Recruit.Vacancies.Client/Infrastructure/OuterApi/OuterApiClient.cs"
         },
         {
           "method": "POST",
           "methodName": "Post",
-          "path": "{PostUrl}",
+          "path": null,
           "sourceFile": "src/Shared/Recruit.Vacancies.Client/Infrastructure/OuterApi/OuterApiClient.cs"
         }
       ],
@@ -113,11 +129,11 @@
       "evidence": [
         {
           "sourceFile": "src/Shared/Recruit.Vacancies.Client/Infrastructure/OuterApi/OuterApiClient.cs",
-          "reason": "HttpClient configured with base URL from OuterApiConfiguration."
+          "reason": "HttpClient with BaseAddress and authentication headers set up for OuterApi."
         },
         {
           "sourceFile": "src/Shared/Recruit.Vacancies.Client/Ioc/ServiceCollectionExtensions.cs",
-          "reason": "OuterApiClient registered with HttpClientFactory."
+          "reason": "OuterApiClient registered with AddHttpClient."
         }
       ],
       "confidence": "high",
@@ -125,13 +141,59 @@
       "description": "Calls the API of"
     },
     {
-      "sourceId": "recruit-provider-web",
+      "sourceId": "provider",
+      "name": "Outer API",
+      "kind": "http-api",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "OuterApiClient",
+      "technology": "http",
+      "configurationKeys": [
+        "OuterApiConfiguration:BaseUrl"
+      ],
+      "authentication": {
+        "type": "header",
+        "configurationKeys": [
+          "OuterApiConfiguration:Key"
+        ]
+      },
+      "operations": [
+        {
+          "method": "GET",
+          "methodName": "Get",
+          "path": null,
+          "sourceFile": "src/Shared/Recruit.Vacancies.Client/Infrastructure/OuterApi/OuterApiClient.cs"
+        },
+        {
+          "method": "POST",
+          "methodName": "Post",
+          "path": null,
+          "sourceFile": "src/Shared/Recruit.Vacancies.Client/Infrastructure/OuterApi/OuterApiClient.cs"
+        }
+      ],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/Shared/Recruit.Vacancies.Client/Infrastructure/OuterApi/OuterApiClient.cs",
+          "reason": "HttpClient with BaseAddress and authentication headers set up for OuterApi."
+        },
+        {
+          "sourceFile": "src/Shared/Recruit.Vacancies.Client/Ioc/ServiceCollectionExtensions.cs",
+          "reason": "OuterApiClient registered with AddHttpClient."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "http-api-outer-api",
+      "description": "Calls the API of"
+    },
+    {
+      "sourceId": "provider",
       "name": "Azure Service Bus",
       "kind": "message-broker",
       "classification": "third-party",
       "direction": "outbound",
-      "client": null,
-      "technology": "Azure.Messaging.ServiceBus",
+      "client": "Azure.Messaging.ServiceBus",
+      "technology": "azure-service-bus",
       "configurationKeys": [],
       "authentication": {
         "type": null,
@@ -142,10 +204,10 @@
       "evidence": [
         {
           "sourceFile": "src/Provider/Provider.Web/Provider.Web.csproj",
-          "reason": "Detected usage of package Azure.Messaging.ServiceBus."
+          "reason": "Package reference for Azure.Messaging.ServiceBus indicates message broker usage."
         }
       ],
-      "confidence": "high",
+      "confidence": "medium",
       "targetId": "message-broker-azure-service-bus",
       "description": "Publishes messages to and consumes messages from"
     }

@@ -10,16 +10,12 @@
       "type": "web",
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.EmployerFeedback.Web/Program.cs",
-          "reason": "Program.cs is an ASP.NET web entry point."
-        },
-        {
           "sourceFile": "src/SFA.DAS.EmployerFeedback.Web/Startup.cs",
-          "reason": "Startup.cs configures an ASP.NET web application."
+          "reason": "ASP.NET application configuration and service registration."
         },
         {
-          "sourceFile": "src/SFA.DAS.EmployerFeedback.Web/SFA.DAS.EmployerFeedback.Web.csproj",
-          "reason": "The project file uses Microsoft.NET.Sdk.Web."
+          "sourceFile": "src/SFA.DAS.EmployerFeedback.Web/Program.cs",
+          "reason": "ASP.NET hosting entry point with web application setup."
         }
       ]
     }
@@ -27,15 +23,14 @@
   "dependencies": [
     {
       "sourceId": "employer-feedback",
-      "name": "Data Protection Redis",
+      "name": "Redis",
       "kind": "cache",
-      "classification": "third-party",
+      "classification": "unknown",
       "direction": "outbound",
-      "client": "ConnectionMultiplexer",
+      "client": "StackExchangeRedis",
       "technology": "Redis",
       "configurationKeys": [
-        "EmployerFeedbackWebConfiguration:DataProtectionKeysDatabase",
-        "EmployerFeedbackWebConfiguration:RedisConnectionString"
+        "EmployerFeedbackWebConfiguration.RedisConnectionString"
       ],
       "authentication": {
         "type": null,
@@ -45,108 +40,30 @@
       "resources": [
         {
           "type": "cache",
-          "name": "Data Protection Redis",
+          "name": "DataProtection-Keys",
           "direction": "outbound",
           "sourceFile": "src/SFA.DAS.EmployerFeedback.Web/StartupExtensions/DataProtectionStartupExtensions.cs"
-        }
-      ],
-      "evidence": [
-        {
-          "sourceFile": "src/SFA.DAS.EmployerFeedback.Web/StartupExtensions/DataProtectionStartupExtensions.cs",
-          "reason": "ConnectionMultiplexer.Connect is used for Redis-based data protection."
-        }
-      ],
-      "confidence": "high",
-      "targetId": "cache-data-protection-redis",
-      "description": "Caches data in"
-    },
-    {
-      "sourceId": "employer-feedback",
-      "name": "Redis Cache",
-      "kind": "cache",
-      "classification": "third-party",
-      "direction": "outbound",
-      "client": null,
-      "technology": "Redis",
-      "configurationKeys": [
-        "EmployerFeedbackWebConfiguration:RedisConnectionString"
-      ],
-      "authentication": {
-        "type": null,
-        "configurationKeys": []
-      },
-      "operations": [],
-      "resources": [
+        },
         {
           "type": "cache",
-          "name": "Redis Cache",
+          "name": null,
           "direction": "outbound",
           "sourceFile": "src/SFA.DAS.EmployerFeedback.Web/StartupExtensions/CacheStartupExtensions.cs"
         }
       ],
       "evidence": [
         {
+          "sourceFile": "src/SFA.DAS.EmployerFeedback.Web/StartupExtensions/DataProtectionStartupExtensions.cs",
+          "reason": "Redis cache is used for data protection keys storage with ConnectionMultiplexer."
+        },
+        {
           "sourceFile": "src/SFA.DAS.EmployerFeedback.Web/StartupExtensions/CacheStartupExtensions.cs",
-          "reason": "AddStackExchangeRedisCache is used for production configuration based on 'RedisConnectionString'."
+          "reason": "Redis cache registered via AddStackExchangeRedisCache."
         }
       ],
       "confidence": "high",
-      "targetId": "cache-redis-cache",
+      "targetId": "cache-redis",
       "description": "Caches data in"
-    },
-    {
-      "sourceId": "employer-feedback",
-      "name": "Application Insights",
-      "kind": "cloud-service",
-      "classification": "third-party",
-      "direction": "outbound",
-      "client": null,
-      "technology": null,
-      "configurationKeys": [
-        "APPLICATIONINSIGHTS_CONNECTION_STRING"
-      ],
-      "authentication": {
-        "type": null,
-        "configurationKeys": []
-      },
-      "operations": [],
-      "resources": [],
-      "evidence": [
-        {
-          "sourceFile": "src/SFA.DAS.EmployerFeedback.Web/Startup.cs",
-          "reason": "AddOpenTelemetryRegistration uses Application Insights connection string."
-        }
-      ],
-      "confidence": "medium",
-      "targetId": "cloud-service-application-insights",
-      "description": "Uses"
-    },
-    {
-      "sourceId": "employer-feedback",
-      "name": "Employer Feedback Outer API",
-      "kind": "http-api",
-      "classification": "internal",
-      "direction": "outbound",
-      "client": "IEmployerFeedbackOuterApiClient",
-      "technology": "HTTP",
-      "configurationKeys": [
-        "EmployerFeedbackOuterApiConfiguration"
-      ],
-      "authentication": {
-        "type": null,
-        "configurationKeys": []
-      },
-      "operations": [],
-      "resources": [],
-      "evidence": [
-        {
-          "sourceFile": "src/SFA.DAS.EmployerFeedback.Web/Startup.cs",
-          "reason": "Dependency added to IServiceCollection using AddOuterApi with the configuration section 'EmployerFeedbackOuterApiConfiguration'."
-        }
-      ],
-      "confidence": "high",
-      "targetId": "http-api-employer-feedback-outer-api",
-      "description": "Calls the API of"
     }
   ]
 }
