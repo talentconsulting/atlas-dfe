@@ -12,27 +12,27 @@
       ],
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.ApprenticeCommitments/Extensions/DbContextBuilderExtensions.cs",
-          "reason": "Database connection factory and extensions using DbConnection."
-        },
-        {
           "sourceFile": "src/SFA.DAS.ApprenticeCommitments/Configuration/ApplicationSettings.cs",
-          "reason": "Defines DbConnectionString property for database configuration."
+          "reason": "The ApplicationSettings class contains a DbConnectionString property for database connection."
         },
         {
           "sourceFile": "src/SFA.DAS.ApprenticeCommitments/Data/Models/ApprenticeCommitmentsDbContext.cs",
-          "reason": "Uses DbContextOptions to configure a database context."
+          "reason": "The ApprenticeCommitmentsDbContext class uses DbContextOptions which requires a database connection string."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.ApprenticeCommitments/Infrastructure/SqlServerConnectionFactory.cs",
+          "reason": "AddConnection method calls UseSqlServer with the configured DbConnection."
         },
         {
           "sourceFile": "src/SFA.DAS.ApprenticeCommitments/Infrastructure/ServiceCollectionExtensions.cs",
-          "reason": "Database connection string required for `DbContext` setup with `UseDataStorage(connectionFactory, settings.DbConnectionString)`."
+          "reason": "Use of DbConnection in connectionFactory.CreateConnection with key 'ApplicationSettings:DbConnectionString'."
         }
       ]
     },
     {
-      "name": "NServiceBus",
+      "name": "Azure Service Bus",
       "kind": "message-broker",
-      "technology": null,
+      "technology": "azure-service-bus",
       "configurationKeys": [
         "ApplicationSettings:NServiceBusConnectionString",
         "ApplicationSettings:NServiceBusLicense"
@@ -40,7 +40,21 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.ApprenticeCommitments/Infrastructure/ServiceCollectionExtensions.cs",
-          "reason": "Connection string and license referenced for NServiceBus configuration in `StartNServiceBus`."
+          "reason": "Use of service bus connection string 'ApplicationSettings:NServiceBusConnectionString' and license 'ApplicationSettings:NServiceBusLicense'."
+        }
+      ]
+    },
+    {
+      "name": "Azurite",
+      "kind": "object-storage",
+      "technology": "azurite",
+      "configurationKeys": [
+        "ConfigurationStorageConnectionString"
+      ],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.ApprenticeCommitments.Api/appsettings.json",
+          "reason": "The ConfigurationStorageConnectionString key indicates Azure Storage emulator such as Azurite for local development."
         }
       ]
     }
@@ -49,87 +63,72 @@
     {
       "key": "AllowedHosts",
       "sourceFile": "src/SFA.DAS.ApprenticeCommitments.Api/appsettings.json",
-      "reason": "Defines allowed hosts for the application."
+      "reason": "Specifies the allowed hosts for the application."
     },
     {
       "key": "APPLICATIONINSIGHTS_CONNECTION_STRING",
       "sourceFile": "src/SFA.DAS.ApprenticeCommitments.Api/appsettings.json",
-      "reason": "Defines connection string for Application Insights."
+      "reason": "Specifies the connection string for Azure Application Insights telemetry."
     },
     {
       "key": "ApplicationSettings:DbConnectionString",
       "sourceFile": "src/SFA.DAS.ApprenticeCommitments/Configuration/ApplicationSettings.cs",
-      "reason": "Declared in ApplicationSettings class for database connection."
+      "reason": "The ApplicationSettings class defines DbConnectionString for database connection."
     },
     {
       "key": "ApplicationSettings:DbConnectionString",
       "sourceFile": "src/SFA.DAS.ApprenticeCommitments/Infrastructure/ServiceCollectionExtensions.cs",
-      "reason": "Database connection string required for `DbContext` setup with `UseDataStorage(connectionFactory, settings.DbConnectionString)`."
+      "reason": "Key is required for SQL Server database connection in connectionFactory.CreateConnection call."
     },
     {
-      "key": "ApplicationSettings:FuzzyMatchingSimilarityThreshold",
-      "sourceFile": "src/SFA.DAS.ApprenticeCommitments/Configuration/ApplicationSettings.cs",
-      "reason": "Defines the threshold for fuzzy matching."
+      "key": "ApplicationSettings:DbConnectionString",
+      "sourceFile": "src/SFA.DAS.ApprenticeCommitments/Infrastructure/SqlServerConnectionFactory.cs",
+      "reason": "Key is used to set up a SQL Server connection in AddConnection and CreateConnection methods."
     },
     {
       "key": "ApplicationSettings:NServiceBusConnectionString",
       "sourceFile": "src/SFA.DAS.ApprenticeCommitments/Infrastructure/ServiceCollectionExtensions.cs",
-      "reason": "Connection string used for configuring NServiceBus transport."
+      "reason": "Key is required to determine the transport for Azure Service Bus."
     },
     {
       "key": "ApplicationSettings:NServiceBusLicense",
       "sourceFile": "src/SFA.DAS.ApprenticeCommitments/Infrastructure/ServiceCollectionExtensions.cs",
-      "reason": "NServiceBus license key referenced in `StartNServiceBus`."
-    },
-    {
-      "key": "ApplicationSettings:TimeToWaitBeforeChangeOfApprenticeshipEmail",
-      "sourceFile": "src/SFA.DAS.ApprenticeCommitments/Configuration/ApplicationSettings.cs",
-      "reason": "Represents a time span configuration."
-    },
-    {
-      "key": "AzureActiveDirectoryConfiguration:Identifier",
-      "sourceFile": "src/SFA.DAS.ApprenticeCommitments/Configuration/AzureActiveDirectoryConfiguration.cs",
-      "reason": "Part of Azure Active Directory configuration."
-    },
-    {
-      "key": "AzureActiveDirectoryConfiguration:Tenant",
-      "sourceFile": "src/SFA.DAS.ApprenticeCommitments/Configuration/AzureActiveDirectoryConfiguration.cs",
-      "reason": "Part of Azure Active Directory configuration."
+      "reason": "Key is used to configure NServiceBus license."
     },
     {
       "key": "ConfigNames",
       "sourceFile": "src/SFA.DAS.ApprenticeCommitments.Api/appsettings.json",
-      "reason": "Specifies names for the configuration."
+      "reason": "Specifies the configuration names to load settings."
     },
     {
       "key": "ConfigurationStorageConnectionString",
       "sourceFile": "src/SFA.DAS.ApprenticeCommitments.Api/appsettings.json",
-      "reason": "Defines connection string for configuration storage."
+      "reason": "Connection string for configuration storage, likely using Azurite for local development."
     },
     {
       "key": "EnvironmentName",
       "sourceFile": "src/SFA.DAS.ApprenticeCommitments.Api/appsettings.json",
-      "reason": "Defines the environment the application runs in."
+      "reason": "Specifies the current environment setting, e.g., LOCAL for development."
     },
     {
       "key": "Logging:LogLevel:Default",
       "sourceFile": "src/SFA.DAS.ApprenticeCommitments.Api/appsettings.json",
-      "reason": "Specifies default logging level."
+      "reason": "Specifies logging level configuration."
     },
     {
       "key": "Logging:LogLevel:Microsoft",
       "sourceFile": "src/SFA.DAS.ApprenticeCommitments.Api/appsettings.json",
-      "reason": "Specifies logging level for Microsoft."
+      "reason": "Specifies logging level configuration for Microsoft components."
     },
     {
       "key": "Logging:LogLevel:Microsoft.EntityFrameworkCore.Database.Command",
       "sourceFile": "src/SFA.DAS.ApprenticeCommitments.Api/appsettings.json",
-      "reason": "Specifies logging level for database commands."
+      "reason": "Specifies logging level for EF Core database commands."
     },
     {
       "key": "Logging:LogLevel:Microsoft.Hosting.Lifetime",
       "sourceFile": "src/SFA.DAS.ApprenticeCommitments.Api/appsettings.json",
-      "reason": "Specifies logging level for Microsoft.Hosting.Lifetime."
+      "reason": "Specifies logging level configuration for Microsoft hosting lifetime actions."
     },
     {
       "key": "Version",

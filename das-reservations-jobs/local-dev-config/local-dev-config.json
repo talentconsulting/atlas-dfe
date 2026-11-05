@@ -1,0 +1,142 @@
+{
+  "repository": "SkillsFundingAgency/das-reservations-jobs",
+  "ref": "master",
+  "path": "src",
+  "localServices": [
+    {
+      "name": "In-Memory Database",
+      "kind": "database",
+      "technology": "inmemory",
+      "configurationKeys": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Reservations.Infrastructure/Database/AddDatabaseExtension.cs",
+          "reason": "The `AddDatabaseRegistration` method configures an in-memory database for the `DEV` environment."
+        }
+      ]
+    },
+    {
+      "name": "SQL Server",
+      "kind": "database",
+      "technology": "sqlserver",
+      "configurationKeys": [
+        "ReservationsJobs:ConnectionString"
+      ],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Reservations.Infrastructure/Database/AddDatabaseExtension.cs",
+          "reason": "The `AddDatabaseRegistration` method registers the SQL Server-backed `ReservationsDataContext` for non-`DEV` environments, requiring a connection string."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.Reservations.Data/ReservationsDataContext.cs",
+          "reason": "The `ReservationsDataContext` class uses UseSqlServer with a connection string passed as an IDbConnection."
+        }
+      ]
+    },
+    {
+      "name": "Azure Service Bus",
+      "kind": "message-broker",
+      "technology": null,
+      "configurationKeys": [
+        "AzureWebJobsServiceBus"
+      ],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Reservations.Functions.LegalEntities/local.settings.json",
+          "reason": "Key specifies local Azure Service Bus Endpoint."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.Reservations.Functions.ProviderPermission/local.settings.json",
+          "reason": "Key specifies local Azure Service Bus Endpoint."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.Reservations.Functions.Reservations/local.settings.json",
+          "reason": "Key specifies local Azure Service Bus Endpoint."
+        }
+      ]
+    },
+    {
+      "name": "Azurite",
+      "kind": "object-storage",
+      "technology": "azurite",
+      "configurationKeys": [
+        "AzureWebJobsStorage",
+        "ConfigurationStorageConnectionString"
+      ],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Reservations.Functions.LegalEntities/local.settings.json",
+          "reason": "Key references local Azure Storage Emulator (UseDevelopmentStorage=true) as connection string."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.Reservations.Functions.ProviderPermission/local.settings.json",
+          "reason": "Key references local Azure Storage Emulator (UseDevelopmentStorage=true) as connection string."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.Reservations.Functions.RefreshCourse/local.settings.json",
+          "reason": "Key references local Azure Storage Emulator (UseDevelopmentStorage=true) as connection string."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.Reservations.Functions.ReservationIndex/local.settings.json",
+          "reason": "Key references local Azure Storage Emulator (UseDevelopmentStorage=true) as connection string."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.Reservations.Functions.Reservations/local.settings.json",
+          "reason": "Key references local Azure Storage Emulator (UseDevelopmentStorage=true) as connection string."
+        }
+      ]
+    }
+  ],
+  "configurationKeys": [
+    {
+      "key": "AppName",
+      "sourceFile": "src/SFA.DAS.Reservations.Functions.LegalEntities/local.settings.json",
+      "reason": "References the name of the application."
+    },
+    {
+      "key": "AzureWebJobsServiceBus",
+      "sourceFile": "src/SFA.DAS.Reservations.Functions.LegalEntities/local.settings.json",
+      "reason": "Specifies the connection string for Service Bus."
+    },
+    {
+      "key": "AzureWebJobsStorage",
+      "sourceFile": "src/SFA.DAS.Reservations.Functions.LegalEntities/local.settings.json",
+      "reason": "Defines storage emulator connection for Azure Functions."
+    },
+    {
+      "key": "ConfigNames",
+      "sourceFile": "src/SFA.DAS.Reservations.Functions.LegalEntities/local.settings.json",
+      "reason": "Specifies configuration names for initialization."
+    },
+    {
+      "key": "ConfigurationStorageConnectionString",
+      "sourceFile": "src/SFA.DAS.Reservations.Functions.LegalEntities/local.settings.json",
+      "reason": "Defines configuration source connection string for initialization."
+    },
+    {
+      "key": "EnvironmentName",
+      "sourceFile": "src/SFA.DAS.Reservations.Functions.LegalEntities/local.settings.json",
+      "reason": "Defines the environment context for local development."
+    },
+    {
+      "key": "FUNCTIONS_WORKER_RUNTIME",
+      "sourceFile": "src/SFA.DAS.Reservations.Functions.LegalEntities/local.settings.json",
+      "reason": "Declares .NET runtime for Azure Functions."
+    },
+    {
+      "key": "RefreshCoursesSchedule",
+      "sourceFile": "src/SFA.DAS.Reservations.Functions.RefreshCourse/local.settings.json",
+      "reason": "Specifies the schedule for the RefreshCourses function."
+    },
+    {
+      "key": "ReservationsJobs:ConnectionString",
+      "sourceFile": "src/SFA.DAS.Reservations.Infrastructure/Database/AddDatabaseExtension.cs",
+      "reason": "Required for SQL Server configuration in non-`DEV` environments."
+    },
+    {
+      "key": "Version",
+      "sourceFile": "src/SFA.DAS.Reservations.Functions.LegalEntities/local.settings.json",
+      "reason": "Defines the version of the application."
+    }
+  ]
+}

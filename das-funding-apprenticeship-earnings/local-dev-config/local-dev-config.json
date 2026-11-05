@@ -9,136 +9,192 @@
       "technology": "sqlserver",
       "configurationKeys": [
         "ApplicationSettings:DbConnectionString",
+        "ConnectionStrings:ApprenticeshipEarningsDatabase",
+        "Database:ConnectionString",
+        "Database:Name",
         "DbConnectionString"
       ],
       "evidence": [
         {
           "sourceFile": "src/Infrastructure/Configuration/ApplicationSettings.cs",
-          "reason": "DbConnectionString property in ApplicationSettings indicates database connection configuration."
+          "reason": "DbConnectionString is a required configuration key and likely represents the connection to a SQL Server instance in the context of Entity Framework Core."
         },
         {
           "sourceFile": "src/DataAccess/ApprenticeshipEarningsDataContext.cs",
-          "reason": "DbContext provides evidence of a SQL Server connection for entity configuration."
-        },
-        {
-          "sourceFile": "src/Infrastructure/HealthChecks/DbHealthCheck.cs",
-          "reason": "SQL Server connection is created with a connection string."
+          "reason": "The DbContext in the file suggests SQL Server is used as the database in this project."
         },
         {
           "sourceFile": "src/Infrastructure/ServiceCollectionExtensions.cs",
-          "reason": "UseSqlServer method is called with a DbConnectionString."
-        },
-        {
-          "sourceFile": "src/TestHelpers/SqlDatabase.cs",
-          "reason": "Defines a test helper for SQL Server, including database creation and connection management."
+          "reason": "The file configures Entity Framework to use a SQL Server database by calling UseSqlServer with a DbConnectionString."
         },
         {
           "sourceFile": "src/Queries/GetFm36Data/GetFm36DataQueryHandler.cs",
-          "reason": "Uses Entity Framework with SQL Server-specific options via ApprenticeshipEarningsDataContext."
+          "reason": "ApprenticeshipEarningsDataContext is used with Entity Framework Core."
         },
         {
           "sourceFile": "src/Queries/GetFm99ShortCourseEarnings/GetFm99ShortCourseEarningsQueryHandler.cs",
-          "reason": "Uses Entity Framework with SQL Server-specific options via ApprenticeshipEarningsDataContext."
+          "reason": "ApprenticeshipEarningsDataContext is used with Entity Framework Core."
         },
         {
           "sourceFile": "src/Queries/GetShortCourse/GetShortCourseQueryHandler.cs",
-          "reason": "Uses Entity Framework with SQL Server-specific options via ApprenticeshipEarningsDataContext."
+          "reason": "ApprenticeshipEarningsDataContext is used with Entity Framework Core."
+        },
+        {
+          "sourceFile": "src/TestHelpers/SqlDatabase.cs",
+          "reason": "SQL Server connection string is defined and `UseSqlServer` is used for database context."
         }
       ]
     },
     {
       "name": "Azure Service Bus",
       "kind": "message-broker",
-      "technology": "servicebus",
+      "technology": null,
       "configurationKeys": [
-        "_connectionString",
         "ApplicationSettings:ServiceBusConnectionString"
       ],
       "evidence": [
         {
           "sourceFile": "src/Infrastructure/Configuration/ApplicationSettings.cs",
-          "reason": "ServiceBusConnectionString property in ApplicationSettings indicates a connection to Azure Service Bus."
-        },
-        {
-          "sourceFile": "src/Infrastructure/HealthChecks/ServiceBusReceiveHealthCheck.cs",
-          "reason": "Service Bus client is created using a connection string for health checks."
-        }
-      ]
-    },
-    {
-      "name": "NServiceBus",
-      "kind": "message-broker",
-      "technology": "nservicebus",
-      "configurationKeys": [
-        "ApplicationSettings:NServiceBusConnectionString",
-        "ApplicationSettings:NServiceBusLicense"
-      ],
-      "evidence": [
-        {
-          "sourceFile": "src/MessageHandlers/AppStart/NServiceBusConfiguration.cs",
-          "reason": "NServiceBus configuration methods indicate the application uses NServiceBus as a message broker."
-        },
-        {
-          "sourceFile": "src/Infrastructure/Configuration/ApplicationSettings.cs",
-          "reason": "NServiceBusConnectionString and NServiceBusLicense properties in ApplicationSettings indicate NServiceBus usage."
-        }
-      ]
-    },
-    {
-      "name": "Azurite",
-      "kind": "object-storage",
-      "technology": "azurite",
-      "configurationKeys": [
-        "ApplicationSettings:AzureWebJobsStorage"
-      ],
-      "evidence": [
-        {
-          "sourceFile": "src/Infrastructure/Configuration/ApplicationSettings.cs",
-          "reason": "AzureWebJobsStorage property in ApplicationSettings suggests dependency on Azure Storage, which can be emulated locally with Azurite."
+          "reason": "ServiceBusConnectionString is referenced as a configuration key under ApplicationSettings, indicating usage of Azure Service Bus."
         }
       ]
     }
   ],
   "configurationKeys": [
     {
-      "key": "_connectionString",
-      "sourceFile": "src/Infrastructure/HealthChecks/ServiceBusReceiveHealthCheck.cs",
-      "reason": "Azure Service Bus client connection is initiated with this key."
+      "key": "AllowedHosts",
+      "sourceFile": "src/InnerApi/appsettings.json",
+      "reason": "AllowedHosts is a configuration key in appsettings.json."
+    },
+    {
+      "key": "ApplicationSettings:ApprenticeshipOptInConfiguration:EarningsOptedInProviders",
+      "sourceFile": "src/Infrastructure/Configuration/ApplicationSettings.cs",
+      "reason": "EarningsOptedInProviders is a configuration key for managing opted-in providers in ApprenticeshipOptInConfiguration."
+    },
+    {
+      "key": "ApplicationSettings:ApprenticeshipOptInConfiguration:PaymentsOptedInProviders",
+      "sourceFile": "src/Infrastructure/Configuration/ApplicationSettings.cs",
+      "reason": "PaymentsOptedInProviders is a configuration key for managing payment-opted-in providers in ApprenticeshipOptInConfiguration."
+    },
+    {
+      "key": "ApplicationSettings:ApprenticeshipOptInConfiguration:StartDate",
+      "sourceFile": "src/Infrastructure/Configuration/ApplicationSettings.cs",
+      "reason": "StartDate is a configuration key relevant to ApprenticeshipOptInConfiguration, as defined in the ApplicationSettings class."
     },
     {
       "key": "ApplicationSettings:AzureWebJobsStorage",
       "sourceFile": "src/Infrastructure/Configuration/ApplicationSettings.cs",
-      "reason": "Required for Azurite object storage emulation to mimic Azure Storage."
+      "reason": "AzureWebJobsStorage is a configuration key for Azure Functions or similar services."
     },
     {
       "key": "ApplicationSettings:DbConnectionString",
       "sourceFile": "src/Infrastructure/Configuration/ApplicationSettings.cs",
-      "reason": "Required for SQL Server connection in the data context."
+      "reason": "DbConnectionString stores database connection information for setting up the DbContext in the application."
+    },
+    {
+      "key": "ApplicationSettings:EarningOuterApiConfiguration:BaseUrl",
+      "sourceFile": "src/Infrastructure/Configuration/ApplicationSettings.cs",
+      "reason": "BaseUrl is required for the EarningOuterApiConfiguration, as defined in the ApplicationSettings class."
+    },
+    {
+      "key": "ApplicationSettings:EarningOuterApiConfiguration:Key",
+      "sourceFile": "src/Infrastructure/Configuration/ApplicationSettings.cs",
+      "reason": "Key is required for the EarningOuterApiConfiguration, as defined in the ApplicationSettings class."
+    },
+    {
+      "key": "ApplicationSettings:LearningTransportStorageDirectory",
+      "sourceFile": "src/Infrastructure/Configuration/ApplicationSettings.cs",
+      "reason": "LearningTransportStorageDirectory is a configuration key likely used for local storage in NServiceBus."
     },
     {
       "key": "ApplicationSettings:NServiceBusConnectionString",
       "sourceFile": "src/Infrastructure/Configuration/ApplicationSettings.cs",
-      "reason": "Required for NServiceBus message broker connection."
+      "reason": "NServiceBusConnectionString hints at the use of NServiceBus for message handling."
     },
     {
       "key": "ApplicationSettings:NServiceBusLicense",
       "sourceFile": "src/Infrastructure/Configuration/ApplicationSettings.cs",
-      "reason": "Required for NServiceBus license configuration."
+      "reason": "NServiceBusLicense is a configuration key referenced in the ApplicationSettings for providing NServiceBus license information."
+    },
+    {
+      "key": "ApplicationSettings:NServiceBusLicense",
+      "sourceFile": "src/MessageHandlers/AppStart/NServiceBusConfiguration.cs",
+      "reason": "NServiceBusLicense is referenced when setting the license for NServiceBus in the configuration."
+    },
+    {
+      "key": "ApplicationSettings:PaymentsConfiguration:PaymentsEndpoint",
+      "sourceFile": "src/Infrastructure/Configuration/ApplicationSettings.cs",
+      "reason": "PaymentsEndpoint is defined under PaymentsConfiguration in the ApplicationSettings class."
+    },
+    {
+      "key": "ApplicationSettings:QueueName",
+      "sourceFile": "src/Infrastructure/Configuration/ApplicationSettings.cs",
+      "reason": "QueueName is specified as part of the ApplicationSettings, likely required for message queue configuration."
     },
     {
       "key": "ApplicationSettings:ServiceBusConnectionString",
       "sourceFile": "src/Infrastructure/Configuration/ApplicationSettings.cs",
-      "reason": "Required for Azure Service Bus connection."
+      "reason": "ServiceBusConnectionString is a configuration key for an Azure Service Bus connection."
     },
     {
-      "key": "DbConnectionString",
-      "sourceFile": "src/Infrastructure/HealthChecks/DbHealthCheck.cs",
-      "reason": "SQL Server connection initialized using this key in DbHealthCheck."
+      "key": "ApplicationSettings:TopicPath",
+      "sourceFile": "src/Infrastructure/Configuration/ApplicationSettings.cs",
+      "reason": "TopicPath is specified as part of the ApplicationSettings, likely required for setting up an Azure Service Bus topic."
+    },
+    {
+      "key": "ApplicationSettings:UseWebSockets",
+      "sourceFile": "src/Infrastructure/Configuration/ApplicationSettings.cs",
+      "reason": "UseWebSockets is a configuration flag associated with WebSocket usage in the application."
+    },
+    {
+      "key": "ConfigurationStorageConnectionString",
+      "sourceFile": "src/InnerApi/appsettings.json",
+      "reason": "ConfigurationStorageConnectionString indicates connection to a development storage, as defined in appsettings.json."
+    },
+    {
+      "key": "ConnectionStrings:ApprenticeshipEarningsDatabase",
+      "sourceFile": "src/Queries/GetFm36Data/GetFm36DataQueryHandler.cs",
+      "reason": "Used in ApprenticeshipEarningsDataContext for database connection."
+    },
+    {
+      "key": "Database:ConnectionString",
+      "sourceFile": "src/TestHelpers/SqlDatabase.cs",
+      "reason": "SQL Server connection string parameter defined for database connection."
+    },
+    {
+      "key": "Database:Name",
+      "sourceFile": "src/TestHelpers/SqlDatabase.cs",
+      "reason": "Database name parameter defined in SqlDatabase for local test database setup."
     },
     {
       "key": "DbConnectionString",
       "sourceFile": "src/Infrastructure/ServiceCollectionExtensions.cs",
-      "reason": "UseSqlServer method is configured with this key."
+      "reason": "The file defines application settings and passes DbConnectionString to configure SQL Server in Entity Framework."
+    },
+    {
+      "key": "EnvironmentName",
+      "sourceFile": "src/InnerApi/appsettings.json",
+      "reason": "EnvironmentName is explicitly set to 'LOCAL' in appsettings.json."
+    },
+    {
+      "key": "Logging:LogLevel:Default",
+      "sourceFile": "src/InnerApi/appsettings.Development.json",
+      "reason": "Default log level is specified for development in appsettings.Development.json."
+    },
+    {
+      "key": "Logging:LogLevel:Default",
+      "sourceFile": "src/InnerApi/appsettings.json",
+      "reason": "Default log level is specified in appsettings.json."
+    },
+    {
+      "key": "Logging:LogLevel:Microsoft.AspNetCore",
+      "sourceFile": "src/InnerApi/appsettings.Development.json",
+      "reason": "LogLevel for Microsoft.AspNetCore is specified for development in appsettings.Development.json."
+    },
+    {
+      "key": "Logging:LogLevel:Microsoft.AspNetCore",
+      "sourceFile": "src/InnerApi/appsettings.json",
+      "reason": "LogLevel for Microsoft.AspNetCore is specified in appsettings.json."
     }
   ]
 }

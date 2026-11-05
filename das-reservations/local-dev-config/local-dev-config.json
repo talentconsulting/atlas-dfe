@@ -14,11 +14,11 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.Reservations.Infrastructure/Configuration/ReservationsWebConfiguration.cs",
-          "reason": "The property RedisCacheConnectionString was found, indicating a use of Redis as a cache."
+          "reason": "Property 'RedisCacheConnectionString' suggests usage of Redis for caching."
         },
         {
           "sourceFile": "src/SFA.DAS.Reservations.Web/Startup.cs",
-          "reason": "Configures RedisCache using a connection string read from ReservationsWeb configuration."
+          "reason": "services.AddStackExchangeRedisCache references ReservationsWebConfig.RedisCacheConnectionString."
         }
       ]
     },
@@ -32,151 +32,176 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.Reservations.Infrastructure/Configuration/ReservationsWebConfiguration.cs",
-          "reason": "The property DataProtectionKeysDatabase suggests a SQL Server is used for data protection."
+          "reason": "Property 'DataProtectionKeysDatabase' suggests usage of a SQL Server database to store keys."
         }
       ]
     }
   ],
   "configurationKeys": [
     {
+      "key": "APPLICATIONINSIGHTS_CONNECTION_STRING",
+      "sourceFile": "src/SFA.DAS.Reservations.Web/appsettings.json",
+      "reason": "Required for Application Insights logging."
+    },
+    {
+      "key": "ConfigNames",
+      "sourceFile": "src/SFA.DAS.Reservations.Web/appsettings.json",
+      "reason": "Used for configuration storage names."
+    },
+    {
+      "key": "ConnectionStrings:RedisLogging",
+      "sourceFile": "src/SFA.DAS.Reservations.Web/appsettings.json",
+      "reason": "Referenced for Redis logging configuration but not specifically implemented in code."
+    },
+    {
+      "key": "Environment",
+      "sourceFile": "src/SFA.DAS.Reservations.Web/AppStart/Configuration.cs",
+      "reason": "Referenced in configuration checks for environment-specific behavior."
+    },
+    {
       "key": "Environment",
       "sourceFile": "src/SFA.DAS.Reservations.Web/Startup.cs",
-      "reason": "Determines the runtime environment (DEV, LOCAL, etc.)."
+      "reason": "Used to determine environment-specific settings and behavior."
     },
     {
       "key": "IsIntegrationTest",
       "sourceFile": "src/SFA.DAS.Reservations.Web/AppStart/Configuration.cs",
-      "reason": "Used to check if the application is running in an integration test environment."
+      "reason": "Used to toggle mocking dependencies."
     },
     {
-      "key": "ProviderIdams",
-      "sourceFile": "src/SFA.DAS.Reservations.Web/AppStart/Configuration.cs",
-      "reason": "Used to configure provider-specific Idams settings."
+      "key": "IsIntegrationTest",
+      "sourceFile": "src/SFA.DAS.Reservations.Web/Startup.cs",
+      "reason": "Used to set up configurations based on integration tests."
     },
     {
       "key": "ProviderIdamsConfiguration:MetadataAddress",
       "sourceFile": "src/SFA.DAS.Reservations.Infrastructure/Configuration/ProviderIdamsConfiguration.cs",
-      "reason": "The property MetadataAddress is required in ProviderIdamsConfiguration."
+      "reason": "Property 'MetadataAddress' may be required to configure identity provider metadata."
     },
     {
       "key": "ProviderIdamsConfiguration:Wtrealm",
       "sourceFile": "src/SFA.DAS.Reservations.Infrastructure/Configuration/ProviderIdamsConfiguration.cs",
-      "reason": "The property Wtrealm is required in ProviderIdamsConfiguration."
+      "reason": "Property 'Wtrealm' appears to set a realm for identity provider configuration."
     },
     {
       "key": "ReservationsApi",
       "sourceFile": "src/SFA.DAS.Reservations.Web/AppStart/Configuration.cs",
-      "reason": "Configured as a section to provide settings for the Reservations API."
+      "reason": "Configuration section for Reservations API service."
     },
     {
       "key": "ReservationsApiConfiguration:Id",
       "sourceFile": "src/SFA.DAS.Reservations.Infrastructure/Configuration/ReservationsApiConfiguration.cs",
-      "reason": "The property Id is required in ReservationsApiConfiguration."
+      "reason": "Property 'Id' hints at an API client identifier."
     },
     {
       "key": "ReservationsApiConfiguration:Identifier",
       "sourceFile": "src/SFA.DAS.Reservations.Infrastructure/Configuration/ReservationsApiConfiguration.cs",
-      "reason": "The property Identifier is required in ReservationsApiConfiguration."
+      "reason": "Property 'Identifier' might point to an external API or system."
     },
     {
       "key": "ReservationsApiConfiguration:Secret",
       "sourceFile": "src/SFA.DAS.Reservations.Infrastructure/Configuration/ReservationsApiConfiguration.cs",
-      "reason": "The property Secret is required in ReservationsApiConfiguration."
+      "reason": "Property 'Secret' implies an API client secret."
     },
     {
       "key": "ReservationsApiConfiguration:Tenant",
       "sourceFile": "src/SFA.DAS.Reservations.Infrastructure/Configuration/ReservationsApiConfiguration.cs",
-      "reason": "The property Tenant is required in ReservationsApiConfiguration."
+      "reason": "Property 'Tenant' may specify a multi-tenant structure identifier or domain."
     },
     {
       "key": "ReservationsApiConfiguration:Url",
       "sourceFile": "src/SFA.DAS.Reservations.Infrastructure/Configuration/ReservationsApiConfiguration.cs",
-      "reason": "The property Url is required in ReservationsApiConfiguration."
+      "reason": "Property 'Url' suggests the location of a backend API."
     },
     {
       "key": "ReservationsOuterApi",
       "sourceFile": "src/SFA.DAS.Reservations.Web/AppStart/Configuration.cs",
-      "reason": "Configured as a section to provide settings for Reservations Outer API."
+      "reason": "Configuration section for Reservations Outer API service."
+    },
+    {
+      "key": "ReservationsOuterApi",
+      "sourceFile": "src/SFA.DAS.Reservations.Web/appsettings.json",
+      "reason": "Defined external API configurations here."
     },
     {
       "key": "ReservationsOuterApiConfiguration:ApiBaseUrl",
       "sourceFile": "src/SFA.DAS.Reservations.Infrastructure/Configuration/ReservationsOuterApiConfiguration.cs",
-      "reason": "The property ApiBaseUrl is required in ReservationsOuterApiConfiguration."
+      "reason": "Property 'ApiBaseUrl' defines the base URL for an external API client."
     },
     {
       "key": "ReservationsOuterApiConfiguration:ApiVersion",
       "sourceFile": "src/SFA.DAS.Reservations.Infrastructure/Configuration/ReservationsOuterApiConfiguration.cs",
-      "reason": "The property ApiVersion is required in ReservationsOuterApiConfiguration."
+      "reason": "Property 'ApiVersion' sets the version of the external API."
     },
     {
       "key": "ReservationsOuterApiConfiguration:SubscriptionKey",
       "sourceFile": "src/SFA.DAS.Reservations.Infrastructure/Configuration/ReservationsOuterApiConfiguration.cs",
-      "reason": "The property SubscriptionKey is required in ReservationsOuterApiConfiguration."
+      "reason": "Property 'SubscriptionKey' signifies an API authentication requirement."
     },
     {
       "key": "ReservationsWeb",
       "sourceFile": "src/SFA.DAS.Reservations.Web/AppStart/Configuration.cs",
-      "reason": "Configured as a section to provide settings for Reservations Web."
+      "reason": "Configuration section for Reservations Web settings."
+    },
+    {
+      "key": "ReservationsWeb",
+      "sourceFile": "src/SFA.DAS.Reservations.Web/appsettings.json",
+      "reason": "Holds configuration values for Reservations Web."
     },
     {
       "key": "ReservationsWeb:RedisCacheConnectionString",
       "sourceFile": "src/SFA.DAS.Reservations.Web/Startup.cs",
-      "reason": "Used as the configuration key for Redis cache integration."
+      "reason": "services.AddStackExchangeRedisCache references ReservationsWebConfig.RedisCacheConnectionString."
     },
     {
       "key": "ReservationsWebConfiguration:ApprenticeshipFundingRulesUrl",
       "sourceFile": "src/SFA.DAS.Reservations.Infrastructure/Configuration/ReservationsWebConfiguration.cs",
-      "reason": "The property ApprenticeshipFundingRulesUrl is required in ReservationsWebConfiguration."
+      "reason": "Property 'ApprenticeshipFundingRulesUrl' defines the URL for accessing apprenticeship funding rules."
     },
     {
       "key": "ReservationsWebConfiguration:ApprenticeUrl",
       "sourceFile": "src/SFA.DAS.Reservations.Infrastructure/Configuration/ReservationsWebConfiguration.cs",
-      "reason": "The property ApprenticeUrl is required in ReservationsWebConfiguration."
+      "reason": "Property 'ApprenticeUrl' is required to configure external URL for apprentice services."
     },
     {
       "key": "ReservationsWebConfiguration:DashboardUrl",
       "sourceFile": "src/SFA.DAS.Reservations.Infrastructure/Configuration/ReservationsWebConfiguration.cs",
-      "reason": "The property DashboardUrl is required in ReservationsWebConfiguration."
+      "reason": "Property 'DashboardUrl' is required to configure dashboard URL for client applications."
     },
     {
       "key": "ReservationsWebConfiguration:DataProtectionKeysDatabase",
       "sourceFile": "src/SFA.DAS.Reservations.Infrastructure/Configuration/ReservationsWebConfiguration.cs",
-      "reason": "The property DataProtectionKeysDatabase is required, suggesting configuration of a SQL Server database."
+      "reason": "Property 'DataProtectionKeysDatabase' indicates a dependency on a database for storing keys."
     },
     {
       "key": "ReservationsWebConfiguration:EmployerApprenticeUrl",
       "sourceFile": "src/SFA.DAS.Reservations.Infrastructure/Configuration/ReservationsWebConfiguration.cs",
-      "reason": "The property EmployerApprenticeUrl is required in ReservationsWebConfiguration."
+      "reason": "Property 'EmployerApprenticeUrl' is required to configure the external URL for employer-apprentice services."
     },
     {
       "key": "ReservationsWebConfiguration:EmployerDashboardUrl",
       "sourceFile": "src/SFA.DAS.Reservations.Infrastructure/Configuration/ReservationsWebConfiguration.cs",
-      "reason": "The property EmployerDashboardUrl is required in ReservationsWebConfiguration."
+      "reason": "Property 'EmployerDashboardUrl' is required for configuring the external employer dashboard service."
     },
     {
       "key": "ReservationsWebConfiguration:FindApprenticeshipTrainingUrl",
       "sourceFile": "src/SFA.DAS.Reservations.Infrastructure/Configuration/ReservationsWebConfiguration.cs",
-      "reason": "The property FindApprenticeshipTrainingUrl is required in ReservationsWebConfiguration."
+      "reason": "Property 'FindApprenticeshipTrainingUrl' is required to point to a training-related service."
     },
     {
       "key": "ReservationsWebConfiguration:RedisCacheConnectionString",
       "sourceFile": "src/SFA.DAS.Reservations.Infrastructure/Configuration/ReservationsWebConfiguration.cs",
-      "reason": "The property RedisCacheConnectionString is required, suggesting configuration of Redis cache."
-    },
-    {
-      "key": "ReservationsWebConfiguration:SessionTimeoutHours",
-      "sourceFile": "src/SFA.DAS.Reservations.Infrastructure/Configuration/ReservationsWebConfiguration.cs",
-      "reason": "The property SessionTimeoutHours is required in ReservationsWebConfiguration."
+      "reason": "Property 'RedisCacheConnectionString' suggests usage of a Redis cache service."
     },
     {
       "key": "ResourceEnvironmentName",
       "sourceFile": "src/SFA.DAS.Reservations.Web/Startup.cs",
-      "reason": "Used for conditionally registering dependencies like menu configuration."
+      "reason": "Used to set up the shared UI for the environment."
     },
     {
       "key": "SFA.DAS.Encoding",
       "sourceFile": "src/SFA.DAS.Reservations.Web/AppStart/Configuration.cs",
-      "reason": "Configures the encoding settings via JSON deserialization."
+      "reason": "Configuration section for encoding setup."
     }
   ]
 }

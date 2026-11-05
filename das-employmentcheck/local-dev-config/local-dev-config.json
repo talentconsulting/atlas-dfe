@@ -1,0 +1,365 @@
+{
+  "repository": "SkillsFundingAgency/das-employmentcheck",
+  "ref": "master",
+  "path": "src",
+  "localServices": [
+    {
+      "name": "SQL Server",
+      "kind": "database",
+      "technology": "sqlserver",
+      "configurationKeys": [
+        "ApplicationSettings:DbConnectionString",
+        "DatabaseInfo:ConnectionString",
+        "DbConnectionString",
+        "EmploymentChecksConnectionString",
+        "EmploymentCheckSettings:DbConnectionString"
+      ],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.EmploymentCheck.Api/Configuration/EmploymentCheckSettings.cs",
+          "reason": "Property named 'DbConnectionString' indicates a connection string for SQL Server."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.EmploymentCheck.DataSeeder/Options.cs",
+          "reason": "Property named 'EmploymentChecksConnectionString' indicates another SQL Server connection string."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.EmploymentCheck.Api/Repositories/EmploymentCheckRepository.cs",
+          "reason": "References the DbConnectionString from EmploymentCheckSettings for database operations."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.EmploymentCheck.Data/Repositories/AccountsResponseRepository.cs",
+          "reason": "Uses DbConnectionString from ApplicationSettings for database operations."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.EmploymentCheck.Data/Repositories/DataCollectionsResponseRepository.cs",
+          "reason": "Uses DbConnectionString from ApplicationSettings for database operations."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.EmploymentCheck.DataSeeder/DataAccess.cs",
+          "reason": "DataAccess class accepts connection string for SQL operations"
+        },
+        {
+          "sourceFile": "src/SFA.DAS.EmploymentCheck.Data/Repositories/UnitOfWork.cs",
+          "reason": "UnitOfWork class initializes SQL connection using ApplicationSettings.DbConnectionString"
+        },
+        {
+          "sourceFile": "src/SFA.DAS.EmploymentCheck.Data/Repositories/EmploymentCheckCacheRequestRepository.cs",
+          "reason": "Usage of _connectionString member variable initialized from ApplicationSettings.DbConnectionString in database operations"
+        },
+        {
+          "sourceFile": "src/SFA.DAS.EmploymentCheck.Data/Repositories/EmploymentCheckCacheResponseRepository.cs",
+          "reason": "Usage of _connectionString member variable initialized from ApplicationSettings.DbConnectionString in database operations"
+        },
+        {
+          "sourceFile": "src/SFA.DAS.EmploymentCheck.Data/Repositories/EmploymentCheckRepository.cs",
+          "reason": "Usage of _settings.DbConnectionString for SQL connection creation in repository methods"
+        },
+        {
+          "sourceFile": "src/SFA.DAS.EmploymentCheck.Tests.Database/SqlDatabase.cs",
+          "reason": "A connection string for `(localdb)\\MSSQLLocalDB` used to create and connect to a local SQL Server instance."
+        }
+      ]
+    },
+    {
+      "name": "sqlserver",
+      "kind": "database",
+      "technology": "sqlserver",
+      "configurationKeys": [
+        "ApplicationSettings:DbConnectionString"
+      ],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.EmploymentCheck.Infrastructure/Configuration/ApplicationSettings.cs",
+          "reason": "Contains a configuration property named 'DbConnectionString' likely for SQL Server database connectivity."
+        }
+      ]
+    },
+    {
+      "name": "azure-table-storage",
+      "kind": "object-storage",
+      "technology": "azurite",
+      "configurationKeys": [
+        "AzureStorageConnectionConfiguration:StorageAccountConnectionString"
+      ],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.EmploymentCheck.Infrastructure/Configuration/AzureStorageConnectionConfiguration.cs",
+          "reason": "Contains a 'StorageAccountConnectionString' property defaulting to 'UseDevelopmentStorage=true', indicating Azure Table Storage emulation (e.g., Azurite)."
+        }
+      ]
+    }
+  ],
+  "configurationKeys": [
+    {
+      "key": "ApiRetryOptions:TokenRetrievalRetryCount",
+      "sourceFile": "src/SFA.DAS.EmploymentCheck.Infrastructure/Configuration/ApiRetryOptions.cs",
+      "reason": "Defines retry count for token retrieval."
+    },
+    {
+      "key": "ApiRetryOptions:TooManyRequestsRetryCount",
+      "sourceFile": "src/SFA.DAS.EmploymentCheck.Infrastructure/Configuration/ApiRetryOptions.cs",
+      "reason": "Defines retry configuration for handling 'Too Many Requests' using an integer property."
+    },
+    {
+      "key": "ApiRetryOptions:TransientErrorDelayInMs",
+      "sourceFile": "src/SFA.DAS.EmploymentCheck.Infrastructure/Configuration/ApiRetryOptions.cs",
+      "reason": "Defines delay duration for retrying transient errors in milliseconds."
+    },
+    {
+      "key": "ApiRetryOptions:TransientErrorRetryCount",
+      "sourceFile": "src/SFA.DAS.EmploymentCheck.Infrastructure/Configuration/ApiRetryOptions.cs",
+      "reason": "Defines retry configuration for transient errors using an integer property."
+    },
+    {
+      "key": "ApplicationSettings:DbConnectionString",
+      "sourceFile": "src/SFA.DAS.EmploymentCheck.Data/Repositories/AccountsResponseRepository.cs",
+      "reason": "Referenced to establish a SQL Server connection for accounts response repository."
+    },
+    {
+      "key": "ApplicationSettings:DbConnectionString",
+      "sourceFile": "src/SFA.DAS.EmploymentCheck.Data/Repositories/DataCollectionsResponseRepository.cs",
+      "reason": "Referenced to establish a SQL Server connection for data collections response handling."
+    },
+    {
+      "key": "ApplicationSettings:DbConnectionString",
+      "sourceFile": "src/SFA.DAS.EmploymentCheck.Data/Repositories/EmploymentCheckCacheRequestRepository.cs",
+      "reason": "Repository uses this property from ApplicationSettings for database connection string"
+    },
+    {
+      "key": "ApplicationSettings:DbConnectionString",
+      "sourceFile": "src/SFA.DAS.EmploymentCheck.Data/Repositories/EmploymentCheckCacheResponseRepository.cs",
+      "reason": "Repository accesses this property to create SQL connections"
+    },
+    {
+      "key": "ApplicationSettings:DbConnectionString",
+      "sourceFile": "src/SFA.DAS.EmploymentCheck.Data/Repositories/EmploymentCheckRepository.cs",
+      "reason": "This setting is used in repository to establish SQL connection"
+    },
+    {
+      "key": "ApplicationSettings:DbConnectionString",
+      "sourceFile": "src/SFA.DAS.EmploymentCheck.Data/Repositories/UnitOfWork.cs",
+      "reason": "SQL connection for UnitOfWork is initialized using ApplicationSettings.DbConnectionString"
+    },
+    {
+      "key": "ApplicationSettings:DbConnectionString",
+      "sourceFile": "src/SFA.DAS.EmploymentCheck.DataSeeder/DataAccess.cs",
+      "reason": "DataAccess class requires this key for SQL database access"
+    },
+    {
+      "key": "ApplicationSettings:DbConnectionString",
+      "sourceFile": "src/SFA.DAS.EmploymentCheck.Infrastructure/Configuration/ApplicationSettings.cs",
+      "reason": "Configures the SQL Server database connection string."
+    },
+    {
+      "key": "ApplicationSettings:NServiceBusConnectionString",
+      "sourceFile": "src/SFA.DAS.EmploymentCheck.Infrastructure/Configuration/ApplicationSettings.cs",
+      "reason": "Configures the connection string for NServiceBus."
+    },
+    {
+      "key": "ApplicationSettings:NServiceBusFullyQualifiedNamespace",
+      "sourceFile": "src/SFA.DAS.EmploymentCheck.Infrastructure/Configuration/ApplicationSettings.cs",
+      "reason": "Configures the Azure service namespace for NServiceBus."
+    },
+    {
+      "key": "ApplicationSettings:NServiceBusLicense",
+      "sourceFile": "src/SFA.DAS.EmploymentCheck.Infrastructure/Configuration/ApplicationSettings.cs",
+      "reason": "Configures the license key for NServiceBus."
+    },
+    {
+      "key": "ApplicationSettings:UseNServiceBusConnectionString",
+      "sourceFile": "src/SFA.DAS.EmploymentCheck.Infrastructure/Configuration/ApplicationSettings.cs",
+      "reason": "Boolean flag to toggle usage of 'NServiceBusConnectionString' for connectivity."
+    },
+    {
+      "key": "AzureStorageConnectionConfiguration:EnvironmentName",
+      "sourceFile": "src/SFA.DAS.EmploymentCheck.Infrastructure/Configuration/AzureStorageConnectionConfiguration.cs",
+      "reason": "Defines the environment name, defaulting to 'LOCAL'."
+    },
+    {
+      "key": "AzureStorageConnectionConfiguration:StorageAccountConnectionString",
+      "sourceFile": "src/SFA.DAS.EmploymentCheck.Infrastructure/Configuration/AzureStorageConnectionConfiguration.cs",
+      "reason": "Configures the connection string for Azure Table Storage or its emulator."
+    },
+    {
+      "key": "ConfigNames",
+      "sourceFile": "src/SFA.DAS.EmploymentCheck.Api/appsettings.Development.json",
+      "reason": "Key 'ConfigNames' is defined in the appsettings.Development.json file."
+    },
+    {
+      "key": "DatabaseInfo:ConnectionString",
+      "sourceFile": "src/SFA.DAS.EmploymentCheck.Tests.Database/SqlDatabase.cs",
+      "reason": "A connection string for `(localdb)\\MSSQLLocalDB` required to configure the local SQL Server instance."
+    },
+    {
+      "key": "DataCollectionsApiConfiguration:AcademicYearsCacheDurationSecs",
+      "sourceFile": "src/SFA.DAS.EmploymentCheck.Infrastructure/Configuration/DataCollectionsApiConfiguration.cs",
+      "reason": "Defines the cache duration for academic years data in seconds."
+    },
+    {
+      "key": "DataCollectionsApiConfiguration:AcademicYearsPath",
+      "sourceFile": "src/SFA.DAS.EmploymentCheck.Infrastructure/Configuration/DataCollectionsApiConfiguration.cs",
+      "reason": "Configures the API path for accessing academic years data."
+    },
+    {
+      "key": "DataCollectionsApiConfiguration:BaseUrl",
+      "sourceFile": "src/SFA.DAS.EmploymentCheck.Infrastructure/Configuration/DataCollectionsApiConfiguration.cs",
+      "reason": "Configures the base URL for the Data Collections API."
+    },
+    {
+      "key": "DataCollectionsApiConfiguration:ClientId",
+      "sourceFile": "src/SFA.DAS.EmploymentCheck.Infrastructure/Configuration/DataCollectionsApiConfiguration.cs",
+      "reason": "Sets the client ID for the Data Collections API."
+    },
+    {
+      "key": "DataCollectionsApiConfiguration:ClientSecret",
+      "sourceFile": "src/SFA.DAS.EmploymentCheck.Infrastructure/Configuration/DataCollectionsApiConfiguration.cs",
+      "reason": "Sets the client secret for the Data Collections API."
+    },
+    {
+      "key": "DataCollectionsApiConfiguration:IdentifierUri",
+      "sourceFile": "src/SFA.DAS.EmploymentCheck.Infrastructure/Configuration/DataCollectionsApiConfiguration.cs",
+      "reason": "Configures the URI for token identification in the Data Collections API."
+    },
+    {
+      "key": "DataCollectionsApiConfiguration:NumberOfAcademicYearsToSearch",
+      "sourceFile": "src/SFA.DAS.EmploymentCheck.Infrastructure/Configuration/DataCollectionsApiConfiguration.cs",
+      "reason": "Sets the number of academic years to search for data."
+    },
+    {
+      "key": "DataCollectionsApiConfiguration:Path",
+      "sourceFile": "src/SFA.DAS.EmploymentCheck.Infrastructure/Configuration/DataCollectionsApiConfiguration.cs",
+      "reason": "Configures the API path for querying learners' data."
+    },
+    {
+      "key": "DataCollectionsApiConfiguration:Tenant",
+      "sourceFile": "src/SFA.DAS.EmploymentCheck.Infrastructure/Configuration/DataCollectionsApiConfiguration.cs",
+      "reason": "Configures the tenant identifier for the Data Collections API."
+    },
+    {
+      "key": "DbConnectionString",
+      "sourceFile": "src/SFA.DAS.EmploymentCheck.Api/Configuration/EmploymentCheckSettings.cs",
+      "reason": "The property 'DbConnectionString' is defined in the EmploymentCheckSettings class."
+    },
+    {
+      "key": "DbConnectionString",
+      "sourceFile": "src/SFA.DAS.EmploymentCheck.Api/appsettings.Development.json",
+      "reason": "Key 'DbConnectionString' is defined in the appsettings.Development.json file."
+    },
+    {
+      "key": "EmployerAccountApiConfiguration:BaseUrl",
+      "sourceFile": "src/SFA.DAS.EmploymentCheck.Infrastructure/Configuration/EmployerAccountApiConfiguration.cs",
+      "reason": "Provides a base URL for the Employer Account API for backward compatibility."
+    },
+    {
+      "key": "EmployerAccountApiConfiguration:Identifier",
+      "sourceFile": "src/SFA.DAS.EmploymentCheck.Infrastructure/Configuration/EmployerAccountApiConfiguration.cs",
+      "reason": "Sets up the identifier for the Employer Account API."
+    },
+    {
+      "key": "EmployerAccountApiConfiguration:Url",
+      "sourceFile": "src/SFA.DAS.EmploymentCheck.Infrastructure/Configuration/EmployerAccountApiConfiguration.cs",
+      "reason": "Configures the URL for the Employer Account API."
+    },
+    {
+      "key": "EmploymentChecksConnectionString",
+      "sourceFile": "src/SFA.DAS.EmploymentCheck.DataSeeder/Options.cs",
+      "reason": "Property 'EmploymentChecksConnectionString' is defined in the Options class, suggesting a connection string for SQL Server."
+    },
+    {
+      "key": "EmploymentCheckSettings:DbConnectionString",
+      "sourceFile": "src/SFA.DAS.EmploymentCheck.Api/Repositories/EmploymentCheckRepository.cs",
+      "reason": "Referenced to establish a SQL Server connection for employment checks."
+    },
+    {
+      "key": "EnvironmentName",
+      "sourceFile": "src/SFA.DAS.EmploymentCheck.Api/appsettings.Development.json",
+      "reason": "Key 'EnvironmentName' is defined in the appsettings.Development.json file."
+    },
+    {
+      "key": "HmrcApiConfiguration:BaseUrl",
+      "sourceFile": "src/SFA.DAS.EmploymentCheck.Infrastructure/Configuration/HmrcApiConfiguration.cs",
+      "reason": "Evidenced by the HmrcApiConfiguration class containing a property named BaseUrl."
+    },
+    {
+      "key": "HmrcApiConfiguration:RetryDelay",
+      "sourceFile": "src/SFA.DAS.EmploymentCheck.Infrastructure/Configuration/HmrcApiConfiguration.cs",
+      "reason": "Evidenced by the HmrcApiConfiguration class containing a property named RetryDelay."
+    },
+    {
+      "key": "HmrcApiRateLimiterOptions:DelayAdjustmentIntervalInMs",
+      "sourceFile": "src/SFA.DAS.EmploymentCheck.Infrastructure/Configuration/HmrcApiRateLimiterOptions.cs",
+      "reason": "Evidenced by the HmrcApiRateLimiterOptions class containing a property named DelayAdjustmentIntervalInMs."
+    },
+    {
+      "key": "HmrcApiRateLimiterOptions:EmploymentCheckBatchSize",
+      "sourceFile": "src/SFA.DAS.EmploymentCheck.Infrastructure/Configuration/HmrcApiRateLimiterOptions.cs",
+      "reason": "Evidenced by the HmrcApiRateLimiterOptions class containing a property named EmploymentCheckBatchSize."
+    },
+    {
+      "key": "HmrcApiRateLimiterOptions:MinimumIncreaseDelayIntervalInSeconds",
+      "sourceFile": "src/SFA.DAS.EmploymentCheck.Infrastructure/Configuration/HmrcApiRateLimiterOptions.cs",
+      "reason": "Evidenced by the HmrcApiRateLimiterOptions class containing a property named MinimumIncreaseDelayIntervalInSeconds."
+    },
+    {
+      "key": "HmrcApiRateLimiterOptions:MinimumReduceDelayIntervalInMinutes",
+      "sourceFile": "src/SFA.DAS.EmploymentCheck.Infrastructure/Configuration/HmrcApiRateLimiterOptions.cs",
+      "reason": "Evidenced by the HmrcApiRateLimiterOptions class containing a property named MinimumReduceDelayIntervalInMinutes."
+    },
+    {
+      "key": "HmrcApiRateLimiterOptions:TokenFailureRetryDelayInMs",
+      "sourceFile": "src/SFA.DAS.EmploymentCheck.Infrastructure/Configuration/HmrcApiRateLimiterOptions.cs",
+      "reason": "Evidenced by the HmrcApiRateLimiterOptions class containing a property named TokenFailureRetryDelayInMs."
+    },
+    {
+      "key": "HmrcAuthTokenServiceConfiguration:BaseUrl",
+      "sourceFile": "src/SFA.DAS.EmploymentCheck.TokenServiceStub/Configuration/HmrcAuthTokenServiceConfiguration.cs",
+      "reason": "Evidenced by the HmrcAuthTokenServiceConfiguration class containing a property named BaseUrl."
+    },
+    {
+      "key": "HmrcAuthTokenServiceConfiguration:ClientId",
+      "sourceFile": "src/SFA.DAS.EmploymentCheck.TokenServiceStub/Configuration/HmrcAuthTokenServiceConfiguration.cs",
+      "reason": "Evidenced by the HmrcAuthTokenServiceConfiguration class containing a property named ClientId."
+    },
+    {
+      "key": "HmrcAuthTokenServiceConfiguration:ClientSecret",
+      "sourceFile": "src/SFA.DAS.EmploymentCheck.TokenServiceStub/Configuration/HmrcAuthTokenServiceConfiguration.cs",
+      "reason": "Evidenced by the HmrcAuthTokenServiceConfiguration class containing a property named ClientSecret."
+    },
+    {
+      "key": "HmrcAuthTokenServiceConfiguration:TokenUrl",
+      "sourceFile": "src/SFA.DAS.EmploymentCheck.TokenServiceStub/Configuration/HmrcAuthTokenServiceConfiguration.cs",
+      "reason": "Evidenced by the HmrcAuthTokenServiceConfiguration class containing a property named TokenUrl."
+    },
+    {
+      "key": "HmrcAuthTokenServiceConfiguration:TotpSecret",
+      "sourceFile": "src/SFA.DAS.EmploymentCheck.TokenServiceStub/Configuration/HmrcAuthTokenServiceConfiguration.cs",
+      "reason": "Evidenced by the HmrcAuthTokenServiceConfiguration class containing a property named TotpSecret."
+    },
+    {
+      "key": "TokenServiceApiClientConfiguration:ApiBaseUrl",
+      "sourceFile": "src/SFA.DAS.EmploymentCheck.Infrastructure/Configuration/TokenServiceApiClientConfiguration.cs",
+      "reason": "Evidenced by the TokenServiceApiClientConfiguration class containing a property named ApiBaseUrl."
+    },
+    {
+      "key": "TokenServiceApiClientConfiguration:ClientId",
+      "sourceFile": "src/SFA.DAS.EmploymentCheck.Infrastructure/Configuration/TokenServiceApiClientConfiguration.cs",
+      "reason": "Evidenced by the TokenServiceApiClientConfiguration class containing a property named ClientId."
+    },
+    {
+      "key": "TokenServiceApiClientConfiguration:ClientSecret",
+      "sourceFile": "src/SFA.DAS.EmploymentCheck.Infrastructure/Configuration/TokenServiceApiClientConfiguration.cs",
+      "reason": "Evidenced by the TokenServiceApiClientConfiguration class containing a property named ClientSecret."
+    },
+    {
+      "key": "TokenServiceApiClientConfiguration:IdentifierUri",
+      "sourceFile": "src/SFA.DAS.EmploymentCheck.Infrastructure/Configuration/TokenServiceApiClientConfiguration.cs",
+      "reason": "Evidenced by the TokenServiceApiClientConfiguration class containing a property named IdentifierUri."
+    },
+    {
+      "key": "TokenServiceApiClientConfiguration:Tenant",
+      "sourceFile": "src/SFA.DAS.EmploymentCheck.Infrastructure/Configuration/TokenServiceApiClientConfiguration.cs",
+      "reason": "Evidenced by the TokenServiceApiClientConfiguration class containing a property named Tenant."
+    }
+  ]
+}

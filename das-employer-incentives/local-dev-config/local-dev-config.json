@@ -1,0 +1,301 @@
+{
+  "repository": "SkillsFundingAgency/das-employer-incentives",
+  "ref": "master",
+  "path": "src",
+  "localServices": [
+    {
+      "name": "SQL Server",
+      "kind": "database",
+      "technology": "sqlserver",
+      "configurationKeys": [
+        "ApplicationSettings:DbConnectionString",
+        "ConnectionStrings:EmployerIncentivesDb"
+      ],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Commands/ServiceCollectionExtensions.cs",
+          "reason": "SQL Server persistence is configured with a connection string in 'ApplicationSettings:DbConnectionString'."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Data/ApprenticeshipIncentives/ApprenticeshipIncentiveArchiveRepository.cs",
+          "reason": "Usage of EmployerIncentivesDbContext indicates that a connection string for SQL Server is required."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Data/ApprenticeshipIncentives/ApprenticeshipIncentiveDataRepository.cs",
+          "reason": "Usage of EmployerIncentivesDbContext indicates that a connection string for SQL Server is required."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Data/ApprenticeshipIncentives/ChangeOfCircumstancesDataRepository.cs",
+          "reason": "Usage of EmployerIncentivesDbContext indicates that a connection string for SQL Server is required."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Data/ApprenticeshipIncentives/CollectionPeriodDataRepository.cs",
+          "reason": "Usage of EmployerIncentivesDbContext indicates that a connection string for SQL Server is required."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Data/ApprenticeshipIncentives/EmploymentCheckAuditRepository.cs",
+          "reason": "Usage of EmployerIncentivesDbContext indicates that a connection string for SQL Server is required."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Data/ApprenticeshipIncentives/LearnerDataRepository.cs",
+          "reason": "The `EmployerIncentivesDbContext` is used with Entity Framework Core for database operations."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Data/ApprenticeshipIncentives/ReinstatedPendingPaymentAuditRepository.cs",
+          "reason": "The `EmployerIncentivesDbContext` is used with Entity Framework Core for database operations."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Data/ApprenticeshipIncentives/RevertedPaymentAuditRepository.cs",
+          "reason": "The `EmployerIncentivesDbContext` is used with Entity Framework Core for database operations."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Data/ApprenticeshipIncentives/ValidationOverrideAuditRepository.cs",
+          "reason": "The `EmployerIncentivesDbContext` is used with Entity Framework Core for database operations."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Data/IncentiveApplication/IncentiveApplicationDataRepository.cs",
+          "reason": "The `EmployerIncentivesDbContext` is used with Entity Framework Core for database operations."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Data/Reports/ReportsConnectionProvider.cs",
+          "reason": "The file initializes a SqlConnection using a connection string."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Functions.PaymentsProcess/ServiceCollectionExtensions.cs",
+          "reason": "The file registers UseSqlServerPersistence with DbConnectionString."
+        }
+      ]
+    },
+    {
+      "name": "NServiceBus Learning Transport",
+      "kind": "message-broker",
+      "technology": null,
+      "configurationKeys": [
+        "ApplicationSettings:NServiceBusConnectionString",
+        "ApplicationSettings:UseLearningEndpointStorageDirectory",
+        "NServiceBusConnectionString",
+        "NServiceBusLicense"
+      ],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Api/appsettings.json",
+          "reason": "NServiceBus connection strings and learning directory are explicitly configured, indicating NServiceBus with a learning transport is required."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Functions.TestConsole/local.settings.json",
+          "reason": "NServiceBus connection strings are defined, showing integration with NServiceBus."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Commands/ServiceCollectionExtensions.cs",
+          "reason": "NServiceBus Learning Transport is conditionally initialized using 'ApplicationSettings:NServiceBusConnectionString' and storage directory configuration."
+        }
+      ]
+    },
+    {
+      "name": "Azure Blob Storage",
+      "kind": "object-storage",
+      "technology": "azureblobstorage",
+      "configurationKeys": [
+        "ApplicationSettings:ReportsConnectionString",
+        "ApplicationSettings:ReportsContainerName"
+      ],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Reports/Repositories/AzureBlobRepository.cs",
+          "reason": "The file initializes a BlobContainerClient using ReportsConnectionString and ReportsContainerName."
+        }
+      ]
+    },
+    {
+      "name": "Azure Storage Emulator",
+      "kind": "object-storage",
+      "technology": "azurestorage",
+      "configurationKeys": [
+        "AzureWebJobsStorage",
+        "ConfigurationStorageConnectionString"
+      ],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Functions.TestConsole/local.settings.json",
+          "reason": "AzureWebJobsStorage and ConfigurationStorageConnectionString specify development storage, indicating an Azure Storage Emulator is required."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.EmployerIncentives.Api/appsettings.json",
+          "reason": "ConfigurationStorageConnectionString specifies development storage, indicating an Azure Storage Emulator is required."
+        }
+      ]
+    }
+  ],
+  "configurationKeys": [
+    {
+      "key": "AllowedHosts",
+      "sourceFile": "src/SFA.DAS.EmployerIncentives.Api/appsettings.json",
+      "reason": "Restricted hosts configuration is required for the application."
+    },
+    {
+      "key": "ApplicationInsights:InstrumentationKey",
+      "sourceFile": "src/SFA.DAS.EmployerIncentives.Api/appsettings.json",
+      "reason": "InstrumentationKey is required for Application Insights monitoring."
+    },
+    {
+      "key": "ApplicationSettings:DbConnectionString",
+      "sourceFile": "src/SFA.DAS.EmployerIncentives.Commands/ServiceCollectionExtensions.cs",
+      "reason": "SQL Server persistence is configured with a connection string."
+    },
+    {
+      "key": "ApplicationSettings:DbConnectionString",
+      "sourceFile": "src/SFA.DAS.EmployerIncentives.Data/Reports/ReportsConnectionProvider.cs",
+      "reason": "Required for SQL Server database connection configuration for reports."
+    },
+    {
+      "key": "ApplicationSettings:DbConnectionString",
+      "sourceFile": "src/SFA.DAS.EmployerIncentives.Functions.PaymentsProcess/ServiceCollectionExtensions.cs",
+      "reason": "Required for SQL Server database connection configuration."
+    },
+    {
+      "key": "ApplicationSettings:MinimumAgreementVersion",
+      "sourceFile": "src/SFA.DAS.EmployerIncentives.Api/appsettings.json",
+      "reason": "Identifies the minimum agreement version for the application."
+    },
+    {
+      "key": "ApplicationSettings:NServiceBusConnectionString",
+      "sourceFile": "src/SFA.DAS.EmployerIncentives.Api/appsettings.json",
+      "reason": "Configuration for NServiceBus is specified."
+    },
+    {
+      "key": "ApplicationSettings:NServiceBusConnectionString",
+      "sourceFile": "src/SFA.DAS.EmployerIncentives.Commands/ServiceCollectionExtensions.cs",
+      "reason": "Used for NServiceBus transport configuration."
+    },
+    {
+      "key": "ApplicationSettings:NServiceBusConnectionString",
+      "sourceFile": "src/SFA.DAS.EmployerIncentives.Functions.PaymentsProcess/ServiceCollectionExtensions.cs",
+      "reason": "Used to configure NServiceBus transport."
+    },
+    {
+      "key": "ApplicationSettings:NServiceBusLicense",
+      "sourceFile": "src/SFA.DAS.EmployerIncentives.Functions.PaymentsProcess/ServiceCollectionExtensions.cs",
+      "reason": "Optional key for NServiceBus licensing."
+    },
+    {
+      "key": "ApplicationSettings:ReportsConnectionString",
+      "sourceFile": "src/SFA.DAS.EmployerIncentives.Reports/Repositories/AzureBlobRepository.cs",
+      "reason": "Required to connect to Azure Blob Storage for reports."
+    },
+    {
+      "key": "ApplicationSettings:ReportsContainerName",
+      "sourceFile": "src/SFA.DAS.EmployerIncentives.Reports/Repositories/AzureBlobRepository.cs",
+      "reason": "Specifies the Azure Blob Storage container name for reports."
+    },
+    {
+      "key": "ApplicationSettings:UseLearningEndpointStorageDirectory",
+      "sourceFile": "src/SFA.DAS.EmployerIncentives.Api/appsettings.json",
+      "reason": "Specifies the location of the learning transport endpoint storage for NServiceBus."
+    },
+    {
+      "key": "ApplicationSettings:UseLearningEndpointStorageDirectory",
+      "sourceFile": "src/SFA.DAS.EmployerIncentives.Commands/ServiceCollectionExtensions.cs",
+      "reason": "Indicates directory for NServiceBus Learning Transport storage."
+    },
+    {
+      "key": "ApplicationSettings:UseLearningEndpointStorageDirectory",
+      "sourceFile": "src/SFA.DAS.EmployerIncentives.Functions.PaymentsProcess/ServiceCollectionExtensions.cs",
+      "reason": "Used when initializing LearningTransport for NServiceBus in a local environment."
+    },
+    {
+      "key": "AzureWebJobsStorage",
+      "sourceFile": "src/SFA.DAS.EmployerIncentives.Functions.TestConsole/local.settings.json",
+      "reason": "Defines local Azure function storage using an emulator."
+    },
+    {
+      "key": "ConfigNames",
+      "sourceFile": "src/SFA.DAS.EmployerIncentives.Api/appsettings.json",
+      "reason": "Specifies configuration names for the application."
+    },
+    {
+      "key": "ConfigNames",
+      "sourceFile": "src/SFA.DAS.EmployerIncentives.Functions.TestConsole/local.settings.json",
+      "reason": "Specifies configuration names for Azure Functions."
+    },
+    {
+      "key": "ConfigurationStorageConnectionString",
+      "sourceFile": "src/SFA.DAS.EmployerIncentives.Api/appsettings.json",
+      "reason": "Storage connection string for configuration, indicates using an Azure Storage Emulator."
+    },
+    {
+      "key": "ConnectionStrings:EmployerIncentivesDb",
+      "sourceFile": "src/SFA.DAS.EmployerIncentives.Data/ApprenticeshipIncentives/ApprenticeshipIncentiveArchiveRepository.cs",
+      "reason": "Usage of EmployerIncentivesDbContext indicates that a connection string is required."
+    },
+    {
+      "key": "ConnectionStrings:EmployerIncentivesDb",
+      "sourceFile": "src/SFA.DAS.EmployerIncentives.Data/ApprenticeshipIncentives/ApprenticeshipIncentiveDataRepository.cs",
+      "reason": "Usage of EmployerIncentivesDbContext indicates that a connection string is required."
+    },
+    {
+      "key": "ConnectionStrings:EmployerIncentivesDb",
+      "sourceFile": "src/SFA.DAS.EmployerIncentives.Data/ApprenticeshipIncentives/ChangeOfCircumstancesDataRepository.cs",
+      "reason": "Usage of EmployerIncentivesDbContext indicates that a connection string is required."
+    },
+    {
+      "key": "ConnectionStrings:EmployerIncentivesDb",
+      "sourceFile": "src/SFA.DAS.EmployerIncentives.Data/ApprenticeshipIncentives/CollectionPeriodDataRepository.cs",
+      "reason": "Usage of EmployerIncentivesDbContext indicates that a connection string is required."
+    },
+    {
+      "key": "ConnectionStrings:EmployerIncentivesDb",
+      "sourceFile": "src/SFA.DAS.EmployerIncentives.Data/ApprenticeshipIncentives/EmploymentCheckAuditRepository.cs",
+      "reason": "Usage of EmployerIncentivesDbContext indicates that a connection string is required."
+    },
+    {
+      "key": "EnvironmentName",
+      "sourceFile": "src/SFA.DAS.EmployerIncentives.Api/appsettings.json",
+      "reason": "Defines the environment name for the application."
+    },
+    {
+      "key": "EnvironmentName",
+      "sourceFile": "src/SFA.DAS.EmployerIncentives.Functions.TestConsole/local.settings.json",
+      "reason": "Defines the environment name for Azure Functions."
+    },
+    {
+      "key": "FUNCTIONS_WORKER_RUNTIME",
+      "sourceFile": "src/SFA.DAS.EmployerIncentives.Functions.TestConsole/local.settings.json",
+      "reason": "Worker runtime configuration for Azure Functions."
+    },
+    {
+      "key": "Logging:LogLevel:Default",
+      "sourceFile": "src/SFA.DAS.EmployerIncentives.Api/appsettings.json",
+      "reason": "Default log level configuration is specified."
+    },
+    {
+      "key": "Logging:LogLevel:Microsoft",
+      "sourceFile": "src/SFA.DAS.EmployerIncentives.Api/appsettings.json",
+      "reason": "Microsoft log level configuration is specified."
+    },
+    {
+      "key": "Logging:LogLevel:Microsoft.Hosting.Lifetime",
+      "sourceFile": "src/SFA.DAS.EmployerIncentives.Api/appsettings.json",
+      "reason": "Microsoft.Hosting.Lifetime log level configuration is specified."
+    },
+    {
+      "key": "NServiceBusConnectionString",
+      "sourceFile": "src/SFA.DAS.EmployerIncentives.Functions.TestConsole/local.settings.json",
+      "reason": "Configuration for NServiceBus connection string."
+    },
+    {
+      "key": "NServiceBusLicense",
+      "sourceFile": "src/SFA.DAS.EmployerIncentives.Functions.TestConsole/local.settings.json",
+      "reason": "License information for NServiceBus."
+    },
+    {
+      "key": "Version",
+      "sourceFile": "src/SFA.DAS.EmployerIncentives.Api/appsettings.json",
+      "reason": "Specifies the version of the application."
+    },
+    {
+      "key": "Version",
+      "sourceFile": "src/SFA.DAS.EmployerIncentives.Functions.TestConsole/local.settings.json",
+      "reason": "Specifies the version of Azure Functions."
+    }
+  ]
+}

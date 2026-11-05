@@ -14,18 +14,18 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.Assessor.Functions.Infrastructure/Options/FunctionsOptions.cs",
-          "reason": "Class `FunctionsOptions` declares `SqlConnectionString` and `UseSqlConnectionMI` properties, used for SQL Server connection."
+          "reason": "Database connection keys are defined in the FunctionsOptions class."
         },
         {
           "sourceFile": "src/SFA.DAS.Assessor.Functions/StartupConfiguration/DatabaseExtensions.cs",
-          "reason": "The code registers a SQL Server database connection using the FunctionsOptions:SqlConnectionString key and checks for the FunctionsOptions:UseSqlConnectionMI key for managed identity."
+          "reason": "The file shows SQL Server is configured using connection string 'FunctionsOptions:SqlConnectionString', and optionally uses Managed Identity for authentication based on 'FunctionsOptions:UseSqlConnectionMI'."
         }
       ]
     },
     {
       "name": "Azure Blob Storage",
       "kind": "object-storage",
-      "technology": "azureblobstorage",
+      "technology": "azureblob",
       "configurationKeys": [
         "BlobStorage:ConnectionString",
         "BlobStorage:ContainerName"
@@ -33,206 +33,131 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.Assessor.Functions/Domain/FileTransfer/BlobFileTransferClient.cs",
-          "reason": "Constructor of BlobServiceClient and use of _blobContainerClient indicate a dependency on Azure Blob Storage."
+          "reason": "Constructor of BlobServiceClient accepts a connection string and uses it with a BlobContainerClient."
         }
       ]
     }
   ],
   "configurationKeys": [
     {
+      "key": "AssessorManagedIdentityClientConfiguration:ApiBaseUrl",
+      "sourceFile": "src/SFA.DAS.Assessor.Functions.ExternalApis/Config/ManagedIdentityClientConfiguration.cs",
+      "reason": "ApiBaseUrl property is part of the ManagedIdentityClientConfiguration class."
+    },
+    {
+      "key": "AssessorManagedIdentityClientConfiguration:IdentifierUri",
+      "sourceFile": "src/SFA.DAS.Assessor.Functions.ExternalApis/Config/ManagedIdentityClientConfiguration.cs",
+      "reason": "IdentifierUri property is part of the ManagedIdentityClientConfiguration class."
+    },
+    {
       "key": "BlobSasTokenGeneratorOptions:Enabled",
       "sourceFile": "src/SFA.DAS.Assessor.Functions.Infrastructure/Options/PrintCertificates/BlobSasTokenGeneratorOptions.cs",
-      "reason": "Bound property 'Enabled' in the 'BlobSasTokenGeneratorOptions' class, potentially part of application configuration."
+      "reason": "Property on a bound configuration class indicating local configuration is required."
     },
     {
       "key": "BlobSasTokenGeneratorOptions:SasExpiryDays",
       "sourceFile": "src/SFA.DAS.Assessor.Functions.Infrastructure/Options/PrintCertificates/BlobSasTokenGeneratorOptions.cs",
-      "reason": "Bound property 'SasExpiryDays' in the 'BlobSasTokenGeneratorOptions' class, potentially part of application configuration."
+      "reason": "Property on a bound configuration class indicating local configuration is required."
     },
     {
       "key": "BlobSasTokenGeneratorOptions:SasGroupPolicyIdentifier",
       "sourceFile": "src/SFA.DAS.Assessor.Functions.Infrastructure/Options/PrintCertificates/BlobSasTokenGeneratorOptions.cs",
-      "reason": "Bound property 'SasGroupPolicyIdentifier' in the 'BlobSasTokenGeneratorOptions' class, potentially part of application configuration."
+      "reason": "Property on a bound configuration class indicating local configuration is required."
     },
     {
       "key": "BlobSasTokenGeneratorOptions:SasIPAddress",
       "sourceFile": "src/SFA.DAS.Assessor.Functions.Infrastructure/Options/PrintCertificates/BlobSasTokenGeneratorOptions.cs",
-      "reason": "Bound property 'SasIPAddress' in the 'BlobSasTokenGeneratorOptions' class, potentially part of application configuration."
+      "reason": "Property on a bound configuration class indicating local configuration is required."
     },
     {
       "key": "BlobSasTokenGeneratorOptions:SecureMessageTtl",
       "sourceFile": "src/SFA.DAS.Assessor.Functions.Infrastructure/Options/PrintCertificates/BlobSasTokenGeneratorOptions.cs",
-      "reason": "Bound property 'SecureMessageTtl' in the 'BlobSasTokenGeneratorOptions' class, potentially part of application configuration."
+      "reason": "Property on a bound configuration class indicating local configuration is required."
     },
     {
       "key": "BlobStorage:ConnectionString",
       "sourceFile": "src/SFA.DAS.Assessor.Functions/Domain/FileTransfer/BlobFileTransferClient.cs",
-      "reason": "Declared as a constructor parameter passed to BlobServiceClient for initialization."
+      "reason": "Used in the BlobFileTransferClient constructor to initialize BlobServiceClient."
     },
     {
       "key": "BlobStorage:ContainerName",
       "sourceFile": "src/SFA.DAS.Assessor.Functions/Domain/FileTransfer/BlobFileTransferClient.cs",
-      "reason": "Declared as a constructor parameter passed for initializing the BlobContainerClient."
+      "reason": "Used in the BlobFileTransferClient constructor to get BlobContainerClient."
     },
     {
       "key": "DatabaseMaintenanceOptions:Enabled",
       "sourceFile": "src/SFA.DAS.Assessor.Functions.Infrastructure/Options/DatabaseMaintenance/DatabaseMaintenanceOptions.cs",
-      "reason": "Property `Enabled` in class `DatabaseMaintenanceOptions` requires configuration to enable or disable database maintenance."
+      "reason": "Enabled property is defined in the DatabaseMaintenanceOptions class."
     },
     {
       "key": "DeliveryNotificationOptions:ArchiveDirectory",
       "sourceFile": "src/SFA.DAS.Assessor.Functions.Infrastructure/Options/PrintCertificates/DeliveryNotificationOptions.cs",
-      "reason": "Bound property 'ArchiveDirectory' in the 'DeliveryNotificationOptions' class, potentially part of application configuration."
+      "reason": "Property on a bound configuration class indicating local configuration is required."
     },
     {
       "key": "DeliveryNotificationOptions:Directory",
       "sourceFile": "src/SFA.DAS.Assessor.Functions.Infrastructure/Options/PrintCertificates/DeliveryNotificationOptions.cs",
-      "reason": "Bound property 'Directory' in the 'DeliveryNotificationOptions' class, potentially part of application configuration."
+      "reason": "Property on a bound configuration class indicating local configuration is required."
     },
     {
       "key": "DeliveryNotificationOptions:ErrorDirectory",
       "sourceFile": "src/SFA.DAS.Assessor.Functions.Infrastructure/Options/PrintCertificates/DeliveryNotificationOptions.cs",
-      "reason": "Bound property 'ErrorDirectory' in the 'DeliveryNotificationOptions' class, potentially part of application configuration."
+      "reason": "Property on a bound configuration class indicating local configuration is required."
     },
     {
       "key": "FunctionsOptions:SqlConnectionString",
       "sourceFile": "src/SFA.DAS.Assessor.Functions.Infrastructure/Options/FunctionsOptions.cs",
-      "reason": "Property `SqlConnectionString` in class `FunctionsOptions` requires configuration for the SQL Server connection string."
+      "reason": "SqlConnectionString property is defined in the FunctionsOptions class, which configures SQL Server."
     },
     {
       "key": "FunctionsOptions:SqlConnectionString",
       "sourceFile": "src/SFA.DAS.Assessor.Functions/StartupConfiguration/DatabaseExtensions.cs",
-      "reason": "Configurations required for setting up a SQL Server connection."
+      "reason": "Connection string for SQL Server configuration."
     },
     {
       "key": "FunctionsOptions:UseSqlConnectionMI",
       "sourceFile": "src/SFA.DAS.Assessor.Functions.Infrastructure/Options/FunctionsOptions.cs",
-      "reason": "Property `UseSqlConnectionMI` in class `FunctionsOptions` requires configuration to specify if SQL connection uses managed identity."
+      "reason": "UseSqlConnectionMI property is defined in the FunctionsOptions class, influencing database connection mode."
     },
     {
       "key": "FunctionsOptions:UseSqlConnectionMI",
       "sourceFile": "src/SFA.DAS.Assessor.Functions/StartupConfiguration/DatabaseExtensions.cs",
-      "reason": "Configuration to determine if managed identity should be used for SQL Server."
+      "reason": "Determines whether to use Managed Identity for SQL Server authentication."
     },
     {
       "key": "ImportLearnersOptions:Enabled",
       "sourceFile": "src/SFA.DAS.Assessor.Functions.Infrastructure/Options/Learners/ImportLearnersOptions.cs",
-      "reason": "Bound property 'Enabled' in the 'ImportLearnersOptions' class, potentially part of application configuration."
-    },
-    {
-      "key": "ManagedIdentityClientConfiguration:ApiBaseUrl",
-      "sourceFile": "src/SFA.DAS.Assessor.Functions.ExternalApis/Config/ManagedIdentityClientConfiguration.cs",
-      "reason": "Property `ApiBaseUrl` in class `ManagedIdentityClientConfiguration` requires configuration for an API base URL."
-    },
-    {
-      "key": "ManagedIdentityClientConfiguration:IdentifierUri",
-      "sourceFile": "src/SFA.DAS.Assessor.Functions.ExternalApis/Config/ManagedIdentityClientConfiguration.cs",
-      "reason": "Property `IdentifierUri` in class `ManagedIdentityClientConfiguration` requires configuration for an API client."
+      "reason": "Property on a bound configuration class indicating local configuration is required."
     },
     {
       "key": "OfqualImportOptions:DownloadBlobContainer",
       "sourceFile": "src/SFA.DAS.Assessor.Functions.Infrastructure/Options/OfqualImport/OfqualImportOptions.cs",
-      "reason": "Bound property 'DownloadBlobContainer' in the 'OfqualImportOptions' class, potentially part of application configuration."
+      "reason": "Property on a bound configuration class indicating local configuration is required."
     },
     {
       "key": "OfqualImportOptions:OrganisationsDataUrl",
       "sourceFile": "src/SFA.DAS.Assessor.Functions.Infrastructure/Options/OfqualImport/OfqualImportOptions.cs",
-      "reason": "Bound property 'OrganisationsDataUrl' in the 'OfqualImportOptions' class, potentially part of application configuration."
+      "reason": "Property on a bound configuration class indicating local configuration is required."
     },
     {
       "key": "OfqualImportOptions:QualificationsDataUrl",
       "sourceFile": "src/SFA.DAS.Assessor.Functions.Infrastructure/Options/OfqualImport/OfqualImportOptions.cs",
-      "reason": "Bound property 'QualificationsDataUrl' in the 'OfqualImportOptions' class, potentially part of application configuration."
+      "reason": "Property on a bound configuration class indicating local configuration is required."
     },
     {
       "key": "PrintCertificatesOptions:ExternalBlobContainer",
       "sourceFile": "src/SFA.DAS.Assessor.Functions.Infrastructure/Options/PrintCertificates/PrintCertificatesOptions.cs",
-      "reason": "Bound property 'ExternalBlobContainer' in the 'PrintCertificatesOptions' class, potentially part of application configuration."
+      "reason": "Property on a bound configuration class indicating local configuration is required."
     },
     {
       "key": "PrintCertificatesOptions:InternalBlobContainer",
       "sourceFile": "src/SFA.DAS.Assessor.Functions.Infrastructure/Options/PrintCertificates/PrintCertificatesOptions.cs",
-      "reason": "Bound property 'InternalBlobContainer' in the 'PrintCertificatesOptions' class, potentially part of application configuration."
-    },
-    {
-      "key": "PrintRequestOptions:AddReadyToPrintLimit",
-      "sourceFile": "src/SFA.DAS.Assessor.Functions.Infrastructure/Options/PrintCertificates/PrintRequestOptions.cs",
-      "reason": "Property defined in the PrintRequestOptions class."
-    },
-    {
-      "key": "PrintRequestOptions:ArchiveDirectory",
-      "sourceFile": "src/SFA.DAS.Assessor.Functions.Infrastructure/Options/PrintCertificates/PrintRequestOptions.cs",
-      "reason": "Property defined in the PrintRequestOptions class."
-    },
-    {
-      "key": "PrintRequestOptions:ChairName",
-      "sourceFile": "src/SFA.DAS.Assessor.Functions.Infrastructure/Options/PrintCertificates/PrintRequestOptions.cs",
-      "reason": "Property defined in the PrintRequestOptions class."
-    },
-    {
-      "key": "PrintRequestOptions:ChairTitle",
-      "sourceFile": "src/SFA.DAS.Assessor.Functions.Infrastructure/Options/PrintCertificates/PrintRequestOptions.cs",
-      "reason": "Property defined in the PrintRequestOptions class."
-    },
-    {
-      "key": "PrintRequestOptions:Directory",
-      "sourceFile": "src/SFA.DAS.Assessor.Functions.Infrastructure/Options/PrintCertificates/PrintRequestOptions.cs",
-      "reason": "Property defined in the PrintRequestOptions class."
-    },
-    {
-      "key": "PrintResponseOptions:ArchiveDirectory",
-      "sourceFile": "src/SFA.DAS.Assessor.Functions.Infrastructure/Options/PrintCertificates/PrintResponseOptions.cs",
-      "reason": "Property defined in the PrintResponseOptions class."
-    },
-    {
-      "key": "PrintResponseOptions:Directory",
-      "sourceFile": "src/SFA.DAS.Assessor.Functions.Infrastructure/Options/PrintCertificates/PrintResponseOptions.cs",
-      "reason": "Property defined in the PrintResponseOptions class."
-    },
-    {
-      "key": "PrintResponseOptions:ErrorDirectory",
-      "sourceFile": "src/SFA.DAS.Assessor.Functions.Infrastructure/Options/PrintCertificates/PrintResponseOptions.cs",
-      "reason": "Property defined in the PrintResponseOptions class."
+      "reason": "Property on a bound configuration class indicating local configuration is required."
     },
     {
       "key": "RebuildExternalApiSandboxOptions:Enabled",
       "sourceFile": "src/SFA.DAS.Assessor.Functions.Infrastructure/Options/ExternalApiDataSync/RebuildExternalApiSandboxOptions.cs",
-      "reason": "Property `Enabled` in class `RebuildExternalApiSandboxOptions` requires configuration to enable or disable external API sandbox rebuild."
-    },
-    {
-      "key": "RefreshIlrsOptions:AcademicYearsOverride",
-      "sourceFile": "src/SFA.DAS.Assessor.Functions.Infrastructure/Options/RefreshIlrs/RefreshIlrsOptions.cs",
-      "reason": "Property defined in the RefreshIlrsOptions class."
-    },
-    {
-      "key": "RefreshIlrsOptions:EnqueueProvidersMaxPastDueMinutes",
-      "sourceFile": "src/SFA.DAS.Assessor.Functions.Infrastructure/Options/RefreshIlrs/RefreshIlrsOptions.cs",
-      "reason": "Property defined in the RefreshIlrsOptions class."
-    },
-    {
-      "key": "RefreshIlrsOptions:LearnerFundModels",
-      "sourceFile": "src/SFA.DAS.Assessor.Functions.Infrastructure/Options/RefreshIlrs/RefreshIlrsOptions.cs",
-      "reason": "Property defined in the RefreshIlrsOptions class."
-    },
-    {
-      "key": "RefreshIlrsOptions:LearnerPageSize",
-      "sourceFile": "src/SFA.DAS.Assessor.Functions.Infrastructure/Options/RefreshIlrs/RefreshIlrsOptions.cs",
-      "reason": "Property defined in the RefreshIlrsOptions class."
-    },
-    {
-      "key": "RefreshIlrsOptions:ProviderInitialRunDate",
-      "sourceFile": "src/SFA.DAS.Assessor.Functions.Infrastructure/Options/RefreshIlrs/RefreshIlrsOptions.cs",
-      "reason": "Property defined in the RefreshIlrsOptions class."
-    },
-    {
-      "key": "RefreshIlrsOptions:ProviderPageSize",
-      "sourceFile": "src/SFA.DAS.Assessor.Functions.Infrastructure/Options/RefreshIlrs/RefreshIlrsOptions.cs",
-      "reason": "Property defined in the RefreshIlrsOptions class."
-    },
-    {
-      "key": "RefreshProvidersOptions:Enabled",
-      "sourceFile": "src/SFA.DAS.Assessor.Functions.Infrastructure/Options/Providers/RefreshProvidersOptions.cs",
-      "reason": "Property defined in the RefreshProvidersOptions class."
+      "reason": "Enabled property is defined in the RebuildExternalApiSandboxOptions class."
     }
   ]
 }

@@ -1,0 +1,202 @@
+{
+  "repository": "SkillsFundingAgency/das-notifications",
+  "ref": "master",
+  "path": "src",
+  "localServices": [
+    {
+      "name": "SQL Server",
+      "kind": "database",
+      "technology": "sqlserver",
+      "configurationKeys": [
+        "APPSETTING_EnvironmentName",
+        "DatabaseConnectionString",
+        "NotificationService:DatabaseConnectionString",
+        "NotificationServiceConfiguration:DatabaseConnectionString"
+      ],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Notifications.Infrastructure/Configuration/NotificationServiceConfiguration.cs",
+          "reason": "DatabaseConnectionString property in NotificationServiceConfiguration class indicates a dependency on SQL Server."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.Notifications.Api/StartupExtensions/NServiceBusStartUp.cs",
+          "reason": "UseSqlServerPersistence is configured with a connection string key named DatabaseConnectionString."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.Notifications.Infrastructure/DependencyResolution/DataRegistry.cs",
+          "reason": "SQL Server dependency evidenced by its usage in creating a SqlConnection instance."
+        }
+      ]
+    },
+    {
+      "name": "Azure Service Bus",
+      "kind": "message-broker",
+      "technology": null,
+      "configurationKeys": [
+        "NServiceBusConfiguration:ServiceBusConnectionString"
+      ],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Notifications.Api/StartupExtensions/NServiceBusStartUp.cs",
+          "reason": "UseAzureServiceBusTransport configured with a connection string key NServiceBusConfiguration:ServiceBusConnectionString."
+        }
+      ]
+    },
+    {
+      "name": "NServiceBus",
+      "kind": "other",
+      "technology": null,
+      "configurationKeys": [
+        "NServiceBusConfiguration:NServiceBusLicense"
+      ],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Notifications.Api/StartupExtensions/NServiceBusStartUp.cs",
+          "reason": "License for NServiceBus configured through NServiceBusConfiguration:NServiceBusLicense."
+        }
+      ]
+    }
+  ],
+  "configurationKeys": [
+    {
+      "key": "ActiveDirectory:AppId",
+      "sourceFile": "src/SFA.DAS.Notifications.Api/Security/ActiveDirectoryConfiguration.cs",
+      "reason": "AppId property in ActiveDirectoryConfiguration requires local setup for Active Directory integration."
+    },
+    {
+      "key": "ActiveDirectory:IdentifierUri",
+      "sourceFile": "src/SFA.DAS.Notifications.Api/Security/ActiveDirectoryConfiguration.cs",
+      "reason": "IdentifierUri property in ActiveDirectoryConfiguration requires local setup for Active Directory integration."
+    },
+    {
+      "key": "ActiveDirectory:Tenant",
+      "sourceFile": "src/SFA.DAS.Notifications.Api/Security/ActiveDirectoryConfiguration.cs",
+      "reason": "Tenant property in ActiveDirectoryConfiguration requires local setup for Active Directory integration."
+    },
+    {
+      "key": "APPINSIGHTS_INSTRUMENTATIONKEY",
+      "sourceFile": "src/SFA.DAS.Notifications.MessageHandlers/appsettings.Development.json",
+      "reason": "Referenced in appsettings.Development.json for application telemetry."
+    },
+    {
+      "key": "APPLICATIONINSIGHTS_CONNECTION_STRING",
+      "sourceFile": "src/SFA.DAS.Notifications.Api/appsettings.json",
+      "reason": "Application Insights connection string required for telemetry integration."
+    },
+    {
+      "key": "APPSETTING_EnvironmentName",
+      "sourceFile": "src/SFA.DAS.Notifications.Infrastructure/DependencyResolution/DataRegistry.cs",
+      "reason": "Environment variable is used to conditionally configure local vs other environments for SQL Server connection."
+    },
+    {
+      "key": "APPSETTING_EnvironmentName",
+      "sourceFile": "src/SFA.DAS.Notifications.MessageHandlers/appsettings.Development.json",
+      "reason": "Defines the environment name (e.g., LOCAL)."
+    },
+    {
+      "key": "ConfigurationStorageConnectionString",
+      "sourceFile": "src/SFA.DAS.Notifications.MessageHandlers/appsettings.Development.json",
+      "reason": "Configuration for development storage."
+    },
+    {
+      "key": "ConnectionStrings:AzureWebJobsDashboard",
+      "sourceFile": "src/SFA.DAS.Notifications.MessageHandlers/appsettings.Development.json",
+      "reason": "Provides connection string for Azure WebJobs Dashboard."
+    },
+    {
+      "key": "ConnectionStrings:AzureWebJobsStorage",
+      "sourceFile": "src/SFA.DAS.Notifications.MessageHandlers/appsettings.Development.json",
+      "reason": "Provides connection string for Azure WebJobs Storage."
+    },
+    {
+      "key": "DatabaseConnectionString",
+      "sourceFile": "src/SFA.DAS.Notifications.Api/StartupExtensions/NServiceBusStartUp.cs",
+      "reason": "Required for SQL Server persistence in NServiceBus configuration."
+    },
+    {
+      "key": "LocalConfig",
+      "sourceFile": "src/SFA.DAS.Notifications.MessageHandlers/appsettings.Development.json",
+      "reason": "Indicates if local configuration is used."
+    },
+    {
+      "key": "Logging:LogLevel:Default",
+      "sourceFile": "src/SFA.DAS.Notifications.Api/appsettings.Development.json",
+      "reason": "Default log level for Logging indicated under the Development configuration."
+    },
+    {
+      "key": "Logging:LogLevel:Default",
+      "sourceFile": "src/SFA.DAS.Notifications.Api/appsettings.json",
+      "reason": "Default log level for Logging indicated in the app settings."
+    },
+    {
+      "key": "Logging:LogLevel:Microsoft",
+      "sourceFile": "src/SFA.DAS.Notifications.Api/appsettings.Development.json",
+      "reason": "Microsoft-level log level for Logging indicated under the Development configuration."
+    },
+    {
+      "key": "Logging:LogLevel:Microsoft",
+      "sourceFile": "src/SFA.DAS.Notifications.Api/appsettings.json",
+      "reason": "Microsoft-level log level for Logging indicated in the app settings."
+    },
+    {
+      "key": "Logging:LogLevel:Microsoft.ApplicationInsights",
+      "sourceFile": "src/SFA.DAS.Notifications.Api/appsettings.json",
+      "reason": "Microsoft Application Insights log level indicated in the app settings."
+    },
+    {
+      "key": "Logging:LogLevel:System",
+      "sourceFile": "src/SFA.DAS.Notifications.Api/appsettings.Development.json",
+      "reason": "System-level log level for Logging indicated under the Development configuration."
+    },
+    {
+      "key": "Logging:LogLevel:System",
+      "sourceFile": "src/SFA.DAS.Notifications.Api/appsettings.json",
+      "reason": "System-level log level for Logging indicated in the app settings."
+    },
+    {
+      "key": "NotificationService:DatabaseConnectionString",
+      "sourceFile": "src/SFA.DAS.Notifications.Infrastructure/Configuration/NotificationServiceConfiguration.cs",
+      "reason": "DatabaseConnectionString property in NotificationServiceConfiguration class requires local setup."
+    },
+    {
+      "key": "NotificationService:EmailService",
+      "sourceFile": "src/SFA.DAS.Notifications.Infrastructure/Configuration/NotificationServiceConfiguration.cs",
+      "reason": "EmailService property in NotificationServiceConfiguration class requires local setup."
+    },
+    {
+      "key": "NotificationService:NotificationServiceApiKey",
+      "sourceFile": "src/SFA.DAS.Notifications.Infrastructure/Configuration/NotificationServiceConfiguration.cs",
+      "reason": "NotificationServiceApiKey property in NotificationServiceConfiguration class requires local setup."
+    },
+    {
+      "key": "NotificationService:NServiceBusConfiguration",
+      "sourceFile": "src/SFA.DAS.Notifications.Infrastructure/Configuration/NotificationServiceConfiguration.cs",
+      "reason": "NServiceBusConfiguration property in NotificationServiceConfiguration class requires local setup."
+    },
+    {
+      "key": "NotificationService:SmtpConfiguration",
+      "sourceFile": "src/SFA.DAS.Notifications.Infrastructure/Configuration/NotificationServiceConfiguration.cs",
+      "reason": "SmtpConfiguration property in NotificationServiceConfiguration class requires local setup."
+    },
+    {
+      "key": "NotificationServiceConfiguration:DatabaseConnectionString",
+      "sourceFile": "src/SFA.DAS.Notifications.Infrastructure/DependencyResolution/DataRegistry.cs",
+      "reason": "Key is accessed to configure a SqlConnection for SQL Server."
+    },
+    {
+      "key": "NServiceBusConfiguration:NServiceBusLicense",
+      "sourceFile": "src/SFA.DAS.Notifications.Api/StartupExtensions/NServiceBusStartUp.cs",
+      "reason": "License key for NServiceBus configuration."
+    },
+    {
+      "key": "NServiceBusConfiguration:ServiceBusConnectionString",
+      "sourceFile": "src/SFA.DAS.Notifications.Api/StartupExtensions/NServiceBusStartUp.cs",
+      "reason": "Required for Azure Service Bus transport in NServiceBus configuration."
+    },
+    {
+      "key": "StorageConnectionString",
+      "sourceFile": "src/SFA.DAS.Notifications.MessageHandlers/appsettings.Development.json",
+      "reason": "Configuration for development storage."
+    }
+  ]
+}

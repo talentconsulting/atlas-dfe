@@ -1,0 +1,196 @@
+{
+  "repository": "SkillsFundingAgency/das-rat-api",
+  "ref": "main",
+  "path": "src",
+  "localServices": [
+    {
+      "name": "SQL Server",
+      "kind": "database",
+      "technology": "sqlserver",
+      "configurationKeys": [
+        "ApplicationSettings:DbConnectionString",
+        "DbConnectionString"
+      ],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Domain/Configuration/ApplicationSettings.cs",
+          "reason": "The 'DbConnectionString' property indicates a SQL Server database is required for application data storage."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Data/RequestApprenticeTrainingDataContext.cs",
+          "reason": "DbContext configured with UseSqlServer using credentials and configuration."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Api/AppStart/AddDatabaseRegistrations.cs",
+          "reason": "DbContext registered with UseSqlServer; external connection string is sourced from configuration."
+        }
+      ]
+    },
+    {
+      "name": "NServiceBus",
+      "kind": "message-broker",
+      "technology": null,
+      "configurationKeys": [
+        "NServiceBusConnectionString",
+        "NServiceBusLicense"
+      ],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Domain/Configuration/ApplicationSettings.cs",
+          "reason": "The 'NServiceBusConnectionString' and 'NServiceBusLicense' properties suggest the application uses NServiceBus for messaging."
+        }
+      ]
+    },
+    {
+      "name": "NServiceBus Learning Transport",
+      "kind": "message-broker",
+      "technology": "nservicebus",
+      "configurationKeys": [
+        "ApplicationSettings:NServiceBusConnectionString"
+      ],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Api/AppStart/NServiceBusRegistration.cs",
+          "reason": "Evaluates LearningTransport or Azure Service Bus based on NServiceBusConnectionString in configuration."
+        }
+      ]
+    }
+  ],
+  "configurationKeys": [
+    {
+      "key": "AllowedHosts",
+      "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Api/appsettings.Development.json",
+      "reason": "Evidenced in appsettings.Development.json for specifying allowed hosts."
+    },
+    {
+      "key": "AllowedHosts",
+      "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Api/appsettings.json",
+      "reason": "Evidenced in appsettings.json for defining allowed hosts."
+    },
+    {
+      "key": "APPLICATIONINSIGHTS_CONNECTION_STRING",
+      "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Api/appsettings.json",
+      "reason": "Evidenced in appsettings.json as a configuration key for Application Insights connection."
+    },
+    {
+      "key": "ApplicationSettings:DbConnectionString",
+      "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Api/AppStart/AddDatabaseRegistrations.cs",
+      "reason": "Database connection string for SQL Server sourced from ApplicationSettings."
+    },
+    {
+      "key": "ApplicationSettings:DbConnectionString",
+      "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Data/RequestApprenticeTrainingDataContext.cs",
+      "reason": "Database connection string used for SQL Server in DataContext."
+    },
+    {
+      "key": "ApplicationSettings:NServiceBusConnectionString",
+      "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Api/AppStart/NServiceBusRegistration.cs",
+      "reason": "NServiceBus connection string determines transport type for message broker."
+    },
+    {
+      "key": "ApplicationSettings:NServiceBusLicense",
+      "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Api/AppStart/NServiceBusRegistration.cs",
+      "reason": "Optional license key for NServiceBus sourced from ApplicationSettings."
+    },
+    {
+      "key": "ConfigNames",
+      "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Api/appsettings.Development.json",
+      "reason": "Evidenced in appsettings.Development.json as an application configuration name."
+    },
+    {
+      "key": "ConfigNames",
+      "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Api/appsettings.json",
+      "reason": "Evidenced in appsettings.json as an application configuration name."
+    },
+    {
+      "key": "ConfigurationStorageConnectionString",
+      "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Api/appsettings.Development.json",
+      "reason": "Evidenced in appsettings.Development.json as a setting for a configuration storage connection string."
+    },
+    {
+      "key": "ConfigurationStorageConnectionString",
+      "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Api/appsettings.json",
+      "reason": "Evidenced in appsettings.json for specifying configuration storage connection."
+    },
+    {
+      "key": "DbConnectionString",
+      "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Domain/Configuration/ApplicationSettings.cs",
+      "reason": "Required to configure the SQL Server database connection."
+    },
+    {
+      "key": "EmployerRemovedAfterExpiryMonths",
+      "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Domain/Configuration/ApplicationSettings.cs",
+      "reason": "Defines when employers will be removed after expiry."
+    },
+    {
+      "key": "EnvironmentName",
+      "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Api/appsettings.Development.json",
+      "reason": "Evidenced in appsettings.Development.json for specifying the environment name."
+    },
+    {
+      "key": "EnvironmentName",
+      "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Api/appsettings.json",
+      "reason": "Evidenced in appsettings.json for designating the application environment."
+    },
+    {
+      "key": "ExpiryAfterMonths",
+      "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Domain/Configuration/ApplicationSettings.cs",
+      "reason": "Defines the expiry period in months for a specific feature."
+    },
+    {
+      "key": "Logging:LogLevel:Default",
+      "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Api/appsettings.Development.json",
+      "reason": "Evidenced in appsettings.Development.json for configuration of log level."
+    },
+    {
+      "key": "Logging:LogLevel:Default",
+      "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Api/appsettings.json",
+      "reason": "Evidenced in appsettings.json for configuration of default log level."
+    },
+    {
+      "key": "Logging:LogLevel:Microsoft",
+      "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Api/appsettings.Development.json",
+      "reason": "Evidenced in appsettings.Development.json for configuration of log level specific to Microsoft namespace."
+    },
+    {
+      "key": "Logging:LogLevel:Microsoft",
+      "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Api/appsettings.json",
+      "reason": "Evidenced in appsettings.json for configuration of Microsoft namespace log level."
+    },
+    {
+      "key": "Logging:LogLevel:Microsoft.Hosting.Lifetime",
+      "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Api/appsettings.Development.json",
+      "reason": "Evidenced in appsettings.Development.json for configuration of log level specific to Microsoft.Hosting.Lifetime."
+    },
+    {
+      "key": "Logging:LogLevel:Microsoft.Hosting.Lifetime",
+      "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Api/appsettings.json",
+      "reason": "Evidenced in appsettings.json for configuration of Microsoft.Hosting.Lifetime log level."
+    },
+    {
+      "key": "NServiceBusConnectionString",
+      "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Domain/Configuration/ApplicationSettings.cs",
+      "reason": "Required for connecting to the NServiceBus transport."
+    },
+    {
+      "key": "NServiceBusLicense",
+      "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Domain/Configuration/ApplicationSettings.cs",
+      "reason": "Required for providing the NServiceBus license details."
+    },
+    {
+      "key": "ProviderRemovedAfterRequestedMonths",
+      "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Domain/Configuration/ApplicationSettings.cs",
+      "reason": "Defines when providers will be removed after a request expiration period."
+    },
+    {
+      "key": "Version",
+      "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Api/appsettings.Development.json",
+      "reason": "Evidenced in appsettings.Development.json for specifying application version."
+    },
+    {
+      "key": "Version",
+      "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Api/appsettings.json",
+      "reason": "Evidenced in appsettings.json for setting application version."
+    }
+  ]
+}

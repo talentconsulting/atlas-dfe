@@ -10,35 +10,30 @@
       "configurationKeys": [
         "DataProtectionKeysDatabase",
         "EmployerFeedbackWebConfiguration:RedisConnectionString",
-        "RedisConnectionString",
-        "RedisLogging"
+        "RedisConnectionString"
       ],
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.EmployerFeedback.Web/appsettings.json",
-          "reason": "Key 'RedisLogging' suggests Redis is used for logging."
-        },
-        {
           "sourceFile": "src/SFA.DAS.EmployerFeedback.Web/StartupExtensions/CacheStartupExtensions.cs",
-          "reason": "Redis is conditionally configured for distributed caching in non-development environments."
+          "reason": "Redis cache added with configuration key from EmployerFeedbackWebConfiguration."
         },
         {
           "sourceFile": "src/SFA.DAS.EmployerFeedback.Web/StartupExtensions/DataProtectionStartupExtensions.cs",
-          "reason": "ConnectionMultiplexer.Connect is used to configure Redis with connection string and database."
+          "reason": "ConnectionMultiplexer.Connect is used with RedisConnectionString and DataProtectionKeysDatabase for configuring Redis."
         }
       ]
     },
     {
-      "name": "DataProtectionKeysDatabase",
+      "name": "SQL Server",
       "kind": "database",
-      "technology": null,
+      "technology": "sqlserver",
       "configurationKeys": [
         "EmployerFeedbackWebConfiguration:DataProtectionKeysDatabase"
       ],
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.EmployerFeedback.Infrastructure/Configuration/EmployerFeedbackWebConfiguration.cs",
-          "reason": "Key 'DataProtectionKeysDatabase' suggests an external database is used for data protection keys."
+          "reason": "DataProtectionKeysDatabase key in EmployerFeedbackWebConfiguration indicates SQL Server usage."
         }
       ]
     }
@@ -47,77 +42,132 @@
     {
       "key": "APPLICATIONINSIGHTS_CONNECTION_STRING",
       "sourceFile": "src/SFA.DAS.EmployerFeedback.Web/appsettings.json",
-      "reason": "Explicitly defined in the appsettings.json for Application Insights connection."
+      "reason": "Telemetry connection string for Application Insights."
     },
     {
       "key": "cdn:url",
       "sourceFile": "src/SFA.DAS.EmployerFeedback.Web/appsettings.json",
-      "reason": "Explicitly defined in the appsettings.json for content delivery network URL."
+      "reason": "Content Delivery Network URL for static resources."
     },
     {
       "key": "ConfigNames",
       "sourceFile": "src/SFA.DAS.EmployerFeedback.Web/appsettings.json",
-      "reason": "Explicitly defined in the appsettings.json for configuration names."
+      "reason": "List of configuration names for application setup."
     },
     {
       "key": "ConfigurationStorageConnectionString",
       "sourceFile": "src/SFA.DAS.EmployerFeedback.Web/appsettings.json",
-      "reason": "Explicitly defined in the appsettings.json for configuration storage."
+      "reason": "Configuration storage connection string for development storage setup."
+    },
+    {
+      "key": "ConnectionStrings:RedisLogging",
+      "sourceFile": "src/SFA.DAS.EmployerFeedback.Web/appsettings.json",
+      "reason": "Connection string for Redis logging evidences Redis-related service configurations."
     },
     {
       "key": "DataProtectionKeysDatabase",
       "sourceFile": "src/SFA.DAS.EmployerFeedback.Web/StartupExtensions/DataProtectionStartupExtensions.cs",
-      "reason": "Referenced as 'dataProtectionKeysDatabase' to specify Redis database for data protection keys."
+      "reason": "DataProtectionKeysDatabase is used to specify the database for storing data protection keys in Redis."
+    },
+    {
+      "key": "EmployerFeedbackOuterApiConfiguration:ApiBaseUrl",
+      "sourceFile": "src/SFA.DAS.EmployerFeedback.Infrastructure/Configuration/EmployerFeedbackOuterApiConfiguration.cs",
+      "reason": "Outer API configuration requires ApiBaseUrl."
+    },
+    {
+      "key": "EmployerFeedbackOuterApiConfiguration:ApiVersion",
+      "sourceFile": "src/SFA.DAS.EmployerFeedback.Infrastructure/Configuration/EmployerFeedbackOuterApiConfiguration.cs",
+      "reason": "Outer API configuration requires ApiVersion."
+    },
+    {
+      "key": "EmployerFeedbackOuterApiConfiguration:SubscriptionKey",
+      "sourceFile": "src/SFA.DAS.EmployerFeedback.Infrastructure/Configuration/EmployerFeedbackOuterApiConfiguration.cs",
+      "reason": "Outer API configuration requires SubscriptionKey."
     },
     {
       "key": "EmployerFeedbackWebConfiguration:DataProtectionKeysDatabase",
       "sourceFile": "src/SFA.DAS.EmployerFeedback.Infrastructure/Configuration/EmployerFeedbackWebConfiguration.cs",
-      "reason": "Defined in the bound configuration for data protection keys database."
+      "reason": "DataProtectionKeysDatabase used for SQL Server configuration."
+    },
+    {
+      "key": "EmployerFeedbackWebConfiguration:ExternalLinks",
+      "sourceFile": "src/SFA.DAS.EmployerFeedback.Infrastructure/Configuration/EmployerFeedbackWebConfiguration.cs",
+      "reason": "External links used in the EmployerFeedbackWeb configuration settings."
+    },
+    {
+      "key": "EmployerFeedbackWebConfiguration:FeedbackWaitPeriodDays",
+      "sourceFile": "src/SFA.DAS.EmployerFeedback.Infrastructure/Configuration/EmployerFeedbackWebConfiguration.cs",
+      "reason": "Feedback waiting period configuration."
+    },
+    {
+      "key": "EmployerFeedbackWebConfiguration:GoogleAnalytics",
+      "sourceFile": "src/SFA.DAS.EmployerFeedback.Infrastructure/Configuration/EmployerFeedbackWebConfiguration.cs",
+      "reason": "Google Analytics configuration as part of EmployerFeedbackWebConfiguration."
     },
     {
       "key": "EmployerFeedbackWebConfiguration:RedisConnectionString",
       "sourceFile": "src/SFA.DAS.EmployerFeedback.Infrastructure/Configuration/EmployerFeedbackWebConfiguration.cs",
-      "reason": "Defined in the bound configuration for Redis connection."
+      "reason": "RedisConnectionString needed for configuring Redis cache."
+    },
+    {
+      "key": "EmployerFeedbackWebConfiguration:SlidingExpirationMinutes",
+      "sourceFile": "src/SFA.DAS.EmployerFeedback.Infrastructure/Configuration/EmployerFeedbackWebConfiguration.cs",
+      "reason": "Sliding expiration for caching configuration."
+    },
+    {
+      "key": "EmployerFeedbackWebConfiguration:ZendeskSectionId",
+      "sourceFile": "src/SFA.DAS.EmployerFeedback.Infrastructure/Configuration/EmployerFeedbackWebConfiguration.cs",
+      "reason": "Zendesk section ID for external configurations."
     },
     {
       "key": "EnvironmentName",
       "sourceFile": "src/SFA.DAS.EmployerFeedback.Web/appsettings.json",
-      "reason": "Explicitly defined in the appsettings.json for environment naming."
+      "reason": "Environment name for application execution context."
+    },
+    {
+      "key": "ExternalLinksConfiguration:ComplaintSiteUrl",
+      "sourceFile": "src/SFA.DAS.EmployerFeedback.Infrastructure/Configuration/ExternalLinksConfiguration.cs",
+      "reason": "Complaint Site URL in ExternalLinksConfiguration."
+    },
+    {
+      "key": "ExternalLinksConfiguration:ComplaintToProviderSiteUrl",
+      "sourceFile": "src/SFA.DAS.EmployerFeedback.Infrastructure/Configuration/ExternalLinksConfiguration.cs",
+      "reason": "Complaint-to-Provider Site URL in ExternalLinksConfiguration."
+    },
+    {
+      "key": "ExternalLinksConfiguration:FindApprenticeshipTrainingSiteUrl",
+      "sourceFile": "src/SFA.DAS.EmployerFeedback.Infrastructure/Configuration/ExternalLinksConfiguration.cs",
+      "reason": "Find Apprenticeship Training Site URL in ExternalLinksConfiguration."
     },
     {
       "key": "RedisConnectionString",
       "sourceFile": "src/SFA.DAS.EmployerFeedback.Web/StartupExtensions/DataProtectionStartupExtensions.cs",
-      "reason": "Referenced as 'redisConnectionString' to initialize ConnectionMultiplexer for Redis."
-    },
-    {
-      "key": "RedisLogging",
-      "sourceFile": "src/SFA.DAS.EmployerFeedback.Web/appsettings.json",
-      "reason": "Explicitly defined in the appsettings.json under 'ConnectionStrings'."
+      "reason": "RedisConnectionString is used to establish a connection to Redis in ConnectionMultiplexer.Connect."
     },
     {
       "key": "ResourceEnvironmentName",
       "sourceFile": "src/SFA.DAS.EmployerFeedback.Web/appsettings.json",
-      "reason": "Explicitly defined in the appsettings.json for resource environment naming."
+      "reason": "Environment name for resource targeting during execution."
     },
     {
       "key": "StubAuth",
       "sourceFile": "src/SFA.DAS.EmployerFeedback.Web/appsettings.json",
-      "reason": "Explicitly defined in the appsettings.json for a stub auth field."
+      "reason": "Stub authentication configuration key for local use."
     },
     {
       "key": "StubEmail",
       "sourceFile": "src/SFA.DAS.EmployerFeedback.Web/appsettings.json",
-      "reason": "Explicitly defined in the appsettings.json for a stub email."
+      "reason": "Stub email address configuration."
     },
     {
       "key": "StubId",
       "sourceFile": "src/SFA.DAS.EmployerFeedback.Web/appsettings.json",
-      "reason": "Explicitly defined in the appsettings.json for a stub identifier."
+      "reason": "Stub ID for local authentication configuration."
     },
     {
       "key": "Version",
       "sourceFile": "src/SFA.DAS.EmployerFeedback.Web/appsettings.json",
-      "reason": "Explicitly defined in the appsettings.json for application versioning."
+      "reason": "Application version setting."
     }
   ]
 }
