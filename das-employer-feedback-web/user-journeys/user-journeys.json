@@ -17,7 +17,7 @@
       "line": 43,
       "requiresAuthentication": false,
       "isEntryPoint": true,
-      "purpose": "Displays the main landing page for the web application, or redirects to an account page if not running locally.",
+      "purpose": "Displays the home page if running locally or in development, otherwise redirects to the accounts link.",
       "fields": []
     },
     {
@@ -33,7 +33,7 @@
       "line": 74,
       "requiresAuthentication": true,
       "isEntryPoint": false,
-      "purpose": "Clears any search filters applied when searching for training providers.",
+      "purpose": "Clears all filters applied to the provider list.",
       "fields": []
     },
     {
@@ -50,7 +50,7 @@
       "line": 82,
       "requiresAuthentication": true,
       "isEntryPoint": false,
-      "purpose": "Lets the user confirm that the selected training provider is the one they want to give feedback on.",
+      "purpose": "Lets the user confirm the selected training provider before giving feedback.",
       "fields": [
         {
           "name": "Confirmed",
@@ -69,7 +69,7 @@
           "dataType": "bool?",
           "required": null,
           "constraints": [],
-          "validation": "required; must not be null",
+          "validation": "required",
           "line": 38,
           "sourceFile": "src/SFA.DAS.EmployerFeedback.Web/Views/Provider/ProviderConfirm.cshtml"
         }
@@ -89,7 +89,7 @@
       "line": 41,
       "requiresAuthentication": true,
       "isEntryPoint": false,
-      "purpose": "Lets the user search for and filter training providers by name and feedback status.",
+      "purpose": "Lets the user search for and filter training providers.",
       "fields": [
         {
           "name": "SelectedProviderName",
@@ -130,7 +130,7 @@
       "line": 66,
       "requiresAuthentication": true,
       "isEntryPoint": true,
-      "purpose": "Sorts the provider search results by selected criteria.",
+      "purpose": "Sorts the list of providers based on selected criteria.",
       "fields": []
     },
     {
@@ -144,10 +144,10 @@
         "POST"
       ],
       "sourceFile": "src/SFA.DAS.EmployerFeedback.Web/Controllers/QuestionsController.cs",
-      "line": 48,
+      "line": 47,
       "requiresAuthentication": true,
       "isEntryPoint": false,
-      "purpose": "Lets the user answer the first feedback question about provider strengths.",
+      "purpose": "Lets the user select up to 3 strengths of the provider.",
       "fields": []
     },
     {
@@ -161,10 +161,10 @@
         "POST"
       ],
       "sourceFile": "src/SFA.DAS.EmployerFeedback.Web/Controllers/QuestionsController.cs",
-      "line": 100,
+      "line": 99,
       "requiresAuthentication": true,
       "isEntryPoint": false,
-      "purpose": "Lets the user rate the training provider\u2019s overall training and service.",
+      "purpose": "Lets the user rate the provider's training and service overall.",
       "fields": [
         {
           "name": "Rating",
@@ -174,7 +174,7 @@
           "dataType": "ProviderRating?",
           "required": null,
           "constraints": [],
-          "validation": "required; must not be null",
+          "validation": "required",
           "line": 27,
           "sourceFile": "src/SFA.DAS.EmployerFeedback.Web/Views/Questions/QuestionThree.cshtml"
         }
@@ -191,10 +191,10 @@
         "POST"
       ],
       "sourceFile": "src/SFA.DAS.EmployerFeedback.Web/Controllers/QuestionsController.cs",
-      "line": 74,
+      "line": 73,
       "requiresAuthentication": true,
       "isEntryPoint": false,
-      "purpose": "Lets the user answer the second feedback question regarding weaknesses.",
+      "purpose": "Lets the employer select weaknesses of the provider for feedback.",
       "fields": []
     },
     {
@@ -207,10 +207,10 @@
         "GET"
       ],
       "sourceFile": "src/SFA.DAS.EmployerFeedback.Web/Controllers/QuestionsController.cs",
-      "line": 41,
+      "line": 40,
       "requiresAuthentication": true,
       "isEntryPoint": false,
-      "purpose": "Starts the feedback process for the selected training provider.",
+      "purpose": "Starts the feedback process for the selected provider.",
       "fields": []
     },
     {
@@ -226,7 +226,7 @@
       "line": 71,
       "requiresAuthentication": true,
       "isEntryPoint": false,
-      "purpose": "Informs the user that feedback has already been submitted.",
+      "purpose": "Informs the employer that feedback was already submitted for this provider.",
       "fields": []
     },
     {
@@ -242,7 +242,7 @@
       "line": 64,
       "requiresAuthentication": true,
       "isEntryPoint": false,
-      "purpose": "Confirms to the user that their feedback was successfully submitted.",
+      "purpose": "Confirms to the employer that their feedback was submitted successfully.",
       "fields": []
     },
     {
@@ -259,7 +259,7 @@
       "line": 40,
       "requiresAuthentication": true,
       "isEntryPoint": false,
-      "purpose": "Lets the user review their feedback answers before submitting.",
+      "purpose": "Allows the employer to review their answers before submitting feedback.",
       "fields": []
     }
   ],
@@ -268,7 +268,7 @@
       "from": "ProviderController.SortProviders",
       "to": "ProviderController.ProviderSearch",
       "trigger": "redirect",
-      "condition": "after sorting provider search results",
+      "condition": null,
       "evidence": [
         "src/SFA.DAS.EmployerFeedback.Web/Controllers/ProviderController.cs:69"
       ]
@@ -277,7 +277,7 @@
       "from": "ProviderController.ClearFilters",
       "to": "ProviderController.ProviderSearch",
       "trigger": "redirect",
-      "condition": "after clearing provider search filters",
+      "condition": null,
       "evidence": [
         "src/SFA.DAS.EmployerFeedback.Web/Controllers/ProviderController.cs:77"
       ]
@@ -286,7 +286,7 @@
       "from": "ProviderController.ProviderConfirm",
       "to": "ProviderController.ProviderSearch",
       "trigger": "redirect",
-      "condition": "if provider confirmation is invalid or not confirmed",
+      "condition": "when the provider confirmation view model is not valid or not confirmed",
       "evidence": [
         "src/SFA.DAS.EmployerFeedback.Web/Controllers/ProviderController.cs:87",
         "src/SFA.DAS.EmployerFeedback.Web/Controllers/ProviderController.cs:104"
@@ -296,7 +296,7 @@
       "from": "ProviderController.ProviderConfirm",
       "to": "QuestionsController.StartFeedback",
       "trigger": "redirect",
-      "condition": "after confirming the provider and successfully creating new survey",
+      "condition": "after successful confirmation and creating new survey",
       "evidence": [
         "src/SFA.DAS.EmployerFeedback.Web/Controllers/ProviderController.cs:108"
       ]
@@ -305,52 +305,52 @@
       "from": "QuestionsController.QuestionOne",
       "to": "ReviewAnswersController.ReviewAnswers",
       "trigger": "redirect",
-      "condition": "if ReturnToReviewAnswers is true",
+      "condition": "if returnToReviewAnswers is true after validation",
       "evidence": [
-        "src/SFA.DAS.EmployerFeedback.Web/Controllers/QuestionsController.cs:66"
+        "src/SFA.DAS.EmployerFeedback.Web/Controllers/QuestionsController.cs:65"
       ]
     },
     {
       "from": "QuestionsController.QuestionOne",
       "to": "QuestionsController.QuestionTwo",
       "trigger": "redirect",
-      "condition": "after updating answers and ReturnToReviewAnswers is false",
+      "condition": "after updating answers when returnToReviewAnswers is false and validation succeeds",
       "evidence": [
-        "src/SFA.DAS.EmployerFeedback.Web/Controllers/QuestionsController.cs:69"
+        "src/SFA.DAS.EmployerFeedback.Web/Controllers/QuestionsController.cs:68"
       ]
     },
     {
       "from": "QuestionsController.QuestionTwo",
       "to": "ReviewAnswersController.ReviewAnswers",
       "trigger": "redirect",
-      "condition": "if 'ReturnToReviewAnswers' is true after form submission",
+      "condition": "if returning to review answers after saving the form",
       "evidence": [
-        "src/SFA.DAS.EmployerFeedback.Web/Controllers/QuestionsController.cs:92"
+        "src/SFA.DAS.EmployerFeedback.Web/Controllers/QuestionsController.cs:91"
       ]
     },
     {
       "from": "QuestionsController.QuestionTwo",
       "to": "QuestionsController.QuestionThree",
       "trigger": "redirect",
-      "condition": "after saving valid form and 'ReturnToReviewAnswers' is false",
+      "condition": "after saving the form and not returning to review answers",
       "evidence": [
-        "src/SFA.DAS.EmployerFeedback.Web/Controllers/QuestionsController.cs:95"
+        "src/SFA.DAS.EmployerFeedback.Web/Controllers/QuestionsController.cs:94"
       ]
     },
     {
       "from": "QuestionsController.QuestionThree",
       "to": "ReviewAnswersController.ReviewAnswers",
       "trigger": "redirect",
-      "condition": "after saving the rating",
+      "condition": "after updating answers and validation succeeds",
       "evidence": [
-        "src/SFA.DAS.EmployerFeedback.Web/Controllers/QuestionsController.cs:116"
+        "src/SFA.DAS.EmployerFeedback.Web/Controllers/QuestionsController.cs:115"
       ]
     },
     {
       "from": "ReviewAnswersController.ReviewAnswers",
       "to": "ReviewAnswersController.FeedbackAlreadySubmitted",
       "trigger": "redirect",
-      "condition": "if feedback cannot be submitted",
+      "condition": "if feedback has already been submitted",
       "evidence": [
         "src/SFA.DAS.EmployerFeedback.Web/Controllers/ReviewAnswersController.cs:51"
       ]
@@ -359,7 +359,7 @@
       "from": "ReviewAnswersController.ReviewAnswers",
       "to": "ReviewAnswersController.FeedbackConfirmation",
       "trigger": "redirect",
-      "condition": "after successfully submitting feedback",
+      "condition": "after submitting feedback successfully",
       "evidence": [
         "src/SFA.DAS.EmployerFeedback.Web/Controllers/ReviewAnswersController.cs:59"
       ]
@@ -480,23 +480,11 @@
   "selfLinkCount": 10,
   "journeys": [
     {
-      "name": "Search and Select a Training Provider",
-      "description": "The user searches for and selects a training provider to give feedback about.",
+      "name": "Submit provider feedback",
+      "description": "An employer searches for a provider, confirms their choice, gives feedback through a set of questions, reviews their answers, and submits the feedback.",
       "kind": "linear",
       "steps": [
-        "ProviderController.SortProviders",
         "ProviderController.ProviderSearch",
-        "ProviderController.ProviderConfirm"
-      ],
-      "hub": null,
-      "sections": [],
-      "then": []
-    },
-    {
-      "name": "Give Feedback on a Training Provider",
-      "description": "The user proceeds through all feedback questions, reviews their answers, and submits their feedback for a selected provider.",
-      "kind": "linear",
-      "steps": [
         "ProviderController.ProviderConfirm",
         "QuestionsController.StartFeedback",
         "QuestionsController.QuestionOne",
@@ -510,23 +498,34 @@
       "then": []
     },
     {
-      "name": "Clear Search Filters When Searching Providers",
-      "description": "The user clears filters while searching for a provider and continues searching.",
+      "name": "Review and update feedback answers before submission",
+      "description": "Allows the employer to revisit and update any feedback question from the review page before submitting their feedback.",
+      "kind": "hub",
+      "steps": [
+        "ProviderController.ProviderSearch",
+        "ProviderController.ProviderConfirm",
+        "QuestionsController.StartFeedback",
+        "QuestionsController.QuestionOne",
+        "QuestionsController.QuestionTwo",
+        "QuestionsController.QuestionThree",
+        "ReviewAnswersController.ReviewAnswers"
+      ],
+      "hub": "ReviewAnswersController.ReviewAnswers",
+      "sections": [
+        "QuestionsController.QuestionOne",
+        "QuestionsController.QuestionTwo",
+        "QuestionsController.QuestionThree"
+      ],
+      "then": [
+        "ReviewAnswersController.FeedbackConfirmation"
+      ]
+    },
+    {
+      "name": "Attempt to submit duplicate feedback",
+      "description": "An employer attempts to resubmit feedback for a provider they already reviewed and sees the duplicate submission notice.",
       "kind": "linear",
       "steps": [
         "ProviderController.ProviderSearch",
-        "ProviderController.ClearFilters",
-        "ProviderController.ProviderSearch"
-      ],
-      "hub": null,
-      "sections": [],
-      "then": []
-    },
-    {
-      "name": "Handle Already Submitted Feedback",
-      "description": "The user attempts to submit feedback but is notified that feedback has already been submitted for a provider.",
-      "kind": "linear",
-      "steps": [
         "ProviderController.ProviderConfirm",
         "QuestionsController.StartFeedback",
         "QuestionsController.QuestionOne",
@@ -538,7 +537,27 @@
       "hub": null,
       "sections": [],
       "then": []
+    },
+    {
+      "name": "Give feedback on a training provider",
+      "description": "An employer selects a provider and completes the end-to-end feedback process, reviewing and submitting their responses.",
+      "kind": "linear",
+      "steps": [
+        "ProviderController.ProviderSearch",
+        "ProviderController.ProviderConfirm",
+        "QuestionsController.StartFeedback",
+        "QuestionsController.QuestionOne",
+        "QuestionsController.QuestionTwo",
+        "QuestionsController.QuestionThree",
+        "ReviewAnswersController.ReviewAnswers",
+        "ReviewAnswersController.FeedbackConfirmation"
+      ],
+      "hub": null,
+      "sections": [],
+      "then": []
     }
   ],
-  "journeyWarnings": []
+  "journeyWarnings": [
+    "Journey 'Sort and filter providers before giving feedback' was dropped: a linear journey needs at least 3 steps and no hub, sections or then."
+  ]
 }

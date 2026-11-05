@@ -1,220 +1,162 @@
 # User journeys: SkillsFundingAgency/das-employercommitments-v2
 
-Generated from `master/src`: 117 pages, 105 transitions, 7 journeys. 🔒 means sign-in is required. Dotted arrows return to a hub.
+Generated from `master/src`: 119 pages, 107 transitions, 3 journeys. 🔒 means sign-in is required. Dotted arrows return to a hub.
 
-## Stop an Apprenticeship
+## Add a New Draft Apprenticeship to a Cohort
 
-The employer stops an apprenticeship for a specified reason and confirms the outcome.
+Create a new draft apprenticeship, specify course and delivery model, and add all required details to the cohort.
 
 ```mermaid
 flowchart LR
-  p0["WhyStopApprenticeship 🔒"] -->|"when reason is LeftEmployment, ChangeProvider, Withdrawn, or ProviderCorrectsApprenticeRecord"| p1["StopApprenticeship 🔒"]
-  p1["StopApprenticeship 🔒"] --> p2["HasTheApprenticeBeenMadeRedundant 🔒"]
-  p2["HasTheApprenticeBeenMadeRedundant 🔒"] --> p3["ConfirmStop 🔒"]
-  p3["ConfirmStop 🔒"] --> p4["ApprenticeshipStoppedInform 🔒"]
-  p4["ApprenticeshipStoppedInform 🔒"] --> p5["EnterNewTrainingProvider 🔒"]
+  p0["AddNewDraftApprenticeship 🔒"] --> p1["SelectCourse 🔒"]
+  p1["SelectCourse 🔒"] --> p2["SelectDeliveryModel 🔒"]
+  p2["SelectDeliveryModel 🔒"] --> p3["AddDraftApprenticeshipDetails 🔒"]
 ```
 
-## Change an Apprentice’s Training Provider
+## Change Training Provider for an Apprenticeship
 
-The employer changes the training provider for an apprentice and submits a provider change request.
+Start the process to change the training provider for an apprenticeship and confirm the new provider details.
 
 ```mermaid
 flowchart LR
   p0["ChangeProviderInform 🔒"] --> p1["EnterNewTrainingProvider 🔒"]
-  p1["EnterNewTrainingProvider 🔒"] -->|"when Edit is false or not set"| p2["WhoWillEnterTheDetails 🔒"]
-  p2["WhoWillEnterTheDetails 🔒"] -->|"when EmployerWillAdd is true"| p3["WhatIsTheNewStartDate 🔒"]
-  p3["WhatIsTheNewStartDate 🔒"] -->|"if not editing"| p4["WhatIsTheNewEndDate 🔒"]
-  p4["WhatIsTheNewEndDate 🔒"] -->|"if not editing"| p5["WhatIsTheNewPrice 🔒"]
-  p5["WhatIsTheNewPrice 🔒"] --> p6["ConfirmDetailsAndSendRequest 🔒"]
-  p6["ConfirmDetailsAndSendRequest 🔒"] -->|"after successfully creating the change of provider request"| p7["ChangeProviderRequestedConfirmation 🔒"]
+  p1["EnterNewTrainingProvider 🔒"] -->|"when edit is true"| p2["ConfirmDetailsAndSendRequest 🔒"]
+  p2["ConfirmDetailsAndSendRequest 🔒"] -->|"after submitting and successfully creating the change of provider request"| p3["ChangeProviderRequestedConfirmation 🔒"]
 ```
 
-## Handle Apprenticeship That Never Started
+## Edit Course and Delivery Model for an Apprenticeship
 
-The employer records and confirms that an apprenticeship never started.
+Edit the course and delivery model for an apprenticeship and confirm the changes.
 
 ```mermaid
 flowchart LR
-  p0["WhyStopApprenticeship 🔒"] -->|"when reason is NeverStarted"| p1["ApprenticeshipNeverStarted 🔒"]
-  p1["ApprenticeshipNeverStarted 🔒"] --> p2["HasTheApprenticeBeenMadeRedundant 🔒"]
-  p2["HasTheApprenticeBeenMadeRedundant 🔒"] --> p3["ConfirmStop 🔒"]
-  p3["ConfirmStop 🔒"] --> p4["ApprenticeshipStoppedInform 🔒"]
-```
-
-## View and Manage Apprentice Details
-
-The employer reviews an apprentice’s history, updates, or payments from the details view.
-
-Complete the sections in any order, returning to the hub.
-
-```mermaid
-flowchart LR
-  p0["ApprenticeDetail 🔒"] --> p1["ChangeHistory 🔒"]
-  p1["ChangeHistory 🔒"] -.-> p0["ApprenticeDetail 🔒"]
-  p0["ApprenticeDetail 🔒"] --> p2["ChangeVersion 🔒"]
-  p2["ChangeVersion 🔒"] -.-> p0["ApprenticeDetail 🔒"]
-  p0["ApprenticeDetail 🔒"] --> p3["ChangeOption 🔒"]
-  p3["ChangeOption 🔒"] -.-> p0["ApprenticeDetail 🔒"]
-  p0["ApprenticeDetail 🔒"] --> p4["ViewChanges 🔒"]
-  p0["ApprenticeDetail 🔒"] --> p5["ApprenticeViewUpdates 🔒"]
-  p0["ApprenticeDetail 🔒"] --> p6["ChangePayments 🔒"]
-```
-
-## Edit Draft Apprenticeship in Cohort
-
-The employer creates or edits a draft apprentice within a cohort and completes necessary details.
-
-```mermaid
-flowchart LR
-  p0["AddNewDraftApprenticeship 🔒"] -->|"after starting to add a new draft apprenticeship"| p1["SelectCourse 🔒"]
-  p1["SelectCourse 🔒"] -->|"after selecting a course"| p2["SelectDeliveryModel 🔒"]
-  p2["SelectDeliveryModel 🔒"] -->|"after selecting a delivery model"| p3["AddDraftApprenticeshipDetails 🔒"]
-  p3["AddDraftApprenticeshipDetails 🔒"] -->|"after adding draft apprenticeship details when course code is present"| p4["SelectOption 🔒"]
-  p4["SelectOption 🔒"] --> p5["Details 🔒"]
-```
-
-## Edit an Apprentice’s Option or Version
-
-The employer edits an apprentice’s course option or version, and confirms the change.
-
-```mermaid
-flowchart LR
-  p0["ChangeOption 🔒"] --> p1["ConfirmEditApprenticeship 🔒"]
-  p1["ConfirmEditApprenticeship 🔒"] --> p2["ApprenticeDetail 🔒"]
-```
-
-## Send a Cohort for Approval
-
-The employer completes a draft cohort and submits it for approval, returning to the dashboard.
-
-```mermaid
-flowchart LR
-  p0["Draft 🔒"] --> p1["CohortDetails 🔒"]
-  p1["CohortDetails 🔒"] --> p2["ConfirmDelete 🔒"]
+  p0["SetCourseForEdit 🔒"] -->|"after saving course selection"| p1["SelectDeliveryModelForEdit 🔒"]
+  p1["SelectDeliveryModelForEdit 🔒"] -->|"after saving delivery model"| p2["EditApprenticeship 🔒"]
 ```
 
 ## Pages
 
 | Page | Route | Sign-in | Purpose |
 | --- | --- | --- | --- |
-| `Apprentice.ApprenticeshipApprovalRequestConfirmed` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/approvals/{approvalRequestId}/confirmed` | Yes | Confirms that the apprenticeship approval request has been approved. |
-| `Apprentice.ApprenticeshipNeverStarted` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/details/apprenticeshipneverstarted` | Yes | Lets the employer handle cases where the apprenticeship never started. |
-| `Apprentice.ApprenticeshipNotEnded` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/details/apprenticeshipnotended` | Yes | Lets the employer handle cases where the apprenticeship has not ended. |
-| `Apprentice.ApprenticeshipStoppedInform` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/change-provider/apprenticeshipStopped` | Yes | Informs the employer that the apprenticeship has been stopped. |
-| `Apprentice.ChangeHistory` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/change-history` | Yes | Displays the change history for a particular apprenticeship. |
-| `Apprentice.ChangeOption` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/change-option` | Yes | Lets the employer select a new course option for the apprenticeship. |
-| `Apprentice.ChangePayments` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/payments` | Yes | Asks the employer to confirm if they want to change payment status to the training provider. |
-| `Apprentice.ChangeStatus` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/details/changestatus` | Yes | Lets the employer change the status of an apprenticeship. |
-| `Apprentice.ChangeVersion` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/change-version` | Yes | Lets the employer select a new course version for the apprenticeship. |
-| `Apprentice.ConfirmEditApprenticeship` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/edit/confirm` | Yes | Lets the user confirm whether or not to apply the proposed changes to the apprenticeship. |
-| `Apprentice.ConfirmHasNotStop` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/details/confirmHasNotStop` | Yes | Lets the user confirm if the apprenticeship has stopped. |
-| `Apprentice.ConfirmHasNotStopChanges` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/details/confirmHasNotStop` | Yes | Prompts the employer to confirm whether the apprenticeship should be stopped. |
-| `Apprentice.ConfirmHasValidEndDate` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/details/confirmHasValidEndDate` | Yes | Lets the user confirm if the planned end date for the apprenticeship is correct. |
-| `Apprentice.ConfirmHasValidEndDateChanges` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/details/confirmHasValidEndDate` | Yes | Prompts the employer to confirm whether the apprenticeship has a valid end date. |
-| `Apprentice.ConfirmStop` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/details/confirmStop` | Yes | Lets the user confirm whether to stop the apprenticeship. |
-| `Apprentice.ConfirmWhenApprenticeshipStopped` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/details/confirmWhenApprenticeshipStopped` | Yes | Lets the user confirm if the stop date for this apprenticeship is correct. |
-| `Apprentice.DataLockRequestChanges` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/changes/request` | Yes | Lets the user approve or reject requested data lock changes to the apprenticeship. |
-| `Apprentice.DataLockRequestRestart` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/changes/restart` | Yes | Lets the employer request to restart the apprenticeship after a data lock. |
-| `Apprentice.EditApprenticeship` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/edit` | Yes | Lets the employer edit the details of an apprenticeship. |
-| `Apprentice.GetAllChangeHistory` | `{accountHashedId}/apprentices/change-history` | Yes | Displays all change history across apprentices in the employer's account. |
-| `Apprentice.GetApprenticeshipApprovalRequest` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/approvals/{approvalRequestId}` | Yes | Lets the employer choose whether to approve or decline requested changes to the apprenticeship. |
-| `Apprentice.HasTheApprenticeBeenMadeRedundant` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/details/madeRedundant` | Yes | Asks whether the apprentice has been made redundant. |
-| `Apprentice.PostApprenticeshipApprovalRequest` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/approvals/{approvalRequestId}` | Yes | Processes the employer's decision to approve or decline a change request on the apprenticeship. |
+| `Apprentice.ApprenticeshipApprovalRequestConfirmed` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/approvals/confirmed` | Yes | Shows confirmation that the apprenticeship approval request has been handled. |
+| `Apprentice.ApprenticeshipApprovalRequestConfirmedLegacy` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/approvals/{approvalRequestId:guid}/confirmed` | Yes | Redirects the user to the current apprenticeship approval request confirmation page. |
+| `Apprentice.ApprenticeshipNeverStarted` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/details/apprenticeshipneverstarted` | Yes | Allows the user to confirm that the apprenticeship never started. |
+| `Apprentice.ApprenticeshipNotEnded` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/details/apprenticeshipnotended` | Yes | Informs the user that the apprenticeship has not ended. |
+| `Apprentice.ApprenticeshipStoppedInform` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/change-provider/apprenticeshipStopped` | Yes | Informs the user that the apprenticeship has been stopped. |
+| `Apprentice.ChangeHistory` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/change-history` | Yes | Allows the user to view the change history for a specific apprenticeship. |
+| `Apprentice.ChangeOption` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/change-option` | Yes | Allows the user to select a new apprenticeship option when editing details. |
+| `Apprentice.ChangePayments` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/payments` | Yes | Lets the employer confirm pausing or resuming payments to the training provider. |
+| `Apprentice.ChangeStatus` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/details/changestatus` | Yes | Allows the user to select a status change for the apprenticeship. |
+| `Apprentice.ChangeVersion` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/change-version` | Yes | Allows the user to change the version of the apprenticeship. |
+| `Apprentice.ConfirmEditApprenticeship` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/edit/confirm` | Yes | Lets the employer confirm whether to make the proposed changes to the apprenticeship. |
+| `Apprentice.ConfirmHasNotStop` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/details/confirmHasNotStop` | Yes | Lets the employer confirm whether the apprenticeship has stopped. |
+| `Apprentice.ConfirmHasNotStopChanges` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/details/confirmHasNotStop` | Yes | Allows the user to confirm whether the apprenticeship should be stopped or not. |
+| `Apprentice.ConfirmHasValidEndDate` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/details/confirmHasValidEndDate` | Yes | Lets the employer confirm if the planned apprenticeship end date is correct. |
+| `Apprentice.ConfirmHasValidEndDateChanges` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/details/confirmHasValidEndDate` | Yes | Allows the user to confirm whether the apprenticeship's end date is valid. |
+| `Apprentice.ConfirmStop` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/details/confirmStop` | Yes | Lets the employer confirm whether to stop the apprenticeship. |
+| `Apprentice.ConfirmWhenApprenticeshipStopped` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/details/confirmWhenApprenticeshipStopped` | Yes | Lets the employer confirm if the apprenticeship stop date is correct. |
+| `Apprentice.DataLockRequestChanges` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/changes/request` | Yes | Lets the employer approve or reject changes requested via a data lock. |
+| `Apprentice.DataLockRequestRestart` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/changes/restart` | Yes | Allows the user to restart the apprenticeship after a data lock request. |
+| `Apprentice.EditApprenticeship` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/edit` | Yes | Lets the user edit the details of an apprenticeship. |
+| `Apprentice.GetAllChangeHistory` | `{accountHashedId}/apprentices/change-history` | Yes | Lets the user view change history for all apprenticeships in the account. |
+| `Apprentice.GetApprenticeshipApprovalRequest` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/approvals` | Yes | Lets the employer review and approve or decline pending changes to the apprenticeship. |
+| `Apprentice.GetApprenticeshipApprovalRequestLegacy` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/approvals/{approvalRequestId:guid}` | Yes | Redirects the user to the current apprenticeship approval request page. |
+| `Apprentice.HasTheApprenticeBeenMadeRedundant` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/details/madeRedundant` | Yes | Lets the user indicate if the apprentice has been made redundant. |
+| `Apprentice.PostApprenticeshipApprovalRequest` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/approvals` | Yes | Lets the employer approve or decline requested apprenticeship changes. |
 | `Apprentice.ReconfirmHasNotStop` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/details/reconfirmHasNotStop` | Yes | Lets the employer reconfirm that the apprenticeship has not stopped. |
-| `Apprentice.ReconfirmHasNotStopChangesAsync` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/details/reconfirmHasNotStop` | Yes | Lets the employer reconfirm whether the apprentice's status is unchanged after an initial negative confirmation. |
+| `Apprentice.ReconfirmHasNotStopChangesAsync` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/details/reconfirmHasNotStop` | Yes | Lets the employer confirm the apprenticeship is still active after reviewing possible stop date overlap. |
 | `Apprentice.ResendEmailInvitation` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/details/resend-email-invitation` | Yes | Resends the invitation email to the apprentice. |
-| `Apprentice.ReviewApprenticeshipUpdates` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/changes/review` | Yes | Lets the employer review proposed apprenticeship changes and choose to approve or undo them. |
-| `Apprentice.SelectCourseForEdit` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/edit/select-course` | Yes | Allows the user to select a course for editing the apprentice's details. |
-| `Apprentice.SelectDeliveryModelForEdit` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/edit/select-delivery-model` | Yes | Allows the user to select a delivery model for the apprentice's training. |
-| `Apprentice.SetCourseForEdit` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/edit/select-course` | Yes | Processes the selection of a course for the apprentice's record. |
-| `Apprentice.SetDeliveryModelForEdit` | `{accountHashedId}/apprentices/{ApprenticeshipHashedId}/edit/select-delivery-model` | Yes | Processes the selection of a delivery model for the apprentice's record. |
-| `Apprentice.StopApprenticeship` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/details/stop` | Yes | Lets the user begin the process of stopping an apprenticeship. |
-| `Apprentice.ViewApprenticeshipUpdates` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/changes/view` | Yes | Shows updates related to the apprentice's details. |
-| `Apprentice.ViewApprovalRequestAlerts` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/view-alerts` | Yes | Displays alerts to the employer for any apprenticeship approval requests that need their attention. |
-| `Apprentice.WhyStopApprenticeship` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/details/whystopapprenticeship` | Yes | Lets the user select the reason why they want to stop the apprenticeship. |
-| `ApprenticeDetail` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/details` | Yes | Displays detailed information about the apprentice. |
-| `ApprenticeEditEndDate` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/details/editenddate` | Yes | Allows the user to edit the planned end date for the apprenticeship. |
-| `ApprenticeViewUpdates` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/changes/view` | Yes | Allows the employer to confirm whether they want to undo recent changes made to the apprentice's record. |
-| `ApprenticesDownload` | `{accountHashedId}/apprentices/download` | Yes | Allows the user to download a list of apprentices. |
-| `ApprenticesIndex` | `{accountHashedId}/apprentices` | Yes | Shows a list of apprentices with search and filter options. |
-| `ApprenticeshipNeverStarted` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/details/apprenticeshipneverstarted` | Yes | Confirms that an apprenticeship never started. |
-| `CancelChangeOfProviderRequest` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/change-provider/cancel` | Yes | Asks the employer if they want to cancel a request to change the training provider. |
-| `CancelInProgressChangeOfCircumstance` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/cancel-change-of-circumstance` | Yes | Cancels changes in progress for an apprentice's record. |
-| `ChangeOption` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/change-option` | Yes | Lets the employer select a new option for the apprenticeship (such as a pathway or specialization). |
-| `ChangePayments` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/payments` | Yes | Asks the employer to confirm if they want to change payment status to the training provider. |
-| `ChangeProviderInform` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/change-provider` | Yes | Informs the user about changing the apprentice's training provider. |
-| `ChangeProviderRequestedConfirmation` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/change-provider/change-provider-requested/{providerId}` | Yes | Shows confirmation that a provider change has been requested. |
-| `ChangeVersion` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/change-version` | Yes | Allows the apprentice's training version to be changed. |
+| `Apprentice.ReviewApprenticeshipUpdates` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/changes/review` | Yes | Lets the employer approve or undo pending apprenticeship changes. |
+| `Apprentice.SelectCourseForEdit` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/edit/select-course` | Yes | Lets the employer select which course the apprenticeship should be changed to. |
+| `Apprentice.SelectDeliveryModelForEdit` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/edit/select-delivery-model` | Yes | Lets the employer select the delivery model for the apprenticeship. |
+| `Apprentice.SetCourseForEdit` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/edit/select-course` | Yes | Saves the employer's course selection and proceeds to the next step. |
+| `Apprentice.SetDeliveryModelForEdit` | `{accountHashedId}/apprentices/{ApprenticeshipHashedId}/edit/select-delivery-model` | Yes | Saves the employer's delivery model selection and proceeds to the next step. |
+| `Apprentice.StopApprenticeship` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/details/stop` | Yes | Lets the employer begin the process to stop an apprenticeship. |
+| `Apprentice.ViewApprenticeshipUpdates` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/changes/view` | Yes | Shows pending apprenticeship updates for employer review. |
+| `Apprentice.ViewApprovalRequestAlerts` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/view-alerts` | Yes | Lets the employer view alerts related to approval requests for apprenticeship changes. |
+| `Apprentice.WhyStopApprenticeship` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/details/whystopapprenticeship` | Yes | Lets the user select why they want to stop the apprentice's training. |
+| `ApprenticeDetail` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/details` | Yes | Shows the details of an apprentice and available actions. |
+| `ApprenticeEditEndDate` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/details/editenddate` | Yes | Lets the employer edit the planned training end date for an apprenticeship. |
+| `ApprenticeViewUpdates` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/changes/view` | Yes | Lets the user confirm if they want to undo recent changes to an apprentice's record. |
+| `ApprenticesDownload` | `{accountHashedId}/apprentices/download` | Yes | Lets the employer download a list of apprentices. |
+| `ApprenticesIndex` | `{accountHashedId}/apprentices` | Yes | Allows an employer to search, filter, and view a list of apprentices. |
+| `ApprenticeshipNeverStarted` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/details/apprenticeshipneverstarted` | Yes | Lets the employer confirm the apprenticeship never started and proceed accordingly. |
+| `CancelChangeOfProviderRequest` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/change-provider/cancel` | Yes | Lets the employer confirm cancellation of a change of provider request. |
+| `CancelInProgressChangeOfCircumstance` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/cancel-change-of-circumstance` | Yes | Lets the employer cancel an in-progress change of apprenticeship circumstance. |
+| `ChangeOption` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/change-option` | Yes | Lets the employer select an option for changing apprenticeship details. |
+| `ChangePayments` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/payments` | Yes | Lets the employer confirm pausing or resuming payments to the training provider. |
+| `ChangeProviderInform` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/change-provider` | Yes | Informs the employer about changing the training provider for the apprenticeship. |
+| `ChangeProviderRequestedConfirmation` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/change-provider/change-provider-requested/{providerId}` | Yes | Shows confirmation that the request to change provider has been submitted. |
+| `ChangeVersion` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/change-version` | Yes | Lets the employer select the version of the apprenticeship course. |
 | `Cohort.AddDraftApprenticeship` | `{accountHashedId}/unapproved/add/apprenticeship` | Yes | — |
 | `Cohort.AddDraftApprenticeshipOrRoute` | `{accountHashedId}/unapproved/add/apprenticeship` | Yes | — |
 | `Cohort.AgreementNotSigned` | `{accountHashedId}/unapproved` | Yes | — |
 | `Cohort.Apprentice` | `{accountHashedId}/unapproved/add/apprentice` | Yes | — |
 | `Cohort.Approved` | `{accountHashedId}/unapproved/{cohortReference}/approved` | Yes | — |
-| `Cohort.Assign` | `{accountHashedId}/unapproved/add/assign` | Yes | Lets the user specify who will add apprentices and optionally provide a message. |
-| `Cohort.ConfirmDelete` | `{accountHashedId}/unapproved/{cohortReference}/delete` | Yes | Lets the user confirm the deletion of a cohort. |
-| `Cohort.ConfirmProvider` | `{accountHashedId}/unapproved/add/confirm-provider` | Yes | Lets the employer confirm if the selected training provider is the main provider. |
+| `Cohort.Assign` | `{accountHashedId}/unapproved/add/assign` | Yes | Lets the user choose who will add apprentices and optionally provide a message. |
+| `Cohort.ConfirmDelete` | `{accountHashedId}/unapproved/{cohortReference}/delete` | Yes | Asks the user to confirm the deletion of a cohort. |
+| `Cohort.ConfirmProvider` | `{accountHashedId}/unapproved/add/confirm-provider` | Yes | Lets the employer confirm if this is the main training provider. |
 | `Cohort.Delete` | `{accountHashedId}/unapproved/{cohortReference}/delete` | Yes | — |
 | `Cohort.Details` | `{accountHashedId}/unapproved/{cohortReference}` | Yes | — |
 | `Cohort.Draft` | `{accountHashedId}/unapproved/draft` | Yes | — |
 | `Cohort.Finished` | `{accountHashedId}/unapproved/add/finished` | Yes | — |
 | `Cohort.Index` | `{accountHashedId}/unapproved/add` | Yes | — |
 | `Cohort.SaveDraftApprenticeship` | `{accountHashedId}/unapproved` | Yes | — |
-| `Cohort.SelectAcceptedLevyTransferConnection` | `{accountHashedId}/unapproved/add/select-funding/select-accepted-levy-connection` | Yes | Lets the employer select a levy transfer connection for funding the cohort. |
+| `Cohort.SelectAcceptedLevyTransferConnection` | `{accountHashedId}/unapproved/add/select-funding/select-accepted-levy-connection` | Yes | Lets the employer select a levy transfer connection for funding. |
 | `Cohort.SelectCourse` | `{accountHashedId}/unapproved/add/select-course` | Yes | — |
 | `Cohort.SelectDeliveryModel` | `{accountHashedId}/unapproved/add/select-delivery-model` | Yes | — |
-| `Cohort.SelectDirectTransferConnection` | `{accountHashedId}/unapproved/add/select-funding/select-direct-connection` | Yes | Lets the employer select a direct transfer connection for funding. |
-| `Cohort.SelectFunding` | `{accountHashedId}/unapproved/add/select-funding` | Yes | Lets the employer select the funding type for the cohort. |
-| `Cohort.SelectFundingType` | `{accountHashedId}/unapproved/add/select-funding` | Yes | Lets the user choose a funding option for adding apprenticeships. |
-| `Cohort.SelectLegalEntity` | `{accountHashedId}/unapproved/legalEntity/create` | Yes | Lets the employer select the legal entity to be named on the apprenticeship contract. |
-| `Cohort.SelectProvider` | `{accountHashedId}/unapproved/add/select-provider` | Yes | Lets the employer select a training provider for the cohort. |
-| `Cohort.Sent` | `{accountHashedId}/unapproved/{cohortReference}/sent` | Yes | Shows a confirmation that the cohort has been sent. |
-| `Cohort.SetDeliveryModel` | `{accountHashedId}/unapproved/add/select-delivery-model` | Yes | Lets the user select the apprenticeship delivery model. |
-| `Cohort.SetReservation` | `{accountHashedId}/unapproved/add/set-reservation` | Yes | Lets the user set a reservation for apprenticeships. |
-| `Cohort.WithTrainingProvider` | `{accountHashedId}/unapproved/with-training-provider` | Yes | Displays cohorts with a training provider assigned. |
-| `Cohort.WithTransferSender` | `{accountHashedId}/unapproved/with-transfer-sender` | Yes | Displays cohorts with a transfer sender assigned. |
-| `CohortDetails` | `{accountHashedId}/unapproved/{cohortReference}` | Yes | Shows the details of a cohort and lets the employer choose an action such as send, approve, or view the employer agreement. |
-| `CohortReview` | `{accountHashedId}/unapproved` | Yes | Shows a summary and review of draft/unapproved cohorts for the employer account. |
-| `ConfirmDetailsAndSendRequest` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/change-provider/confirm-details` | Yes | Allows the user to review and confirm the details for a change of provider request. |
-| `DeleteDraftApprenticeship` | `{AccountHashedId}/unapproved/{cohortReference}/apprentices/{DraftApprenticeshipHashedId}/Delete` | Yes | Lets the user confirm deletion of a draft apprentice record. |
-| `Details` | `{AccountHashedId}/unapproved/{cohortReference}/apprentices/{DraftApprenticeshipHashedId}` | Yes | Displays details for a specific draft apprenticeship in a cohort. |
-| `Details-View` | `{AccountHashedId}/unapproved/{cohortReference}/apprentices/{DraftApprenticeshipHashedId}/view` | Yes | Shows a read-only view of the draft apprenticeship details. |
-| `DraftApprenticeship.AddDraftApprenticeshipDetails` | `{AccountHashedId}/unapproved/{cohortReference}/apprentices/add-another` | Yes | Lets the employer enter details for a new draft apprenticeship. |
-| `DraftApprenticeship.AddNewDraftApprenticeship` | `{AccountHashedId}/unapproved/{cohortReference}/apprentices/add` | Yes | Starts adding a new draft apprenticeship to a cohort. |
-| `DraftApprenticeship.DeleteDraftApprenticeship` | `{AccountHashedId}/unapproved/{cohortReference}/apprentices/{DraftApprenticeshipHashedId}/Delete` | Yes | Allows the employer to delete a draft apprenticeship from a cohort. |
-| `DraftApprenticeship.EditDraftApprenticeship` | `{AccountHashedId}/unapproved/{cohortReference}/apprentices/{DraftApprenticeshipHashedId}` | Yes | Lets the employer edit details of a draft apprenticeship in a cohort. |
-| `DraftApprenticeship.SelectCourse` | `{AccountHashedId}/unapproved/{cohortReference}/apprentices/add/select-course` | Yes | Lets the employer select a training course for the draft apprenticeship. |
-| `DraftApprenticeship.SelectCourseForEdit` | `{AccountHashedId}/unapproved/{cohortReference}/apprentices/{DraftApprenticeshipHashedId}/edit/select-course` | Yes | Lets the employer select a training course while editing a draft apprenticeship. |
-| `DraftApprenticeship.SelectDeliveryModel` | `{AccountHashedId}/unapproved/{cohortReference}/apprentices/add/select-delivery-model` | Yes | Lets the employer choose the apprenticeship delivery model. |
-| `DraftApprenticeship.SelectDeliveryModelForEdit` | `{AccountHashedId}/unapproved/{cohortReference}/apprentices/{DraftApprenticeshipHashedId}/edit/select-delivery-model` | Yes | Lets the employer choose the apprenticeship delivery model while editing. |
-| `DraftApprenticeship.SelectOption` | `{AccountHashedId}/unapproved/{cohortReference}/apprentices/{DraftApprenticeshipHashedId}/select-option` | Yes | Lets the user select an option for the draft apprenticeship. |
-| `DraftApprenticeship.SetCourseForEdit` | `{AccountHashedId}/unapproved/{cohortReference}/apprentices/{DraftApprenticeshipHashedId}/edit/select-course` | Yes | Processes course selection during editing and moves to delivery model selection. |
-| `DraftApprenticeship.SetDeliveryModel` | `{AccountHashedId}/unapproved/{cohortReference}/apprentices/add/select-delivery-model` | Yes | Processes delivery model selection and moves to draft details. |
-| `DraftApprenticeship.SetDeliveryModelForEdit` | `{AccountHashedId}/unapproved/{cohortReference}/apprentices/{DraftApprenticeshipHashedId}/edit/select-delivery-model` | Yes | Processes delivery model selection while editing and moves to edit display. |
-| `EditApprenticeship` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/edit` | Yes | Allows the employer to edit details of an existing apprentice. |
-| `EditDraftApprenticeshipDisplay` | `{AccountHashedId}/unapproved/{cohortReference}/apprentices/{DraftApprenticeshipHashedId}/edit-display` | Yes | Lets the user view and edit details of a draft apprentice. |
-| `EditStopDateOption` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/details/editstopdate` | Yes | Lets the user specify a new stop date for the apprenticeship. |
-| `EnterNewTrainingProvider` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/change-provider/select-provider` | Yes | Allows the user to select a new training provider for the apprenticeship. |
-| `HasTheApprenticeBeenMadeRedundant` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/details/madeRedundant` | Yes | Lets the employer confirm whether the apprentice has been made redundant. |
-| `Home.Index` | `{accountHashedId}` | Yes | Displays the home page for the employer. |
-| `Inform` | `{accountHashedId}/unapproved/Inform` | Yes | Informs the user about a step in cohort creation. |
-| `PaymentOrder.ProviderPaymentOrder` | `accounts/{accountHashedId}/apprentices/manage/paymentorder` | Yes | Allows the employer to set and review the payment order of providers responsible for apprenticeships. |
-| `PaymentsPausedConfirmation` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/payments/paused` | Yes | Confirms to the employer that payments to the training provider for this apprentice have been paused. |
-| `PaymentsResumedConfirmation` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/payments/resumed` | Yes | Confirms to the employer that payments to the training provider for this apprentice have been resumed. |
-| `PostEditStopDate` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/details/editstopdate` | Yes | Updates the stop date of the apprenticeship and confirms the change. |
-| `ProviderPaymentOrder` | `accounts/{accountHashedId}/apprentices/manage/paymentorder` | Yes | Lets the employer change and submit the priority of payment order for their providers. |
-| `SendRequestNewTrainingProvider` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/change-provider/send-request` | Yes | Lets the employer confirm sending a request to change the apprentice's training provider. |
-| `TransferRequest.TransferConfirmation` | `{accountHashedId}/sender/transfers/{transferRequestHashedId}/confirmation` | Yes | Lets the employer confirm what they want to do next after a transfer request. |
-| `TransferRequest.TransferDetailsForReceiver` | `{accountHashedId}/receiver/transfers/{transferRequestHashedId}` | Yes | Shows the details of a transfer request to the receiving employer. |
-| `TransferRequest.TransferDetailsForSender` | `{accountHashedId}/sender/transfers/{transferRequestHashedId}` | Yes | Shows the details of a transfer request to the sending employer and lets them confirm approval. |
-| `ViewAgreement` | `{accountHashedId}/unapproved/viewAgreement` | Yes | Lets the user view the employer agreement related to cohorts. |
-| `ViewChanges` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/view-changes` | Yes | Shows details of recent or pending changes to the apprentice's record. |
-| `WhatIsTheNewEndDate` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/change-provider/end-date` | Yes | Lets the employer specify the new planned training end date with the new provider. |
-| `WhatIsTheNewPrice` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/change-provider/price` | Yes | Lets the employer enter the agreed price for completing training with the new provider. |
-| `WhatIsTheNewStartDate` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/change-provider/start-date` | Yes | Lets the employer specify the start date with the new training provider. |
-| `WhenToApplyStopApprentice` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/details/stop` | Yes | Lets the employer specify when to stop the apprentice's training. |
-| `WhoWillEnterTheDetails` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/change-provider/who-enter-details` | Yes | Lets the user specify who will enter the new course dates and price for the apprenticeship. |
-| `WhyStopApprenticeship` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/details/whystopapprenticeship` | Yes | Lets the employer select a reason for stopping the apprenticeship. |
+| `Cohort.SelectDirectTransferConnection` | `{accountHashedId}/unapproved/add/select-funding/select-direct-connection` | Yes | Lets the employer select a direct transfer connection for apprenticeship funding. |
+| `Cohort.SelectFunding` | `{accountHashedId}/unapproved/add/select-funding` | Yes | Allows the employer to select the funding type for the cohort. |
+| `Cohort.SelectFundingType` | `{accountHashedId}/unapproved/add/select-funding` | Yes | Allows the user to choose the funding type for a new cohort. |
+| `Cohort.SelectLegalEntity` | `{accountHashedId}/unapproved/legalEntity/create` | Yes | Lets the employer select the legal entity associated with the contract. |
+| `Cohort.SelectProvider` | `{accountHashedId}/unapproved/add/select-provider` | Yes | Lets the employer select a training provider for their apprenticeship cohort. |
+| `Cohort.Sent` | `{accountHashedId}/unapproved/{cohortReference}/sent` | Yes | Shows confirmation that a cohort has been sent. |
+| `Cohort.SetDeliveryModel` | `{accountHashedId}/unapproved/add/select-delivery-model` | Yes | Allows the user to select a delivery model for the apprenticeship. |
+| `Cohort.SetReservation` | `{accountHashedId}/unapproved/add/set-reservation` | Yes | Lets the user set a reservation for a cohort. |
+| `Cohort.WithTrainingProvider` | `{accountHashedId}/unapproved/with-training-provider` | Yes | Displays cohorts with a training provider. |
+| `Cohort.WithTransferSender` | `{accountHashedId}/unapproved/with-transfer-sender` | Yes | Displays cohorts with a transfer sender. |
+| `CohortDetails` | `{accountHashedId}/unapproved/{cohortReference}` | Yes | Shows details about the unapproved cohort and allows the employer to approve, send, or choose other options. |
+| `CohortReview` | `{accountHashedId}/unapproved` | Yes | Shows a review of all unapproved cohorts for the account. |
+| `ConfirmDetailsAndSendRequest` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/change-provider/confirm-details` | Yes | Lets the employer review and confirm details before sending the change of provider request. |
+| `DeleteDraftApprenticeship` | `{AccountHashedId}/unapproved/{cohortReference}/apprentices/{DraftApprenticeshipHashedId}/Delete` | Yes | Lets the employer confirm if they want to delete the draft apprentice record. |
+| `Details` | `{AccountHashedId}/unapproved/{cohortReference}/apprentices/{DraftApprenticeshipHashedId}` | Yes | Shows the details of a draft apprenticeship for review or editing. |
+| `Details-View` | `{AccountHashedId}/unapproved/{cohortReference}/apprentices/{DraftApprenticeshipHashedId}/view` | Yes | Shows a read-only view of a draft apprenticeship's details. |
+| `DraftApprenticeship.AddDraftApprenticeshipDetails` | `{AccountHashedId}/unapproved/{cohortReference}/apprentices/add-another` | Yes | Lets the user enter all details for a new draft apprenticeship before saving. |
+| `DraftApprenticeship.AddNewDraftApprenticeship` | `{AccountHashedId}/unapproved/{cohortReference}/apprentices/add` | Yes | Starts the process to add a new draft apprenticeship. |
+| `DraftApprenticeship.DeleteDraftApprenticeship` | `{AccountHashedId}/unapproved/{cohortReference}/apprentices/{DraftApprenticeshipHashedId}/Delete` | Yes | Allows the user to delete a draft apprenticeship. |
+| `DraftApprenticeship.EditDraftApprenticeship` | `{AccountHashedId}/unapproved/{cohortReference}/apprentices/{DraftApprenticeshipHashedId}` | Yes | Allows the user to edit the details of a draft apprenticeship. |
+| `DraftApprenticeship.SelectCourse` | `{AccountHashedId}/unapproved/{cohortReference}/apprentices/add/select-course` | Yes | Lets the user select a course for the new draft apprenticeship. |
+| `DraftApprenticeship.SelectCourseForEdit` | `{AccountHashedId}/unapproved/{cohortReference}/apprentices/{DraftApprenticeshipHashedId}/edit/select-course` | Yes | Lets the user select a course while editing a draft apprenticeship. |
+| `DraftApprenticeship.SelectDeliveryModel` | `{AccountHashedId}/unapproved/{cohortReference}/apprentices/add/select-delivery-model` | Yes | Lets the user select the apprenticeship delivery model when adding a draft apprenticeship. |
+| `DraftApprenticeship.SelectDeliveryModelForEdit` | `{AccountHashedId}/unapproved/{cohortReference}/apprentices/{DraftApprenticeshipHashedId}/edit/select-delivery-model` | Yes | Lets the user select or change the delivery model while editing a draft apprenticeship. |
+| `DraftApprenticeship.SelectOption` | `{AccountHashedId}/unapproved/{cohortReference}/apprentices/{DraftApprenticeshipHashedId}/select-option` | Yes | Lets the employer select an option for the draft apprenticeship record. |
+| `DraftApprenticeship.SetCourseForEdit` | `{AccountHashedId}/unapproved/{cohortReference}/apprentices/{DraftApprenticeshipHashedId}/edit/select-course` | Yes | Handles changes to the course selection for an apprenticeship being edited. |
+| `DraftApprenticeship.SetDeliveryModel` | `{AccountHashedId}/unapproved/{cohortReference}/apprentices/add/select-delivery-model` | Yes | Handles setting the delivery model for a new draft apprenticeship. |
+| `DraftApprenticeship.SetDeliveryModelForEdit` | `{AccountHashedId}/unapproved/{cohortReference}/apprentices/{DraftApprenticeshipHashedId}/edit/select-delivery-model` | Yes | Handles updating the delivery model during apprenticeship editing. |
+| `EditApprenticeship` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/edit` | Yes | Lets the employer edit the details of an apprentice's record. |
+| `EditDraftApprenticeshipDisplay` | `{AccountHashedId}/unapproved/{cohortReference}/apprentices/{DraftApprenticeshipHashedId}/edit-display` | Yes | Lets the employer edit details for a draft apprentice. |
+| `EditStopDateOption` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/details/editstopdate` | Yes | Lets the employer edit the stop date for an apprenticeship. |
+| `EnterNewTrainingProvider` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/change-provider/select-provider` | Yes | Lets the employer select a new training provider for the apprenticeship. |
+| `HasTheApprenticeBeenMadeRedundant` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/details/madeRedundant` | Yes | Lets the employer indicate if the apprentice has been made redundant. |
+| `Home.Index` | `{accountHashedId}` | Yes | Displays the home page for the employer account. |
+| `Inform` | `{accountHashedId}/unapproved/Inform` | Yes | Provides information to the user regarding cohort actions. |
+| `PaymentOrder.ProviderPaymentOrder` | `accounts/{accountHashedId}/apprentices/manage/paymentorder` | Yes | Lets the employer view and manage the payment order for training providers. |
+| `PaymentsPausedConfirmation` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/payments/paused` | Yes | Shows confirmation that payments to the training provider have been paused. |
+| `PaymentsResumedConfirmation` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/payments/resumed` | Yes | Shows confirmation that payments to the training provider have been resumed. |
+| `PostEditStopDate` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/details/editstopdate` | Yes | Confirms the updated stop date for the apprenticeship. |
+| `ProviderPaymentOrder` | `accounts/{accountHashedId}/apprentices/manage/paymentorder` | Yes | Lets the employer set the payment order priority for training providers. |
+| `SendRequestNewTrainingProvider` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/change-provider/send-request` | Yes | Lets the employer send the request for a new training provider. |
+| `TransferRequest.TransferConfirmation` | `{accountHashedId}/sender/transfers/{transferRequestHashedId}/confirmation` | Yes | Allows the sender to confirm what action to take after a transfer request. |
+| `TransferRequest.TransferDetailsForReceiver` | `{accountHashedId}/receiver/transfers/{transferRequestHashedId}` | Yes | Shows the details of a transfer request to the receiver. |
+| `TransferRequest.TransferDetailsForSender` | `{accountHashedId}/sender/transfers/{transferRequestHashedId}` | Yes | Shows the details of a transfer request to the sender and asks for approval. |
+| `ViewAgreement` | `{accountHashedId}/unapproved/viewAgreement` | Yes | Allows the user to view the employer agreement related to a cohort. |
+| `ViewChanges` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/view-changes` | Yes | Displays changes made to the apprenticeship record. |
+| `WhatIsTheNewEndDate` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/change-provider/end-date` | Yes | Lets the user enter the new planned training end date with a new training provider. |
+| `WhatIsTheNewPrice` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/change-provider/price` | Yes | Lets the user enter the agreed price for completing training with the new provider. |
+| `WhatIsTheNewStartDate` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/change-provider/start-date` | Yes | Lets the user enter the new planned training start date with a new training provider. |
+| `WhenToApplyStopApprentice` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/details/stop` | Yes | Lets the user enter when to stop the apprentice's training. |
+| `WhoWillEnterTheDetails` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/change-provider/who-enter-details` | Yes | Lets the user specify who will enter the new course dates and price when changing training provider. |
+| `WhyStopApprenticeship` | `{accountHashedId}/apprentices/{apprenticeshipHashedId}/details/whystopapprenticeship` | Yes | Lets the employer specify the reason for stopping the apprenticeship. |
 
 ## Form fields
 
@@ -292,14 +234,14 @@ Field definitions only: no values a user enters are recorded.
 
 | Field | Type | Label | Required | Rules | Options |
 | --- | --- | --- | --- | --- | --- |
-| `StopConfirmed` | checkboxes | — | — | required | The apprenticeship has not stopped |
+| `StopConfirmed` | checkboxes | — | — | required (must confirm the apprenticeship has not stopped) | The apprenticeship has not stopped |
 
 ### `Apprentice.ReviewApprenticeshipUpdates`
 
 | Field | Type | Label | Required | Rules | Options |
 | --- | --- | --- | --- | --- | --- |
-| `ApproveChanges` | radios | Are you happy to approve these changes? | — | required | Yes, approve these changes, No, reject these changes |
-| `UndoChanges` | radios | Do you want to undo these changes? | — | required | Yes, undo these changes, No, keep these changes |
+| `ApproveChanges` | radios | Are you happy to approve these changes? | — | required (must confirm if happy to approve changes) | Yes, approve these changes, No, reject these changes |
+| `UndoChanges` | radios | Do you want to undo these changes? | — | required (must confirm if wish to undo changes) | Yes, undo these changes, No, keep these changes |
 
 ### `Apprentice.SelectDeliveryModelForEdit`
 
@@ -311,14 +253,14 @@ Field definitions only: no values a user enters are recorded.
 
 | Field | Type | Label | Required | Rules | Options |
 | --- | --- | --- | --- | --- | --- |
-| `SelectedStatusChange` | radios | Select an option why you want to stop this training | — | required (must not be null; user must select a reason) | — |
+| `SelectedStatusChange` | radios | Select an option why you want to stop this training | — | required; must select why you want to stop this apprenticeship | — |
 
 ### `ApprenticeEditEndDate`
 
 | Field | Type | Label | Required | Rules | Options |
 | --- | --- | --- | --- | --- | --- |
-| `EndMonth` | number | Month | — | required when end date is given; must be a valid month; must be part of a real date | — |
-| `EndYear` | number | Year | — | required when end date is given; must be a valid year; must be part of a real date | — |
+| `EndMonth` | number | Month | — | required; must be a real month; planned training end date must include a month | — |
+| `EndYear` | number | Year | — | required; must be a real year; planned training end date must include a year | — |
 
 ### `ApprenticeViewUpdates`
 
@@ -348,7 +290,7 @@ Field definitions only: no values a user enters are recorded.
 
 | Field | Type | Label | Required | Rules | Options |
 | --- | --- | --- | --- | --- | --- |
-| `SelectedOption` | radios | — | — | required; must differ from current option when not returning to version or edit selection | Confirm option at a later date |
+| `SelectedOption` | radios | — | — | required; must not equal the current option unless returning to change version or edit | Confirm option at a later date |
 
 ### `ChangePayments`
 
@@ -367,7 +309,7 @@ Field definitions only: no values a user enters are recorded.
 | Field | Type | Label | Required | Rules | Options |
 | --- | --- | --- | --- | --- | --- |
 | `WhoIsAddingApprentices` | radios | How would you like to add learners? | Yes | required | — |
-| `Message` | textarea | — | — | If 'Provider' is selected as WhoIsAddingApprentices and Message is not empty, must contain valid free-text characters | — |
+| `Message` | textarea | — | — | must use valid free text characters when 'Provider' is selected | — |
 
 ### `Cohort.ConfirmDelete`
 
@@ -423,7 +365,7 @@ Field definitions only: no values a user enters are recorded.
 
 | Field | Type | Label | Required | Rules | Options |
 | --- | --- | --- | --- | --- | --- |
-| `confirmDelete` | radios | — | — | — | true |
+| `confirmDelete` | radios | — | — | required | true |
 | `ConfirmDelete` | radios | Are you sure you want to delete the record for? | — | required | Yes, delete the record for, No, don't delete |
 
 ### `DraftApprenticeship.AddDraftApprenticeshipDetails`
@@ -450,7 +392,7 @@ Field definitions only: no values a user enters are recorded.
 
 | Field | Type | Label | Required | Rules | Options |
 | --- | --- | --- | --- | --- | --- |
-| `DeliveryModel` | radios | Select delivery model | — | required | — |
+| `DeliveryModel` | radios | Select delivery model | — | — | — |
 
 ### `DraftApprenticeship.SelectOption`
 
@@ -462,9 +404,9 @@ Field definitions only: no values a user enters are recorded.
 
 | Field | Type | Label | Required | Rules | Options |
 | --- | --- | --- | --- | --- | --- |
-| `FirstName` | text | First name | — | required; must not be empty | — |
-| `LastName` | text | Last name | — | required; must not be empty | — |
-| `Email` | text | Email Address | — | required; must not be empty; must be valid email format | — |
+| `FirstName` | text | First name | — | required | — |
+| `LastName` | text | Last name | — | required | — |
+| `Email` | text | Email Address | — | required; must be a valid email address | — |
 | `BirthDay` | text | Day | — | — | — |
 | `BirthMonth` | text | Month | — | — | — |
 | `BirthYear` | text | Year | — | — | — |
@@ -482,32 +424,32 @@ Field definitions only: no values a user enters are recorded.
 
 | Field | Type | Label | Required | Rules | Options |
 | --- | --- | --- | --- | --- | --- |
-| `NewStopDate.Month` | text | — | — | required; must not be in the future; must not be before apprenticeship start; must be different from current stop date | — |
-| `NewStopDate.Year` | text | — | — | required; must not be in the future; must not be before apprenticeship start; must be different from current stop date | — |
+| `NewStopDate.Month` | text | — | — | required; must be a real month; stop date cannot be in the future; stop month cannot be before the apprenticeship started; must be different from the current stopped date | — |
+| `NewStopDate.Year` | text | — | — | required; must be a real year; stop date cannot be in the future; stop month cannot be before the apprenticeship started; must be different from the current stopped date | — |
 
 ### `EnterNewTrainingProvider`
 
 | Field | Type | Label | Required | Rules | Options |
 | --- | --- | --- | --- | --- | --- |
-| `ProviderId` | select | — | — | required; must be a positive number; must not be the current provider | — |
+| `ProviderId` | select | — | — | required; must be a positive value; must not equal current provider id | — |
 
 ### `HasTheApprenticeBeenMadeRedundant`
 
 | Field | Type | Label | Required | Rules | Options |
 | --- | --- | --- | --- | --- | --- |
-| `MadeRedundant` | radios | — | — | required | Yes, No |
+| `MadeRedundant` | radios | — | — | required (must select yes or no) | Yes, No |
 
 ### `ProviderPaymentOrder`
 
 | Field | Type | Label | Required | Rules | Options |
 | --- | --- | --- | --- | --- | --- |
-| `ProviderPaymentOrder[priority-1]` | select | — | — | required; list must not contain duplicates | — |
+| `ProviderPaymentOrder[priority-1]` | select | — | — | required; each provider can only appear once in the list | — |
 
 ### `SendRequestNewTrainingProvider`
 
 | Field | Type | Label | Required | Rules | Options |
 | --- | --- | --- | --- | --- | --- |
-| `Confirm` | radios | — | — | required | Yes, No, return to record |
+| `Confirm` | radios | — | — | required (must select whether to send the request) | Yes, No, return to record |
 
 ### `TransferRequest.TransferConfirmation`
 
@@ -525,32 +467,32 @@ Field definitions only: no values a user enters are recorded.
 
 | Field | Type | Label | Required | Rules | Options |
 | --- | --- | --- | --- | --- | --- |
-| `NewEndMonth` | text | Month | — | required together with NewEndYear; must form a real date; must be after NewStartDate | — |
-| `NewEndYear` | text | Year | — | required together with NewEndMonth; must form a real date; must be after NewStartDate | — |
+| `NewEndMonth` | text | Month | — | required together with NewEndYear; must form a real date; must include a month; must be after the new start date | — |
+| `NewEndYear` | text | Year | — | required together with NewEndMonth; must form a real date; must include a year; must be after the new start date | — |
 
 ### `WhatIsTheNewPrice`
 
 | Field | Type | Label | Required | Rules | Options |
 | --- | --- | --- | --- | --- | --- |
-| `NewPrice` | text | — | — | required; must be at least 1 and at most 100000 | — |
+| `NewPrice` | text | — | — | required; must be an integer between 1 and 100000 | — |
 
 ### `WhatIsTheNewStartDate`
 
 | Field | Type | Label | Required | Rules | Options |
 | --- | --- | --- | --- | --- | --- |
-| `NewStartMonth` | text | — | — | required together with NewStartYear; must form a real date; must be on or after StopDate; must be before NewEndDate (if provided); must be no later than one year after the end of current teaching year unless after NewEndDate | — |
-| `NewStartYear` | text | — | — | required together with NewStartMonth; must form a real date; must be on or after StopDate; must be before NewEndDate (if provided); must be no later than one year after the end of current teaching year unless after NewEndDate | — |
+| `NewStartMonth` | text | — | — | required together with NewStartYear; must form a real date; must include a month; must be on or after stop date; must be before the new end date; must not be later than one year after the end of the current teaching year | — |
+| `NewStartYear` | text | — | — | required together with NewStartMonth; must form a real date; must include a year; must be on or after stop date; must be before the new end date; must not be later than one year after the end of the current teaching year | — |
 
 ### `WhenToApplyStopApprentice`
 
 | Field | Type | Label | Required | Rules | Options |
 | --- | --- | --- | --- | --- | --- |
-| `StopMonth` | text | — | — | required together with StopYear; must form a real date; cannot be before the training started; cannot be in the future | — |
-| `StopYear` | text | — | — | required together with StopMonth; must form a real date; cannot be before the training started; cannot be in the future | — |
+| `StopMonth` | text | — | — | required together with StopYear; must form a real date; must not be before the training start date; must not be in the future | — |
+| `StopYear` | text | — | — | required together with StopMonth; must form a real date; must not be before the training start date; must not be in the future | — |
 
 ### `WhoWillEnterTheDetails`
 
 | Field | Type | Label | Required | Rules | Options |
 | --- | --- | --- | --- | --- | --- |
-| `EmployerWillAdd` | radios | Who will enter the new course dates and price? | — | required (must not be null; user must select who will enter the new course dates and price) | I'll add them now, will add them later |
+| `EmployerWillAdd` | radios | Who will enter the new course dates and price? | — | required; must select who will enter the new course dates and price | I'll add them now, will add them later |
 
