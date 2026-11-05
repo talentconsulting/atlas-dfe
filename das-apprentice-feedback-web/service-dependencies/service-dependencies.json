@@ -11,7 +11,7 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.ApprenticeFeedback.Web.NServiceBusListener/Program.cs",
-          "reason": "NServiceBus Listener entry point using Endpoint.Start."
+          "reason": "Hosted service with NServiceBus endpoint"
         }
       ]
     },
@@ -22,7 +22,7 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.ApprenticeFeedback.Web/Program.cs",
-          "reason": "ASP.NET Core WebHost entry point with UseStartup."
+          "reason": "ASP.NET web entry point (WebHost.CreateDefaultBuilder)"
         }
       ]
     }
@@ -30,14 +30,15 @@
   "dependencies": [
     {
       "sourceId": "apprentice-feedback-web",
-      "name": "Redis",
+      "name": "Azure Redis",
       "kind": "cache",
-      "classification": "unknown",
+      "classification": "third-party",
       "direction": "outbound",
       "client": null,
       "technology": "StackExchange.Redis",
       "configurationKeys": [
-        "DataProtectionConnectionStrings:RedisConnectionString"
+        "DataProtectionKeysDatabase",
+        "RedisConnectionString"
       ],
       "authentication": {
         "type": null,
@@ -46,7 +47,7 @@
       "operations": [],
       "resources": [
         {
-          "type": "database",
+          "type": "Redis instance",
           "name": null,
           "direction": "outbound",
           "sourceFile": "src/SFA.DAS.ApprenticeFeedback.Web/Startup/DataProtectionStartup.cs"
@@ -55,15 +56,11 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.ApprenticeFeedback.Web/Startup/DataProtectionStartup.cs",
-          "reason": "AddStackExchangeRedisCache registration with Redis connection string."
-        },
-        {
-          "sourceFile": "src/SFA.DAS.ApprenticeFeedback.Web/Startup/DataProtectionStartup.cs",
-          "reason": "ConnectionMultiplexer.Connect used with Redis connection string."
+          "reason": "StackExchange.Redis cache or data protection registration with a redis connection"
         }
       ],
       "confidence": "high",
-      "targetId": "cache-redis",
+      "targetId": "cache-azure-redis",
       "description": "Caches data in"
     },
     {
@@ -72,19 +69,21 @@
       "kind": "message-broker",
       "classification": "third-party",
       "direction": "outbound",
-      "client": "NServiceBus",
-      "technology": "Azure Service Bus",
+      "client": null,
+      "technology": "NServiceBus.Azure.Transports.WindowsAzureServiceBus",
       "configurationKeys": [
         "NServiceBusConnectionString"
       ],
       "authentication": {
-        "type": null,
-        "configurationKeys": []
+        "type": "connection string",
+        "configurationKeys": [
+          "NServiceBusConnectionString"
+        ]
       },
       "operations": [],
       "resources": [
         {
-          "type": "message-broker",
+          "type": "Azure Service Bus namespace",
           "name": null,
           "direction": "outbound",
           "sourceFile": "src/SFA.DAS.ApprenticeFeedback.Web.NServiceBusListener/Program.cs"
@@ -93,7 +92,7 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.ApprenticeFeedback.Web.NServiceBusListener/Program.cs",
-          "reason": "UseAzureServiceBusTransport registration for NServiceBus."
+          "reason": "Azure Service Bus connection via NServiceBus configuration"
         }
       ],
       "confidence": "high",

@@ -1,0 +1,33 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+LAYOUT_WITH_LEGEND()
+
+System_Boundary(sys_SkillsFundingAgency_das_admin_service, "Admin Service") {
+  Container(c_admin_service, "Admin Service", "Web Application")
+  Container(c_admin_service_2, "Admin Service", "API")
+}
+
+SystemDb_Ext(d_cache_redis, "Redis", "Redis")
+SystemDb_Ext(d_cache_redis_cache, "Redis Cache", "Redis")
+System_Ext(d_http_api_application, "Application")
+System_Ext(d_http_api_contacts, "Contacts")
+System_Ext(d_http_api_organisations, "Organisations", "Rest API")
+System_Ext(d_http_api_qna, "QnA", "HttpClient")
+System_Ext(d_http_api_register, "Register")
+System_Ext(d_http_api_register_validation, "Register Validation", "Rest API")
+System_Ext(d_http_api_roatp, "RoATP", "HttpClient")
+System_Ext(d_http_api_roatp_application, "RoATP Application", "HttpClient")
+
+Rel(c_admin_service, d_cache_redis, "Caches data in", "Redis")
+Rel(c_admin_service, d_cache_redis_cache, "Caches data in", "Redis")
+Rel(c_admin_service, d_http_api_application, "Calls the API of")
+Rel(c_admin_service, d_http_api_contacts, "Calls the API of")
+Rel(c_admin_service, d_http_api_organisations, "Calls the API of", "Rest API")
+Rel(c_admin_service_2, d_http_api_qna, "Calls the API of", "HttpClient")
+Rel(c_admin_service, d_http_api_register, "Calls the API of")
+Rel(c_admin_service, d_http_api_register_validation, "Calls the API of", "Rest API")
+Rel(c_admin_service_2, d_http_api_roatp, "Calls the API of", "HttpClient")
+Rel(c_admin_service_2, d_http_api_roatp_application, "Calls the API of", "HttpClient")
+Rel(c_admin_service, d_http_api_roatp_application, "Calls the API of")
+
+@enduml

@@ -10,12 +10,12 @@
       "type": "web",
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.Reservations.Web/Program.cs",
-          "reason": "ASP.NET Core entry point detected through WebHost.CreateDefaultBuilder"
+          "sourceFile": "src/SFA.DAS.Reservations.Web/Startup.cs",
+          "reason": "Configures web application services and middleware."
         },
         {
-          "sourceFile": "src/SFA.DAS.Reservations.Web/SFA.DAS.Reservations.Web.csproj",
-          "reason": "Project SDK 'Microsoft.NET.Sdk.Web' indicates an ASP.NET Core application."
+          "sourceFile": "src/SFA.DAS.Reservations.Web/Program.cs",
+          "reason": "Contains a WebHost entry point indicating a web container."
         }
       ]
     }
@@ -25,10 +25,10 @@
       "sourceId": "reservations-web",
       "name": "Redis Cache",
       "kind": "cache",
-      "classification": "internal",
+      "classification": "unknown",
       "direction": "outbound",
       "client": null,
-      "technology": "StackExchange.Redis",
+      "technology": "StackExchangeRedis",
       "configurationKeys": [
         "ReservationsWeb:RedisCacheConnectionString"
       ],
@@ -40,12 +40,8 @@
       "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.Reservations.Web/SFA.DAS.Reservations.Web.csproj",
-          "reason": "StackExchange.Redis package referenced in project file."
-        },
-        {
           "sourceFile": "src/SFA.DAS.Reservations.Web/Startup.cs",
-          "reason": "StackExchangeRedisCache registered in dependency injection with a configuration key."
+          "reason": "StackExchangeRedisCache is configured for distributed caching."
         }
       ],
       "confidence": "high",
@@ -58,18 +54,18 @@
       "kind": "http-api",
       "classification": "internal",
       "direction": "outbound",
-      "client": "ApiClient",
+      "client": "IApiClient",
       "technology": "HttpClient",
       "configurationKeys": [
-        "ReservationsApiConfiguration:Url"
+        "ReservationsWeb:ApiConfiguration:Url"
       ],
       "authentication": {
         "type": "Azure AD",
         "configurationKeys": [
-          "ReservationsApiConfiguration:Id",
-          "ReservationsApiConfiguration:Identifier",
-          "ReservationsApiConfiguration:Secret",
-          "ReservationsApiConfiguration:Tenant"
+          "ReservationsWeb:ApiConfiguration:Id",
+          "ReservationsWeb:ApiConfiguration:Identifier",
+          "ReservationsWeb:ApiConfiguration:Secret",
+          "ReservationsWeb:ApiConfiguration:Tenant"
         ]
       },
       "operations": [
@@ -87,12 +83,6 @@
         },
         {
           "method": "GET",
-          "methodName": "GetAll",
-          "path": null,
-          "sourceFile": "src/SFA.DAS.Reservations.Infrastructure/Api/ApiClientBase.cs"
-        },
-        {
-          "method": "GET",
           "methodName": "Ping",
           "path": "ping",
           "sourceFile": "src/SFA.DAS.Reservations.Infrastructure/Api/ApiClient.cs"
@@ -104,15 +94,22 @@
           "sourceFile": "src/SFA.DAS.Reservations.Infrastructure/Api/ApiClientBase.cs"
         }
       ],
-      "resources": [],
+      "resources": [
+        {
+          "type": "http",
+          "name": "ReservationsApiConfiguration.Url",
+          "direction": "outbound",
+          "sourceFile": "src/SFA.DAS.Reservations.Infrastructure/Api/ApiClient.cs"
+        }
+      ],
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.Reservations.Infrastructure/Api/ApiClient.cs",
-          "reason": "IApiClient implemented with HttpClient usage and supports access token flow."
+          "reason": "ApiClient implementation uses HttpClient to make HTTP calls."
         },
         {
           "sourceFile": "src/SFA.DAS.Reservations.Web/AppStart/ServiceRegistrationExtension.cs",
-          "reason": "IApiClient registered in dependency injection."
+          "reason": "IApiClient is registered as a dependency."
         }
       ],
       "confidence": "high",

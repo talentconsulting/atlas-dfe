@@ -11,11 +11,11 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.ProviderFeedback.Web/Program.cs",
-          "reason": "ASP.NET Core web application entry point detected."
+          "reason": "ASP.NET Core Program.cs used to configure and run the application."
         },
         {
           "sourceFile": "src/SFA.DAS.ProviderFeedback.Web/SFA.DAS.ProviderFeedback.Web.csproj",
-          "reason": "Project SDK indicates a web application."
+          "reason": "Project file indicating a web application entry point."
         }
       ]
     }
@@ -23,7 +23,7 @@
   "dependencies": [
     {
       "sourceId": "provider-feedback",
-      "name": "Redis",
+      "name": "Redis Cache",
       "kind": "cache",
       "classification": "third-party",
       "direction": "outbound",
@@ -41,27 +41,31 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.ProviderFeedback.Web/SFA.DAS.ProviderFeedback.Web.csproj",
-          "reason": "StackExchange.Redis used as a cache provider."
+          "reason": "Contains references to StackExchange.Redis and Microsoft.Extensions.Caching.StackExchangeRedis."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.ProviderFeedback.Web/Program.cs",
+          "reason": "Redis setup evidenced by AddDataProtection using StackExchange.Redis."
         }
       ],
-      "confidence": "medium",
-      "targetId": "cache-redis",
+      "confidence": "high",
+      "targetId": "cache-redis-cache",
       "description": "Caches data in"
     },
     {
       "sourceId": "provider-feedback",
-      "name": "Provider Feedback Outer",
+      "name": "Provider Feedback Outer API",
       "kind": "http-api",
       "classification": "internal",
       "direction": "outbound",
-      "client": "IApiClient",
+      "client": "ApiClient",
       "technology": "HttpClient",
       "configurationKeys": [
         "ProviderFeedbackOuterApi:ApiBaseUrl",
         "ProviderFeedbackOuterApi:SubscriptionKey"
       ],
       "authentication": {
-        "type": "key",
+        "type": "header",
         "configurationKeys": [
           "ProviderFeedbackOuterApi:SubscriptionKey"
         ]
@@ -80,26 +84,19 @@
           "sourceFile": "src/SFA.DAS.ProviderFeedback.Infrastructure/Api/ApiClient.cs"
         }
       ],
-      "resources": [
-        {
-          "type": "http-api",
-          "name": "ProviderFeedbackOuterApi",
-          "direction": "outbound",
-          "sourceFile": "src/SFA.DAS.ProviderFeedback.Infrastructure/Api/ApiClient.cs"
-        }
-      ],
+      "resources": [],
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.ProviderFeedback.Infrastructure/Api/ApiClient.cs",
-          "reason": "Custom HttpClient API client defined."
+          "reason": "HttpClient constructed with base URL and subscription key for API calls."
         },
         {
           "sourceFile": "src/SFA.DAS.ProviderFeedback.Web/AppStart/AddServiceRegistrationExtensions.cs",
-          "reason": "HttpClient client 'IApiClient' registered."
+          "reason": "IApiClient registered with AddHttpClient for outbound HTTP API communication."
         }
       ],
       "confidence": "high",
-      "targetId": "http-api-provider-feedback-outer",
+      "targetId": "http-api-provider-feedback-outer-api",
       "description": "Calls the API of"
     }
   ]
