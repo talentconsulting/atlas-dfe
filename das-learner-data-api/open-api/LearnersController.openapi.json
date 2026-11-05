@@ -1,0 +1,71 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Learners API",
+    "version": "1.0"
+  },
+  "paths": {
+    "/learners": {
+      "get": {
+        "summary": "Get all learners",
+        "operationId": "GetAllLearners",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1
+            },
+            "description": "The page number to retrieve."
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 100,
+              "maximum": 1000
+            },
+            "description": "The number of learners per page."
+          },
+          {
+            "name": "excludeApproved",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": true
+            },
+            "description": "Whether to exclude approved learners."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response with list of learners.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAllLearnersResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request due to invalid parameters."
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "GetAllLearnersResponse": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    }
+  }
+}
