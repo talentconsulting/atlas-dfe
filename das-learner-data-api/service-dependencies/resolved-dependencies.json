@@ -1,0 +1,151 @@
+{
+  "repository": "SkillsFundingAgency/das-learner-data-api",
+  "ref": "main",
+  "path": "src",
+  "systemName": "Learner Data",
+  "containers": [
+    {
+      "id": "learner-data",
+      "name": "Learner Data",
+      "type": "api",
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.LearnerData.Api/Program.cs",
+          "reason": "ASP.NET Core entry point"
+        },
+        {
+          "sourceFile": "src/SFA.DAS.LearnerData.Api/SFA.DAS.LearnerData.Api.csproj",
+          "reason": "Project with ASP.NET Core Web SDK"
+        }
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "sourceId": "learner-data",
+      "name": "Redis",
+      "kind": "cache",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "ConnectionMultiplexer",
+      "technology": "StackExchange.Redis",
+      "configurationKeys": [
+        "LearnerDataApi:DataProtectionKeysDatabase",
+        "LearnerDataApi:RedisConnectionString"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [
+        {
+          "type": "cache",
+          "name": "LearnerDataApi:RedisConnectionString",
+          "direction": "outbound",
+          "sourceFile": "src/SFA.DAS.LearnerData.Api/StartupExtensions/DataProtectionStartupExtensions.cs"
+        }
+      ],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.LearnerData.Api/StartupExtensions/DataProtectionStartupExtensions.cs",
+          "reason": "ConnectionMultiplexer.Connect for Redis cache"
+        }
+      ],
+      "confidence": "high",
+      "targetId": "cache-redis",
+      "description": "Caches data in"
+    },
+    {
+      "sourceId": "learner-data",
+      "name": "Azure Key Vault",
+      "kind": "cloud-service",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": null,
+      "technology": "Azure.Identity",
+      "configurationKeys": [],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.LearnerData/SFA.DAS.LearnerData.csproj",
+          "reason": "Azure SDK and connection traces for Key Vault"
+        }
+      ],
+      "confidence": "medium",
+      "targetId": "cloud-service-azure-key-vault",
+      "description": "Uses"
+    },
+    {
+      "sourceId": "learner-data",
+      "name": "SQL Server",
+      "kind": "database",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "SqlConnection",
+      "technology": "Entity Framework Core",
+      "configurationKeys": [
+        "LearnerDataApi:DatabaseConnectionString"
+      ],
+      "authentication": {
+        "type": "managed-identity",
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [
+        {
+          "type": "database",
+          "name": "LearnerDataApi:DatabaseConnectionString",
+          "direction": "outbound",
+          "sourceFile": "src/SFA.DAS.LearnerData.Api/StartupExtensions/EntityFrameworkStartupExtensions.cs"
+        }
+      ],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.LearnerData.Api/StartupExtensions/EntityFrameworkStartupExtensions.cs",
+          "reason": "AddDbContext for LearnerDataDbContext"
+        }
+      ],
+      "confidence": "high",
+      "targetId": "database-sql-server",
+      "description": "Reads from and writes to"
+    },
+    {
+      "sourceId": "learner-data",
+      "name": "Azure Service Bus",
+      "kind": "message-broker",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "IEndpointInstance",
+      "technology": "NServiceBus",
+      "configurationKeys": [
+        "NServiceBusConnectionString"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.LearnerData.Api/Startup.cs",
+          "reason": "AddNServiceBus for Azure Service Bus"
+        }
+      ],
+      "confidence": "high",
+      "targetId": "message-broker-azure-service-bus",
+      "description": "Publishes messages to and consumes messages from"
+    }
+  ],
+  "resolution": {
+    "overlay": "dfe-overlay/apim-routing.json",
+    "apimCommit": "7c83d23270959bfc4da9e92d355f95e1f2f4d257",
+    "precision": "area"
+  }
+}
