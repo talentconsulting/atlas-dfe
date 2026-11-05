@@ -1,0 +1,431 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Provider Learners API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/providers/{ukprn}/learners": {
+      "post": {
+        "summary": "Search learners",
+        "operationId": "searchLearners",
+        "parameters": [
+          {
+            "name": "ukprn",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SearchLearnersRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/providers/{ukprn}/learners/{uln}": {
+      "put": {
+        "summary": "Save a learner",
+        "operationId": "saveLearner",
+        "parameters": [
+          {
+            "name": "ukprn",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "uln",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SaveLearnerRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
+    "/providers/{ukprn}/learners/{id}": {
+      "get": {
+        "summary": "Get learner by ID",
+        "operationId": "getLearnerById",
+        "parameters": [
+          {
+            "name": "ukprn",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/providers/{ukprn}/learners/by-ids": {
+      "post": {
+        "summary": "Get learners by list of IDs",
+        "operationId": "getLearnersById",
+        "parameters": [
+          {
+            "name": "ukprn",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetLearnersByIdRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/providers/{ukprn}/learners/{id}/apprenticeshipId": {
+      "patch": {
+        "summary": "Assign an ApprenticeshipId to a learner",
+        "operationId": "patchApprenticeshipId",
+        "parameters": [
+          {
+            "name": "ukprn",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PatchLearnerDataApprenticeshipIdRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "SearchLearnersRequest": {
+        "type": "object",
+        "properties": {
+          "startMonth": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "startYear": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32",
+            "default": 1
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32",
+            "default": 20,
+            "nullable": true
+          },
+          "sortColumn": {
+            "type": "string",
+            "nullable": true
+          },
+          "sortDescending": {
+            "type": "boolean",
+            "default": false
+          },
+          "filter": {
+            "type": "string",
+            "nullable": true
+          },
+          "excludeApproved": {
+            "type": "boolean",
+            "default": true
+          },
+          "maxStartDate": {
+            "type": "string",
+            "nullable": true
+          },
+          "excludeUlns": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          "courseCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "learningType": {
+            "$ref": "#/components/schemas/LearningType",
+            "nullable": true
+          }
+        }
+      },
+      "SaveLearnerRequest": {
+        "type": "object",
+        "properties": {
+          "uln": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "ukprn": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "firstName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "dob": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "academicYear": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "plannedEndDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "percentageLearningToBeDelivered": {
+            "type": "integer",
+            "nullable": true
+          },
+          "epaoPrice": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "trainingPrice": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "agreementId": {
+            "type": "string",
+            "nullable": true
+          },
+          "larsCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "trainingName": {
+            "type": "string",
+            "nullable": true
+          },
+          "learningType": {
+            "$ref": "#/components/schemas/LearningType",
+            "nullable": true
+          },
+          "isFlexiJob": {
+            "type": "boolean"
+          },
+          "plannedOTJTrainingHours": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "receivedDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "correlationId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "consumerReference": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "uln",
+          "ukprn",
+          "firstName",
+          "lastName",
+          "dob",
+          "academicYear",
+          "startDate",
+          "plannedEndDate",
+          "epaoPrice",
+          "trainingPrice",
+          "isFlexiJob",
+          "plannedOTJTrainingHours",
+          "receivedDate",
+          "correlationId",
+          "consumerReference"
+        ]
+      },
+      "GetLearnersByIdRequest": {
+        "type": "object",
+        "properties": {
+          "learnerIds": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        },
+        "required": [
+          "learnerIds"
+        ]
+      },
+      "PatchLearnerDataApprenticeshipIdRequest": {
+        "type": "object",
+        "properties": {
+          "apprenticeshipId": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          }
+        }
+      },
+      "LearningType": {
+        "type": "string",
+        "enum": [
+          "Apprenticeship",
+          "FoundationApprenticeship",
+          "ApprenticeshipUnit"
+        ]
+      }
+    }
+  }
+}
