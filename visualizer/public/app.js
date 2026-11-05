@@ -1,7 +1,7 @@
 const state = {
   catalog: [], source: null, view: 'database', data: null,
   filter: '', selected: null, messageType: 'all', apiFile: null,
-  mode: 'source', landscape: null, apiView: 'operations', selectedModel: null, dbView: 'diagram', cy: null
+  mode: 'source', landscape: null, apiView: 'operations', selectedModel: null, dbView: 'diagram', tableTab: 'columns', cy: null
 };
 
 const $ = (selector) => document.querySelector(selector);
@@ -457,32 +457,61 @@ function renderDatabaseDiagram(filtered, allEdges, isolatedCount) {
 }
 
 function tableDetailInline(table) {
-  const incoming = (state.data.tables || []).flatMap((candidate) => (candidate.relationships || [])
-    .filter((relation) => relation.targetTable === table.name)
-    .map((relation) => ({ ...relation, fromTable: candidate.name })));
-  return `<article class="dependency-detail">
-    <p class="eyebrow">${escapeHtml(table.schema)} schema</p><h2>${escapeHtml(table.name)}</h2>
-    <div class="badges"><span class="badge">${table.columns.length} columns</span><span class="badge blue">${table.indexes?.length || 0} indexes</span><span class="badge amber">${(table.relationships?.length || 0) + incoming.length} links</span></div>
-    <h3>Columns</h3>${columnsTable(table.columns)}
-    <h3>Relationships</h3>${relationshipsTable(table.relationships || [], incoming)}
-    <h3>Indexes</h3>${indexesTable(table.indexes || [])}
-  </article>`;
+  return `<article class="dependency-detail">${tableDetailBody(table)}</article>`;
 }
 
 function renderTableDetail(table) {
+  toolbar.innerHTML = '<button id="back" class="plain-button" type="button">← All tables</button>';
+  content.innerHTML = `<article class="detail standalone">${tableDetailBody(table)}</article>`;
+  $('#back').addEventListener('click', () => { state.filter = ''; renderDatabase(true); });
+}
+
+const TABLE_TABS = ['columns', 'relationships', 'indexes'];
+
+// Columns, relationships and indexes sit behind tabs so a wide table doesn't push the other two
+// sections a long way down the page. The chosen tab carries over as you move between tables.
+function tableDetailBody(table) {
+  const outbound = table.relationships || [];
   const incoming = (state.data.tables || []).flatMap((candidate) => (candidate.relationships || [])
     .filter((relation) => relation.targetTable === table.name)
     .map((relation) => ({ ...relation, fromTable: candidate.name })));
-  toolbar.innerHTML = '<button id="back" class="plain-button" type="button">← All tables</button>';
-  content.innerHTML = `<article class="detail standalone">
-    <p class="eyebrow">${escapeHtml(table.schema)} schema</p><h2>${escapeHtml(table.name)}</h2>
-    <div class="badges"><span class="badge">${table.columns.length} columns</span><span class="badge blue">${table.indexes?.length || 0} indexes</span><span class="badge amber">${(table.relationships?.length || 0) + incoming.length} links</span></div>
-    <h3>Columns</h3>${columnsTable(table.columns)}
-    <h3>Relationships</h3>${relationshipsTable(table.relationships || [], incoming)}
-    <h3>Indexes</h3>${indexesTable(table.indexes || [])}
-  </article>`;
-  $('#back').addEventListener('click', () => { state.filter = ''; renderDatabase(true); });
+  const indexes = table.indexes || [];
+  const sections = {
+    columns: { label: 'Columns', count: table.columns.length, html: columnsTable(table.columns) },
+    relationships: { label: 'Relationships', count: outbound.length + incoming.length, html: relationshipsTable(outbound, incoming) },
+    indexes: { label: 'Indexes', count: indexes.length, html: indexesTable(indexes) }
+  };
+  const active = TABLE_TABS.includes(state.tableTab) ? state.tableTab : 'columns';
+  const id = (key) => `table-${key}`;
+  return `<p class="eyebrow">${escapeHtml(table.schema)} schema</p><h2>${escapeHtml(table.name)}</h2>
+    <div class="table-tabs" role="tablist" aria-label="Table details">${TABLE_TABS.map((key) => `<button class="tab" type="button" role="tab" id="${id(key)}-tab" aria-controls="${id(key)}-panel" aria-selected="${key === active}" tabindex="${key === active ? 0 : -1}" data-table-tab="${key}">${sections[key].label}<span class="count">${sections[key].count}</span></button>`).join('')}</div>
+    ${TABLE_TABS.map((key) => `<section class="table-tab-panel" role="tabpanel" id="${id(key)}-panel" aria-labelledby="${id(key)}-tab"${key === active ? '' : ' hidden'}>${sections[key].html}</section>`).join('')}`;
 }
+
+function selectTableTab(tablist, key, focus) {
+  state.tableTab = key;
+  tablist.querySelectorAll('[data-table-tab]').forEach((tab) => {
+    const selected = tab.dataset.tableTab === key;
+    tab.setAttribute('aria-selected', String(selected));
+    tab.tabIndex = selected ? 0 : -1;
+    if (selected && focus) tab.focus();
+    document.getElementById(tab.getAttribute('aria-controls')).hidden = !selected;
+  });
+}
+
+content.addEventListener('click', (event) => {
+  const tab = event.target.closest?.('[data-table-tab]');
+  if (tab) selectTableTab(tab.parentElement, tab.dataset.tableTab, false);
+});
+
+content.addEventListener('keydown', (event) => {
+  const tab = event.target.closest?.('[data-table-tab]');
+  const step = { ArrowRight: 1, ArrowLeft: -1 }[event.key];
+  if (!tab || !step) return;
+  event.preventDefault();
+  const next = TABLE_TABS[(TABLE_TABS.indexOf(tab.dataset.tableTab) + step + TABLE_TABS.length) % TABLE_TABS.length];
+  selectTableTab(tab.parentElement, next, true);
+});
 
 function columnsTable(columns) {
   return `<div class="table-wrap"><table class="data-table"><thead><tr><th>Name</th><th>Type</th><th>Nullable</th><th>Properties</th></tr></thead><tbody>${columns.map((column) => `<tr><td><code>${escapeHtml(column.name)}</code></td><td>${escapeHtml(column.type)}</td><td>${column.nullable ? 'Yes' : 'No'}</td><td>${[column.primaryKey && 'Primary key', column.generated && 'Generated', column.default && `Default: ${column.default}`].filter(Boolean).map((label) => `<span class="badge">${escapeHtml(label)}</span>`).join(' ') || '<span class="muted">—</span>'}</td></tr>`).join('')}</tbody></table></div>`;
@@ -494,12 +523,12 @@ function relationshipsTable(outbound, incoming) {
     ...incoming.map((rel) => [rel.targetColumns?.join(', '), '←', rel.fromTable, rel.fromColumns?.join(', '), rel.name])
   ];
   if (!rows.length) return '<p class="muted">No relationships recorded.</p>';
-  return `<table class="data-table"><thead><tr><th>Local columns</th><th></th><th>Related table</th><th>Related columns</th><th>Constraint</th></tr></thead><tbody>${rows.map((row) => `<tr>${row.map((cell, index) => `<td${index === 1 ? ' class="muted"' : ''}>${escapeHtml(cell || '—')}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
+  return `<div class="table-wrap"><table class="data-table"><thead><tr><th>Local columns</th><th></th><th>Related table</th><th>Related columns</th><th>Constraint</th></tr></thead><tbody>${rows.map((row) => `<tr>${row.map((cell, index) => `<td${index === 1 ? ' class="muted"' : ''}>${escapeHtml(cell || '—')}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
 }
 
 function indexesTable(indexes) {
   if (!indexes.length) return '<p class="muted">No indexes recorded.</p>';
-  return `<table class="data-table"><thead><tr><th>Name</th><th>Columns</th><th>Type</th><th>Unique</th></tr></thead><tbody>${indexes.map((index) => `<tr><td>${escapeHtml(index.name)}</td><td><code>${escapeHtml(index.columns?.join(', '))}</code></td><td>${escapeHtml(index.type)}</td><td>${index.unique ? 'Yes' : 'No'}</td></tr>`).join('')}</tbody></table>`;
+  return `<div class="table-wrap"><table class="data-table"><thead><tr><th>Name</th><th>Columns</th><th>Type</th><th>Unique</th></tr></thead><tbody>${indexes.map((index) => `<tr><td>${escapeHtml(index.name)}</td><td><code>${escapeHtml(index.columns?.join(', '))}</code></td><td>${escapeHtml(index.type)}</td><td>${index.unique ? 'Yes' : 'No'}</td></tr>`).join('')}</tbody></table></div>`;
 }
 
 function messages() {
