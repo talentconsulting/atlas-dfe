@@ -11,7 +11,7 @@
       "columns": [
         {
           "name": "Id",
-          "type": "int",
+          "type": "INT",
           "nullable": false,
           "primaryKey": true,
           "generated": false,
@@ -20,7 +20,7 @@
         },
         {
           "name": "Description",
-          "type": "varchar(25)",
+          "type": "VARCHAR(25)",
           "nullable": false,
           "primaryKey": false,
           "generated": false,
@@ -39,16 +39,16 @@
       "columns": [
         {
           "name": "Id",
-          "type": "uniqueidentifier",
+          "type": "UNIQUEIDENTIFIER",
           "nullable": false,
           "primaryKey": true,
-          "generated": false,
-          "default": null,
+          "generated": true,
+          "default": "NEWID()",
           "ordinal": null
         },
         {
           "name": "Username",
-          "type": "varchar(255)",
+          "type": "VARCHAR(255)",
           "nullable": false,
           "primaryKey": false,
           "generated": false,
@@ -57,16 +57,16 @@
         },
         {
           "name": "ActionTime",
-          "type": "datetime2",
+          "type": "DATETIME2",
           "nullable": false,
           "primaryKey": false,
           "generated": false,
-          "default": null,
+          "default": "SYSUTCDATETIME()",
           "ordinal": null
         },
         {
           "name": "Action",
-          "type": "varchar(50)",
+          "type": "VARCHAR(50)",
           "nullable": false,
           "primaryKey": false,
           "generated": false,
@@ -75,7 +75,7 @@
         },
         {
           "name": "UserActionId",
-          "type": "bigint",
+          "type": "BIGINT",
           "nullable": false,
           "primaryKey": false,
           "generated": false,
@@ -100,7 +100,7 @@
       "indexes": [
         {
           "name": "IX_AdminActions_UserActionId",
-          "type": null,
+          "type": "btree",
           "columns": [
             "UserActionId"
           ],
@@ -117,7 +117,7 @@
       "columns": [
         {
           "name": "PatchName",
-          "type": "varchar(200)",
+          "type": "VARCHAR(200)",
           "nullable": false,
           "primaryKey": true,
           "generated": false,
@@ -126,7 +126,7 @@
         },
         {
           "name": "AppliedAt",
-          "type": "datetime2(0)",
+          "type": "DATETIME2(0)",
           "nullable": false,
           "primaryKey": false,
           "generated": false,
@@ -139,6 +139,106 @@
       "hasPii": false
     },
     {
+      "name": "UserAuditMigration",
+      "schema": "dbo",
+      "entity": null,
+      "columns": [
+        {
+          "name": "AuditId",
+          "type": "BIGINT",
+          "nullable": false,
+          "primaryKey": true,
+          "generated": true,
+          "default": "IDENTITY(1, 1)",
+          "ordinal": null
+        },
+        {
+          "name": "Id",
+          "type": "UNIQUEIDENTIFIER",
+          "nullable": true,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "GovUkIdentifier",
+          "type": "VARCHAR(100)",
+          "nullable": true,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "EmailAddress",
+          "type": "VARCHAR(100)",
+          "nullable": true,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "PhoneNumber",
+          "type": "VARCHAR(20)",
+          "nullable": true,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "LastLoginAt",
+          "type": "DATETIME2",
+          "nullable": true,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "IsLocked",
+          "type": "BIT",
+          "nullable": true,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "CreatedAt",
+          "type": "DATETIME2",
+          "nullable": true,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "Action",
+          "type": "VARCHAR(10)",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": null
+        },
+        {
+          "name": "ActionedAt",
+          "type": "DATETIME2",
+          "nullable": false,
+          "primaryKey": false,
+          "generated": false,
+          "default": null,
+          "ordinal": null
+        }
+      ],
+      "relationships": [],
+      "indexes": [],
+      "hasPii": true
+    },
+    {
       "name": "Sharing",
       "schema": "dbo",
       "entity": "Sharing",
@@ -148,9 +248,9 @@
           "type": "UNIQUEIDENTIFIER",
           "nullable": false,
           "primaryKey": true,
-          "generated": false,
-          "default": null,
-          "ordinal": 1
+          "generated": true,
+          "default": "NEWID()",
+          "ordinal": null
         },
         {
           "name": "UserId",
@@ -159,7 +259,7 @@
           "primaryKey": false,
           "generated": false,
           "default": null,
-          "ordinal": 2
+          "ordinal": null
         },
         {
           "name": "CertificateId",
@@ -168,7 +268,7 @@
           "primaryKey": false,
           "generated": false,
           "default": null,
-          "ordinal": 3
+          "ordinal": null
         },
         {
           "name": "CertificateType",
@@ -177,7 +277,7 @@
           "primaryKey": false,
           "generated": false,
           "default": null,
-          "ordinal": 4
+          "ordinal": null
         },
         {
           "name": "CourseName",
@@ -186,25 +286,25 @@
           "primaryKey": false,
           "generated": false,
           "default": null,
-          "ordinal": 5
+          "ordinal": null
         },
         {
           "name": "LinkCode",
           "type": "UNIQUEIDENTIFIER",
           "nullable": false,
           "primaryKey": false,
-          "generated": false,
-          "default": null,
-          "ordinal": 6
+          "generated": true,
+          "default": "NEWID()",
+          "ordinal": null
         },
         {
           "name": "CreatedAt",
           "type": "DATETIME2",
           "nullable": false,
           "primaryKey": false,
-          "generated": false,
-          "default": null,
-          "ordinal": 7
+          "generated": true,
+          "default": "SYSUTCDATETIME()",
+          "ordinal": null
         },
         {
           "name": "ExpiryTime",
@@ -213,7 +313,7 @@
           "primaryKey": false,
           "generated": false,
           "default": null,
-          "ordinal": 8
+          "ordinal": null
         },
         {
           "name": "Status",
@@ -222,7 +322,7 @@
           "primaryKey": false,
           "generated": false,
           "default": "'Live'",
-          "ordinal": 9
+          "ordinal": null
         }
       ],
       "relationships": [
@@ -259,7 +359,7 @@
           "filter": null
         }
       ],
-      "hasPii": false
+      "hasPii": true
     },
     {
       "name": "SharingAccess",
@@ -271,9 +371,9 @@
           "type": "UNIQUEIDENTIFIER",
           "nullable": false,
           "primaryKey": true,
-          "generated": false,
-          "default": null,
-          "ordinal": 1
+          "generated": true,
+          "default": "NEWID()",
+          "ordinal": null
         },
         {
           "name": "SharingId",
@@ -282,16 +382,16 @@
           "primaryKey": false,
           "generated": false,
           "default": null,
-          "ordinal": 2
+          "ordinal": null
         },
         {
           "name": "AccessedAt",
           "type": "DATETIME2",
           "nullable": false,
           "primaryKey": false,
-          "generated": false,
-          "default": null,
-          "ordinal": 3
+          "generated": true,
+          "default": "SYSUTCDATETIME()",
+          "ordinal": null
         }
       ],
       "relationships": [
@@ -331,9 +431,9 @@
           "type": "UNIQUEIDENTIFIER",
           "nullable": false,
           "primaryKey": true,
-          "generated": false,
-          "default": null,
-          "ordinal": 1
+          "generated": true,
+          "default": "NEWID()",
+          "ordinal": null
         },
         {
           "name": "SharingId",
@@ -342,7 +442,7 @@
           "primaryKey": false,
           "generated": false,
           "default": null,
-          "ordinal": 2
+          "ordinal": null
         },
         {
           "name": "EmailAddress",
@@ -351,25 +451,25 @@
           "primaryKey": false,
           "generated": false,
           "default": null,
-          "ordinal": 3
+          "ordinal": null
         },
         {
           "name": "EmailLinkCode",
           "type": "UNIQUEIDENTIFIER",
           "nullable": false,
           "primaryKey": false,
-          "generated": false,
-          "default": null,
-          "ordinal": 4
+          "generated": true,
+          "default": "NEWID()",
+          "ordinal": null
         },
         {
           "name": "SentTime",
           "type": "DATETIME2",
           "nullable": false,
           "primaryKey": false,
-          "generated": false,
-          "default": null,
-          "ordinal": 5
+          "generated": true,
+          "default": "SYSUTCDATETIME()",
+          "ordinal": null
         }
       ],
       "relationships": [
@@ -418,9 +518,9 @@
           "type": "UNIQUEIDENTIFIER",
           "nullable": false,
           "primaryKey": true,
-          "generated": false,
-          "default": null,
-          "ordinal": 1
+          "generated": true,
+          "default": "NEWID()",
+          "ordinal": null
         },
         {
           "name": "SharingEmailId",
@@ -429,16 +529,16 @@
           "primaryKey": false,
           "generated": false,
           "default": null,
-          "ordinal": 2
+          "ordinal": null
         },
         {
           "name": "AccessedAt",
           "type": "DATETIME2",
           "nullable": false,
           "primaryKey": false,
-          "generated": false,
-          "default": null,
-          "ordinal": 3
+          "generated": true,
+          "default": "SYSUTCDATETIME()",
+          "ordinal": null
         }
       ],
       "relationships": [
@@ -478,9 +578,9 @@
           "type": "UNIQUEIDENTIFIER",
           "nullable": false,
           "primaryKey": true,
-          "generated": false,
-          "default": null,
-          "ordinal": 1
+          "generated": true,
+          "default": "NEWID()",
+          "ordinal": null
         },
         {
           "name": "GovUkIdentifier",
@@ -489,7 +589,7 @@
           "primaryKey": false,
           "generated": false,
           "default": null,
-          "ordinal": 2
+          "ordinal": null
         },
         {
           "name": "EmailAddress",
@@ -498,7 +598,7 @@
           "primaryKey": false,
           "generated": false,
           "default": null,
-          "ordinal": 3
+          "ordinal": null
         },
         {
           "name": "PhoneNumber",
@@ -507,7 +607,7 @@
           "primaryKey": false,
           "generated": false,
           "default": null,
-          "ordinal": 4
+          "ordinal": null
         },
         {
           "name": "LastLoginAt",
@@ -516,48 +616,35 @@
           "primaryKey": false,
           "generated": false,
           "default": null,
-          "ordinal": 5
+          "ordinal": null
         },
         {
           "name": "IsLocked",
           "type": "BIT",
           "nullable": false,
           "primaryKey": false,
-          "generated": false,
+          "generated": true,
           "default": "(0)",
-          "ordinal": 6
+          "ordinal": null
         },
         {
           "name": "CreatedAt",
           "type": "DATETIME2",
           "nullable": false,
           "primaryKey": false,
-          "generated": false,
+          "generated": true,
           "default": "SYSUTCDATETIME()",
-          "ordinal": 7
+          "ordinal": null
         }
       ],
-      "relationships": [
-        {
-          "name": "FK_User_UserAuthorisation",
-          "type": "one-to-one",
-          "fromColumns": [
-            "Id"
-          ],
-          "targetTable": "UserAuthorisation",
-          "targetColumns": [
-            "UserId"
-          ],
-          "onDelete": null
-        }
-      ],
+      "relationships": [],
       "indexes": [],
       "hasPii": true
     },
     {
       "name": "UserActions",
       "schema": "dbo",
-      "entity": null,
+      "entity": "UserActions",
       "columns": [
         {
           "name": "Id",
@@ -679,7 +766,7 @@
       "indexes": [
         {
           "name": "IX_UserActions_UserId",
-          "type": null,
+          "type": "btree",
           "columns": [
             "UserId"
           ],
@@ -688,7 +775,7 @@
         },
         {
           "name": "UX_UserActions_ActionCode",
-          "type": null,
+          "type": "btree",
           "columns": [
             "ActionCode"
           ],
@@ -701,7 +788,7 @@
     {
       "name": "UserAudit",
       "schema": "dbo",
-      "entity": null,
+      "entity": "UserAudit",
       "columns": [
         {
           "name": "AuditId",
@@ -798,7 +885,7 @@
       "indexes": [
         {
           "name": "IX_UserAudit_Id_ActionedAt",
-          "type": null,
+          "type": "btree",
           "columns": [
             "Id",
             "ActionedAt"
@@ -812,15 +899,15 @@
     {
       "name": "UserAuthorisation",
       "schema": "dbo",
-      "entity": "SFA.DAS.DigitalCertificates.Domain.Entities.UserAuthorisation",
+      "entity": "UserAuthorisation",
       "columns": [
         {
           "name": "Id",
           "type": "UNIQUEIDENTIFIER",
           "nullable": false,
           "primaryKey": true,
-          "generated": false,
-          "default": null,
+          "generated": true,
+          "default": "NEWID()",
           "ordinal": 1
         },
         {
@@ -847,7 +934,7 @@
           "nullable": false,
           "primaryKey": false,
           "generated": false,
-          "default": null,
+          "default": "SYSUTCDATETIME()",
           "ordinal": 4
         }
       ],
@@ -868,7 +955,7 @@
       "indexes": [
         {
           "name": "UX_UserAuthorisation_ULN",
-          "type": null,
+          "type": "btree",
           "columns": [
             "ULN"
           ],
@@ -877,7 +964,7 @@
         },
         {
           "name": "UX_UserAuthorisation_UserId",
-          "type": null,
+          "type": "btree",
           "columns": [
             "UserId"
           ],
@@ -890,15 +977,15 @@
     {
       "name": "UserIdentity",
       "schema": "dbo",
-      "entity": "SFA.DAS.DigitalCertificates.Domain.Entities.UserIdentity",
+      "entity": "UserIdentity",
       "columns": [
         {
           "name": "Id",
           "type": "UNIQUEIDENTIFIER",
           "nullable": false,
           "primaryKey": true,
-          "generated": false,
-          "default": null,
+          "generated": true,
+          "default": "NEWID()",
           "ordinal": 1
         },
         {
@@ -973,7 +1060,7 @@
       "indexes": [
         {
           "name": "IX_UserIdentity_UserId",
-          "type": null,
+          "type": "btree",
           "columns": [
             "UserId"
           ],
@@ -986,15 +1073,15 @@
     {
       "name": "UserMatch",
       "schema": "dbo",
-      "entity": "SFA.DAS.DigitalCertificates.Domain.Entities.UserMatch",
+      "entity": "UserMatch",
       "columns": [
         {
           "name": "Id",
           "type": "UNIQUEIDENTIFIER",
           "nullable": false,
           "primaryKey": true,
-          "generated": false,
-          "default": null,
+          "generated": true,
+          "default": "NEWID()",
           "ordinal": 1
         },
         {
@@ -1039,7 +1126,7 @@
           "nullable": false,
           "primaryKey": false,
           "generated": false,
-          "default": "GETUTCDATE()",
+          "default": "SYSUTCDATETIME()",
           "ordinal": 6
         },
         {
@@ -1150,7 +1237,7 @@
       "indexes": [
         {
           "name": "IX_UserMatch_UserId",
-          "type": null,
+          "type": "btree",
           "columns": [
             "UserId"
           ],
@@ -1161,50 +1248,5 @@
       "hasPii": true
     }
   ],
-  "types": [
-    {
-      "name": "AdminActionType",
-      "kind": "enum",
-      "values": [
-        "Viewed",
-        "Unlocked"
-      ]
-    },
-    {
-      "name": "CertificateType",
-      "kind": "enum",
-      "values": [
-        "Unknown",
-        "Standard",
-        "Framework"
-      ]
-    },
-    {
-      "name": "ActionType",
-      "kind": "enum",
-      "values": [
-        "Reprint",
-        "Help",
-        "Contact",
-        "NotMatched",
-        "NotFound"
-      ]
-    },
-    {
-      "name": "SharingStatus",
-      "kind": "enum",
-      "values": [
-        "Live",
-        "Deleted"
-      ]
-    },
-    {
-      "name": "UserActionStatus",
-      "kind": "enum",
-      "values": [
-        "New",
-        "Viewed"
-      ]
-    }
-  ]
+  "types": []
 }
