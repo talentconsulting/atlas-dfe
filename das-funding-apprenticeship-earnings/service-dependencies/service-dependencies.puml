@@ -3,20 +3,18 @@
 LAYOUT_WITH_LEGEND()
 
 System_Boundary(sys_SkillsFundingAgency_das_funding_apprenticeship_earnings, "Funding Apprenticeship Earnings") {
-  Container(c_funding_apprenticeship_earnings, "Funding Apprenticeship Earnings", "API")
+  Container(c_funding_apprenticeship_earnings_api, "Funding Apprenticeship Earnings", "API")
   Container(c_funding_apprenticeship_earnings_jobs, "Funding Apprenticeship Earnings Jobs", "Background Job")
 }
 
-SystemDb_Ext(d_database_sql_server, "SQL Server", "Entity Framework Core")
-System_Ext(d_http_api_earnings_outer_api, "Earnings Outer API", "HttpClient")
-SystemQueue_Ext(d_message_broker_azure_service_bus, "Azure Service Bus")
-SystemQueue_Ext(d_message_broker_nservicebus, "NServiceBus", "Azure Service Bus")
+SystemDb_Ext(d_database_sql_database, "SQL Database", "SQL Server")
+System_Ext(d_http_api_earnings_outer_api, "Earnings Outer API")
+SystemQueue_Ext(d_message_broker_nservicebus_service_bus, "NServiceBus Service Bus", "Azure Service Bus")
 
-Rel(c_funding_apprenticeship_earnings, d_database_sql_server, "Reads from and writes to", "Entity Framework Core")
-Rel(c_funding_apprenticeship_earnings_jobs, d_database_sql_server, "Reads from and writes to", "Microsoft SQL Server")
-Rel(c_funding_apprenticeship_earnings, d_http_api_earnings_outer_api, "Calls the API of", "HttpClient")
+Rel(c_funding_apprenticeship_earnings_api, d_database_sql_database, "Reads from and writes to", "SQL Server")
+Rel(c_funding_apprenticeship_earnings_jobs, d_database_sql_database, "Reads from and writes to", "SQL Server")
+Rel(c_funding_apprenticeship_earnings_api, d_http_api_earnings_outer_api, "Calls the API of")
 Rel(c_funding_apprenticeship_earnings_jobs, d_http_api_earnings_outer_api, "Calls the API of")
-Rel(c_funding_apprenticeship_earnings, d_message_broker_azure_service_bus, "Publishes messages to and consumes messages from")
-Rel(c_funding_apprenticeship_earnings_jobs, d_message_broker_nservicebus, "Publishes messages to and consumes messages from", "Azure Service Bus")
+Rel(c_funding_apprenticeship_earnings_jobs, d_message_broker_nservicebus_service_bus, "Publishes messages to and consumes messages from", "Azure Service Bus")
 
 @enduml

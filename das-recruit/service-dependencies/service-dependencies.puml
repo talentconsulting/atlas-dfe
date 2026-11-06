@@ -3,17 +3,20 @@
 LAYOUT_WITH_LEGEND()
 
 System_Boundary(sys_SkillsFundingAgency_das_recruit, "Recruit") {
-  Container(c_recruit_employer_web, "Recruit", "Web Application")
+  Container(c_recruit_employer_web, "Recruit Employer Web", "Web Application")
   Container(c_recruit_provider_web, "Recruit Provider Web", "Web Application")
-  Container(c_recruit_vacancies_jobs, "Recruit Vacancies Jobs", "Background Job")
 }
 
-SystemDb_Ext(d_cache_redis, "Redis", "StackExchange.Redis")
+SystemDb_Ext(d_cache_redis_cache, "Redis Cache", "Redis")
+System_Ext(d_cloud_service_azure_table_storage, "Azure Table Storage", "Azure Table Storage")
+System_Ext(d_http_api_account_api, "Account Api", "HttpClient")
 System_Ext(d_http_api_outer_api, "Outer Api", "HttpClient")
-SystemQueue_Ext(d_message_broker_azure_service_bus, "Azure Service Bus", "Azure.Messaging.ServiceBus")
+SystemQueue_Ext(d_message_broker_azure_service_bus, "Azure Service Bus", "Azure Service Bus")
 
-Rel(c_recruit_employer_web, d_cache_redis, "Caches data in", "StackExchange.Redis")
+Rel(c_recruit_employer_web, d_cache_redis_cache, "Caches data in", "Redis")
+Rel(c_recruit_employer_web, d_cloud_service_azure_table_storage, "Uses", "Azure Table Storage")
+Rel(c_recruit_employer_web, d_http_api_account_api, "Calls the API of", "HttpClient")
 Rel(c_recruit_employer_web, d_http_api_outer_api, "Calls the API of", "HttpClient")
-Rel(c_recruit_provider_web, d_message_broker_azure_service_bus, "Publishes messages to and consumes messages from", "Azure.Messaging.ServiceBus")
+Rel(c_recruit_provider_web, d_message_broker_azure_service_bus, "Publishes messages to and consumes messages from", "Azure Service Bus")
 
 @enduml

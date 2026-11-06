@@ -1,0 +1,52 @@
+{
+  "repository": "SkillsFundingAgency/das-apprentice-feedback-jobs",
+  "ref": "main",
+  "path": "src",
+  "systemName": "Apprentice Feedback",
+  "containers": [
+    {
+      "id": "apprentice-feedback-jobs",
+      "name": "Apprentice Feedback Jobs",
+      "type": "job",
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.ApprenticeFeedback.Jobs/Program.cs",
+          "reason": "Azure Functions entry point with HostBuilder configuration."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.ApprenticeFeedback.Jobs/SFA.DAS.ApprenticeFeedback.Jobs.csproj",
+          "reason": "Project file indicates Azure Functions app with OutputType='Exe' and <AzureFunctionsVersion>v4</AzureFunctionsVersion>."
+        }
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "sourceId": "apprentice-feedback-jobs",
+      "name": "Apprentice Feedback Outer",
+      "kind": "http-api",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "IApprenticeFeedbackApi",
+      "technology": "RestEase",
+      "configurationKeys": [
+        "ApprenticeFeedbackOuterApi"
+      ],
+      "authentication": {
+        "type": "apim",
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.ApprenticeFeedback.Jobs/Extensions/AddServiceRegistrationsExtension.cs",
+          "reason": "RestEase client registered for IApprenticeFeedbackApi with API base URL from ApprenticeFeedbackApiConfiguration."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "http-api-apprentice-feedback-outer",
+      "description": "Calls the API of"
+    }
+  ]
+}

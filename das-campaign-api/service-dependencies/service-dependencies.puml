@@ -2,12 +2,16 @@
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
 LAYOUT_WITH_LEGEND()
 
-System_Boundary(sys_SkillsFundingAgency_das_campaign_api, "Campaign") {
-  Container(c_campaign, "Campaign", "API")
+System_Boundary(sys_SkillsFundingAgency_das_campaign_api, "SFA.DAS.Campaign") {
+  Container(c_sfa_das_campaign, "SFA.DAS.Campaign", "API")
 }
 
-SystemDb_Ext(d_database_sql_server, "SQL Server", "Entity Framework Core")
+System_Ext(d_cloud_service_azure_active_directory, "Azure Active Directory")
+System_Ext(d_cloud_service_azure_table_storage, "Azure Table Storage")
+SystemDb_Ext(d_database_sql_database, "SQL Database", "SQL Server")
 
-Rel(c_campaign, d_database_sql_server, "Reads from and writes to", "Entity Framework Core")
+Rel(c_sfa_das_campaign, d_cloud_service_azure_active_directory, "Uses")
+Rel(c_sfa_das_campaign, d_cloud_service_azure_table_storage, "Uses")
+Rel(c_sfa_das_campaign, d_database_sql_database, "Reads from and writes to", "SQL Server")
 
 @enduml
