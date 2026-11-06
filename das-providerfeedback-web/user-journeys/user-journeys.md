@@ -7,5 +7,5 @@ Generated from `main/src`: 3 pages, 0 transitions, 0 journeys. 🔒 means sign-i
 | Page | Route | Sign-in | Purpose |
 | --- | --- | --- | --- |
 | `ProviderAccount.SignOut` | — | Unknown | — |
-| `ProviderSignOut` | `signout` | No | Lets the provider sign out of their account. |
-| `ServiceStartDefault` | — | Yes | Displays annual feedback information for the provider. |
+| `ProviderSignOut` | `signout` | No | Lets the provider sign out from their account. |
+| `ServiceStartDefault` | — | Yes | Shows the provider's annual feedback status and notices. |

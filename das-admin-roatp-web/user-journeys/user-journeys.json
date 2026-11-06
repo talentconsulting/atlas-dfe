@@ -19,8 +19,92 @@
       "line": 28,
       "requiresAuthentication": null,
       "isEntryPoint": true,
-      "purpose": "Shows that the user has been signed out.",
+      "purpose": "Shows that the user has signed out of their account.",
       "fields": []
+    },
+    {
+      "id": "AddAllowedCourse",
+      "kind": "mvc-action",
+      "routes": [
+        "providers/{ukprn}/{routeLearningType}/allowed-courses/add"
+      ],
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/Controllers/ManageRestrictedProvider/AddAllowedCourseController.cs",
+      "line": 29,
+      "requiresAuthentication": true,
+      "isEntryPoint": false,
+      "purpose": "Lets the admin add a new allowed course for a restricted training provider.",
+      "fields": [
+        {
+          "name": "SelectedLarsCode",
+          "control": "select",
+          "label": "Start typing in the box and its name will appear",
+          "options": [],
+          "dataType": "string?",
+          "required": null,
+          "constraints": [],
+          "validation": "required; must be a valid value from the list of allowable courses for the provider",
+          "line": 37,
+          "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/Views/ManageRestrictedProvider/AddAllowedCourse/Index.cshtml"
+        }
+      ]
+    },
+    {
+      "id": "AddAllowedCourseLastStartDate",
+      "kind": "mvc-action",
+      "routes": [
+        "providers/{ukprn}/{routeLearningType}/allowed-courses/{larsCode}/set-last-date-start"
+      ],
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/Controllers/ManageRestrictedProvider/AddAllowedCourseLastStartDateController.cs",
+      "line": 29,
+      "requiresAuthentication": true,
+      "isEntryPoint": false,
+      "purpose": "Lets the admin set the last possible start date for a newly allowed course.",
+      "fields": [
+        {
+          "name": "Day",
+          "control": "text",
+          "label": null,
+          "options": [],
+          "dataType": null,
+          "required": null,
+          "constraints": [],
+          "validation": "required; must form a valid date with Month and Year",
+          "line": 55,
+          "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/Views/ManageRestrictedProvider/AddAllowedCourseLastStartDate/Index.cshtml"
+        },
+        {
+          "name": "Month",
+          "control": "text",
+          "label": "Month",
+          "options": [],
+          "dataType": null,
+          "required": null,
+          "constraints": [],
+          "validation": "required; must form a valid date with Day and Year",
+          "line": 67,
+          "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/Views/ManageRestrictedProvider/AddAllowedCourseLastStartDate/Index.cshtml"
+        },
+        {
+          "name": "Year",
+          "control": "text",
+          "label": "Year",
+          "options": [],
+          "dataType": null,
+          "required": null,
+          "constraints": [],
+          "validation": "required; must form a valid date with Day and Month",
+          "line": 79,
+          "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/Views/ManageRestrictedProvider/AddAllowedCourseLastStartDate/Index.cshtml"
+        }
+      ]
     },
     {
       "id": "AddProvider",
@@ -36,7 +120,7 @@
       "line": 21,
       "requiresAuthentication": null,
       "isEntryPoint": false,
-      "purpose": "Allows the user to enter the UKPRN to start adding a new provider.",
+      "purpose": "Lets the user enter a provider UKPRN to search for their details.",
       "fields": [
         {
           "name": "Ukprn",
@@ -46,7 +130,7 @@
           "dataType": "string?",
           "required": null,
           "constraints": [],
-          "validation": "required; must be a valid UKPRN not matching an existing provider",
+          "validation": "required; must be a valid UKPRN; must not already exist as a provider",
           "line": 21,
           "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/Views/SelectProvider/Index.cshtml"
         }
@@ -65,7 +149,7 @@
       "line": 66,
       "requiresAuthentication": null,
       "isEntryPoint": false,
-      "purpose": "Confirms that a provider has been added.",
+      "purpose": "Confirms the provider has been successfully added.",
       "fields": []
     },
     {
@@ -82,7 +166,7 @@
       "line": 25,
       "requiresAuthentication": true,
       "isEntryPoint": false,
-      "purpose": "Lets the user add a training provider to a restricted course.",
+      "purpose": "Lets the admin select a provider to be added to a restricted course.",
       "fields": [
         {
           "name": "SelectedUkprn",
@@ -92,7 +176,7 @@
           "dataType": "string?",
           "required": null,
           "constraints": [],
-          "validation": "optional; must match an available provider for the course",
+          "validation": "required; must match a provider's UKPRN for the course",
           "line": 28,
           "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/Views/CourseRestrictions/AddProviderToRestrictedCourse/Index.cshtml"
         }
@@ -112,7 +196,7 @@
       "line": 28,
       "requiresAuthentication": true,
       "isEntryPoint": false,
-      "purpose": "Lets the admin set the last start date for a restricted course at a provider.",
+      "purpose": "Lets the user set the last date for new starts when restricting a provider's course.",
       "fields": [
         {
           "name": "Day",
@@ -122,7 +206,7 @@
           "dataType": null,
           "required": null,
           "constraints": [],
-          "validation": "required; must be a valid day",
+          "validation": null,
           "line": 50,
           "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/Views/ManageUnrestrictedProvider/AddRestrictedCourseLastStartDate/Index.cshtml"
         },
@@ -134,7 +218,7 @@
           "dataType": null,
           "required": null,
           "constraints": [],
-          "validation": "required; must be a valid month",
+          "validation": null,
           "line": 62,
           "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/Views/ManageUnrestrictedProvider/AddRestrictedCourseLastStartDate/Index.cshtml"
         },
@@ -146,7 +230,7 @@
           "dataType": null,
           "required": null,
           "constraints": [],
-          "validation": "required; must be a valid year",
+          "validation": null,
           "line": 74,
           "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/Views/ManageUnrestrictedProvider/AddRestrictedCourseLastStartDate/Index.cshtml"
         }
@@ -166,7 +250,7 @@
       "line": 19,
       "requiresAuthentication": true,
       "isEntryPoint": false,
-      "purpose": "Lets the user specify whether the provider offers apprenticeship units.",
+      "purpose": "Lets the user update whether a provider offers apprenticeship units.",
       "fields": [
         {
           "name": "ApprenticeshipUnitsSelectionId",
@@ -176,7 +260,7 @@
           "dataType": "bool?",
           "required": null,
           "constraints": [],
-          "validation": "required; must be 'Yes' if provider does not offer apprenticeships",
+          "validation": "required; training providers must offer either apprenticeships or apprenticeship units; required when offersApprenticeships is false",
           "line": 29,
           "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/Views/ApprenticeshipUnitsUpdate/Index.cshtml"
         }
@@ -196,7 +280,7 @@
       "line": 16,
       "requiresAuthentication": null,
       "isEntryPoint": false,
-      "purpose": "Lets the user specify whether the provider offers apprenticeships.",
+      "purpose": "Lets the user update whether a provider offers apprenticeships.",
       "fields": [
         {
           "name": "IsApprenticeshipsOffered",
@@ -206,9 +290,39 @@
           "dataType": "bool?",
           "required": null,
           "constraints": [],
-          "validation": "required",
+          "validation": "required; must select if apprenticeships are offered",
           "line": 27,
           "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/Views/ApprenticeshipsUpdate/Index.cshtml"
+        }
+      ]
+    },
+    {
+      "id": "ChangeAllowedCourseLastStartDate",
+      "kind": "mvc-action",
+      "routes": [
+        "providers/{ukprn}/{routeLearningType}/allowed-courses/{larsCode}/change"
+      ],
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/Controllers/ManageRestrictedProvider/ChangeAllowedCourseLastStartDateController.cs",
+      "line": 24,
+      "requiresAuthentication": true,
+      "isEntryPoint": false,
+      "purpose": "Allows the admin to choose whether to change or remove the last possible start date for an allowed course.",
+      "fields": [
+        {
+          "name": "nameof(Model.SelectedOption)",
+          "control": "radios",
+          "label": "What would you like to change?",
+          "options": [],
+          "dataType": null,
+          "required": null,
+          "constraints": [],
+          "validation": "required; must be a valid option",
+          "line": 31,
+          "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/Views/ManageRestrictedProvider/ChangeAllowedCourseLastStartDate/Index.cshtml"
         }
       ]
     },
@@ -223,10 +337,10 @@
         "POST"
       ],
       "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/Controllers/CourseRestrictions/ChangeCourseRestrictionController.cs",
-      "line": 21,
+      "line": 20,
       "requiresAuthentication": true,
       "isEntryPoint": false,
-      "purpose": "Allows the user to select an option for changing a provider's restriction status for the course.",
+      "purpose": "Lets the admin choose what restriction to change for a provider on a restricted course.",
       "fields": [
         {
           "name": "nameof(Model.SelectedOption)",
@@ -236,7 +350,7 @@
           "dataType": null,
           "required": null,
           "constraints": [],
-          "validation": "optional; must be a valid radio option",
+          "validation": "required; must be a valid option",
           "line": 33,
           "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/Views/CourseRestrictions/ChangeCourseRestriction/Index.cshtml"
         }
@@ -256,7 +370,7 @@
       "line": 30,
       "requiresAuthentication": true,
       "isEntryPoint": false,
-      "purpose": "Lets the admin change the last start date for a provider's restricted course.",
+      "purpose": "Lets the user change the last date for new starts for a restricted provider's course.",
       "fields": [
         {
           "name": "Day",
@@ -266,7 +380,7 @@
           "dataType": null,
           "required": null,
           "constraints": [],
-          "validation": "required; must be a valid day",
+          "validation": null,
           "line": 51,
           "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/Views/ManageUnrestrictedProvider/ChangeRestrictedCourseLastStartDate/Index.cshtml"
         },
@@ -278,7 +392,7 @@
           "dataType": null,
           "required": null,
           "constraints": [],
-          "validation": "required; must be a valid month",
+          "validation": null,
           "line": 63,
           "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/Views/ManageUnrestrictedProvider/ChangeRestrictedCourseLastStartDate/Index.cshtml"
         },
@@ -290,7 +404,7 @@
           "dataType": null,
           "required": null,
           "constraints": [],
-          "validation": "required; must be a valid year",
+          "validation": null,
           "line": 75,
           "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/Views/ManageUnrestrictedProvider/ChangeRestrictedCourseLastStartDate/Index.cshtml"
         }
@@ -310,7 +424,7 @@
       "line": 21,
       "requiresAuthentication": true,
       "isEntryPoint": false,
-      "purpose": "Lets the user confirm adding a provider to a restricted course.",
+      "purpose": "Allows the admin to confirm adding a provider to a restricted course.",
       "fields": []
     },
     {
@@ -327,7 +441,7 @@
       "line": 24,
       "requiresAuthentication": true,
       "isEntryPoint": false,
-      "purpose": "Lets the user confirm adding a course to the provider's restricted apprenticeships list.",
+      "purpose": "Lets the user confirm that the course has been added to the provider's list of restricted apprenticeships.",
       "fields": []
     },
     {
@@ -344,7 +458,7 @@
       "line": 23,
       "requiresAuthentication": true,
       "isEntryPoint": false,
-      "purpose": "Lets the user confirm restricting a provider to deliver only approved courses.",
+      "purpose": "Lets the user confirm restricting a provider to only deliver approved courses.",
       "fields": []
     },
     {
@@ -360,8 +474,62 @@
       "line": 41,
       "requiresAuthentication": null,
       "isEntryPoint": false,
-      "purpose": "Provides access to the main admin dashboard.",
+      "purpose": "Provides an entry point to administer the application.",
       "fields": []
+    },
+    {
+      "id": "EditAllowedCourseLastStartDate",
+      "kind": "mvc-action",
+      "routes": [
+        "providers/{ukprn}/{routeLearningType}/allowed-courses/{larsCode}/set-last-date-starts"
+      ],
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/Controllers/ManageRestrictedProvider/EditAllowedCourseLastStartDateController.cs",
+      "line": 29,
+      "requiresAuthentication": true,
+      "isEntryPoint": false,
+      "purpose": "Lets the user edit the last date that new starts are allowed for a provider's course.",
+      "fields": [
+        {
+          "name": "Day",
+          "control": "text",
+          "label": null,
+          "options": [],
+          "dataType": null,
+          "required": null,
+          "constraints": [],
+          "validation": null,
+          "line": 51,
+          "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/Views/ManageRestrictedProvider/EditAllowedCourseLastStartDate/Index.cshtml"
+        },
+        {
+          "name": "Month",
+          "control": "text",
+          "label": "Month",
+          "options": [],
+          "dataType": null,
+          "required": null,
+          "constraints": [],
+          "validation": null,
+          "line": 63,
+          "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/Views/ManageRestrictedProvider/EditAllowedCourseLastStartDate/Index.cshtml"
+        },
+        {
+          "name": "Year",
+          "control": "text",
+          "label": "Year",
+          "options": [],
+          "dataType": null,
+          "required": null,
+          "constraints": [],
+          "validation": null,
+          "line": 75,
+          "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/Views/ManageRestrictedProvider/EditAllowedCourseLastStartDate/Index.cshtml"
+        }
+      ]
     },
     {
       "id": "Home",
@@ -374,7 +542,7 @@
       "line": 17,
       "requiresAuthentication": true,
       "isEntryPoint": false,
-      "purpose": "Provides links to manage training providers and restricted courses.",
+      "purpose": "Serves as the start page for managing training providers and restricted courses.",
       "fields": []
     },
     {
@@ -391,7 +559,7 @@
       "line": 16,
       "requiresAuthentication": null,
       "isEntryPoint": false,
-      "purpose": "Lets the user update the organisation type for a provider.",
+      "purpose": "Lets the user change the type of organisation for a provider.",
       "fields": [
         {
           "name": "OrganisationTypeId",
@@ -401,7 +569,7 @@
           "dataType": "int",
           "required": null,
           "constraints": [],
-          "validation": "required; must be a valid organisation type",
+          "validation": null,
           "line": 25,
           "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/Views/OrganisationTypeUpdate/Index.cshtml"
         }
@@ -420,7 +588,7 @@
       "line": 23,
       "requiresAuthentication": true,
       "isEntryPoint": false,
-      "purpose": "Shows the list of courses a provider is allowed for a specific learning type.",
+      "purpose": "Shows the list of courses that are currently allowed for a provider, with options to edit or add.",
       "fields": []
     },
     {
@@ -436,7 +604,7 @@
       "line": 17,
       "requiresAuthentication": null,
       "isEntryPoint": false,
-      "purpose": "Displays the details for the provider being added.",
+      "purpose": "Displays provider details before beginning the provider addition process.",
       "fields": []
     },
     {
@@ -453,7 +621,7 @@
       "line": 17,
       "requiresAuthentication": null,
       "isEntryPoint": false,
-      "purpose": "Summarises the provider details before final submission.",
+      "purpose": "Lets the user review and submit a summary of provider details before adding a provider.",
       "fields": []
     },
     {
@@ -469,7 +637,7 @@
       "line": 93,
       "requiresAuthentication": null,
       "isEntryPoint": false,
-      "purpose": "Informs the user the provider was not found in the UKRLP database.",
+      "purpose": "Tells the user that the provider UKPRN was not found in UKRLP.",
       "fields": []
     },
     {
@@ -486,7 +654,7 @@
       "line": 19,
       "requiresAuthentication": true,
       "isEntryPoint": false,
-      "purpose": "Lets the user select a reason for removing a training provider.",
+      "purpose": "Lets the user select the reason for removing a provider.",
       "fields": [
         {
           "name": "RemovalReasonId",
@@ -515,7 +683,7 @@
       "line": 25,
       "requiresAuthentication": true,
       "isEntryPoint": false,
-      "purpose": "Displays the list of apprenticeships restricted for a provider and enables filtering them.",
+      "purpose": "Shows a list of restricted apprenticeships for a provider and allows filtering, viewing, or managing them.",
       "fields": [
         {
           "name": "For",
@@ -545,7 +713,7 @@
       "line": 27,
       "requiresAuthentication": true,
       "isEntryPoint": false,
-      "purpose": "Lets the user select a course to add to the provider's restricted list.",
+      "purpose": "Lets the user search for and select an apprenticeship course to restrict for a provider.",
       "fields": [
         {
           "name": "SelectedLarsCode",
@@ -555,7 +723,7 @@
           "dataType": "string?",
           "required": null,
           "constraints": [],
-          "validation": null,
+          "validation": "required; must be a valid course selection",
           "line": 29,
           "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/Views/ManageUnrestrictedProvider/ProviderRestrictedCourseSearch/Index.cshtml"
         }
@@ -575,7 +743,7 @@
       "line": 19,
       "requiresAuthentication": true,
       "isEntryPoint": false,
-      "purpose": "Lets the user update the status of a provider.",
+      "purpose": "Lets the user update the status for a training provider.",
       "fields": [
         {
           "name": "OrganisationStatus",
@@ -585,7 +753,7 @@
           "dataType": "OrganisationStatus",
           "required": null,
           "constraints": [],
-          "validation": "required; must be a valid status",
+          "validation": null,
           "line": 23,
           "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/Views/ProviderStatusUpdate/Index.cshtml"
         }
@@ -604,7 +772,7 @@
       "line": 64,
       "requiresAuthentication": true,
       "isEntryPoint": false,
-      "purpose": "Shows confirmation of a provider's status update.",
+      "purpose": "Shows a confirmation after updating a provider's status.",
       "fields": []
     },
     {
@@ -620,7 +788,7 @@
       "line": 18,
       "requiresAuthentication": true,
       "isEntryPoint": false,
-      "purpose": "Shows the summary details for a provider.",
+      "purpose": "Shows a summary and management links for a training provider.",
       "fields": []
     },
     {
@@ -637,7 +805,7 @@
       "line": 19,
       "requiresAuthentication": true,
       "isEntryPoint": false,
-      "purpose": "Lets the user update the provider's route type.",
+      "purpose": "Lets the user change what provider route a provider is using.",
       "fields": [
         {
           "name": "ProviderTypeId",
@@ -647,7 +815,7 @@
           "dataType": "int",
           "required": null,
           "constraints": [],
-          "validation": "required; must be a valid provider type",
+          "validation": null,
           "line": 24,
           "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/Views/ProviderTypeUpdate/Index.cshtml"
         }
@@ -664,7 +832,24 @@
       "line": 11,
       "requiresAuthentication": null,
       "isEntryPoint": true,
-      "purpose": "Allows searching for providers by query.",
+      "purpose": "Lets the user search for registered providers by query.",
+      "fields": []
+    },
+    {
+      "id": "RemoveAllowedCourseLastStartDate",
+      "kind": "mvc-action",
+      "routes": [
+        "providers/{ukprn}/{routeLearningType}/allowed-courses/{larsCode}/remove-last-date-starts"
+      ],
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/Controllers/ManageRestrictedProvider/RemoveAllowedCourseLastStartDateController.cs",
+      "line": 27,
+      "requiresAuthentication": true,
+      "isEntryPoint": false,
+      "purpose": "Lets the user remove the last date for new starts from a provider's allowed course.",
       "fields": []
     },
     {
@@ -681,7 +866,7 @@
       "line": 27,
       "requiresAuthentication": true,
       "isEntryPoint": false,
-      "purpose": "Lets the user confirm removal of a course from the provider's restricted apprenticeships list.",
+      "purpose": "Lets the user remove a restriction from a restricted course for a provider.",
       "fields": []
     },
     {
@@ -698,7 +883,7 @@
       "line": 22,
       "requiresAuthentication": true,
       "isEntryPoint": false,
-      "purpose": "Allows the user to confirm restricting a course.",
+      "purpose": "Lets the admin confirm restricting a course.",
       "fields": []
     },
     {
@@ -715,7 +900,7 @@
       "line": 19,
       "requiresAuthentication": true,
       "isEntryPoint": false,
-      "purpose": "Shows information before restricting the provider and allows the user to proceed.",
+      "purpose": "Lets the user begin restricting a provider's courses.",
       "fields": []
     },
     {
@@ -732,7 +917,7 @@
       "line": 24,
       "requiresAuthentication": true,
       "isEntryPoint": true,
-      "purpose": "Lets the user choose what restriction to change for a specific course offered by a provider.",
+      "purpose": "Lets the user choose how to change a restriction for a specific course for a provider.",
       "fields": [
         {
           "name": "nameof(Model.SelectedOption)",
@@ -742,7 +927,7 @@
           "dataType": null,
           "required": null,
           "constraints": [],
-          "validation": "required; must be a valid option",
+          "validation": "required",
           "line": 30,
           "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/Views/ManageUnrestrictedProvider/RestrictedCourseChangeRestriction/Index.cshtml"
         }
@@ -761,7 +946,7 @@
       "line": 22,
       "requiresAuthentication": true,
       "isEntryPoint": false,
-      "purpose": "Shows the details of a restricted course, including its providers.",
+      "purpose": "Shows details of a restricted course and its allowed providers.",
       "fields": [
         {
           "name": "For",
@@ -790,7 +975,7 @@
       "line": 19,
       "requiresAuthentication": true,
       "isEntryPoint": false,
-      "purpose": "Shows the list of all restricted courses.",
+      "purpose": "Shows a list of all restricted courses, with optional filtering.",
       "fields": [
         {
           "name": "For",
@@ -820,7 +1005,7 @@
       "line": 18,
       "requiresAuthentication": null,
       "isEntryPoint": false,
-      "purpose": "Lets the user select whether the provider offers apprenticeship units.",
+      "purpose": "Lets the user specify if the provider offers apprenticeship units.",
       "fields": [
         {
           "name": "IsApprenticeshipUnitsOffered",
@@ -830,7 +1015,7 @@
           "dataType": "bool?",
           "required": null,
           "constraints": [],
-          "validation": "required; must be Yes or No; available only if provider is not Supporting type",
+          "validation": "null",
           "line": 26,
           "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/Views/SelectOfferApprenticeshipUnits/Index.cshtml"
         }
@@ -850,7 +1035,7 @@
       "line": 18,
       "requiresAuthentication": null,
       "isEntryPoint": false,
-      "purpose": "Lets the user select whether the provider offers apprenticeships.",
+      "purpose": "Lets the user specify if the provider offers apprenticeships.",
       "fields": [
         {
           "name": "IsApprenticeshipsOffered",
@@ -860,7 +1045,7 @@
           "dataType": "bool?",
           "required": null,
           "constraints": [],
-          "validation": "required; must be Yes or No; available only if provider is not Supporting type",
+          "validation": "null",
           "line": 26,
           "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/Views/SelectOfferApprenticeships/Index.cshtml"
         }
@@ -880,7 +1065,7 @@
       "line": 18,
       "requiresAuthentication": null,
       "isEntryPoint": false,
-      "purpose": "Lets the user choose the type of organisation for the new provider.",
+      "purpose": "Lets the user choose the organisation type for a new provider.",
       "fields": [
         {
           "name": "OrganisationTypeId",
@@ -890,7 +1075,7 @@
           "dataType": "int?",
           "required": null,
           "constraints": [],
-          "validation": "required; must be a valid organisation type",
+          "validation": "required; must select an organisation type",
           "line": 26,
           "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/Views/SelectOrganisationType/Index.cshtml"
         }
@@ -940,7 +1125,7 @@
       "line": 19,
       "requiresAuthentication": null,
       "isEntryPoint": false,
-      "purpose": "Lets the user select which provider route the new provider will use.",
+      "purpose": "Lets the user choose the provider type for a new provider.",
       "fields": [
         {
           "name": "SelectedProviderTypeId",
@@ -950,7 +1135,7 @@
           "dataType": "int?",
           "required": null,
           "constraints": [],
-          "validation": "required; must be one of the designated provider types",
+          "validation": "required; must select a provider type",
           "line": 26,
           "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/Views/SelectProviderType/Index.cshtml"
         }
@@ -970,7 +1155,7 @@
       "line": 20,
       "requiresAuthentication": true,
       "isEntryPoint": false,
-      "purpose": "Shows details for a course that is not currently restricted.",
+      "purpose": "Displays details for a course that is not currently restricted.",
       "fields": []
     },
     {
@@ -987,7 +1172,7 @@
       "line": 22,
       "requiresAuthentication": true,
       "isEntryPoint": false,
-      "purpose": "Allows searching for an unrestricted course by name.",
+      "purpose": "Allows searching for and selecting an unrestricted course to view details or restrict.",
       "fields": [
         {
           "name": "SelectedLarsCode",
@@ -997,7 +1182,7 @@
           "dataType": "string?",
           "required": null,
           "constraints": [],
-          "validation": "required; must be a valid course code present in the list",
+          "validation": "required; must be a valid value from the list of unrestricted courses",
           "line": 23,
           "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/Views/CourseRestrictions/UnrestrictedCourseSearch/Index.cshtml"
         }
@@ -1072,7 +1257,7 @@
       "from": "ProviderDetailsSummary",
       "to": "AddProviderConfirmation",
       "trigger": "redirect",
-      "condition": "after successful provider submission",
+      "condition": "after successfully validating and submitting the provider details",
       "evidence": [
         "src/SFA.DAS.Admin.Roatp.Web/Controllers/AddProvider/ProviderDetailsSummaryController.cs:61"
       ]
@@ -1081,7 +1266,7 @@
       "from": "AddProviderConfirmation",
       "to": "Home",
       "trigger": "redirect",
-      "condition": "if organisation was not submitted",
+      "condition": null,
       "evidence": [
         "src/SFA.DAS.Admin.Roatp.Web/Controllers/AddProvider/ProviderDetailsSummaryController.cs:72"
       ]
@@ -1108,7 +1293,7 @@
       "from": "SelectOfferApprenticeshipUnits",
       "to": "ProviderDetailsSummary",
       "trigger": "redirect",
-      "condition": "if coming from summary page",
+      "condition": "if redirected from summary page",
       "evidence": [
         "src/SFA.DAS.Admin.Roatp.Web/Controllers/AddProvider/SelectOfferApprenticeshipUnitsController.cs:58"
       ]
@@ -1117,7 +1302,7 @@
       "from": "SelectOfferApprenticeshipUnits",
       "to": "SelectOrganisationType",
       "trigger": "redirect",
-      "condition": "otherwise after saving selection",
+      "condition": "otherwise, after submitting the form",
       "evidence": [
         "src/SFA.DAS.Admin.Roatp.Web/Controllers/AddProvider/SelectOfferApprenticeshipUnitsController.cs:61"
       ]
@@ -1135,7 +1320,7 @@
       "from": "SelectOfferApprenticeships",
       "to": "ProviderDetailsSummary",
       "trigger": "redirect",
-      "condition": "if coming from summary page",
+      "condition": "if redirected from summary page",
       "evidence": [
         "src/SFA.DAS.Admin.Roatp.Web/Controllers/AddProvider/SelectOfferApprenticeshipsController.cs:58"
       ]
@@ -1144,7 +1329,7 @@
       "from": "SelectOfferApprenticeships",
       "to": "SelectOfferApprenticeshipUnits",
       "trigger": "redirect",
-      "condition": "otherwise after saving selection",
+      "condition": "otherwise, after submitting the form",
       "evidence": [
         "src/SFA.DAS.Admin.Roatp.Web/Controllers/AddProvider/SelectOfferApprenticeshipsController.cs:61"
       ]
@@ -1153,7 +1338,7 @@
       "from": "SelectOrganisationType",
       "to": "ProviderDetailsSummary",
       "trigger": "redirect",
-      "condition": "after successfully selecting organisation type",
+      "condition": "after submitting valid organisation type selection",
       "evidence": [
         "src/SFA.DAS.Admin.Roatp.Web/Controllers/AddProvider/SelectOrganisationTypeController.cs:80"
       ]
@@ -1162,7 +1347,7 @@
       "from": "AddProvider",
       "to": "ProviderNotFoundInUkrlp",
       "trigger": "redirect",
-      "condition": "when provider not found in UKRLP",
+      "condition": "when provider UKPRN is not found in UKRLP",
       "evidence": [
         "src/SFA.DAS.Admin.Roatp.Web/Controllers/AddProvider/SelectProviderController.cs:67"
       ]
@@ -1171,7 +1356,7 @@
       "from": "AddProvider",
       "to": "ProviderDetails",
       "trigger": "redirect",
-      "condition": "when provider found in UKRLP and not already registered",
+      "condition": "when provider UKPRN is found in UKRLP and does not already exist",
       "evidence": [
         "src/SFA.DAS.Admin.Roatp.Web/Controllers/AddProvider/SelectProviderController.cs:88"
       ]
@@ -1189,7 +1374,7 @@
       "from": "SelectProviderType",
       "to": "ProviderDetailsSummary",
       "trigger": "redirect",
-      "condition": "when previous provider type is selected and redirected from summary page",
+      "condition": "when the same provider type is reselected and user is returning from summary page",
       "evidence": [
         "src/SFA.DAS.Admin.Roatp.Web/Controllers/AddProvider/SelectProviderTypeController.cs:53"
       ]
@@ -1198,7 +1383,7 @@
       "from": "SelectProviderType",
       "to": "SelectOrganisationType",
       "trigger": "redirect",
-      "condition": "when selected provider type is 'Supporting'",
+      "condition": "when 'Supporting' provider type is selected",
       "evidence": [
         "src/SFA.DAS.Admin.Roatp.Web/Controllers/AddProvider/SelectProviderTypeController.cs:67"
       ]
@@ -1207,7 +1392,7 @@
       "from": "SelectProviderType",
       "to": "SelectOfferApprenticeships",
       "trigger": "redirect",
-      "condition": "when selected provider type is not 'Supporting'",
+      "condition": "when 'Main' or 'Employer' provider type is selected",
       "evidence": [
         "src/SFA.DAS.Admin.Roatp.Web/Controllers/AddProvider/SelectProviderTypeController.cs:70"
       ]
@@ -1216,27 +1401,27 @@
       "from": "ApprenticeshipUnitsUpdate",
       "to": "Home",
       "trigger": "redirect",
-      "condition": "when organisation API response status is not OK",
+      "condition": "when provider is not found",
       "evidence": [
-        "src/SFA.DAS.Admin.Roatp.Web/Controllers/ApprenticeshipUnitsUpdateController.cs:23",
-        "src/SFA.DAS.Admin.Roatp.Web/Controllers/ApprenticeshipUnitsUpdateController.cs:43"
+        "src/SFA.DAS.Admin.Roatp.Web/Controllers/ApprenticeshipUnitsUpdateController.cs:22",
+        "src/SFA.DAS.Admin.Roatp.Web/Controllers/ApprenticeshipUnitsUpdateController.cs:55"
       ]
     },
     {
       "from": "ApprenticeshipUnitsUpdate",
       "to": "ProviderSummary",
       "trigger": "redirect",
-      "condition": "after updating course types or provider type and course types",
+      "condition": "after successfully updating apprenticeship units",
       "evidence": [
-        "src/SFA.DAS.Admin.Roatp.Web/Controllers/ApprenticeshipUnitsUpdateController.cs:55",
-        "src/SFA.DAS.Admin.Roatp.Web/Controllers/ApprenticeshipUnitsUpdateController.cs:93"
+        "src/SFA.DAS.Admin.Roatp.Web/Controllers/ApprenticeshipUnitsUpdateController.cs:72",
+        "src/SFA.DAS.Admin.Roatp.Web/Controllers/ApprenticeshipUnitsUpdateController.cs:85"
       ]
     },
     {
       "from": "ApprenticeshipsUpdate",
       "to": "Home",
       "trigger": "redirect",
-      "condition": "when organisation API response status is not OK or supporting session model not found",
+      "condition": "when provider is not found",
       "evidence": [
         "src/SFA.DAS.Admin.Roatp.Web/Controllers/ApprenticeshipsUpdateController.cs:20",
         "src/SFA.DAS.Admin.Roatp.Web/Controllers/ApprenticeshipsUpdateController.cs:23",
@@ -1247,7 +1432,7 @@
       "from": "ApprenticeshipsUpdate",
       "to": "ApprenticeshipUnitsUpdate",
       "trigger": "redirect",
-      "condition": "after saving apprenticeship offering",
+      "condition": "after selecting whether apprenticeships are offered",
       "evidence": [
         "src/SFA.DAS.Admin.Roatp.Web/Controllers/ApprenticeshipsUpdateController.cs:72"
       ]
@@ -1256,7 +1441,7 @@
       "from": "AddProviderToRestrictedCourse",
       "to": "ConfirmAddProviderToRestrictedCourse",
       "trigger": "redirect",
-      "condition": "after a valid provider is selected and session is saved",
+      "condition": "after submitting a valid provider selection",
       "evidence": [
         "src/SFA.DAS.Admin.Roatp.Web/Controllers/CourseRestrictions/AddProviderToRestrictedCourseController.cs:71"
       ]
@@ -1265,16 +1450,16 @@
       "from": "ChangeCourseRestriction",
       "to": "RestrictedCourseDetails",
       "trigger": "redirect",
-      "condition": "after successful change removal and API call",
+      "condition": "after submitting the change and updating restrictions",
       "evidence": [
-        "src/SFA.DAS.Admin.Roatp.Web/Controllers/CourseRestrictions/ChangeCourseRestrictionController.cs:73"
+        "src/SFA.DAS.Admin.Roatp.Web/Controllers/CourseRestrictions/ChangeCourseRestrictionController.cs:65"
       ]
     },
     {
       "from": "ConfirmAddProviderToRestrictedCourse",
       "to": "RestrictedCourseDetails",
       "trigger": "redirect",
-      "condition": "after confirming provider addition and API call",
+      "condition": "after confirming adding the provider",
       "evidence": [
         "src/SFA.DAS.Admin.Roatp.Web/Controllers/CourseRestrictions/ConfirmAddProviderToRestrictedCourseController.cs:26",
         "src/SFA.DAS.Admin.Roatp.Web/Controllers/CourseRestrictions/ConfirmAddProviderToRestrictedCourseController.cs:40",
@@ -1285,7 +1470,7 @@
       "from": "RestrictCourseConfirm",
       "to": "UnrestrictedCourseDetails",
       "trigger": "redirect",
-      "condition": "if session is missing or invalid",
+      "condition": "if the session for restricting the course is missing or invalid",
       "evidence": [
         "src/SFA.DAS.Admin.Roatp.Web/Controllers/CourseRestrictions/RestrictCourseConfirmController.cs:27",
         "src/SFA.DAS.Admin.Roatp.Web/Controllers/CourseRestrictions/RestrictCourseConfirmController.cs:39"
@@ -1295,7 +1480,7 @@
       "from": "RestrictCourseConfirm",
       "to": "RestrictedCourseDetails",
       "trigger": "redirect",
-      "condition": "after successfully restricting the course",
+      "condition": "after confirming restricting the course",
       "evidence": [
         "src/SFA.DAS.Admin.Roatp.Web/Controllers/CourseRestrictions/RestrictCourseConfirmController.cs:54"
       ]
@@ -1304,7 +1489,7 @@
       "from": "RestrictedCourseDetails",
       "to": "UnrestrictedCourseDetails",
       "trigger": "redirect",
-      "condition": "if the course is not actually restricted",
+      "condition": "when the course is not restricted",
       "evidence": [
         "src/SFA.DAS.Admin.Roatp.Web/Controllers/CourseRestrictions/RestrictedCourseDetailsController.cs:37"
       ]
@@ -1340,7 +1525,7 @@
       "from": "UnrestrictedCourseDetails",
       "to": "RestrictCourseConfirm",
       "trigger": "redirect",
-      "condition": "after submitting the restrict course form",
+      "condition": "after submitting the form to restrict the course",
       "evidence": [
         "src/SFA.DAS.Admin.Roatp.Web/Controllers/CourseRestrictions/UnrestrictedCourseDetailsController.cs:49"
       ]
@@ -1349,7 +1534,7 @@
       "from": "UnrestrictedCourseSearch",
       "to": "UnrestrictedCourseDetails",
       "trigger": "redirect",
-      "condition": "after selecting a valid course from the search",
+      "condition": "after submitting the course search and selection",
       "evidence": [
         "src/SFA.DAS.Admin.Roatp.Web/Controllers/CourseRestrictions/UnrestrictedCourseSearchController.cs:43"
       ]
@@ -1391,12 +1576,111 @@
       ]
     },
     {
+      "from": "AddAllowedCourse",
+      "to": "ProviderRestrictedApprenticeships",
+      "trigger": "redirect",
+      "condition": "if the provider is unrestricted for the selected route",
+      "evidence": [
+        "src/SFA.DAS.Admin.Roatp.Web/Controllers/ManageRestrictedProvider/AddAllowedCourseController.cs:47"
+      ]
+    },
+    {
+      "from": "AddAllowedCourse",
+      "to": "ProviderAllowedCourses",
+      "trigger": "redirect",
+      "condition": "after successfully adding the allowed course",
+      "evidence": [
+        "src/SFA.DAS.Admin.Roatp.Web/Controllers/ManageRestrictedProvider/AddAllowedCourseController.cs:102"
+      ]
+    },
+    {
+      "from": "AddAllowedCourseLastStartDate",
+      "to": "ChangeAllowedCourseLastStartDate",
+      "trigger": "redirect",
+      "condition": "if the allowed course already has a last start date",
+      "evidence": [
+        "src/SFA.DAS.Admin.Roatp.Web/Controllers/ManageRestrictedProvider/AddAllowedCourseLastStartDateController.cs:64"
+      ]
+    },
+    {
+      "from": "AddAllowedCourseLastStartDate",
+      "to": "ProviderAllowedCourses",
+      "trigger": "redirect",
+      "condition": "after successfully setting the last start date",
+      "evidence": [
+        "src/SFA.DAS.Admin.Roatp.Web/Controllers/ManageRestrictedProvider/AddAllowedCourseLastStartDateController.cs:105"
+      ]
+    },
+    {
+      "from": "ChangeAllowedCourseLastStartDate",
+      "to": "AddAllowedCourseLastStartDate",
+      "trigger": "redirect",
+      "condition": "if the allowed course does not have a last start date",
+      "evidence": [
+        "src/SFA.DAS.Admin.Roatp.Web/Controllers/ManageRestrictedProvider/ChangeAllowedCourseLastStartDateController.cs:53"
+      ]
+    },
+    {
+      "from": "ChangeAllowedCourseLastStartDate",
+      "to": "EditAllowedCourseLastStartDate",
+      "trigger": "redirect",
+      "condition": "if the admin selects the change option",
+      "evidence": [
+        "src/SFA.DAS.Admin.Roatp.Web/Controllers/ManageRestrictedProvider/ChangeAllowedCourseLastStartDateController.cs:96"
+      ]
+    },
+    {
+      "from": "ChangeAllowedCourseLastStartDate",
+      "to": "RemoveAllowedCourseLastStartDate",
+      "trigger": "redirect",
+      "condition": "if the admin selects the remove option",
+      "evidence": [
+        "src/SFA.DAS.Admin.Roatp.Web/Controllers/ManageRestrictedProvider/ChangeAllowedCourseLastStartDateController.cs:99"
+      ]
+    },
+    {
+      "from": "EditAllowedCourseLastStartDate",
+      "to": "AddAllowedCourseLastStartDate",
+      "trigger": "redirect",
+      "condition": "when the course does not have a last date for starts",
+      "evidence": [
+        "src/SFA.DAS.Admin.Roatp.Web/Controllers/ManageRestrictedProvider/EditAllowedCourseLastStartDateController.cs:59"
+      ]
+    },
+    {
+      "from": "EditAllowedCourseLastStartDate",
+      "to": "ProviderAllowedCourses",
+      "trigger": "redirect",
+      "condition": "after saving the form",
+      "evidence": [
+        "src/SFA.DAS.Admin.Roatp.Web/Controllers/ManageRestrictedProvider/EditAllowedCourseLastStartDateController.cs:117"
+      ]
+    },
+    {
       "from": "ProviderAllowedCourses",
       "to": "ProviderRestrictedApprenticeships",
       "trigger": "redirect",
-      "condition": "if provider is not restricted for apprenticeship course type",
+      "condition": "if the provider is unrestricted for this learning route",
       "evidence": [
-        "src/SFA.DAS.Admin.Roatp.Web/Controllers/ManageRestrictedProvider/ProviderAllowedCoursesController.cs:42"
+        "src/SFA.DAS.Admin.Roatp.Web/Controllers/ManageRestrictedProvider/ProviderAllowedCoursesController.cs:41"
+      ]
+    },
+    {
+      "from": "ProviderAllowedCourses",
+      "to": "ChangeAllowedCourseLastStartDate",
+      "trigger": "link",
+      "condition": null,
+      "evidence": [
+        "src/SFA.DAS.Admin.Roatp.Web/Controllers/ManageRestrictedProvider/ProviderAllowedCoursesController.cs:60"
+      ]
+    },
+    {
+      "from": "ProviderAllowedCourses",
+      "to": "AddAllowedCourseLastStartDate",
+      "trigger": "link",
+      "condition": null,
+      "evidence": [
+        "src/SFA.DAS.Admin.Roatp.Web/Controllers/ManageRestrictedProvider/ProviderAllowedCoursesController.cs:63"
       ]
     },
     {
@@ -1405,14 +1689,32 @@
       "trigger": "link",
       "condition": null,
       "evidence": [
-        "src/SFA.DAS.Admin.Roatp.Web/Controllers/ManageRestrictedProvider/ProviderAllowedCoursesController.cs:69"
+        "src/SFA.DAS.Admin.Roatp.Web/Controllers/ManageRestrictedProvider/ProviderAllowedCoursesController.cs:74"
+      ]
+    },
+    {
+      "from": "ProviderAllowedCourses",
+      "to": "AddAllowedCourse",
+      "trigger": "link",
+      "condition": null,
+      "evidence": [
+        "src/SFA.DAS.Admin.Roatp.Web/Controllers/ManageRestrictedProvider/ProviderAllowedCoursesController.cs:75"
+      ]
+    },
+    {
+      "from": "RemoveAllowedCourseLastStartDate",
+      "to": "ProviderAllowedCourses",
+      "trigger": "redirect",
+      "condition": "after removing the last start date",
+      "evidence": [
+        "src/SFA.DAS.Admin.Roatp.Web/Controllers/ManageRestrictedProvider/RemoveAllowedCourseLastStartDateController.cs:88"
       ]
     },
     {
       "from": "AddRestrictedCourseLastStartDate",
       "to": "ProviderRestrictedApprenticeships",
       "trigger": "redirect",
-      "condition": "after successfully setting last start date",
+      "condition": "after saving the form",
       "evidence": [
         "src/SFA.DAS.Admin.Roatp.Web/Controllers/ManageUnrestrictedProvider/AddRestrictedCourseLastStartDateController.cs:33",
         "src/SFA.DAS.Admin.Roatp.Web/Controllers/ManageUnrestrictedProvider/AddRestrictedCourseLastStartDateController.cs:53",
@@ -1423,7 +1725,7 @@
       "from": "ChangeRestrictedCourseLastStartDate",
       "to": "ProviderRestrictedApprenticeships",
       "trigger": "redirect",
-      "condition": "after successfully changing last start date",
+      "condition": "after saving the form",
       "evidence": [
         "src/SFA.DAS.Admin.Roatp.Web/Controllers/ManageUnrestrictedProvider/ChangeRestrictedCourseLastStartDateController.cs:35",
         "src/SFA.DAS.Admin.Roatp.Web/Controllers/ManageUnrestrictedProvider/ChangeRestrictedCourseLastStartDateController.cs:73",
@@ -1434,7 +1736,7 @@
       "from": "ConfirmProviderRestrictedCourse",
       "to": "ProviderRestrictedApprenticeships",
       "trigger": "redirect",
-      "condition": "after saving the form",
+      "condition": "after confirming the addition",
       "evidence": [
         "src/SFA.DAS.Admin.Roatp.Web/Controllers/ManageUnrestrictedProvider/ConfirmProviderRestrictedCourseController.cs:29",
         "src/SFA.DAS.Admin.Roatp.Web/Controllers/ManageUnrestrictedProvider/ConfirmProviderRestrictedCourseController.cs:41",
@@ -1454,7 +1756,7 @@
       "from": "ConfirmRestrictProvider",
       "to": "ProviderAllowedCourses",
       "trigger": "redirect",
-      "condition": "after saving the form",
+      "condition": "after saving the restriction",
       "evidence": [
         "src/SFA.DAS.Admin.Roatp.Web/Controllers/ManageUnrestrictedProvider/ConfirmRestrictProviderController.cs:64"
       ]
@@ -1463,7 +1765,7 @@
       "from": "ProviderRestrictedApprenticeships",
       "to": "ProviderAllowedCourses",
       "trigger": "redirect",
-      "condition": "if provider is already restricted for apprenticeships",
+      "condition": "if the provider is already restricted",
       "evidence": [
         "src/SFA.DAS.Admin.Roatp.Web/Controllers/ManageUnrestrictedProvider/ProviderRestrictedApprenticeshipsController.cs:40"
       ]
@@ -1490,7 +1792,7 @@
       "from": "ProviderRestrictedCourseSearch",
       "to": "AddRestrictedCourseLastStartDate",
       "trigger": "redirect",
-      "condition": "if the provider already has the selected course",
+      "condition": "if provider already has the course",
       "evidence": [
         "src/SFA.DAS.Admin.Roatp.Web/Controllers/ManageUnrestrictedProvider/ProviderRestrictedCourseSearchController.cs:76"
       ]
@@ -1499,7 +1801,7 @@
       "from": "ProviderRestrictedCourseSearch",
       "to": "ConfirmProviderRestrictedCourse",
       "trigger": "redirect",
-      "condition": "if the provider does not have the selected course",
+      "condition": "if provider does not already have the course",
       "evidence": [
         "src/SFA.DAS.Admin.Roatp.Web/Controllers/ManageUnrestrictedProvider/ProviderRestrictedCourseSearchController.cs:76"
       ]
@@ -1508,7 +1810,7 @@
       "from": "RemoveRestrictedCourseRestriction",
       "to": "ProviderRestrictedApprenticeships",
       "trigger": "redirect",
-      "condition": "after saving the form",
+      "condition": "after removing restriction",
       "evidence": [
         "src/SFA.DAS.Admin.Roatp.Web/Controllers/ManageUnrestrictedProvider/RemoveRestrictedCourseRestrictionController.cs:32",
         "src/SFA.DAS.Admin.Roatp.Web/Controllers/ManageUnrestrictedProvider/RemoveRestrictedCourseRestrictionController.cs:52",
@@ -1528,7 +1830,7 @@
       "from": "RestrictProvider",
       "to": "ConfirmRestrictProvider",
       "trigger": "redirect",
-      "condition": "after saving the form",
+      "condition": "after confirming restriction",
       "evidence": [
         "src/SFA.DAS.Admin.Roatp.Web/Controllers/ManageUnrestrictedProvider/RestrictProviderController.cs:48"
       ]
@@ -1537,7 +1839,7 @@
       "from": "RestrictedCourseChangeRestriction",
       "to": "ProviderRestrictedApprenticeships",
       "trigger": "redirect",
-      "condition": "if the targeted course or session data is missing",
+      "condition": "if session is invalid",
       "evidence": [
         "src/SFA.DAS.Admin.Roatp.Web/Controllers/ManageUnrestrictedProvider/RestrictedCourseChangeRestrictionController.cs:29",
         "src/SFA.DAS.Admin.Roatp.Web/Controllers/ManageUnrestrictedProvider/RestrictedCourseChangeRestrictionController.cs:65"
@@ -1547,7 +1849,7 @@
       "from": "RestrictedCourseChangeRestriction",
       "to": "ChangeRestrictedCourseLastStartDate",
       "trigger": "redirect",
-      "condition": "if SelectedOption is 'AddOrChange'",
+      "condition": "if user selects 'AddOrChange'",
       "evidence": [
         "src/SFA.DAS.Admin.Roatp.Web/Controllers/ManageUnrestrictedProvider/RestrictedCourseChangeRestrictionController.cs:82"
       ]
@@ -1556,7 +1858,7 @@
       "from": "RestrictedCourseChangeRestriction",
       "to": "RemoveRestrictedCourseRestriction",
       "trigger": "redirect",
-      "condition": "if SelectedOption is not 'AddOrChange'",
+      "condition": "if user selects removal",
       "evidence": [
         "src/SFA.DAS.Admin.Roatp.Web/Controllers/ManageUnrestrictedProvider/RestrictedCourseChangeRestrictionController.cs:85"
       ]
@@ -1565,7 +1867,7 @@
       "from": "OrganisationTypeUpdate",
       "to": "Home",
       "trigger": "redirect",
-      "condition": "if the organisation cannot be found",
+      "condition": "if organisation not found",
       "evidence": [
         "src/SFA.DAS.Admin.Roatp.Web/Controllers/OrganisationTypeUpdateController.cs:20",
         "src/SFA.DAS.Admin.Roatp.Web/Controllers/OrganisationTypeUpdateController.cs:49"
@@ -1575,7 +1877,7 @@
       "from": "OrganisationTypeUpdate",
       "to": "ProviderSummary",
       "trigger": "redirect",
-      "condition": "after saving the updated organisation type",
+      "condition": "after saving the organisation type",
       "evidence": [
         "src/SFA.DAS.Admin.Roatp.Web/Controllers/OrganisationTypeUpdateController.cs:58"
       ]
@@ -1584,7 +1886,7 @@
       "from": "ProviderStatusUpdate",
       "to": "Home",
       "trigger": "redirect",
-      "condition": "if the organisation cannot be found",
+      "condition": "if organisation not found",
       "evidence": [
         "src/SFA.DAS.Admin.Roatp.Web/Controllers/ProviderStatusUpdateController.cs:23",
         "src/SFA.DAS.Admin.Roatp.Web/Controllers/ProviderStatusUpdateController.cs:42"
@@ -1603,7 +1905,7 @@
       "from": "ProviderStatusUpdate",
       "to": "ProviderSummary",
       "trigger": "redirect",
-      "condition": "after saving, if patching organisation failed",
+      "condition": "if organisation patch unsuccessful",
       "evidence": [
         "src/SFA.DAS.Admin.Roatp.Web/Controllers/ProviderStatusUpdateController.cs:56"
       ]
@@ -1612,7 +1914,7 @@
       "from": "ProviderStatusUpdate",
       "to": "ProviderStatusUpdateConfirmed",
       "trigger": "redirect",
-      "condition": "after saving, if patching organisation succeeded",
+      "condition": "if organisation patch successful",
       "evidence": [
         "src/SFA.DAS.Admin.Roatp.Web/Controllers/ProviderStatusUpdateController.cs:56"
       ]
@@ -1621,7 +1923,7 @@
       "from": "ProviderStatusUpdateConfirmed",
       "to": "Home",
       "trigger": "redirect",
-      "condition": "if the organisation cannot be found",
+      "condition": "if organisation not found",
       "evidence": [
         "src/SFA.DAS.Admin.Roatp.Web/Controllers/ProviderStatusUpdateController.cs:68"
       ]
@@ -1657,7 +1959,7 @@
       "from": "ProviderSummary",
       "to": "Home",
       "trigger": "redirect",
-      "condition": "if the organisation cannot be found",
+      "condition": "if organisation not found",
       "evidence": [
         "src/SFA.DAS.Admin.Roatp.Web/Controllers/ProviderSummaryController.cs:22"
       ]
@@ -1739,7 +2041,7 @@
       "from": "ProviderTypeUpdate",
       "to": "Home",
       "trigger": "redirect",
-      "condition": "if the organisation cannot be found",
+      "condition": "if organisation not found",
       "evidence": [
         "src/SFA.DAS.Admin.Roatp.Web/Controllers/ProviderTypeUpdateController.cs:23",
         "src/SFA.DAS.Admin.Roatp.Web/Controllers/ProviderTypeUpdateController.cs:42"
@@ -1749,7 +2051,7 @@
       "from": "ProviderTypeUpdate",
       "to": "ApprenticeshipsUpdate",
       "trigger": "redirect",
-      "condition": "if the provider's current type is 'Supporting' and is changed to 'Main' or 'Employer'",
+      "condition": "if provider type changes from Supporting to Main or Employer",
       "evidence": [
         "src/SFA.DAS.Admin.Roatp.Web/Controllers/ProviderTypeUpdateController.cs:53"
       ]
@@ -1758,16 +2060,16 @@
       "from": "ProviderTypeUpdate",
       "to": "ProviderSummary",
       "trigger": "redirect",
-      "condition": "after saving, if not redirecting to ApprenticeshipsUpdate",
+      "condition": "after saving the provider type",
       "evidence": [
-        "src/SFA.DAS.Admin.Roatp.Web/Controllers/ProviderTypeUpdateController.cs:60"
+        "src/SFA.DAS.Admin.Roatp.Web/Controllers/ProviderTypeUpdateController.cs:61"
       ]
     },
     {
       "from": "ProviderRemovalReasonUpdate",
       "to": "Home",
       "trigger": "redirect",
-      "condition": "if provider details cannot be loaded",
+      "condition": "if the provider cannot be found",
       "evidence": [
         "src/SFA.DAS.Admin.Roatp.Web/Controllers/RemovalReasonUpdateController.cs:23",
         "src/SFA.DAS.Admin.Roatp.Web/Controllers/RemovalReasonUpdateController.cs:50"
@@ -1777,7 +2079,7 @@
       "from": "ProviderRemovalReasonUpdate",
       "to": "ProviderSummary",
       "trigger": "redirect",
-      "condition": "if removal update fails",
+      "condition": "if the provider removal update fails",
       "evidence": [
         "src/SFA.DAS.Admin.Roatp.Web/Controllers/RemovalReasonUpdateController.cs:77"
       ]
@@ -1786,7 +2088,7 @@
       "from": "ProviderRemovalReasonUpdate",
       "to": "ProviderStatusUpdateConfirmed",
       "trigger": "redirect",
-      "condition": "if removal update succeeds",
+      "condition": "if the provider removal update is successful",
       "evidence": [
         "src/SFA.DAS.Admin.Roatp.Web/Controllers/RemovalReasonUpdateController.cs:77"
       ]
@@ -1795,7 +2097,7 @@
       "from": "SelectProvider",
       "to": "ProviderSummary",
       "trigger": "redirect",
-      "condition": "after successfully selecting a provider",
+      "condition": "after searching and selecting a provider",
       "evidence": [
         "src/SFA.DAS.Admin.Roatp.Web/Controllers/SelectTrainingProviderController.cs:36"
       ]
@@ -1831,7 +2133,7 @@
       "from": "ProviderRemovalReasonUpdate",
       "to": "ProviderStatusUpdate",
       "trigger": "form-post",
-      "condition": null,
+      "condition": "after submitting the form",
       "evidence": [
         "src/SFA.DAS.Admin.Roatp.Web/Views/RemovalReasonUpdate/Index.cshtml:22"
       ]
@@ -1843,7 +2145,7 @@
       "from": "ChangeCourseRestriction",
       "reference": "SetLastDateStarts",
       "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/Controllers/CourseRestrictions/ChangeCourseRestrictionController.cs",
-      "line": 52
+      "line": 51
     },
     {
       "from": "RestrictedCourseDetails",
@@ -1888,29 +2190,11 @@
       "line": 34
     }
   ],
-  "selfLinkCount": 28,
+  "selfLinkCount": 32,
   "journeys": [
     {
-      "name": "Add a New Training Provider",
-      "description": "An admin searches for a provider by UKPRN, supplies and reviews details, selects provider configurations, and adds the provider.",
-      "kind": "linear",
-      "steps": [
-        "AddProvider",
-        "ProviderDetails",
-        "SelectProviderType",
-        "SelectOfferApprenticeships",
-        "SelectOfferApprenticeshipUnits",
-        "SelectOrganisationType",
-        "ProviderDetailsSummary",
-        "AddProviderConfirmation"
-      ],
-      "hub": null,
-      "sections": [],
-      "then": []
-    },
-    {
-      "name": "Add a Provider and Mark as Supporting",
-      "description": "Admins add a provider, select 'Supporting' type, and skip the additional configuration steps.",
+      "name": "Add a new provider",
+      "description": "Add a new provider by searching for a UKPRN, completing required details, and confirming the addition.",
       "kind": "linear",
       "steps": [
         "AddProvider",
@@ -1918,73 +2202,19 @@
         "SelectProviderType",
         "SelectOrganisationType",
         "ProviderDetailsSummary",
-        "AddProviderConfirmation"
+        "AddProviderConfirmation",
+        "Home"
       ],
       "hub": null,
       "sections": [],
       "then": []
     },
     {
-      "name": "Restrict an Approved Course",
-      "description": "An admin searches for an unrestricted course, chooses to restrict it, and confirms the restriction.",
-      "kind": "linear",
-      "steps": [
-        "RestrictedCourses",
-        "UnrestrictedCourseSearch",
-        "UnrestrictedCourseDetails",
-        "RestrictCourseConfirm",
-        "RestrictedCourseDetails"
-      ],
-      "hub": null,
-      "sections": [],
-      "then": []
-    },
-    {
-      "name": "Add a Provider to a Restricted Course",
-      "description": "An admin selects a restricted course and adds a provider to its delivery list.",
-      "kind": "linear",
-      "steps": [
-        "RestrictedCourses",
-        "RestrictedCourseDetails",
-        "AddProviderToRestrictedCourse",
-        "ConfirmAddProviderToRestrictedCourse",
-        "RestrictedCourseDetails"
-      ],
-      "hub": null,
-      "sections": [],
-      "then": []
-    },
-    {
-      "name": "Change Provider Restriction or Delivery Dates for a Course",
-      "description": "An admin changes restriction settings or delivery dates for a course at a provider.",
-      "kind": "linear",
-      "steps": [
-        "RestrictedCourseChangeRestriction",
-        "ChangeRestrictedCourseLastStartDate",
-        "ProviderRestrictedApprenticeships"
-      ],
-      "hub": null,
-      "sections": [],
-      "then": []
-    },
-    {
-      "name": "Remove a Restricted Course from a Provider",
-      "description": "An admin removes a restricted course from a provider's allowed list.",
-      "kind": "linear",
-      "steps": [
-        "RestrictedCourseChangeRestriction",
-        "RemoveRestrictedCourseRestriction",
-        "ProviderRestrictedApprenticeships"
-      ],
-      "hub": null,
-      "sections": [],
-      "then": []
-    },
-    {
-      "name": "Manage a Training Provider",
-      "description": "An admin accesses a provider via search, then manages all aspects of that provider from a hub page.",
+      "name": "Manage an existing provider",
+      "description": "Select a provider to update their details, status, type, courses, or view summaries.",
       "kind": "hub",
       "steps": [
+        "Home",
         "SelectProvider",
         "ProviderSummary"
       ],
@@ -2001,22 +2231,50 @@
       "then": []
     },
     {
-      "name": "Update Provider Status (including Removal)",
-      "description": "An admin changes a provider's status, with a conditional removal path if needed.",
+      "name": "Add a restricted apprenticeship course to a provider",
+      "description": "Add a restricted apprenticeship course for a provider, including setting last allowed start date if needed.",
       "kind": "linear",
       "steps": [
         "ProviderSummary",
-        "ProviderStatusUpdate",
-        "ProviderRemovalReasonUpdate",
-        "ProviderStatusUpdateConfirmed"
+        "ProviderRestrictedApprenticeships",
+        "ProviderRestrictedCourseSearch",
+        "ConfirmProviderRestrictedCourse",
+        "ProviderRestrictedApprenticeships"
       ],
       "hub": null,
       "sections": [],
       "then": []
     },
     {
-      "name": "Restrict a Provider",
-      "description": "An admin restricts a provider so they may deliver only approved courses.",
+      "name": "Add an allowed course to a restricted provider",
+      "description": "Add an allowed course to a restricted provider and set its last allowed start date if required.",
+      "kind": "linear",
+      "steps": [
+        "ProviderAllowedCourses",
+        "AddAllowedCourse",
+        "ProviderAllowedCourses"
+      ],
+      "hub": null,
+      "sections": [],
+      "then": []
+    },
+    {
+      "name": "Set or change last allowed start date for provider\u2019s course",
+      "description": "Set, change, or remove the last allowed start date for an allowed course for a provider.",
+      "kind": "linear",
+      "steps": [
+        "ProviderAllowedCourses",
+        "ChangeAllowedCourseLastStartDate",
+        "EditAllowedCourseLastStartDate",
+        "ProviderAllowedCourses"
+      ],
+      "hub": null,
+      "sections": [],
+      "then": []
+    },
+    {
+      "name": "Restrict a provider\u2019s delivery to specific courses",
+      "description": "Restrict a provider's ability to deliver apprenticeships only to specific, approved courses.",
       "kind": "linear",
       "steps": [
         "ProviderSummary",
@@ -2029,87 +2287,71 @@
       "then": []
     },
     {
-      "name": "Manage a Provider\u2019s Restricted Apprenticeships",
-      "description": "An admin views a provider\u2019s restricted courses and adds or updates restrictions as needed.",
-      "kind": "hub",
-      "steps": [
-        "ProviderSummary",
-        "ProviderRestrictedApprenticeships"
-      ],
-      "hub": "ProviderRestrictedApprenticeships",
-      "sections": [
-        "ProviderAllowedCourses",
-        "ProviderRestrictedCourseSearch"
-      ],
-      "then": []
-    },
-    {
-      "name": "Add a Restricted Course to a Provider",
-      "description": "Adds a restricted course for a provider including setting special dates or confirming as needed.",
+      "name": "Search and view all restricted courses",
+      "description": "View the list of all restricted courses and see their details or manage providers for those courses.",
       "kind": "linear",
-      "steps": [
-        "ProviderRestrictedApprenticeships",
-        "ProviderRestrictedCourseSearch",
-        "ConfirmProviderRestrictedCourse",
-        "ProviderRestrictedApprenticeships"
-      ],
-      "hub": null,
-      "sections": [],
-      "then": []
-    },
-    {
-      "name": "Add a Restricted Course Last Start Date for Provider",
-      "description": "Sets a last start date for a specific restricted course and provider.",
-      "kind": "linear",
-      "steps": [
-        "ProviderRestrictedApprenticeships",
-        "ProviderRestrictedCourseSearch",
-        "AddRestrictedCourseLastStartDate",
-        "ProviderRestrictedApprenticeships"
-      ],
-      "hub": null,
-      "sections": [],
-      "then": []
-    },
-    {
-      "name": "Change a Provider's Organisation or Route Type",
-      "description": "Provides the workflow for updating the organisation or delivery type for a provider.",
-      "kind": "linear",
-      "steps": [
-        "ProviderSummary",
-        "OrganisationTypeUpdate",
-        "ProviderSummary"
-      ],
-      "hub": null,
-      "sections": [],
-      "then": []
-    },
-    {
-      "name": "Update Provider Apprenticeship Offering",
-      "description": "Update if a provider offers apprenticeships and their units.",
-      "kind": "linear",
-      "steps": [
-        "ProviderSummary",
-        "ApprenticeshipUnitsUpdate",
-        "ProviderSummary"
-      ],
-      "hub": null,
-      "sections": [],
-      "then": []
-    },
-    {
-      "name": "Browse and Manage Restricted Courses",
-      "description": "An admin browses all restricted courses and manages restrictions for each.",
-      "kind": "hub",
       "steps": [
         "Home",
-        "RestrictedCourses"
-      ],
-      "hub": "RestrictedCourses",
-      "sections": [
-        "UnrestrictedCourseSearch",
+        "RestrictedCourses",
         "RestrictedCourseDetails"
       ],
+      "hub": null,
+      "sections": [],
+      "then": []
+    },
+    {
+      "name": "Restrict a course",
+      "description": "Restrict an unrestricted apprenticeship course and confirm restriction.",
+      "kind": "linear",
+      "steps": [
+        "RestrictedCourses",
+        "UnrestrictedCourseSearch",
+        "UnrestrictedCourseDetails",
+        "RestrictCourseConfirm",
+        "RestrictedCourseDetails"
+      ],
+      "hub": null,
+      "sections": [],
+      "then": []
+    },
+    {
+      "name": "Add a provider to a restricted course",
+      "description": "Add a new provider to an apprenticeship course that is already restricted.",
+      "kind": "linear",
+      "steps": [
+        "RestrictedCourseDetails",
+        "AddProviderToRestrictedCourse",
+        "ConfirmAddProviderToRestrictedCourse",
+        "RestrictedCourseDetails"
+      ],
+      "hub": null,
+      "sections": [],
+      "then": []
+    },
+    {
+      "name": "Change or remove a restriction for a provider\u2019s restricted course",
+      "description": "Change or remove restriction details (e.g. last start date) for a restricted course for a provider.",
+      "kind": "linear",
+      "steps": [
+        "RestrictedCourseChangeRestriction",
+        "ChangeRestrictedCourseLastStartDate",
+        "ProviderRestrictedApprenticeships"
+      ],
+      "hub": null,
+      "sections": [],
+      "then": []
+    },
+    {
+      "name": "Remove a restriction from a provider\u2019s restricted course",
+      "description": "Remove the restriction from a restricted course for a provider.",
+      "kind": "linear",
+      "steps": [
+        "RestrictedCourseChangeRestriction",
+        "RemoveRestrictedCourseRestriction",
+        "ProviderRestrictedApprenticeships"
+      ],
+      "hub": null,
+      "sections": [],
       "then": []
     }
   ],
