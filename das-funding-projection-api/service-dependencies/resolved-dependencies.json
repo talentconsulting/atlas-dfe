@@ -1,0 +1,108 @@
+{
+  "repository": "SkillsFundingAgency/das-funding-projection-api",
+  "ref": "23ab140b020c61b422c637389d5595209e8e1e36",
+  "path": "src",
+  "systemName": "Funding Projection",
+  "containers": [
+    {
+      "id": "funding-projection-api",
+      "name": "Funding Projection",
+      "type": "api",
+      "evidence": [
+        {
+          "sourceFile": "src/FundingProjection.Api/Program.cs",
+          "reason": "Main method in a Program class; indicates an API application entry point."
+        },
+        {
+          "sourceFile": "src/FundingProjection.Api/FundingProjection.Api.csproj",
+          "reason": "Project type SDK is Microsoft.NET.Sdk.Web, indicating a web or API application."
+        },
+        {
+          "sourceFile": "src/FundingProjection.Api/Startup.cs",
+          "reason": "Startup class configuring an API application."
+        }
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "sourceId": "funding-projection-api",
+      "name": "SQL Server",
+      "kind": "database",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "FundingProjectionDataContext",
+      "technology": "Entity Framework Core",
+      "configurationKeys": [
+        "ConnectionStrings.SqlConnectionString"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [
+        {
+          "type": "database",
+          "name": "SqlConnectionString",
+          "direction": "outbound",
+          "sourceFile": "src/FundingProjection.Api/AppStart/AddServiceRegistrationExtension.cs"
+        }
+      ],
+      "evidence": [
+        {
+          "sourceFile": "src/FundingProjection.Api/Startup.cs",
+          "reason": "Database-related dependency injection (IFundingProjectionDataContext and AddDbContext) is registered with SQL Server."
+        },
+        {
+          "sourceFile": "src/FundingProjection.Data/FundingProjectionDataContext.cs",
+          "reason": "FundingProjectionDataContext class defined with SQL Server usage."
+        },
+        {
+          "sourceFile": "src/FundingProjection.Api/AppStart/AddServiceRegistrationExtension.cs",
+          "reason": "FundingProjectionDataContext is constructed and registered with a SQL Server connection string."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "database-sql-server",
+      "description": "Reads from and writes to"
+    },
+    {
+      "sourceId": "funding-projection-api",
+      "name": "Service Bus",
+      "kind": "message-broker",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": "ServiceBusClient",
+      "technology": "Azure Service Bus",
+      "configurationKeys": [
+        "QueueConstants.ServiceBusConnection",
+        "QueueConstants.ServiceBusConnection:fullyQualifiedNamespace"
+      ],
+      "authentication": {
+        "type": "DefaultAzureCredential",
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/FundingProjection.Api/AppStart/AddServiceRegistrationExtension.cs",
+          "reason": "ServiceBusClient is constructed and registered for message queuing."
+        },
+        {
+          "sourceFile": "src/FundingProjection.Domain/Services/EventService.cs",
+          "reason": "ServiceBusClient is used for sending messages."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "message-broker-service-bus",
+      "description": "Publishes messages to and consumes messages from"
+    }
+  ],
+  "resolution": {
+    "overlay": "dfe-overlay/apim-routing.json",
+    "apimCommit": "26c65ce63226678c0f2fd6959072b89c4da6512f",
+    "precision": "area"
+  }
+}
