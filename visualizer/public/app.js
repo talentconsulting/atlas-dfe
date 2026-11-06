@@ -188,6 +188,17 @@ function orgRepoSlug(repositoryUrl) {
   return (repositoryUrl || '').replace(/^https?:\/\/[^/]+\//, '').replace(/\/$/, '');
 }
 
+// A manifest node either carries its branch in path-to-scan (tree/<branch>/<folder>) or names it in
+// "branch", with path-to-scan then just the folder within that branch.
+function scanSourceUrl(repositoryUrl, node) {
+  const scanPath = node?.['path-to-scan'];
+  if (typeof scanPath !== 'string' || !repositoryUrl) return '';
+  const repository = repositoryUrl.replace(/\/$/, '');
+  if (!node.branch) return scanPath ? `${repository}/${scanPath}` : '';
+  const folder = scanPath.split('/').filter(Boolean).join('/');
+  return `${repository}/tree/${node.branch}${folder ? `/${folder}` : ''}`;
+}
+
 function namespaceServiceSegment(namespace) {
   const orgPrefixes = new Set(['sfa', 'esfa', 'das']);
   const parts = String(namespace || '').split('.');
@@ -1863,10 +1874,10 @@ function databaseRows({ source, schema }) {
   const rowId = `db-${source.id}`;
   const expanded = state.dashboardExpanded.has(rowId);
   const database = schema.database;
-  const scanPath = source.scans.dbschema?.['path-to-scan'];
+  const scanUrl = scanSourceUrl(source.repository, source.scans.dbschema);
   const links = `<div class="badges dashboard-links">
       <button class="badge blue as-link" type="button" data-open-schema="${escapeHtml(source.id)}">View schema →</button>
-      ${scanPath ? `<a class="badge as-link" href="${escapeHtml(`${source.repository.replace(/\/$/, '')}/${scanPath}`)}" target="_blank" rel="noopener noreferrer">Source ↗</a>` : ''}
+      ${scanUrl ? `<a class="badge as-link" href="${escapeHtml(scanUrl)}" target="_blank" rel="noopener noreferrer">Source ↗</a>` : ''}
       <a class="badge as-link" href="/api/sources/${encodeURIComponent(source.id)}/database" target="_blank" rel="noopener noreferrer">JSON ↗</a>
     </div>`;
   const summaryRow = `<tr class="repo-alert-row" data-toggle-alerts="${escapeHtml(rowId)}">
