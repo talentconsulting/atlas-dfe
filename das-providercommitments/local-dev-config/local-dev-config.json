@@ -13,14 +13,14 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments.Web/Extensions/CacheStartupExtensions.cs",
-          "reason": "Code calls AddStackExchangeRedisCache and configures it with a Redis connection string from configuration."
+          "reason": "AddStackExchangeRedisCache is used with a configuration key for RedisConnectionString."
         }
       ]
     },
     {
       "name": "Azure Blob Storage",
       "kind": "object-storage",
-      "technology": null,
+      "technology": "azureblob",
       "configurationKeys": [
         "BlobStorageSettings:BulkuploadContainer",
         "BlobStorageSettings:ConnectionString"
@@ -28,7 +28,7 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments/Infrastructure/BlobFileTransferClient.cs",
-          "reason": "Code constructs a BlobServiceClient with a connection string and a container client."
+          "reason": "BlobStorageSettings class is used to initialize a BlobServiceClient with connection string and container."
         }
       ]
     },
@@ -43,71 +43,96 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments/Configuration/BlobStorageSettings.cs",
-          "reason": "BlobStorageSettings class defines configuration keys for a storage service."
+          "reason": "Connection string and container settings for a blob storage service were defined in a strongly-typed configuration class."
         }
       ]
     }
   ],
   "configurationKeys": [
     {
+      "key": "AllowedHosts",
+      "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments.Web/appsettings.json",
+      "reason": "Allowed hosts configuration defined in the appsettings.json file."
+    },
+    {
+      "key": "ApprovalsOuterApiConfiguration:ApiBaseUrl",
+      "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments/Configuration/ApprovalsOuterApiConfiguration.cs",
+      "reason": "API base URL for the ApprovalsOuter API defined in a strongly-typed configuration class."
+    },
+    {
+      "key": "ApprovalsOuterApiConfiguration:ApiVersion",
+      "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments/Configuration/ApprovalsOuterApiConfiguration.cs",
+      "reason": "API version for the ApprovalsOuter API defined in a strongly-typed configuration class."
+    },
+    {
+      "key": "ApprovalsOuterApiConfiguration:SubscriptionKey",
+      "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments/Configuration/ApprovalsOuterApiConfiguration.cs",
+      "reason": "Subscription key for the ApprovalsOuter API defined in a strongly-typed configuration class."
+    },
+    {
       "key": "BlobStorageSettings:BulkuploadContainer",
       "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments/Configuration/BlobStorageSettings.cs",
-      "reason": "Defined in BlobStorageSettings for specifying bulk upload container."
+      "reason": "Blob storage container setting defined in a strongly-typed configuration class."
     },
     {
       "key": "BlobStorageSettings:BulkuploadContainer",
       "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments/Infrastructure/BlobFileTransferClient.cs",
-      "reason": "Container name for Azure Blob Storage bulk upload files."
+      "reason": "Referenced in BlobContainerClient setup for Azure Blob Storage."
     },
     {
       "key": "BlobStorageSettings:ConnectionString",
       "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments/Configuration/BlobStorageSettings.cs",
-      "reason": "Defined in BlobStorageSettings for configuring blob storage connection."
+      "reason": "Blob storage connection string setting defined in a strongly-typed configuration class."
     },
     {
       "key": "BlobStorageSettings:ConnectionString",
       "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments/Infrastructure/BlobFileTransferClient.cs",
-      "reason": "Connection string for Azure Blob Storage client."
+      "reason": "Referenced in BlobServiceClient initialization for Azure Blob Storage."
     },
     {
       "key": "cdn:url",
       "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments.Web/appsettings.json",
-      "reason": "Referenced in appsettings.json under the 'cdn' section."
+      "reason": "CDN URL configuration defined in the appsettings.json file."
     },
     {
       "key": "ConfigNames",
       "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments.Web/appsettings.json",
-      "reason": "Referenced in appsettings.json to define configuration names."
+      "reason": "Configuration names setting defined in the appsettings.json file."
     },
     {
       "key": "DataProtectionConnectionStrings:RedisConnectionString",
       "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments.Web/Extensions/CacheStartupExtensions.cs",
-      "reason": "Redis connection string used for caching outside of development environment."
+      "reason": "Referenced in Redis cache configuration for StackExchangeRedisCache."
+    },
+    {
+      "key": "Logging:LogLevel:Default",
+      "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments.Web/appsettings.json",
+      "reason": "Logging level configuration defined in the appsettings.json file."
     },
     {
       "key": "ResourceEnvironmentName",
       "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments.Web/appsettings.json",
-      "reason": "Referenced in appsettings.json for environment configuration."
+      "reason": "Resource environment name configuration defined in the appsettings.json file."
     },
     {
       "key": "UseLocalRegistry",
       "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments.Web/appsettings.json",
-      "reason": "Boolean setting in appsettings.json for local registry usage."
+      "reason": "Flag for enabling the use of a local registry defined in the appsettings.json file."
     },
     {
       "key": "UseStubProviderAuth",
       "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments.Web/appsettings.json",
-      "reason": "Boolean setting in appsettings.json for provider authentication stubs."
+      "reason": "Stub provider authentication configuration defined in the appsettings.json file."
     },
     {
       "key": "UseStubProviderRelationships",
       "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments.Web/appsettings.json",
-      "reason": "Boolean setting in appsettings.json for use of stub services."
+      "reason": "Stub provider relationships configuration defined in the appsettings.json file."
     },
     {
       "key": "UseStubProviderValidation",
       "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments.Web/appsettings.json",
-      "reason": "Boolean setting in appsettings.json for provider validation stubs."
+      "reason": "Stub provider validation configuration defined in the appsettings.json file."
     }
   ]
 }

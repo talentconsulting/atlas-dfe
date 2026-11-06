@@ -14,49 +14,83 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/Infrastructure/ApplicationConfiguration.cs",
-          "reason": "The ApplicationConfiguration class requires RedisConnectionString and DataProtectionKeysDatabase properties, which are used to configure the Redis connection."
-        },
-        {
-          "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/AppStart/AddDataProtectionExtension.cs",
-          "reason": "The ConnectionMultiplexer.Connect method is used to connect to Redis with configuration properties for RedisConnectionString and DataProtectionKeysDatabase."
+          "reason": "Property 'RedisConnectionString' in the ApplicationConfiguration class indicates a dependency on Redis."
         },
         {
           "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/AppStart/AddSessionExtension.cs",
-          "reason": "AddStackExchangeRedisCache configured with options.Configuration set to a Redis connection string."
+          "reason": "Detected usage of AddStackExchangeRedisCache with application configuration for Redis connection."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/AppStart/AddDataProtectionExtension.cs",
+          "reason": "Detected usage of StackExchange.Redis ConnectionMultiplexer and DataProtection configuration settings."
+        }
+      ]
+    },
+    {
+      "name": "SQL Server",
+      "kind": "database",
+      "technology": "sqlserver",
+      "configurationKeys": [
+        "ApplicationConfiguration:DataProtectionKeysDatabase"
+      ],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/Infrastructure/ApplicationConfiguration.cs",
+          "reason": "Property 'DataProtectionKeysDatabase' in the ApplicationConfiguration class indicates a dependency on a database."
         }
       ]
     }
   ],
   "configurationKeys": [
     {
+      "key": "AdminRoatpOuterApiConfiguration:ApiBaseUrl",
+      "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/Infrastructure/AdminRoatpOuterApiConfiguration.cs",
+      "reason": "Constructor parameter 'ApiBaseUrl' in AdminRoatpOuterApiConfiguration indicates a required configuration key."
+    },
+    {
+      "key": "AdminRoatpOuterApiConfiguration:ApiVersion",
+      "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/Infrastructure/AdminRoatpOuterApiConfiguration.cs",
+      "reason": "Constructor parameter 'ApiVersion' in AdminRoatpOuterApiConfiguration indicates a required configuration key."
+    },
+    {
+      "key": "AdminRoatpOuterApiConfiguration:SubscriptionKey",
+      "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/Infrastructure/AdminRoatpOuterApiConfiguration.cs",
+      "reason": "Constructor parameter 'SubscriptionKey' in AdminRoatpOuterApiConfiguration indicates a required configuration key."
+    },
+    {
       "key": "ApplicationConfiguration:AdminServicesBaseUrl",
       "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/Infrastructure/ApplicationConfiguration.cs",
-      "reason": "Declared as a required property in the ApplicationConfiguration class."
+      "reason": "Property 'AdminServicesBaseUrl' in the ApplicationConfiguration class indicates a required configuration key."
+    },
+    {
+      "key": "ApplicationConfiguration:DataProtectionKeysDatabase",
+      "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/AppStart/AddDataProtectionExtension.cs",
+      "reason": "Used to specify the Redis database for persisting Data Protection keys."
     },
     {
       "key": "ApplicationConfiguration:DataProtectionKeysDatabase",
       "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/Infrastructure/ApplicationConfiguration.cs",
-      "reason": "Declared as a required property in the ApplicationConfiguration class."
+      "reason": "Property 'DataProtectionKeysDatabase' in the ApplicationConfiguration class indicates a required configuration key."
     },
     {
       "key": "ApplicationConfiguration:DfESignInServiceHelpUrl",
       "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/Infrastructure/ApplicationConfiguration.cs",
-      "reason": "Declared as a required property in the ApplicationConfiguration class."
+      "reason": "Property 'DfESignInServiceHelpUrl' in the ApplicationConfiguration class indicates a required configuration key."
     },
     {
       "key": "ApplicationConfiguration:RedisConnectionString",
-      "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/AppStart/AddSessionExtension.cs",
-      "reason": "Configuration for Redis cache connection is retrieved from ApplicationConfiguration section."
+      "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/AppStart/AddDataProtectionExtension.cs",
+      "reason": "Required for connecting to Redis in data-protection and session management implementations."
     },
     {
       "key": "ApplicationConfiguration:RedisConnectionString",
       "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/Infrastructure/ApplicationConfiguration.cs",
-      "reason": "Declared as a required property in the ApplicationConfiguration class."
+      "reason": "Property 'RedisConnectionString' in the ApplicationConfiguration class indicates a required configuration key."
     },
     {
       "key": "EnvironmentName",
       "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/AppStart/AddSessionExtension.cs",
-      "reason": "EnvironmentName is used to determine if the application is running in a local environment."
+      "reason": "Used to determine whether the application is running in the local environment."
     }
   ]
 }

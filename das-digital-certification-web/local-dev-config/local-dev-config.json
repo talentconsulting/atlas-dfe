@@ -8,208 +8,118 @@
       "kind": "cache",
       "technology": "redis",
       "configurationKeys": [
-        "DigitalCertificatesWebConfiguration:RedisConnectionString",
+        "DataProtectionKeysDatabase",
         "RedisConnectionString"
       ],
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.DigitalCertificates.Infrastructure/Configuration/DigitalCertificatesWebConfiguration.cs",
-          "reason": "Redis connection string is required to configure caching."
+          "reason": "RedisConnectionString is explicitly defined as a required configuration in DigitalCertificatesWebConfiguration."
         },
         {
           "sourceFile": "src/SFA.DAS.DigitalCertificates.Web/StartupExtensions/CacheStartupExtensions.cs",
-          "reason": "Redis cache configuration via AddStackExchangeRedisCache with options.Configuration linked to RedisConnectionString."
+          "reason": "The AddStackExchangeRedisCache method is configured with the RedisConnectionString for non-development environments."
         },
         {
           "sourceFile": "src/SFA.DAS.DigitalCertificates.Web/StartupExtensions/DataProtectionStartupExtensions.cs",
-          "reason": "Redis connection used for data protection keys using RedisConnectionString."
+          "reason": "The DataProtection service is configured with RedisConnectionString and DataProtectionKeysDatabase."
         }
       ]
     },
     {
-      "name": "Azurite",
-      "kind": "object-storage",
-      "technology": "azurite",
-      "configurationKeys": [
-        "ConfigurationStorageConnectionString",
-        "StorageConnectionString"
-      ],
-      "evidence": [
-        {
-          "sourceFile": "src/SFA.DAS.DigitalCertificates.Infrastructure/Configuration/DigitalCertificatesWebConfiguration.cs",
-          "reason": "Configuration references storage connection string for Azurite."
-        },
-        {
-          "sourceFile": "src/SFA.DAS.DigitalCertificates.Web/appsettings.json",
-          "reason": "Configuration references storage connection strings pointing to local emulator."
-        }
-      ]
-    },
-    {
-      "name": "Blob Storage",
+      "name": "Azure Blob Storage",
       "kind": "object-storage",
       "technology": "azureblob",
       "configurationKeys": [
+        "ContainerName",
         "StorageConnectionString"
       ],
       "evidence": [
         {
+          "sourceFile": "src/SFA.DAS.DigitalCertificates.Web/Services/BlobService.cs",
+          "reason": "BlobService uses BlobServiceClient which requires a connection string and container name for Azure Blob Storage."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.DigitalCertificates.Infrastructure/Configuration/DigitalCertificatesWebConfiguration.cs",
+          "reason": "StorageConnectionString and ContainerName are defined as required properties in DigitalCertificatesWebConfiguration to support blob storage operations."
+        },
+        {
           "sourceFile": "src/SFA.DAS.DigitalCertificates.Web/StartupExtensions/AddServiceRegistrationExtensions.cs",
-          "reason": "BlobServiceClient created with connection string retrieved from StorageConnectionString."
+          "reason": "The BlobServiceClient is registered using the StorageConnectionString."
         }
       ]
     }
   ],
   "configurationKeys": [
     {
-      "key": "AllowedHosts",
-      "sourceFile": "src/SFA.DAS.DigitalCertificates.Web/appsettings.json",
-      "reason": "Hosts allowed by the application."
-    },
-    {
       "key": "APPLICATIONINSIGHTS_CONNECTION_STRING",
       "sourceFile": "src/SFA.DAS.DigitalCertificates.Web/appsettings.json",
-      "reason": "Instrumentation key for Application Insights."
+      "reason": "Listed in appsettings.json as required for application insights."
     },
     {
       "key": "AsposeLicenseContainerName",
       "sourceFile": "src/SFA.DAS.DigitalCertificates.Infrastructure/Configuration/DigitalCertificatesWebConfiguration.cs",
-      "reason": "Azure Blob storage container for Aspose license required for document generation."
+      "reason": "Appears as a required configuration for identifying the license container."
     },
     {
       "key": "cdn:url",
       "sourceFile": "src/SFA.DAS.DigitalCertificates.Web/appsettings.json",
-      "reason": "URL for the CDN endpoint."
-    },
-    {
-      "key": "ConfigNames",
-      "sourceFile": "src/SFA.DAS.DigitalCertificates.Web/appsettings.json",
-      "reason": "Names of configurations to load for the application."
+      "reason": "URL for a content delivery network appears in appsettings.json."
     },
     {
       "key": "ConfigurationStorageConnectionString",
       "sourceFile": "src/SFA.DAS.DigitalCertificates.Web/appsettings.json",
-      "reason": "Required for configuring connections to Azurite storage emulator."
+      "reason": "Used for accessing the configuration storage as evidenced in appsettings.json."
     },
     {
       "key": "ContainerName",
       "sourceFile": "src/SFA.DAS.DigitalCertificates.Infrastructure/Configuration/DigitalCertificatesWebConfiguration.cs",
-      "reason": "Azure Blob storage container name required for accessing blobs."
+      "reason": "Required for identifying the blob container in Azure Blob Storage."
     },
     {
       "key": "DataProtectionKeysDatabase",
       "sourceFile": "src/SFA.DAS.DigitalCertificates.Infrastructure/Configuration/DigitalCertificatesWebConfiguration.cs",
-      "reason": "Required for storing data protection keys to a database."
+      "reason": "Appears as a required configuration for storing data protection keys."
     },
     {
-      "key": "DigitalCertificatesWebConfiguration:DataProtectionKeysDatabase",
+      "key": "DataProtectionKeysDatabase",
       "sourceFile": "src/SFA.DAS.DigitalCertificates.Web/StartupExtensions/DataProtectionStartupExtensions.cs",
-      "reason": "Required for identifying database index in Redis for storing data protection keys."
-    },
-    {
-      "key": "DigitalCertificatesWebConfiguration:RedisConnectionString",
-      "sourceFile": "src/SFA.DAS.DigitalCertificates.Web/StartupExtensions/CacheStartupExtensions.cs",
-      "reason": "Required for configuring Redis cache in production environment."
-    },
-    {
-      "key": "DigitalCertificatesWebConfiguration:RedisConnectionString",
-      "sourceFile": "src/SFA.DAS.DigitalCertificates.Web/StartupExtensions/DataProtectionStartupExtensions.cs",
-      "reason": "Required for configuring data protection keys with Redis."
-    },
-    {
-      "key": "EnvironmentName",
-      "sourceFile": "src/SFA.DAS.DigitalCertificates.Web/appsettings.json",
-      "reason": "Current environment name for application."
-    },
-    {
-      "key": "FrameworkTemplateBlobName",
-      "sourceFile": "src/SFA.DAS.DigitalCertificates.Infrastructure/Configuration/DigitalCertificatesWebConfiguration.cs",
-      "reason": "Azure Blob storage name for the framework template required for document generation."
-    },
-    {
-      "key": "GreenStandardTemplateBlobName",
-      "sourceFile": "src/SFA.DAS.DigitalCertificates.Infrastructure/Configuration/DigitalCertificatesWebConfiguration.cs",
-      "reason": "Azure Blob storage name for the green standard template required for document generation."
-    },
-    {
-      "key": "LicenseBlobName",
-      "sourceFile": "src/SFA.DAS.DigitalCertificates.Infrastructure/Configuration/DigitalCertificatesWebConfiguration.cs",
-      "reason": "Azure Blob storage name for the license blob required for document generation."
-    },
-    {
-      "key": "MasterPassword",
-      "sourceFile": "src/SFA.DAS.DigitalCertificates.Infrastructure/Configuration/DigitalCertificatesWebConfiguration.cs",
-      "reason": "Secure master password for decrypting certain features."
+      "reason": "DataProtection configuration requires DataProtectionKeysDatabase setting."
     },
     {
       "key": "OneLoginBaseUrl",
       "sourceFile": "src/SFA.DAS.DigitalCertificates.Infrastructure/Configuration/DigitalCertificatesWebConfiguration.cs",
-      "reason": "Base URL for OneLogin is required for application startup."
+      "reason": "OneLoginBaseUrl is explicitly defined as a required configuration."
     },
     {
       "key": "OneLoginSettingsPath",
       "sourceFile": "src/SFA.DAS.DigitalCertificates.Infrastructure/Configuration/DigitalCertificatesWebConfiguration.cs",
-      "reason": "Path for OneLogin settings required for application startup."
+      "reason": "OneLoginSettingsPath is explicitly defined as a required configuration."
     },
     {
       "key": "RedisConnectionString",
       "sourceFile": "src/SFA.DAS.DigitalCertificates.Infrastructure/Configuration/DigitalCertificatesWebConfiguration.cs",
-      "reason": "Required to configure Redis as a cache service."
+      "reason": "RedisConnectionString is explicitly defined as a required configuration in DigitalCertificatesWebConfiguration."
     },
     {
-      "key": "RedisLogging",
-      "sourceFile": "src/SFA.DAS.DigitalCertificates.Web/appsettings.json",
-      "reason": "Redis connection for logging, configured through appsettings.json."
+      "key": "RedisConnectionString",
+      "sourceFile": "src/SFA.DAS.DigitalCertificates.Web/StartupExtensions/CacheStartupExtensions.cs",
+      "reason": "Redis cache configuration requires RedisConnectionString for non-development environments."
     },
     {
-      "key": "ResourceEnvironmentName",
-      "sourceFile": "src/SFA.DAS.DigitalCertificates.Web/appsettings.json",
-      "reason": "Resource-specific environment name for the application."
-    },
-    {
-      "key": "ServiceBaseUrl",
-      "sourceFile": "src/SFA.DAS.DigitalCertificates.Infrastructure/Configuration/DigitalCertificatesWebConfiguration.cs",
-      "reason": "Base URL for the service is required for application startup."
-    },
-    {
-      "key": "StandardTemplateBlobName",
-      "sourceFile": "src/SFA.DAS.DigitalCertificates.Infrastructure/Configuration/DigitalCertificatesWebConfiguration.cs",
-      "reason": "Azure Blob storage name for the standard template required for document generation."
+      "key": "RedisConnectionString",
+      "sourceFile": "src/SFA.DAS.DigitalCertificates.Web/StartupExtensions/DataProtectionStartupExtensions.cs",
+      "reason": "DataProtection service configuration requires RedisConnectionString."
     },
     {
       "key": "StorageConnectionString",
       "sourceFile": "src/SFA.DAS.DigitalCertificates.Infrastructure/Configuration/DigitalCertificatesWebConfiguration.cs",
-      "reason": "Required for configuring connections to Azurite storage emulator."
+      "reason": "Required for Azure Blob Storage interactions defined by DigitalCertificatesWebConfiguration."
     },
     {
       "key": "StorageConnectionString",
       "sourceFile": "src/SFA.DAS.DigitalCertificates.Web/StartupExtensions/AddServiceRegistrationExtensions.cs",
-      "reason": "Required for BlobServiceClient instantiation."
-    },
-    {
-      "key": "StubAuth",
-      "sourceFile": "src/SFA.DAS.DigitalCertificates.Web/appsettings.json",
-      "reason": "Stub auth for local testing."
-    },
-    {
-      "key": "StubEmail",
-      "sourceFile": "src/SFA.DAS.DigitalCertificates.Web/appsettings.json",
-      "reason": "Stub email for local testing."
-    },
-    {
-      "key": "StubId",
-      "sourceFile": "src/SFA.DAS.DigitalCertificates.Web/appsettings.json",
-      "reason": "Stub Id for local testing."
-    },
-    {
-      "key": "StubPhone",
-      "sourceFile": "src/SFA.DAS.DigitalCertificates.Web/appsettings.json",
-      "reason": "Stub phone for local testing."
-    },
-    {
-      "key": "Version",
-      "sourceFile": "src/SFA.DAS.DigitalCertificates.Web/appsettings.json",
-      "reason": "Version of the application."
+      "reason": "BlobServiceClient registration requires StorageConnectionString."
     }
   ]
 }

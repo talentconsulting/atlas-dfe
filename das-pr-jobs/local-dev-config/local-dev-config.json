@@ -1,0 +1,89 @@
+{
+  "repository": "SkillsFundingAgency/das-pr-jobs",
+  "ref": "main",
+  "path": "src",
+  "localServices": [
+    {
+      "name": "SQL Server",
+      "kind": "database",
+      "technology": "sqlserver",
+      "configurationKeys": [
+        "ConnectionStrings:ProviderRelationshipsDatabase",
+        "EnvironmentName",
+        "SqlConnectionString"
+      ],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.PR.Data/Extensions/AddPrDataContextExtension.cs",
+          "reason": "Code constructs SqlConnection using SqlConnectionString and EnvironmentName"
+        },
+        {
+          "sourceFile": "src/SFA.DAS.PR.Data/ProviderRelationshipsDataContext.cs",
+          "reason": "The provided DbContext class for EF Core receives its configuration from DbContextOptions, typically initialized with a connection string in a 'ConnectionStrings' setting."
+        }
+      ]
+    }
+  ],
+  "configurationKeys": [
+    {
+      "key": "ConnectionStrings:ProviderRelationshipsDatabase",
+      "sourceFile": "src/SFA.DAS.PR.Data/ProviderRelationshipsDataContext.cs",
+      "reason": "The DbContext class relies on a connection string, conventionally stored under the 'ConnectionStrings' section, for database access."
+    },
+    {
+      "key": "EnvironmentName",
+      "sourceFile": "src/SFA.DAS.PR.Data/Extensions/AddPrDataContextExtension.cs",
+      "reason": "Configuration key used to determine if the environment is LOCAL"
+    },
+    {
+      "key": "ExpiredRequestsFunctionSchedule",
+      "sourceFile": "src/SFA.DAS.PR.Jobs/Functions/Requests/ExpiredRequestsFunction.cs",
+      "reason": "The TimerTrigger attribute in ExpiredRequestsFunction references a '%ExpiredRequestsFunctionSchedule%' app setting for scheduling."
+    },
+    {
+      "key": "Notifications:BatchSize",
+      "sourceFile": "src/SFA.DAS.PR.Jobs/Configuration/NotificationsConfiguration.cs",
+      "reason": "Required as a property in NotificationsConfiguration for notifications"
+    },
+    {
+      "key": "Notifications:EmployerAccountsBaseUrl",
+      "sourceFile": "src/SFA.DAS.PR.Jobs/Configuration/NotificationsConfiguration.cs",
+      "reason": "Required as a property in NotificationsConfiguration for notifications"
+    },
+    {
+      "key": "Notifications:EmployerPRBaseUrl",
+      "sourceFile": "src/SFA.DAS.PR.Jobs/Configuration/NotificationsConfiguration.cs",
+      "reason": "Required as a property in NotificationsConfiguration for notifications"
+    },
+    {
+      "key": "Notifications:NotificationRetentionDays",
+      "sourceFile": "src/SFA.DAS.PR.Jobs/Configuration/NotificationsConfiguration.cs",
+      "reason": "Required as a property in NotificationsConfiguration for notifications"
+    },
+    {
+      "key": "Notifications:ProviderPortalUrl",
+      "sourceFile": "src/SFA.DAS.PR.Jobs/Configuration/NotificationsConfiguration.cs",
+      "reason": "Required as a property in NotificationsConfiguration for notifications"
+    },
+    {
+      "key": "Notifications:ProviderPRBaseUrl",
+      "sourceFile": "src/SFA.DAS.PR.Jobs/Configuration/NotificationsConfiguration.cs",
+      "reason": "Required as a property in NotificationsConfiguration for notifications"
+    },
+    {
+      "key": "Notifications:RequestExpiry",
+      "sourceFile": "src/SFA.DAS.PR.Jobs/Configuration/NotificationsConfiguration.cs",
+      "reason": "Required as a property in NotificationsConfiguration for notifications"
+    },
+    {
+      "key": "NotificationsConfiguration:RequestExpiry",
+      "sourceFile": "src/SFA.DAS.PR.Jobs/Functions/Requests/ExpiredRequestsFunction.cs",
+      "reason": "The ExpiredRequestsFunction references this configuration key through the bound NotificationsConfiguration class and the IOptions service."
+    },
+    {
+      "key": "SqlConnectionString",
+      "sourceFile": "src/SFA.DAS.PR.Data/Extensions/AddPrDataContextExtension.cs",
+      "reason": "Configuration key used to specify the connection string for SQL Server"
+    }
+  ]
+}

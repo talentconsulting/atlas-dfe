@@ -1,0 +1,265 @@
+{
+  "repository": "SkillsFundingAgency/das-tools-servicebus-support",
+  "ref": "master",
+  "path": "src",
+  "localServices": [
+    {
+      "name": "Redis",
+      "kind": "cache",
+      "technology": "redis",
+      "configurationKeys": [
+        "RedisConnectionString"
+      ],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Tools.Servicebus.Support.Web/App_Start/DistributedCacheConfigurationExtension.cs",
+          "reason": "Redis connection string used to configure data protection and distributed caching in production environment."
+        }
+      ]
+    },
+    {
+      "name": "Cosmos DB",
+      "kind": "database",
+      "technology": "cosmosdb",
+      "configurationKeys": [
+        "CosmosDbSettings:AuthKey",
+        "CosmosDbSettings:Url"
+      ],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Tools.Servicebus.Support.Web/App_Start/ConfigureServices.cs",
+          "reason": "CosmosClient initialized with settings from CosmosDbSettings configuration."
+        }
+      ]
+    },
+    {
+      "name": "CosmosDb",
+      "kind": "database",
+      "technology": "cosmosdb",
+      "configurationKeys": [
+        "CosmosDbSettings:AuthKey",
+        "CosmosDbSettings:CollectionName",
+        "CosmosDbSettings:DatabaseName",
+        "CosmosDbSettings:DefaultCosmosInterimRequestTimeout",
+        "CosmosDbSettings:DefaultCosmosOperationTimeout",
+        "CosmosDbSettings:Throughput",
+        "CosmosDbSettings:Url"
+      ],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Tools.Servicebus.Support.Core/Configuration/CosmosDbSettings.cs",
+          "reason": "Class defining configuration for CosmosDb service with relevant connection and settings keys."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.Tools.Servicebus.Support.Web/App_Start/ConfigureConfiguration.cs",
+          "reason": "CosmosDbSettings is configured within the AddConfiguration method."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.Tools.Servicebus.Support.Functions/IoC.cs",
+          "reason": "CosmosDbSettings is used to configure a CosmosClient."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.Tools.Servicebus.Support.Infrastructure/Services/CosmosDb/CosmosInfrastructureService.cs",
+          "reason": "CosmosDbSettings values are used to configure database and collection for Cosmos DB."
+        }
+      ]
+    }
+  ],
+  "configurationKeys": [
+    {
+      "key": "APPINSIGHTS_INSTRUMENTATIONKEY",
+      "sourceFile": "src/SFA.DAS.Tools.Servicebus.Support.Web/appsettings.json",
+      "reason": "Instrumentation key for application insights."
+    },
+    {
+      "key": "AuditApiSettings:ApiBaseUrl",
+      "sourceFile": "src/SFA.DAS.Tools.Servicebus.Support.Audit/AuditApiConfiguration.cs",
+      "reason": "Class property suggesting external configuration for Audit API base URL."
+    },
+    {
+      "key": "AuditApiSettings:ClientId",
+      "sourceFile": "src/SFA.DAS.Tools.Servicebus.Support.Audit/AuditApiConfiguration.cs",
+      "reason": "Class property suggesting external configuration for Azure AD client ID."
+    },
+    {
+      "key": "AuditApiSettings:ClientSecret",
+      "sourceFile": "src/SFA.DAS.Tools.Servicebus.Support.Audit/AuditApiConfiguration.cs",
+      "reason": "Class property suggesting external configuration for Azure AD client secret."
+    },
+    {
+      "key": "AuditApiSettings:IdentifierUri",
+      "sourceFile": "src/SFA.DAS.Tools.Servicebus.Support.Audit/AuditApiConfiguration.cs",
+      "reason": "Class property suggesting external configuration for Azure AD identifier URI."
+    },
+    {
+      "key": "AuditApiSettings:Tenant",
+      "sourceFile": "src/SFA.DAS.Tools.Servicebus.Support.Audit/AuditApiConfiguration.cs",
+      "reason": "Class property suggesting external configuration for Azure AD tenant."
+    },
+    {
+      "key": "AzureAdConfiguration:Authority",
+      "sourceFile": "src/SFA.DAS.Tools.Servicebus.Support.Web/appsettings.json",
+      "reason": "Used to configure Azure AD authority for authentication."
+    },
+    {
+      "key": "AzureAdConfiguration:ClientId",
+      "sourceFile": "src/SFA.DAS.Tools.Servicebus.Support.Web/appsettings.json",
+      "reason": "Used to configure Azure AD client ID for authentication."
+    },
+    {
+      "key": "AzureAdConfiguration:ClientSecret",
+      "sourceFile": "src/SFA.DAS.Tools.Servicebus.Support.Web/appsettings.json",
+      "reason": "Used to configure Azure AD client secret for authentication."
+    },
+    {
+      "key": "ConfigNames",
+      "sourceFile": "src/SFA.DAS.Tools.Servicebus.Support.Web/appsettings.json",
+      "reason": "Defines configuration names for the application."
+    },
+    {
+      "key": "ConfigurationStorageConnectionString",
+      "sourceFile": "src/SFA.DAS.Tools.Servicebus.Support.Web/appsettings.json",
+      "reason": "Storage connection string required for application configuration."
+    },
+    {
+      "key": "CosmosDbSettings:AuthKey",
+      "sourceFile": "src/SFA.DAS.Tools.Servicebus.Support.Core/Configuration/CosmosDbSettings.cs",
+      "reason": "Class property indicating the Cosmos DB authentication key configuration."
+    },
+    {
+      "key": "CosmosDbSettings:AuthKey",
+      "sourceFile": "src/SFA.DAS.Tools.Servicebus.Support.Functions/IoC.cs",
+      "reason": "Used to authenticate the CosmosClient."
+    },
+    {
+      "key": "CosmosDbSettings:AuthKey",
+      "sourceFile": "src/SFA.DAS.Tools.Servicebus.Support.Web/App_Start/ConfigureServices.cs",
+      "reason": "Used to configure the AuthKey for Cosmos DB in the CosmosClient."
+    },
+    {
+      "key": "CosmosDbSettings:CollectionName",
+      "sourceFile": "src/SFA.DAS.Tools.Servicebus.Support.Core/Configuration/CosmosDbSettings.cs",
+      "reason": "Class property indicating the Cosmos DB collection name configuration."
+    },
+    {
+      "key": "CosmosDbSettings:CollectionName",
+      "sourceFile": "src/SFA.DAS.Tools.Servicebus.Support.Infrastructure/Services/CosmosDb/CosmosInfrastructureService.cs",
+      "reason": "Defines the collection name for Cosmos DB operations."
+    },
+    {
+      "key": "CosmosDbSettings:DatabaseName",
+      "sourceFile": "src/SFA.DAS.Tools.Servicebus.Support.Core/Configuration/CosmosDbSettings.cs",
+      "reason": "Class property indicating the Cosmos DB database name configuration."
+    },
+    {
+      "key": "CosmosDbSettings:DatabaseName",
+      "sourceFile": "src/SFA.DAS.Tools.Servicebus.Support.Infrastructure/Services/CosmosDb/CosmosInfrastructureService.cs",
+      "reason": "Defines the database name for Cosmos DB operations."
+    },
+    {
+      "key": "CosmosDbSettings:DefaultCosmosInterimRequestTimeout",
+      "sourceFile": "src/SFA.DAS.Tools.Servicebus.Support.Core/Configuration/CosmosDbSettings.cs",
+      "reason": "Class property indicating the Cosmos DB interim request timeout configuration."
+    },
+    {
+      "key": "CosmosDbSettings:DefaultCosmosOperationTimeout",
+      "sourceFile": "src/SFA.DAS.Tools.Servicebus.Support.Core/Configuration/CosmosDbSettings.cs",
+      "reason": "Class property indicating the Cosmos DB operation timeout configuration."
+    },
+    {
+      "key": "CosmosDbSettings:Throughput",
+      "sourceFile": "src/SFA.DAS.Tools.Servicebus.Support.Core/Configuration/CosmosDbSettings.cs",
+      "reason": "Class property indicating the Cosmos DB throughput configuration."
+    },
+    {
+      "key": "CosmosDbSettings:Throughput",
+      "sourceFile": "src/SFA.DAS.Tools.Servicebus.Support.Infrastructure/Services/CosmosDb/CosmosInfrastructureService.cs",
+      "reason": "Defines the throughput for the Cosmos DB collection."
+    },
+    {
+      "key": "CosmosDbSettings:Url",
+      "sourceFile": "src/SFA.DAS.Tools.Servicebus.Support.Core/Configuration/CosmosDbSettings.cs",
+      "reason": "Class property indicating the Cosmos DB URL configuration."
+    },
+    {
+      "key": "CosmosDbSettings:Url",
+      "sourceFile": "src/SFA.DAS.Tools.Servicebus.Support.Functions/IoC.cs",
+      "reason": "Used to configure the CosmosClient."
+    },
+    {
+      "key": "CosmosDbSettings:Url",
+      "sourceFile": "src/SFA.DAS.Tools.Servicebus.Support.Web/App_Start/ConfigureServices.cs",
+      "reason": "Used to configure the Url for Cosmos DB in the CosmosClient."
+    },
+    {
+      "key": "EnvironmentName",
+      "sourceFile": "src/SFA.DAS.Tools.Servicebus.Support.Web/appsettings.json",
+      "reason": "Defines the environment (e.g., LOCAL) for the application."
+    },
+    {
+      "key": "RedisConnectionString",
+      "sourceFile": "src/SFA.DAS.Tools.Servicebus.Support.Web/App_Start/DistributedCacheConfigurationExtension.cs",
+      "reason": "Used to configure the connection to Redis for distributed caching and data protection in production."
+    },
+    {
+      "key": "ServiceBusErrorManagementSettings:ServiceBusErrorManagementSettingsKey",
+      "sourceFile": "src/SFA.DAS.Tools.Servicebus.Support.Functions/IoC.cs",
+      "reason": "Configures service bus error management settings."
+    },
+    {
+      "key": "ServiceBusSettings:ErrorQueueRegex",
+      "sourceFile": "src/SFA.DAS.Tools.Servicebus.Support.Core/Configuration/ServiceBusErrorManagementSettings.cs",
+      "reason": "Class property suggesting external configuration for error queue regex."
+    },
+    {
+      "key": "ServiceBusSettings:PeekMessageBatchSize",
+      "sourceFile": "src/SFA.DAS.Tools.Servicebus.Support.Core/Configuration/ServiceBusErrorManagementSettings.cs",
+      "reason": "Class property suggesting external configuration for message batch size."
+    },
+    {
+      "key": "ServiceBusSettings:QueueSelectionRegex",
+      "sourceFile": "src/SFA.DAS.Tools.Servicebus.Support.Core/Configuration/ServiceBusErrorManagementSettings.cs",
+      "reason": "Class property suggesting external configuration for queue selection regex."
+    },
+    {
+      "key": "ServiceBusSettings:RedactPatterns",
+      "sourceFile": "src/SFA.DAS.Tools.Servicebus.Support.Core/Configuration/ServiceBusErrorManagementSettings.cs",
+      "reason": "Class property suggesting external configuration for redaction patterns."
+    },
+    {
+      "key": "ServiceBusSettings:ServiceBusConnectionString",
+      "sourceFile": "src/SFA.DAS.Tools.Servicebus.Support.Core/Configuration/ServiceBusErrorManagementSettings.cs",
+      "reason": "Class property suggesting external configuration for Service Bus connection string."
+    },
+    {
+      "key": "UserIdentitySettings:NameClaim",
+      "sourceFile": "src/SFA.DAS.Tools.Servicebus.Support.Core/Configuration/UserIdentitySettings.cs",
+      "reason": "Class property suggesting external configuration for name claim."
+    },
+    {
+      "key": "UserIdentitySettings:RequiredRole",
+      "sourceFile": "src/SFA.DAS.Tools.Servicebus.Support.Core/Configuration/UserIdentitySettings.cs",
+      "reason": "Class property suggesting external configuration for required user role."
+    },
+    {
+      "key": "UserIdentitySettings:UserIdentitySettingsKey",
+      "sourceFile": "src/SFA.DAS.Tools.Servicebus.Support.Functions/IoC.cs",
+      "reason": "Configures user identity settings."
+    },
+    {
+      "key": "UserIdentitySettings:UserRefreshSessionIntervalMinutes",
+      "sourceFile": "src/SFA.DAS.Tools.Servicebus.Support.Core/Configuration/UserIdentitySettings.cs",
+      "reason": "Class property suggesting external configuration for user refresh session interval minutes."
+    },
+    {
+      "key": "UserIdentitySettings:UserSessionExpiryHours",
+      "sourceFile": "src/SFA.DAS.Tools.Servicebus.Support.Core/Configuration/UserIdentitySettings.cs",
+      "reason": "Class property suggesting external configuration for user session expiry hours."
+    },
+    {
+      "key": "Version",
+      "sourceFile": "src/SFA.DAS.Tools.Servicebus.Support.Web/appsettings.json",
+      "reason": "Defines the version of the application."
+    }
+  ]
+}
