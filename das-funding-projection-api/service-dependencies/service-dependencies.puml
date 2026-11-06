@@ -1,0 +1,15 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+LAYOUT_WITH_LEGEND()
+
+System_Boundary(sys_SkillsFundingAgency_das_funding_projection_api, "Funding Projection") {
+  Container(c_funding_projection_api, "Funding Projection", "API")
+}
+
+SystemDb_Ext(d_database_sql_server, "SQL Server", "Entity Framework Core")
+SystemQueue_Ext(d_message_broker_service_bus, "Service Bus", "Azure Service Bus")
+
+Rel(c_funding_projection_api, d_database_sql_server, "Reads from and writes to", "Entity Framework Core")
+Rel(c_funding_projection_api, d_message_broker_service_bus, "Publishes messages to and consumes messages from", "Azure Service Bus")
+
+@enduml
