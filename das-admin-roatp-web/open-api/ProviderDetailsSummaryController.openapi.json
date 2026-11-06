@@ -7,11 +7,11 @@
   "paths": {
     "/providers/new/provider-details-summary": {
       "get": {
-        "operationId": "getProviderDetailsSummary",
-        "summary": "Get provider details for summary page",
+        "operationId": "GetProviderDetailsSummary",
+        "summary": "Retrieve provider details summary page.",
         "responses": {
           "200": {
-            "description": "Provider details summary retrieved successfully",
+            "description": "Provider details summary page rendered.",
             "content": {
               "application/json": {
                 "schema": {
@@ -19,12 +19,23 @@
                 }
               }
             }
+          },
+          "422": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": false
+                }
+              }
+            }
           }
         }
       },
       "post": {
-        "operationId": "postProviderDetailsSummary",
-        "summary": "Submit provider details summary",
+        "operationId": "SubmitProviderDetailsSummary",
+        "summary": "Submit provider details summary.",
         "requestBody": {
           "required": true,
           "content": {
@@ -37,21 +48,18 @@
         },
         "responses": {
           "302": {
-            "description": "Redirected after successful form submission"
+            "description": "Redirect to Add Provider Confirmation or back to summary page."
           }
         }
       }
     },
     "/providers/new/provider-added": {
       "get": {
-        "operationId": "getAddProviderConfirmation",
-        "summary": "Get confirmation of provider addition",
+        "operationId": "GetAddProviderConfirmation",
+        "summary": "Retrieve add provider confirmation page.",
         "responses": {
-          "302": {
-            "description": "Redirected if organisation is not submitted"
-          },
           "200": {
-            "description": "Provider confirmation retrieved successfully",
+            "description": "Add provider confirmation page rendered.",
             "content": {
               "application/json": {
                 "schema": {
@@ -59,6 +67,9 @@
                 }
               }
             }
+          },
+          "302": {
+            "description": "Redirect to home page if organisation submission incomplete."
           }
         }
       }
@@ -68,9 +79,18 @@
     "schemas": {
       "ProviderDetailsSummaryViewModel": {
         "type": "object",
+        "required": [
+          "Ukprn",
+          "ProviderTypeChangeLink",
+          "OffersApprenticeshipsChangeLink",
+          "OffersApprenticeshipUnitsChangeLink",
+          "OrganisationTypeChangeLink",
+          "ManageProviderLink"
+        ],
         "properties": {
           "Ukprn": {
-            "type": "integer"
+            "type": "integer",
+            "example": 12345678
           },
           "LegalName": {
             "type": "string"
@@ -94,27 +114,73 @@
             "type": "boolean"
           },
           "ProviderTypeChangeLink": {
-            "type": "string"
+            "type": "string",
+            "example": "#"
           },
           "OffersApprenticeshipsChangeLink": {
-            "type": "string"
+            "type": "string",
+            "example": "#"
           },
           "OffersApprenticeshipUnitsChangeLink": {
-            "type": "string"
+            "type": "string",
+            "example": "#"
           },
           "OrganisationTypeChangeLink": {
-            "type": "string"
+            "type": "string",
+            "example": "#"
           },
           "ManageProviderLink": {
-            "type": "string"
+            "type": "string",
+            "example": "#"
           }
-        },
+        }
+      },
+      "AddProviderSessionModel": {
+        "type": "object",
         "required": [
-          "Ukprn"
-        ]
+          "Ukprn",
+          "LegalName"
+        ],
+        "properties": {
+          "Ukprn": {
+            "type": "integer",
+            "example": 12345678
+          },
+          "LegalName": {
+            "type": "string"
+          },
+          "TradingName": {
+            "type": "string"
+          },
+          "ProviderTypeId": {
+            "type": "integer"
+          },
+          "OffersApprenticeships": {
+            "type": "boolean"
+          },
+          "OffersApprenticeshipUnits": {
+            "type": "boolean"
+          },
+          "OrganisationTypeId": {
+            "type": "integer"
+          },
+          "OrganisationType": {
+            "type": "string"
+          },
+          "RedirectedFromSummaryPage": {
+            "type": "boolean"
+          },
+          "OrganisationSubmitted": {
+            "type": "boolean"
+          }
+        }
       },
       "AddProviderConfirmationViewModel": {
         "type": "object",
+        "required": [
+          "LegalName",
+          "DashboardLink"
+        ],
         "properties": {
           "LegalName": {
             "type": "string"
@@ -122,11 +188,7 @@
           "DashboardLink": {
             "type": "string"
           }
-        },
-        "required": [
-          "LegalName",
-          "DashboardLink"
-        ]
+        }
       }
     }
   }

@@ -1,13 +1,14 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Authorise Controller API",
+    "title": "Authorise API",
     "version": "1.0.0"
   },
   "paths": {
     "/authorise/need-more-information": {
       "get": {
-        "operationId": "NeedMoreInformationRouteGet",
+        "operationId": "NeedMoreInformation",
+        "summary": "Displays the need-more-information page",
         "security": [
           {
             "VerifiedAndNotUlnAuthorised": []
@@ -15,12 +16,16 @@
         ],
         "responses": {
           "200": {
-            "description": "Returns the need more information page."
+            "description": "Successfully rendered the Need More Information page."
+          },
+          "302": {
+            "description": "Redirected to the Not Found page."
           }
         }
       },
       "post": {
-        "operationId": "NeedMoreInformationContinueRoutePost",
+        "operationId": "NeedMoreInformationContinue",
+        "summary": "Proceeds from the need-more-information page",
         "security": [
           {
             "VerifiedAndNotUlnAuthorised": []
@@ -28,14 +33,15 @@
         ],
         "responses": {
           "302": {
-            "description": "Redirects to the know your ULN route."
+            "description": "Redirected to the Know Your ULN page."
           }
         }
       }
     },
     "/authorise/know-your-uln": {
       "get": {
-        "operationId": "KnowYourUlnRouteGet",
+        "operationId": "KnowYourUlnGet",
+        "summary": "Displays the know-your-uln page",
         "security": [
           {
             "VerifiedAndNotUlnAuthorised": []
@@ -43,7 +49,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Returns the know your ULN page.",
+            "description": "Successfully rendered the Know Your ULN page.",
             "content": {
               "application/json": {
                 "schema": {
@@ -55,13 +61,15 @@
         }
       },
       "post": {
-        "operationId": "KnowYourUlnRoutePost",
+        "operationId": "KnowYourUlnPost",
+        "summary": "Handles submission for the know-your-uln page",
         "security": [
           {
             "VerifiedAndNotUlnAuthorised": []
           }
         ],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -72,14 +80,16 @@
         },
         "responses": {
           "302": {
-            "description": "Redirects to the next appropriate route based on match outcome."
+            "description": "Redirected based on match outcome.",
+            "content": {}
           }
         }
       }
     },
     "/authorise/select-course": {
       "get": {
-        "operationId": "SelectCourseRouteGet",
+        "operationId": "SelectCourseGet",
+        "summary": "Displays the select-course page",
         "security": [
           {
             "VerifiedAndNotUlnAuthorised": []
@@ -87,7 +97,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Returns the select course page.",
+            "description": "Successfully rendered the Select Course page.",
             "content": {
               "application/json": {
                 "schema": {
@@ -95,17 +105,22 @@
                 }
               }
             }
+          },
+          "302": {
+            "description": "Redirected to the Not Found page."
           }
         }
       },
       "post": {
-        "operationId": "SelectCourseRoutePost",
+        "operationId": "SelectCoursePost",
+        "summary": "Handles submission for the select-course page",
         "security": [
           {
             "VerifiedAndNotUlnAuthorised": []
           }
         ],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -116,14 +131,15 @@
         },
         "responses": {
           "302": {
-            "description": "Redirects to the next appropriate route based on match outcome."
+            "description": "Redirected based on match outcome."
           }
         }
       }
     },
     "/authorise/select-provider": {
       "get": {
-        "operationId": "SelectProviderRouteGet",
+        "operationId": "SelectProviderGet",
+        "summary": "Displays the select-provider page",
         "security": [
           {
             "VerifiedAndNotUlnAuthorised": []
@@ -131,7 +147,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Returns the select provider page.",
+            "description": "Successfully rendered the Select Provider page.",
             "content": {
               "application/json": {
                 "schema": {
@@ -139,17 +155,22 @@
                 }
               }
             }
+          },
+          "302": {
+            "description": "Redirected to the Not Found page."
           }
         }
       },
       "post": {
-        "operationId": "SelectProviderRoutePost",
+        "operationId": "SelectProviderPost",
+        "summary": "Handles submission for the select-provider page",
         "security": [
           {
             "VerifiedAndNotUlnAuthorised": []
           }
         ],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -160,42 +181,15 @@
         },
         "responses": {
           "302": {
-            "description": "Redirects to the check answers route."
-          }
-        }
-      }
-    },
-    "/authorise/check-answers": {
-      "get": {
-        "operationId": "CheckAnswersRouteGet",
-        "security": [
-          {
-            "VerifiedAndNotUlnAuthorised": []
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Returns the check answers page."
-          }
-        }
-      },
-      "post": {
-        "operationId": "CheckAnswersRoutePost",
-        "security": [
-          {
-            "VerifiedAndNotUlnAuthorised": []
-          }
-        ],
-        "responses": {
-          "302": {
-            "description": "Redirects to the certificates list or another matching route."
+            "description": "Redirected to the Check Answers page."
           }
         }
       }
     },
     "/authorise/know-year": {
       "get": {
-        "operationId": "KnowYearRouteGet",
+        "operationId": "KnowYearGet",
+        "summary": "Displays the know-year page",
         "security": [
           {
             "VerifiedAndNotUlnAuthorised": []
@@ -203,7 +197,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Returns the know year page.",
+            "description": "Successfully rendered the Know Year page.",
             "content": {
               "application/json": {
                 "schema": {
@@ -211,17 +205,22 @@
                 }
               }
             }
+          },
+          "302": {
+            "description": "Redirected to the Need More Information page."
           }
         }
       },
       "post": {
-        "operationId": "KnowYearRoutePost",
+        "operationId": "KnowYearPost",
+        "summary": "Handles submission for the know-year page",
         "security": [
           {
             "VerifiedAndNotUlnAuthorised": []
           }
         ],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -232,27 +231,82 @@
         },
         "responses": {
           "302": {
-            "description": "Redirects to the check answers or select provider route."
+            "description": "Redirected based on the user's selection."
+          }
+        }
+      }
+    },
+    "/authorise/check-answers": {
+      "get": {
+        "operationId": "CheckAnswersGet",
+        "summary": "Displays the check-answers page",
+        "security": [
+          {
+            "VerifiedAndNotUlnAuthorised": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully rendered the Check Answers page."
+          },
+          "302": {
+            "description": "Redirected to the Need More Information page."
+          }
+        }
+      },
+      "post": {
+        "operationId": "CheckAnswersPost",
+        "summary": "Handles submission for the check-answers page",
+        "security": [
+          {
+            "VerifiedAndNotUlnAuthorised": []
+          }
+        ],
+        "responses": {
+          "302": {
+            "description": "Redirected based on match outcome."
           }
         }
       }
     },
     "/authorise/cannot-match": {
       "get": {
-        "operationId": "CannotMatchRouteGet",
+        "operationId": "CannotMatch",
+        "summary": "Displays the cannot-match page",
         "responses": {
           "200": {
-            "description": "Returns the cannot match page."
+            "description": "Successfully rendered the Cannot Match page.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CannotMatchViewModel"
+                }
+              }
+            }
+          },
+          "302": {
+            "description": "Redirected to certificates list or access denied page."
           }
         }
       }
     },
     "/authorise/not-found": {
       "get": {
-        "operationId": "NotFoundRouteGet",
+        "operationId": "NotFoundPage",
+        "summary": "Displays the not-found page",
         "responses": {
           "200": {
-            "description": "Returns the not found page."
+            "description": "Successfully rendered the Not Found page.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CannotMatchViewModel"
+                }
+              }
+            }
+          },
+          "302": {
+            "description": "Redirected to certificates list or access denied page."
           }
         }
       }
@@ -260,141 +314,182 @@
   },
   "components": {
     "schemas": {
-      "KnowYourUlnViewModel": {
+      "KnowYearViewModel": {
         "type": "object",
         "properties": {
-          "KnowUln": {
+          "knowYear": {
             "type": "boolean",
             "nullable": true
           },
-          "Uln": {
+          "yearCompleted": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "providerSelected": {
+            "type": "boolean"
+          },
+          "isReturningToCheck": {
+            "type": "boolean"
+          },
+          "isShortJourney": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "providerSelected",
+          "isReturningToCheck",
+          "isShortJourney"
+        ]
+      },
+      "KnowYourUlnViewModel": {
+        "type": "object",
+        "properties": {
+          "knowUln": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "uln": {
             "type": "integer",
             "format": "int64",
             "nullable": true
           },
-          "IsReturningToCheck": {
+          "isReturningToCheck": {
             "type": "boolean"
           },
-          "IsShortJourney": {
+          "isShortJourney": {
             "type": "boolean"
           }
-        }
+        },
+        "required": [
+          "isReturningToCheck",
+          "isShortJourney"
+        ]
       },
       "SelectCourseViewModel": {
         "type": "object",
         "properties": {
-          "SelectedCourseCode": {
+          "selectedCourseCode": {
             "type": "string",
             "nullable": true
           },
-          "Courses": {
+          "courses": {
             "type": "array",
             "items": {
-              "type": "object",
-              "properties": {
-                "CourseCode": {
-                  "type": "string",
-                  "required": true
-                },
-                "CourseName": {
-                  "type": "string",
-                  "required": true
-                },
-                "CourseLevel": {
-                  "type": "string",
-                  "nullable": true
-                },
-                "CertificateType": {
-                  "type": "string",
-                  "enum": [
-                    "Unknown",
-                    "Standard",
-                    "Framework"
-                  ]
-                }
-              }
+              "$ref": "#/components/schemas/CourseOption"
             },
             "nullable": true
           },
-          "IsReturningToCheck": {
+          "isReturningToCheck": {
             "type": "boolean"
           },
-          "IsShortJourney": {
+          "isShortJourney": {
             "type": "boolean"
+          }
+        },
+        "required": [
+          "isReturningToCheck",
+          "isShortJourney"
+        ],
+        "components": {
+          "CourseOption": {
+            "type": "object",
+            "properties": {
+              "courseCode": {
+                "type": "string"
+              },
+              "courseName": {
+                "type": "string"
+              },
+              "courseLevel": {
+                "type": "string",
+                "nullable": true
+              },
+              "certificateType": {
+                "$ref": "#/components/schemas/CertificateType"
+              }
+            },
+            "required": [
+              "courseCode",
+              "courseName",
+              "certificateType"
+            ]
           }
         }
       },
       "SelectProviderViewModel": {
         "type": "object",
         "properties": {
-          "SelectedProviderName": {
+          "selectedProviderName": {
             "type": "string",
             "nullable": true
           },
-          "SelectedProviderUnknown": {
+          "selectedProviderUnknown": {
             "type": "boolean",
             "nullable": true
           },
-          "Providers": {
+          "providers": {
             "type": "array",
             "items": {
-              "type": "object",
-              "properties": {
-                "Ukprn": {
-                  "type": "integer",
-                  "format": "int64",
-                  "nullable": true
-                },
-                "ProviderName": {
-                  "type": "string",
-                  "required": true
-                }
-              }
+              "$ref": "#/components/schemas/ProviderOption"
             },
             "nullable": true
           },
-          "IsReturningToCheck": {
+          "isReturningToCheck": {
             "type": "boolean"
           },
-          "IsShortJourney": {
+          "isShortJourney": {
             "type": "boolean"
+          }
+        },
+        "required": [
+          "isReturningToCheck",
+          "isShortJourney"
+        ],
+        "components": {
+          "ProviderOption": {
+            "type": "object",
+            "properties": {
+              "ukprn": {
+                "type": "integer",
+                "format": "int64",
+                "nullable": true
+              },
+              "providerName": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "providerName"
+            ]
           }
         }
       },
-      "KnowYearViewModel": {
+      "CannotMatchViewModel": {
         "type": "object",
         "properties": {
-          "KnowYear": {
-            "type": "boolean",
-            "nullable": true
-          },
-          "YearCompleted": {
-            "type": "integer",
-            "nullable": true
-          },
-          "ProviderSelected": {
-            "type": "boolean"
-          },
-          "IsReturningToCheck": {
-            "type": "boolean"
-          },
-          "IsShortJourney": {
-            "type": "boolean"
+          "referenceNumber": {
+            "type": "string"
           }
-        }
+        },
+        "required": [
+          "referenceNumber"
+        ]
+      },
+      "CertificateType": {
+        "type": "string",
+        "enum": [
+          "Unknown",
+          "Standard",
+          "Framework"
+        ]
       }
     },
     "securitySchemes": {
       "VerifiedAndNotUlnAuthorised": {
-        "type": "oauth2",
-        "flows": {
-          "implicit": {
-            "authorizationUrl": "https://example.com/oauth/authorize",
-            "scopes": {
-              "VerifiedAndNotUlnAuthorised": "Verified and not ULN authorised policy"
-            }
-          }
-        }
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
       }
     }
   }

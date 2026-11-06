@@ -8,10 +8,7 @@
     "/account-details": {
       "get": {
         "operationId": "getAccountDetails",
-        "summary": "Retrieve Account Details",
-        "tags": [
-          "Account"
-        ],
+        "summary": "Retrieve stub account details view.",
         "parameters": [
           {
             "name": "returnUrl",
@@ -19,28 +16,21 @@
             "required": false,
             "schema": {
               "type": "string"
-            },
-            "description": "The URL to return to after the operation."
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "text/html": {}
-            }
+            "description": "Successful response. Returns the account details view."
           },
           "404": {
-            "description": "Not Found"
+            "description": "Not Found if the environment is production."
           }
         }
       },
       "post": {
         "operationId": "postAccountDetails",
-        "summary": "Submit Account Details",
-        "tags": [
-          "Account"
-        ],
+        "summary": "Submit stub account details and sign in.",
         "requestBody": {
           "required": true,
           "content": {
@@ -53,10 +43,10 @@
         },
         "responses": {
           "302": {
-            "description": "Redirect to signed-in route"
+            "description": "Redirects to route after successful sign-in."
           },
           "404": {
-            "description": "Not Found"
+            "description": "Not Found if the environment is production."
           }
         }
       }
@@ -64,10 +54,7 @@
     "/Stub-Auth": {
       "get": {
         "operationId": "getStubSignedIn",
-        "summary": "Authorized Stub Sign-In",
-        "tags": [
-          "Stub Authentication"
-        ],
+        "summary": "Retrieve stub signed-in view.",
         "parameters": [
           {
             "name": "returnUrl",
@@ -75,19 +62,22 @@
             "required": false,
             "schema": {
               "type": "string"
-            },
-            "description": "The URL to return to after signing in."
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Successful response. Returns signed-in user view.",
             "content": {
-              "text/html": {}
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StubAuthenticationViewModel"
+                }
+              }
             }
           },
           "404": {
-            "description": "Not Found"
+            "description": "Not Found if the environment is production."
           }
         },
         "security": [
@@ -104,18 +94,22 @@
         "type": "object",
         "properties": {
           "ReturnUrl": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
+          },
+          "Email": {
+            "type": "string"
+          },
+          "Id": {
+            "type": "string"
           }
-        },
-        "description": "ViewModel for stub authentication functionality."
+        }
       }
     },
     "securitySchemes": {
       "cookieAuth": {
         "type": "apiKey",
-        "name": "Cookie",
-        "in": "header"
+        "in": "cookie",
+        "name": "CookieAuthentication"
       }
     }
   }

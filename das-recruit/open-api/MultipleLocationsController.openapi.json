@@ -1,0 +1,350 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Multiple Locations API",
+    "version": "1.0.0",
+    "description": "API for managing multiple locations in the Employer platform for job vacancies."
+  },
+  "paths": {
+    "/{employerAccountId}/{vacancyId}/location-availability": {
+      "get": {
+        "operationId": "GetLocationAvailability",
+        "summary": "Retrieve the location availability view for a vacancy.",
+        "parameters": [
+          {
+            "name": "employerAccountId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "vacancyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "wizard",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Location availability view rendered successfully."
+          },
+          "400": {
+            "description": "Invalid request parameters."
+          }
+        }
+      },
+      "post": {
+        "operationId": "PostLocationAvailability",
+        "summary": "Submit the selected location availability for a vacancy.",
+        "parameters": [
+          {
+            "name": "wizard",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LocationAvailabilityEditModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully processed location availability and redirected based on selection."
+          },
+          "400": {
+            "description": "Validation errors.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/{employerAccountId}/{vacancyId}/add-many-locations": {
+      "get": {
+        "operationId": "GetAddMoreThanOneLocation",
+        "summary": "Load the view to add multiple locations for a vacancy.",
+        "parameters": [
+          {
+            "name": "employerAccountId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "vacancyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "wizard",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Add locations view rendered successfully."
+          },
+          "400": {
+            "description": "Invalid request parameters."
+          }
+        }
+      },
+      "post": {
+        "operationId": "PostAddMoreThanOneLocation",
+        "summary": "Submit multiple selected locations for a vacancy.",
+        "parameters": [
+          {
+            "name": "wizard",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddMoreThanOneLocationEditModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Processing result for updating multiple locations."
+          },
+          "400": {
+            "description": "Validation errors.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/{employerAccountId}/{vacancyId}/add-many-locations/add-new-location": {
+      "post": {
+        "operationId": "PostAddNewLocationJourney",
+        "summary": "Initiate the journey to add a new location.",
+        "parameters": [
+          {
+            "name": "wizard",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddMoreThanOneLocationEditModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "302": {
+            "description": "Redirect to the add-location view."
+          }
+        }
+      }
+    },
+    "/{employerAccountId}/{vacancyId}/confirm-locations": {
+      "get": {
+        "operationId": "GetConfirmLocations",
+        "summary": "Render the view to confirm locations for a vacancy.",
+        "parameters": [
+          {
+            "name": "employerAccountId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "vacancyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "wizard",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Locations confirmed view rendered successfully."
+          },
+          "400": {
+            "description": "Invalid request parameters."
+          }
+        }
+      },
+      "post": {
+        "operationId": "PostConfirmLocations",
+        "summary": "Confirm the vacancy's selected locations and redirect accordingly.",
+        "parameters": [
+          {
+            "name": "wizard",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VacancyRouteModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "302": {
+            "description": "Redirect to employer task list or check your answers view."
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "LocationAvailabilityEditModel": {
+        "type": "object",
+        "properties": {
+          "employerAccountId": {
+            "type": "string"
+          },
+          "vacancyId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "selectedAvailability": {
+            "type": "string",
+            "enum": [
+              "OneLocation",
+              "MultipleLocations",
+              "AcrossEngland"
+            ]
+          }
+        },
+        "required": [
+          "employerAccountId",
+          "vacancyId",
+          "selectedAvailability"
+        ]
+      },
+      "AddMoreThanOneLocationEditModel": {
+        "type": "object",
+        "properties": {
+          "employerAccountId": {
+            "type": "string"
+          },
+          "vacancyId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "selectedLocations": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "employerAccountId",
+          "vacancyId",
+          "selectedLocations"
+        ]
+      },
+      "VacancyRouteModel": {
+        "type": "object",
+        "properties": {
+          "employerAccountId": {
+            "type": "string"
+          },
+          "vacancyId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "employerAccountId",
+          "vacancyId"
+        ]
+      },
+      "ValidationError": {
+        "type": "object",
+        "properties": {
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}

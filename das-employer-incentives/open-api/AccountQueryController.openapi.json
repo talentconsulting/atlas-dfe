@@ -1,0 +1,196 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Employer Incentives API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/accounts/{accountId}/LegalEntities": {
+      "get": {
+        "summary": "Get legal entities for an account",
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "path",
+            "required": true,
+            "description": "The account ID",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of legal entities",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/LegalEntity"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No legal entities found"
+          }
+        }
+      }
+    },
+    "/accounts/{accountId}/LegalEntities/{accountLegalEntityId}": {
+      "get": {
+        "summary": "Get a specific legal entity for an account",
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "path",
+            "required": true,
+            "description": "The account ID",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "accountLegalEntityId",
+            "in": "path",
+            "required": true,
+            "description": "The ID of the legal entity",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The legal entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LegalEntity"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Legal entity not found"
+          }
+        }
+      }
+    },
+    "/accounts/{accountId}/legalentity/{accountLegalEntityId}/applications": {
+      "get": {
+        "summary": "Get applications for a specific legal entity",
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "path",
+            "required": true,
+            "description": "The account ID",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "accountLegalEntityId",
+            "in": "path",
+            "required": true,
+            "description": "The ID of the legal entity",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Applications for the legal entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApplicationsResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Applications not found"
+          }
+        }
+      }
+    },
+    "/accounts/vendorregistrationform/status": {
+      "get": {
+        "summary": "Get accounts by VRF case status",
+        "parameters": [
+          {
+            "name": "vrfCaseStatus",
+            "in": "query",
+            "required": true,
+            "description": "The VRF case status to filter by",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Accounts with the specified VRF case status",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Account"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/accounts/last-vrf-update-date": {
+      "get": {
+        "summary": "Get the latest vendor registration case update date and time",
+        "responses": {
+          "200": {
+            "description": "The latest update date and time",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LatestVrfUpdateDateTimeResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "LegalEntity": {
+        "type": "object",
+        "properties": {}
+      },
+      "ApplicationsResponse": {
+        "type": "object",
+        "properties": {}
+      },
+      "Account": {
+        "type": "object",
+        "properties": {}
+      },
+      "LatestVrfUpdateDateTimeResponse": {
+        "type": "object",
+        "properties": {}
+      }
+    }
+  }
+}

@@ -7,8 +7,8 @@
   "paths": {
     "/api/paye-schemes/last-submission-date": {
       "get": {
-        "summary": "Get Last Submission Date",
-        "description": "Retrieve the last submission date for a PAYE scheme.",
+        "summary": "Get the last submission date for a PAYE scheme",
+        "operationId": "GetLastSubmissionDate",
         "parameters": [
           {
             "name": "empRef",
@@ -17,33 +17,26 @@
             "schema": {
               "type": "string"
             },
-            "description": "The employer reference number (empRef) of the PAYE scheme."
+            "description": "The employer PAYE reference (empRef)."
           }
         ],
         "responses": {
           "200": {
-            "description": "Successful response with the last submission date.",
+            "description": "Last submission date retrieved successfully.",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "additionalProperties": true
+                  "type": "object"
                 }
               }
             }
           },
           "400": {
-            "description": "Bad request due to validation error.",
+            "description": "Invalid request due to validation errors.",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "Validation": {
-                      "type": "string"
-                    }
-                  },
-                  "additionalProperties": true
+                  "$ref": "#/components/schemas/ValidationError"
                 }
               }
             }
@@ -51,21 +44,36 @@
         },
         "security": [
           {
-            "ApiRoles": [
-              "ReadAllEmployerAccountBalances"
-            ]
+            "ApiRoles_ReadAllEmployerAccountBalances": []
           }
         ]
       }
     }
   },
   "components": {
-    "schemas": {},
+    "schemas": {
+      "ValidationError": {
+        "type": "object",
+        "properties": {
+          "Validation": {
+            "type": "string",
+            "description": "Validation error message."
+          },
+          "errors": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "Dictionary of validation errors with field names as keys and error messages as values."
+          }
+        }
+      }
+    },
     "securitySchemes": {
-      "ApiRoles": {
-        "type": "apiKey",
-        "name": "Authorization",
-        "in": "header"
+      "ApiRoles_ReadAllEmployerAccountBalances": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "Authorization scheme requiring 'ReadAllEmployerAccountBalances' role."
       }
     }
   }

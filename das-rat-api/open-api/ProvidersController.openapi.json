@@ -1,0 +1,259 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Request Apprentice Training API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/api/providers/{ukprn}/employer-requests/aggregated": {
+      "get": {
+        "summary": "Get Provider Aggregated Employer Requests",
+        "operationId": "getProviderAggregatedEmployerRequests",
+        "parameters": [
+          {
+            "name": "ukprn",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "description": "UK Provider Reference Number"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved provider aggregated employer requests",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": true
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          }
+        }
+      }
+    },
+    "/api/providers/{ukprn}/employer-requests/{standardReference}/select": {
+      "get": {
+        "summary": "Get Select Employer Requests",
+        "operationId": "getSelectEmployerRequests",
+        "parameters": [
+          {
+            "name": "ukprn",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "description": "UK Provider Reference Number"
+          },
+          {
+            "name": "standardReference",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Standard Reference for the request"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved select employer requests",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": true
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          }
+        }
+      }
+    },
+    "/api/providers/{ukprn}/employer-requests/acknowledge": {
+      "post": {
+        "summary": "Acknowledge Employer Requests",
+        "operationId": "acknowledgeEmployerRequests",
+        "parameters": [
+          {
+            "name": "ukprn",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "description": "UK Provider Reference Number"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AcknowledgeEmployerRequestsParameters"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully acknowledged employer requests"
+          },
+          "400": {
+            "description": "Validation error or bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "additionalProperties": true
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/providers/{ukprn}/responses": {
+      "post": {
+        "summary": "Submit a Provider Response",
+        "operationId": "submitProviderResponse",
+        "parameters": [
+          {
+            "name": "ukprn",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "description": "UK Provider Reference Number"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SubmitProviderResponseParameters"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully submitted provider response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error or bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "additionalProperties": true
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AcknowledgeEmployerRequestsParameters": {
+        "type": "object",
+        "properties": {
+          "EmployerRequestIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        },
+        "required": [
+          "EmployerRequestIds"
+        ]
+      },
+      "SubmitProviderResponseParameters": {
+        "type": "object",
+        "properties": {
+          "EmployerRequestIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "Email": {
+            "type": "string",
+            "format": "email"
+          },
+          "Phone": {
+            "type": "string"
+          },
+          "Website": {
+            "type": "string",
+            "format": "uri"
+          },
+          "ContactName": {
+            "type": "string"
+          },
+          "RespondedBy": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "EmployerRequestIds",
+          "Email",
+          "ContactName",
+          "RespondedBy"
+        ]
+      }
+    }
+  }
+}

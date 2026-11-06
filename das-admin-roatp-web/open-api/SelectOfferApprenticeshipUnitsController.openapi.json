@@ -2,35 +2,25 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Select Offer Apprenticeship Units API",
-    "description": "API for managing apprenticeship unit offerings in the 'Add Provider' workflow.",
     "version": "1.0.0"
   },
   "paths": {
     "/providers/new/offer-apprenticeship-units": {
       "get": {
-        "operationId": "getOfferApprenticeshipUnits",
-        "summary": "Get Offer Apprenticeship Units",
-        "description": "Retrieves the view model for selecting if apprenticeship units are offered.",
+        "summary": "Get the apprenticeship units selection page",
+        "operationId": "GetOfferApprenticeshipUnits",
         "responses": {
           "200": {
-            "description": "Successful response with the OfferApprenticeshipUnitsViewModel.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OfferApprenticeshipUnitsViewModel"
-                }
-              }
-            }
+            "description": "Success"
           },
           "302": {
-            "description": "Redirect to home if the provider type is 'Supporting'."
+            "description": "Redirect to home if provider type is supporting"
           }
         }
       },
       "post": {
-        "operationId": "postOfferApprenticeshipUnits",
-        "summary": "Submit Offer Apprenticeship Units",
-        "description": "Submits the selected choice for offering apprenticeship units.",
+        "summary": "Submit apprenticeship units selection",
+        "operationId": "SubmitOfferApprenticeshipUnits",
         "requestBody": {
           "required": true,
           "content": {
@@ -42,11 +32,8 @@
           }
         },
         "responses": {
-          "302": {
-            "description": "Redirect to Provider Details Summary or Select Organisation Type based on the session state."
-          },
-          "400": {
-            "description": "Validation errors in the submitted data.",
+          "200": {
+            "description": "Validation errors return with the view model",
             "content": {
               "application/json": {
                 "schema": {
@@ -54,6 +41,9 @@
                 }
               }
             }
+          },
+          "302": {
+            "description": "Redirect to summary or organisation type page based on session state"
           }
         }
       }
@@ -74,10 +64,7 @@
               "$ref": "#/components/schemas/ApprenticeshipUnitsSelectionModel"
             }
           }
-        },
-        "required": [
-          "ApprenticeshipUnitsSelection"
-        ]
+        }
       },
       "OfferApprenticeshipUnitsSubmitModel": {
         "type": "object",

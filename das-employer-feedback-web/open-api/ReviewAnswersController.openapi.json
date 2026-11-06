@@ -7,17 +7,29 @@
   "paths": {
     "/review-answers": {
       "get": {
-        "operationId": "ReviewAnswersGet",
-        "summary": "Retrieve review answers page",
+        "operationId": "reviewAnswersGet",
+        "summary": "Get Review Answers",
         "responses": {
           "200": {
-            "description": "The review answers page was successfully retrieved"
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReviewAnswersViewModel"
+                }
+              }
+            }
           }
-        }
+        },
+        "security": [
+          {
+            "PolicyNames.NoneRole": []
+          }
+        ]
       },
       "post": {
-        "operationId": "ReviewAnswersPost",
-        "summary": "Submit review answers",
+        "operationId": "reviewAnswersPost",
+        "summary": "Submit Review Answers",
         "requestBody": {
           "required": true,
           "content": {
@@ -30,28 +42,20 @@
         },
         "responses": {
           "302": {
-            "description": "Redirect response upon success or failure",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "location": {
-                      "type": "string",
-                      "description": "Redirect URL"
-                    }
-                  }
-                }
-              }
-            }
+            "description": "Redirect"
           }
-        }
+        },
+        "security": [
+          {
+            "PolicyNames.NoneRole": []
+          }
+        ]
       }
     },
     "/feedback-confirmation": {
       "get": {
-        "operationId": "FeedbackConfirmationGet",
-        "summary": "Display feedback confirmation page",
+        "operationId": "feedbackConfirmationGet",
+        "summary": "Get Feedback Confirmation",
         "parameters": [
           {
             "name": "encodedAccountId",
@@ -64,15 +68,27 @@
         ],
         "responses": {
           "200": {
-            "description": "The feedback confirmation page was successfully retrieved"
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccountModel"
+                }
+              }
+            }
           }
-        }
+        },
+        "security": [
+          {
+            "PolicyNames.NoneRole": []
+          }
+        ]
       }
     },
     "/feedback-submitted": {
       "get": {
-        "operationId": "FeedbackAlreadySubmittedGet",
-        "summary": "Display feedback already submitted page",
+        "operationId": "feedbackAlreadySubmittedGet",
+        "summary": "Get Feedback Already Submitted",
         "parameters": [
           {
             "name": "encodedAccountId",
@@ -85,9 +101,21 @@
         ],
         "responses": {
           "200": {
-            "description": "The feedback already submitted page was successfully retrieved"
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccountModel"
+                }
+              }
+            }
           }
-        }
+        },
+        "security": [
+          {
+            "PolicyNames.NoneRole": []
+          }
+        ]
       }
     }
   },
@@ -103,24 +131,30 @@
             "type": "integer",
             "format": "int64"
           }
-        }
+        },
+        "required": [
+          "encodedAccountId",
+          "accountId"
+        ]
       },
       "ReviewAnswersViewModel": {
+        "type": "object",
         "allOf": [
           {
             "$ref": "#/components/schemas/AccountModel"
-          },
-          {
-            "type": "object",
-            "properties": {
-              "survey": {
-                "$ref": "#/components/schemas/SurveyModel"
-              },
-              "fatSiteUrl": {
-                "type": "string"
-              }
-            }
           }
+        ],
+        "properties": {
+          "survey": {
+            "$ref": "#/components/schemas/SurveyModel"
+          },
+          "fatSiteUrl": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "survey",
+          "fatSiteUrl"
         ]
       },
       "SurveyModel": {
@@ -156,7 +190,15 @@
           "feedbackSource": {
             "$ref": "#/components/schemas/FeedbackSource"
           }
-        }
+        },
+        "required": [
+          "userRef",
+          "ukprn",
+          "accountId",
+          "attributes",
+          "providerName",
+          "feedbackSource"
+        ]
       },
       "ProviderAttributeModel": {
         "type": "object",
@@ -173,12 +215,14 @@
           },
           "bad": {
             "type": "boolean"
-          },
-          "score": {
-            "type": "integer",
-            "description": "Derived score based on `good` or `bad` flags"
           }
-        }
+        },
+        "required": [
+          "attributeId",
+          "name",
+          "good",
+          "bad"
+        ]
       },
       "ProviderRating": {
         "type": "string",

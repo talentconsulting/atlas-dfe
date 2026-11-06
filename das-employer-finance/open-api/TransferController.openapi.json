@@ -7,14 +7,13 @@
   "paths": {
     "/api/accounts/{accountId}/transfer/connections": {
       "get": {
-        "summary": "Get transfers by period end",
-        "operationId": "GetTransfersByPeriodEnd",
+        "summary": "Retrieve transfers by period end for a specified account",
         "parameters": [
           {
             "name": "accountId",
             "in": "path",
             "required": true,
-            "description": "The account ID for which transfers are requested.",
+            "description": "The ID of the account",
             "schema": {
               "type": "integer",
               "format": "int64"
@@ -24,7 +23,7 @@
             "name": "periodEnd",
             "in": "query",
             "required": true,
-            "description": "The period end identifier to filter transfers.",
+            "description": "The period end identifier",
             "schema": {
               "type": "string"
             }
@@ -32,7 +31,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful response containing transfer details.",
+            "description": "Successful response with transfer details",
             "content": {
               "application/json": {
                 "schema": {
@@ -42,21 +41,23 @@
             }
           },
           "400": {
-            "description": "Bad request. Missing or invalid query parameters.",
+            "description": "Bad request due to missing query parameter",
             "content": {
-              "application/json": {
+              "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "type": "string",
+                  "example": "periodEnd query parameter is required."
                 }
               }
             }
           },
           "404": {
-            "description": "No transfers found for the specified account and period end.",
+            "description": "Not found if no transfers match the criteria",
             "content": {
-              "application/json": {
+              "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "type": "string",
+                  "example": "No transfers found for account {accountId} and period {periodEnd}."
                 }
               }
             }
@@ -64,7 +65,9 @@
         },
         "security": [
           {
-            "ApiKeyAuth": []
+            "ApiRoles": [
+              "ReadAllEmployerAccountBalances"
+            ]
           }
         ]
       }
@@ -82,22 +85,14 @@
             }
           }
         }
-      },
-      "ErrorResponse": {
-        "type": "object",
-        "properties": {
-          "message": {
-            "type": "string"
-          }
-        }
       }
     },
     "securitySchemes": {
-      "ApiKeyAuth": {
+      "ApiRoles": {
         "type": "apiKey",
-        "in": "header",
         "name": "Authorization",
-        "description": "API key to authorize requests using a Bearer token."
+        "in": "header",
+        "description": "Use a valid API key with appropriate roles defined in ApiRoles to access this endpoint"
       }
     }
   }

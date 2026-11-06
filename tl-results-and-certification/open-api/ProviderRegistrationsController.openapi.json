@@ -1,109 +1,119 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Provider Registrations API",
+    "title": "ProviderRegistrations API",
     "version": "1.0.0"
   },
   "paths": {
-    "/download-registrations-data": {
+    "/api/ProviderRegistrations/GetAvailableStartYears": {
       "get": {
-        "summary": "Get available start years for registrations data.",
-        "operationId": "DownloadRegistrationsDataAsync",
+        "tags": [
+          "ProviderRegistrations"
+        ],
+        "operationId": "GetAvailableStartYears",
         "responses": {
           "200": {
-            "description": "Successful retrieval of available start years.",
+            "description": "List of available start years",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "AvailableStartYearViewModels": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "description": "Component representing available start year data."
-                      }
-                    }
+                  "type": "array",
+                  "items": {
+                    "type": "integer"
                   }
                 }
               }
             }
-          },
-          "302": {
-            "description": "Redirection to another URL when there is an issue.",
-            "content": {}
           }
         }
       }
     },
-    "/download-registrations-data-for": {
-      "get": {
-        "summary": "Download registrations data for a specific start year.",
-        "operationId": "DownloadRegistrationsDataForAsync",
-        "parameters": [
-          {
-            "name": "startYear",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "example": 2023
+    "/api/ProviderRegistrations/GetRegistrations": {
+      "post": {
+        "tags": [
+          "ProviderRegistrations"
+        ],
+        "operationId": "GetRegistrations",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetProviderRegistrationsRequest"
+              }
             }
           }
-        ],
+        },
         "responses": {
           "200": {
-            "description": "Successful retrieval of registrations data.",
+            "description": "Provider registrations data export response",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "DownloadRegistrationsDataForViewModel": {
-                      "type": "object",
-                      "description": "Component representing data for the specific start year."
-                    }
-                  }
+                  "$ref": "#/components/schemas/DataExportResponse"
                 }
               }
             }
-          },
-          "302": {
-            "description": "Redirection to another URL if requested data is unavailable or has issues.",
-            "content": {}
-          }
-        }
-      }
-    },
-    "/download-registrations-data-for/{id}": {
-      "get": {
-        "summary": "Download link for exported registrations data.",
-        "operationId": "DownloadRegistrationsDataForLinkAsync",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful download of exported data.",
-            "content": {}
-          },
-          "302": {
-            "description": "Redirection to an error page for invalid or unavailable data.",
-            "content": {}
           }
         }
       }
     }
   },
   "components": {
-    "schemas": {}
+    "schemas": {
+      "GetProviderRegistrationsRequest": {
+        "type": "object",
+        "properties": {
+          "ProviderUkprn": {
+            "type": "integer",
+            "example": 12345678,
+            "description": "UKPRN of the provider"
+          },
+          "StartYear": {
+            "type": "integer",
+            "example": 2024,
+            "description": "Start year for the provider registration"
+          },
+          "RequestedBy": {
+            "type": "string",
+            "example": "John Doe",
+            "description": "Identifier of the requestor"
+          }
+        },
+        "required": [
+          "ProviderUkprn",
+          "StartYear",
+          "RequestedBy"
+        ]
+      },
+      "DataExportResponse": {
+        "type": "object",
+        "properties": {
+          "IsDataFound": {
+            "type": "boolean",
+            "description": "Status indicating if the data is found"
+          },
+          "BlobUniqueReference": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique reference for the exported file"
+          },
+          "FileSize": {
+            "type": "number",
+            "description": "Size of the exported file"
+          },
+          "ComponentType": {
+            "type": "integer",
+            "description": "Type of the component",
+            "enum": [
+              0,
+              1,
+              2
+            ],
+            "example": 1
+          }
+        }
+      }
+    }
   }
 }

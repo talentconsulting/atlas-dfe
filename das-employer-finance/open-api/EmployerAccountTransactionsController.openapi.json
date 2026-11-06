@@ -7,7 +7,7 @@
   "paths": {
     "/accounts/{hashedAccountId}/finance/provider/summary": {
       "get": {
-        "summary": "Get provider payment summary",
+        "operationId": "GetProviderPaymentSummary",
         "parameters": [
           {
             "name": "hashedAccountId",
@@ -47,14 +47,14 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful response"
+            "description": "Successful response with provider payment summary view."
           }
         }
       }
     },
     "/accounts/{hashedAccountId}/finance": {
       "get": {
-        "summary": "View finance index",
+        "operationId": "GetFinanceIndex",
         "parameters": [
           {
             "name": "hashedAccountId",
@@ -67,22 +67,35 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful response"
+            "description": "Successful response with finance index view."
+          },
+          "302": {
+            "description": "Redirects to another URL if specified."
           }
         }
       }
     },
     "/accounts/{hashedAccountId}/finance/downloadtransactions": {
       "get": {
-        "summary": "View transactions download page",
+        "operationId": "GetTransactionsDownload",
+        "parameters": [
+          {
+            "name": "hashedAccountId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
-            "description": "Successful response"
+            "description": "Successful response with transaction download view."
           }
         }
       },
       "post": {
-        "summary": "Download transactions",
+        "operationId": "PostTransactionsDownload",
         "parameters": [
           {
             "name": "hashedAccountId",
@@ -105,17 +118,17 @@
         },
         "responses": {
           "200": {
-            "description": "File successfully downloaded"
+            "description": "Successful transaction file download."
           },
           "400": {
-            "description": "Validation error"
+            "description": "Validation failed."
           }
         }
       }
     },
     "/accounts/{hashedAccountId}/finance/{year}/{month}": {
       "get": {
-        "summary": "View transactions by month and year",
+        "operationId": "GetTransactionsView",
         "parameters": [
           {
             "name": "hashedAccountId",
@@ -144,17 +157,17 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful response"
+            "description": "Successful response with transaction view."
           },
           "302": {
-            "description": "Redirect to access denied"
+            "description": "Redirects to access denied view if account is not found."
           }
         }
       }
     },
     "/accounts/{hashedAccountId}/finance/levyDeclaration/details": {
       "get": {
-        "summary": "Get levy declaration details",
+        "operationId": "GetLevyDeclarationDetail",
         "parameters": [
           {
             "name": "hashedAccountId",
@@ -185,18 +198,18 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful response"
+            "description": "Successful response with levy declaration detail view."
           }
         }
       }
     },
     "/accounts/{hashedAccountId}/finance/course/standard/summary": {
       "get": {
-        "summary": "Get course standard payment summary",
+        "operationId": "GetCourseStandardPaymentSummary",
         "parameters": [
           {
             "name": "hashedAccountId",
-            "in": "query",
+            "in": "path",
             "required": true,
             "schema": {
               "type": "string"
@@ -248,18 +261,18 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful response"
+            "description": "Successful response with course standard payment summary."
           }
         }
       }
     },
     "/accounts/{hashedAccountId}/finance/course/framework/summary": {
       "get": {
-        "summary": "Get course framework payment summary",
+        "operationId": "GetCourseFrameworkPaymentSummary",
         "parameters": [
           {
             "name": "hashedAccountId",
-            "in": "query",
+            "in": "path",
             "required": true,
             "schema": {
               "type": "string"
@@ -319,14 +332,14 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful response"
+            "description": "Successful response with course framework payment summary."
           }
         }
       }
     },
     "/accounts/{hashedAccountId}/finance/transfer/details": {
       "get": {
-        "summary": "Get transfer transaction details",
+        "operationId": "GetTransferDetail",
         "parameters": [
           {
             "name": "hashedAccountId",
@@ -335,18 +348,44 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "senderAccountId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "receiverAccountId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "transferSector",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Successful response"
+            "description": "Successful response with transfer details view."
           }
         }
       }
     },
     "/accounts/{hashedAccountId}/finance/expiredfunds/details": {
       "get": {
-        "summary": "Get expired funds details",
+        "operationId": "GetExpiredFundsDetails",
         "parameters": [
           {
             "name": "hashedAccountId",
@@ -377,7 +416,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful response"
+            "description": "Successful response with expired funds details view."
           }
         }
       }
@@ -395,10 +434,7 @@
             "$ref": "#/components/schemas/MonthYear"
           },
           "DownloadFormat": {
-            "enum": [
-              "CSV",
-              "Excel"
-            ]
+            "$ref": "#/components/schemas/DownloadFormatType"
           },
           "Version": {
             "type": "string"
@@ -420,7 +456,18 @@
           "Year": {
             "type": "string"
           }
-        }
+        },
+        "required": [
+          "Month",
+          "Year"
+        ]
+      },
+      "DownloadFormatType": {
+        "type": "string",
+        "enum": [
+          "CSV",
+          "Excel"
+        ]
       }
     }
   }

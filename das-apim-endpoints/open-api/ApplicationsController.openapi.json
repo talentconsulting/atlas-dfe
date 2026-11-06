@@ -2,15 +2,17 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Applications API",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "description": "API for managing applications, forms, and related operations."
   },
   "paths": {
     "/api/applications/forms": {
       "get": {
-        "operationId": "GetAllForms",
+        "summary": "Get all application forms",
+        "operationId": "getAllApplicationForms",
         "responses": {
           "200": {
-            "description": "List of Application Forms",
+            "description": "Successful operation",
             "content": {
               "application/json": {
                 "schema": {
@@ -20,14 +22,15 @@
             }
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Internal server error"
           }
         }
       }
     },
     "/api/applications/forms/{formVersionId}/sections/{sectionId}/pages/{pageOrder}": {
       "get": {
-        "operationId": "GetPageById",
+        "summary": "Get application page by ID",
+        "operationId": "getApplicationPageById",
         "parameters": [
           {
             "name": "formVersionId",
@@ -58,7 +61,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Page Details",
+            "description": "Successful operation",
             "content": {
               "application/json": {
                 "schema": {
@@ -68,14 +71,15 @@
             }
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Internal server error"
           }
         }
       }
     },
     "/api/applications/{applicationId}/metadata": {
       "get": {
-        "operationId": "GetApplicationMetadataById",
+        "summary": "Get application metadata by ID",
+        "operationId": "getApplicationMetadataById",
         "parameters": [
           {
             "name": "applicationId",
@@ -89,7 +93,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Application Metadata",
+            "description": "Successful operation",
             "content": {
               "application/json": {
                 "schema": {
@@ -99,14 +103,15 @@
             }
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Internal server error"
           }
         }
       }
     },
     "/api/applications/forms/{formVersionId}": {
       "get": {
-        "operationId": "GetFormVersionById",
+        "summary": "Get application form by form version ID",
+        "operationId": "getApplicationFormByFormVersionId",
         "parameters": [
           {
             "name": "formVersionId",
@@ -120,7 +125,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Form Details",
+            "description": "Successful operation",
             "content": {
               "application/json": {
                 "schema": {
@@ -130,14 +135,15 @@
             }
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Internal server error"
           }
         }
       }
     },
     "/api/applications/organisations/{organisationId}": {
       "get": {
-        "operationId": "GetApplicationsByOrganisationId",
+        "summary": "Get applications by organisation ID",
+        "operationId": "getApplicationsByOrganisationId",
         "parameters": [
           {
             "name": "organisationId",
@@ -151,7 +157,7 @@
         ],
         "responses": {
           "200": {
-            "description": "List of Applications for Organisation",
+            "description": "Successful operation",
             "content": {
               "application/json": {
                 "schema": {
@@ -161,14 +167,56 @@
             }
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Internal server error"
           }
         }
       }
     },
-    "/api/applications/{applicationId}/forms/{formVersionId}/sections/{sectionId}/pages/{pageId}/answers": {
+    "/api/applications/forms/{formVersionId}/sections/{sectionId}": {
       "get": {
-        "operationId": "GetPageAnswersById",
+        "summary": "Get application sections by form version and section ID",
+        "operationId": "getApplicationSectionById",
+        "parameters": [
+          {
+            "name": "formVersionId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "sectionId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetApplicationSectionByIdQueryResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/applications/{applicationId}/forms/{formVersionId}/sections/{sectionId}": {
+      "get": {
+        "summary": "Get application section statuses by application ID and section ID",
+        "operationId": "getApplicationSectionStatusByApplicationId",
         "parameters": [
           {
             "name": "applicationId",
@@ -196,9 +244,41 @@
               "type": "string",
               "format": "uuid"
             }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetApplicationSectionStatusByApplicationIdQueryResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/applications/{applicationId}/forms/{formVersionId}": {
+      "get": {
+        "summary": "Get application form statuses by application ID",
+        "operationId": "getApplicationFormStatusByApplicationId",
+        "parameters": [
+          {
+            "name": "applicationId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
           },
           {
-            "name": "pageId",
+            "name": "formVersionId",
             "in": "path",
             "required": true,
             "schema": {
@@ -209,17 +289,122 @@
         ],
         "responses": {
           "200": {
-            "description": "List of answers for the page",
+            "description": "Successful operation",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetApplicationPageAnswersByPageIdQueryResponse"
+                  "$ref": "#/components/schemas/GetApplicationFormStatusByApplicationIdQueryResponse"
                 }
               }
             }
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/applications/{applicationId}/form-preview": {
+      "get": {
+        "summary": "Get application form preview by application ID",
+        "operationId": "getApplicationFormPreviewById",
+        "parameters": [
+          {
+            "name": "applicationId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetApplicationFormPreviewByIdQueryResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/applications/{applicationId}": {
+      "get": {
+        "summary": "Get application by ID",
+        "operationId": "getApplicationById",
+        "parameters": [
+          {
+            "name": "applicationId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetApplicationByIdQueryResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete application by ID",
+        "operationId": "deleteApplicationById",
+        "parameters": [
+          {
+            "name": "applicationId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "userType",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmptyResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
           }
         }
       }
@@ -251,10 +436,19 @@
                 "order": {
                   "type": "integer"
                 }
-              }
+              },
+              "required": [
+                "id",
+                "title",
+                "description",
+                "order"
+              ]
             }
           }
-        }
+        },
+        "required": [
+          "forms"
+        ]
       },
       "GetApplicationPageByIdQueryResponse": {
         "type": "object",
@@ -269,33 +463,20 @@
           "description": {
             "type": "string"
           },
-          "totalSectionPages": {
+          "order": {
             "type": "integer"
           },
-          "questions": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Question"
-            }
+          "totalSectionPages": {
+            "type": "integer"
           }
-        }
-      },
-      "Question": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "title": {
-            "type": "string"
-          },
-          "type": {
-            "type": "string"
-          },
-          "required": {
-            "type": "boolean"
-          }
-        }
+        },
+        "required": [
+          "id",
+          "title",
+          "description",
+          "order",
+          "totalSectionPages"
+        ]
       },
       "GetApplicationMetadataByIdQueryResponse": {
         "type": "object",
@@ -315,7 +496,13 @@
           "reference": {
             "type": "integer"
           }
-        }
+        },
+        "required": [
+          "applicationId",
+          "formVersionId",
+          "organisationId",
+          "reference"
+        ]
       },
       "GetApplicationFormByIdQueryResponse": {
         "type": "object",
@@ -338,10 +525,19 @@
                 "order": {
                   "type": "integer"
                 }
-              }
+              },
+              "required": [
+                "id",
+                "title",
+                "order"
+              ]
             }
           }
-        }
+        },
+        "required": [
+          "formTitle",
+          "sections"
+        ]
       },
       "GetApplicationsByOrganisationIdQueryResponse": {
         "type": "object",
@@ -358,45 +554,178 @@
                 "name": {
                   "type": "string"
                 },
+                "createdDate": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              },
+              "required": [
+                "id",
+                "name"
+              ]
+            }
+          }
+        },
+        "required": [
+          "applications"
+        ]
+      },
+      "GetApplicationSectionByIdQueryResponse": {
+        "type": "object",
+        "properties": {
+          "sectionTitle": {
+            "type": "string"
+          },
+          "pages": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "title": {
+                  "type": "string"
+                },
+                "order": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        },
+        "required": [
+          "sectionTitle",
+          "pages"
+        ]
+      },
+      "GetApplicationSectionStatusByApplicationIdQueryResponse": {
+        "type": "object",
+        "properties": {
+          "pages": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "pageId": {
+                  "type": "string",
+                  "format": "uuid"
+                },
                 "status": {
                   "type": "string"
                 }
               }
             }
           }
-        }
+        },
+        "required": [
+          "pages"
+        ]
       },
-      "GetApplicationPageAnswersByPageIdQueryResponse": {
+      "GetApplicationFormStatusByApplicationIdQueryResponse": {
         "type": "object",
         "properties": {
-          "questions": {
+          "applicationName": {
+            "type": "string"
+          },
+          "sections": {
             "type": "array",
             "items": {
               "type": "object",
               "properties": {
-                "questionId": {
+                "sectionId": {
                   "type": "string",
                   "format": "uuid"
                 },
-                "answer": {
-                  "type": "object",
-                  "properties": {
-                    "textValue": {
-                      "type": "string"
-                    },
-                    "numberValue": {
-                      "type": "number"
-                    },
-                    "dateValue": {
-                      "type": "string",
-                      "format": "date"
+                "totalPages": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        },
+        "required": [
+          "applicationName",
+          "sections"
+        ]
+      },
+      "GetApplicationFormPreviewByIdQueryResponse": {
+        "type": "object",
+        "properties": {
+          "applicationId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "formVersionId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "sectionsWithPagesAndQuestions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "title": {
+                  "type": "string"
+                },
+                "pages": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "format": "uuid"
+                      },
+                      "title": {
+                        "type": "string"
+                      }
                     }
                   }
                 }
               }
             }
           }
-        }
+        },
+        "required": [
+          "applicationId",
+          "formVersionId",
+          "sectionsWithPagesAndQuestions"
+        ]
+      },
+      "GetApplicationByIdQueryResponse": {
+        "type": "object",
+        "properties": {
+          "applicationId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "formVersionId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "organisationId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "reference": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "applicationId",
+          "formVersionId",
+          "organisationId"
+        ]
+      },
+      "EmptyResponse": {
+        "type": "object",
+        "description": "Success response containing no content."
       }
     }
   }

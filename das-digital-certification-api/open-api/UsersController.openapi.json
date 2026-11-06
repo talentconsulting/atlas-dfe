@@ -1,13 +1,13 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Digital Certificates API",
+    "title": "Digital Certification API",
     "version": "1.0.0"
   },
   "paths": {
     "/api/users/{govUkIdentifier}": {
       "get": {
-        "summary": "Get a user by GovUkIdentifier",
+        "summary": "Get user details",
         "parameters": [
           {
             "name": "govUkIdentifier",
@@ -20,7 +20,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful operation",
+            "description": "Successful response",
             "content": {
               "application/json": {
                 "schema": {
@@ -53,7 +53,7 @@
         },
         "responses": {
           "200": {
-            "description": "Successful operation",
+            "description": "Successful response",
             "content": {
               "application/json": {
                 "schema": {
@@ -97,7 +97,7 @@
         },
         "responses": {
           "200": {
-            "description": "Successful operation"
+            "description": "Successful response"
           },
           "400": {
             "description": "Validation error"
@@ -122,7 +122,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful operation",
+            "description": "Successful response",
             "content": {
               "application/json": {
                 "schema": {
@@ -156,7 +156,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful operation",
+            "description": "Successful response",
             "content": {
               "application/json": {
                 "schema": {
@@ -190,30 +190,30 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful operation",
+            "description": "Successful response",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/GetUserMatchesResponse"
                 }
               }
-            },
-            "404": {
-              "description": "User not found"
-            },
-            "400": {
-              "description": "Validation error"
-            },
-            "500": {
-              "description": "Internal server error"
             }
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "500": {
+            "description": "Internal server error"
           }
         }
       }
     },
     "/api/users/{userId}/sharings": {
       "get": {
-        "summary": "Get sharings for a user and certificate",
+        "summary": "Get sharings for a user",
         "parameters": [
           {
             "name": "userId",
@@ -236,15 +236,15 @@
           {
             "name": "limit",
             "in": "query",
+            "required": false,
             "schema": {
-              "type": "integer",
-              "nullable": true
+              "type": "integer"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Successful operation",
+            "description": "Successful response",
             "content": {
               "application/json": {
                 "schema": {
@@ -263,40 +263,8 @@
       }
     },
     "/api/users/{userId}/user-actions": {
-      "get": {
-        "summary": "Get user actions",
-        "parameters": [
-          {
-            "name": "userId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful operation",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetUserActionsResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Validation error"
-          },
-          "500": {
-            "description": "Internal server error"
-          }
-        }
-      },
       "post": {
-        "summary": "Create a user action",
+        "summary": "Create user action",
         "parameters": [
           {
             "name": "userId",
@@ -320,11 +288,43 @@
         },
         "responses": {
           "200": {
-            "description": "Successful operation",
+            "description": "Successful response",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/CreateUserActionResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "get": {
+        "summary": "Get user actions",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetUserActionsResponse"
                 }
               }
             }
@@ -364,7 +364,7 @@
         },
         "responses": {
           "204": {
-            "description": "Successful operation"
+            "description": "Successful response"
           },
           "400": {
             "description": "Validation error"
@@ -401,7 +401,7 @@
         },
         "responses": {
           "204": {
-            "description": "Successful operation"
+            "description": "Successful response"
           },
           "400": {
             "description": "Validation error"
@@ -428,10 +428,10 @@
         ],
         "responses": {
           "204": {
-            "description": "User unlocked successfully"
+            "description": "No content response"
           },
           "200": {
-            "description": "Unlock operation succeeded"
+            "description": "Already unlocked response"
           },
           "400": {
             "description": "Validation error"
@@ -474,14 +474,17 @@
           "isLocked": {
             "type": "boolean"
           }
-        }
+        },
+        "required": [
+          "id",
+          "govUkIdentifier",
+          "emailAddress",
+          "createdAt",
+          "isLocked"
+        ]
       },
       "CreateOrUpdateUserRequest": {
         "type": "object",
-        "required": [
-          "govUkIdentifier",
-          "emailAddress"
-        ],
         "properties": {
           "govUkIdentifier": {
             "type": "string"
@@ -493,7 +496,11 @@
             "type": "string",
             "nullable": true
           }
-        }
+        },
+        "required": [
+          "govUkIdentifier",
+          "emailAddress"
+        ]
       },
       "CreateOrUpdateUserResponse": {
         "type": "object",
@@ -502,13 +509,13 @@
             "type": "string",
             "format": "uuid"
           }
-        }
+        },
+        "required": [
+          "userId"
+        ]
       },
       "UpdateUserIdentityRequest": {
         "type": "object",
-        "required": [
-          "dateOfBirth"
-        ],
         "properties": {
           "names": {
             "type": "array",
@@ -521,18 +528,19 @@
             "type": "string",
             "format": "date-time"
           }
-        }
+        },
+        "required": [
+          "dateOfBirth"
+        ]
       },
       "NameRequest": {
         "type": "object",
-        "required": [
-          "familyName",
-          "givenNames"
-        ],
         "properties": {
-          "userIdentityId": {
-            "type": "string",
-            "format": "uuid"
+          "familyName": {
+            "type": "string"
+          },
+          "givenNames": {
+            "type": "string"
           },
           "validSince": {
             "type": "string",
@@ -543,14 +551,12 @@
             "type": "string",
             "format": "date-time",
             "nullable": true
-          },
-          "familyName": {
-            "type": "string"
-          },
-          "givenNames": {
-            "type": "string"
           }
-        }
+        },
+        "required": [
+          "familyName",
+          "givenNames"
+        ]
       },
       "GetUserIdentityResponse": {
         "type": "object",
@@ -602,7 +608,12 @@
           "givenNames": {
             "type": "string"
           }
-        }
+        },
+        "required": [
+          "userIdentityId",
+          "familyName",
+          "givenNames"
+        ]
       },
       "AuthorisationResponse": {
         "type": "object",
@@ -618,7 +629,12 @@
             "type": "string",
             "format": "date-time"
           }
-        }
+        },
+        "required": [
+          "authorisationId",
+          "uln",
+          "authorisedAt"
+        ]
       },
       "GetUserAuthorisationResponse": {
         "type": "object",
@@ -635,14 +651,19 @@
             "type": "string",
             "format": "uuid"
           },
-          "uln": {
+          "ULN": {
             "type": "integer"
           },
           "authorisedAt": {
             "type": "string",
             "format": "date-time"
           }
-        }
+        },
+        "required": [
+          "authorisationId",
+          "ULN",
+          "authorisedAt"
+        ]
       },
       "GetUserMatchesResponse": {
         "type": "object",
@@ -679,7 +700,15 @@
               "$ref": "#/components/schemas/UserMatchDetailDto"
             }
           }
-        }
+        },
+        "required": [
+          "userId",
+          "govUkIdentifier",
+          "emailAddress",
+          "createdAt",
+          "isLocked",
+          "userMatches"
+        ]
       },
       "UserMatchDetailDto": {
         "type": "object",
@@ -741,7 +770,16 @@
           "isFailed": {
             "type": "boolean"
           }
-        }
+        },
+        "required": [
+          "id",
+          "familyName",
+          "dateOfBirth",
+          "eventTime",
+          "certificateType",
+          "isMatched",
+          "isFailed"
+        ]
       },
       "GetSharingsResponse": {
         "type": "object",
@@ -772,7 +810,13 @@
             },
             "nullable": true
           }
-        }
+        },
+        "required": [
+          "userId",
+          "certificateId",
+          "certificateType",
+          "courseName"
+        ]
       },
       "SharingDetailDto": {
         "type": "object",
@@ -811,7 +855,14 @@
             },
             "nullable": true
           }
-        }
+        },
+        "required": [
+          "sharingId",
+          "sharingNumber",
+          "createdAt",
+          "linkCode",
+          "expiryTime"
+        ]
       },
       "SharingEmailDetailDto": {
         "type": "object",
@@ -839,7 +890,68 @@
             },
             "nullable": true
           }
-        }
+        },
+        "required": [
+          "sharingEmailId",
+          "emailAddress",
+          "emailLinkCode",
+          "sentTime"
+        ]
+      },
+      "CreateUserActionRequest": {
+        "type": "object",
+        "properties": {
+          "actionType": {
+            "type": "string",
+            "enum": [
+              "Reprint",
+              "Help",
+              "Contact",
+              "NotMatched",
+              "NotFound"
+            ]
+          },
+          "familyName": {
+            "type": "string"
+          },
+          "givenNames": {
+            "type": "string"
+          },
+          "certificateId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "certificateType": {
+            "type": "string",
+            "enum": [
+              "Unknown",
+              "Standard",
+              "Framework"
+            ],
+            "nullable": true
+          },
+          "courseName": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "actionType",
+          "familyName",
+          "givenNames"
+        ]
+      },
+      "CreateUserActionResponse": {
+        "type": "object",
+        "properties": {
+          "actionCode": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "actionCode"
+        ]
       },
       "GetUserActionsResponse": {
         "type": "object",
@@ -850,7 +962,10 @@
               "$ref": "#/components/schemas/UserActionDetailDto"
             }
           }
-        }
+        },
+        "required": [
+          "userActions"
+        ]
       },
       "UserActionDetailDto": {
         "type": "object",
@@ -922,7 +1037,16 @@
             "type": "integer",
             "nullable": true
           }
-        }
+        },
+        "required": [
+          "id",
+          "userId",
+          "actionType",
+          "actionTime",
+          "actionStatus",
+          "familyName",
+          "givenNames"
+        ]
       },
       "AdminActionResponse": {
         "type": "object",
@@ -941,14 +1065,15 @@
               "Unlocked"
             ]
           }
-        }
+        },
+        "required": [
+          "username",
+          "actionTime",
+          "action"
+        ]
       },
       "CreateUserMatchRequest": {
         "type": "object",
-        "required": [
-          "familyName",
-          "dateOfBirth"
-        ],
         "properties": {
           "uln": {
             "type": "integer",
@@ -999,71 +1124,29 @@
           },
           "isFailed": {
             "type": "boolean"
+          },
+          "isUlnMatched": {
+            "type": "boolean"
           }
-        }
+        },
+        "required": [
+          "familyName",
+          "dateOfBirth",
+          "isMatched",
+          "isFailed",
+          "isUlnMatched"
+        ]
       },
       "CreateUserAuthorisationRequest": {
         "type": "object",
-        "required": [
-          "uln"
-        ],
         "properties": {
           "uln": {
             "type": "integer"
           }
-        }
-      },
-      "CreateUserActionRequest": {
-        "type": "object",
+        },
         "required": [
-          "actionType",
-          "familyName",
-          "givenNames"
-        ],
-        "properties": {
-          "actionType": {
-            "type": "string",
-            "enum": [
-              "Reprint",
-              "Help",
-              "Contact",
-              "NotMatched",
-              "NotFound"
-            ]
-          },
-          "familyName": {
-            "type": "string"
-          },
-          "givenNames": {
-            "type": "string"
-          },
-          "certificateId": {
-            "type": "string",
-            "format": "uuid",
-            "nullable": true
-          },
-          "certificateType": {
-            "type": "string",
-            "enum": [
-              "Unknown",
-              "Standard",
-              "Framework"
-            ],
-            "nullable": true
-          },
-          "courseName": {
-            "type": "string",
-            "nullable": true
-          }
-        }
-      },
-      "CreateUserActionResponse": {
-        "type": "object",
-        "properties": {
-          "actionCode": {
-            "type": "string"
-          }
-        }
+          "uln"
+        ]
       }
     }
   }

@@ -1,14 +1,16 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Draft Apprenticeship Management",
+    "title": "Draft Apprenticeship API",
     "version": "1.0.0"
   },
   "paths": {
     "/{providerId}/unapproved/{cohortReference}/apprentices/add": {
       "get": {
-        "operationId": "addNewDraftApprenticeship",
-        "summary": "Redirect to adding a new draft apprenticeship.",
+        "summary": "Add New Draft Apprenticeship",
+        "tags": [
+          "Draft Apprenticeship"
+        ],
         "parameters": [
           {
             "name": "providerId",
@@ -29,15 +31,25 @@
         ],
         "responses": {
           "302": {
-            "description": "Redirect to appropriate route based on the request."
+            "description": "Redirects to appropriate route"
           }
-        }
+        },
+        "security": [
+          {
+            "AccessCohort": []
+          },
+          {
+            "HasContributorOrAbovePermission": []
+          }
+        ]
       }
     },
     "/{providerId}/unapproved/{cohortReference}/apprentices/add/select-how": {
       "get": {
-        "operationId": "addAnotherSelectMethodGet",
-        "summary": "Select method for adding another apprenticeship.",
+        "summary": "Add Another Select Method",
+        "tags": [
+          "Draft Apprenticeship"
+        ],
         "parameters": [
           {
             "name": "providerId",
@@ -58,13 +70,18 @@
         ],
         "responses": {
           "200": {
-            "description": "Renders method selection view."
+            "description": "Returns select journey view model",
+            "content": {
+              "text/html": {}
+            }
           }
         }
       },
       "post": {
-        "operationId": "addAnotherSelectMethodPost",
-        "summary": "Submit method for adding another apprenticeship.",
+        "summary": "Select Method for Adding Another Apprentice",
+        "tags": [
+          "Draft Apprenticeship"
+        ],
         "parameters": [
           {
             "name": "providerId",
@@ -84,10 +101,9 @@
           }
         ],
         "requestBody": {
-          "description": "Details of the selected method.",
           "required": true,
           "content": {
-            "application/json": {
+            "application/x-www-form-urlencoded": {
               "schema": {
                 "$ref": "#/components/schemas/SelectAddAnotherDraftApprenticeshipJourneyViewModel"
               }
@@ -96,15 +112,22 @@
         },
         "responses": {
           "302": {
-            "description": "Redirects to the reservation ID or course selection page."
+            "description": "Redirects to GetReservationId endpoint"
           }
-        }
+        },
+        "security": [
+          {
+            "HasContributorOrAbovePermission": []
+          }
+        ]
       }
     },
     "/{providerId}/unapproved/{cohortReference}/apprentices/add/reservation": {
       "get": {
-        "operationId": "getReservationId",
-        "summary": "Fetch reservation ID for adding apprenticeships.",
+        "summary": "Get Reservation Id",
+        "tags": [
+          "Draft Apprenticeship"
+        ],
         "parameters": [
           {
             "name": "providerId",
@@ -125,15 +148,17 @@
         ],
         "responses": {
           "302": {
-            "description": "Redirects to reservation selection link."
+            "description": "Redirects to reservation URL"
           }
         }
       }
     },
     "/{providerId}/unapproved/{cohortReference}/apprentices/add/select-course": {
       "get": {
-        "operationId": "addDraftApprenticeshipCourseGet",
-        "summary": "Display course selection screen for draft apprenticeships.",
+        "summary": "Add Draft Apprenticeship Course",
+        "tags": [
+          "Draft Apprenticeship"
+        ],
         "parameters": [
           {
             "name": "providerId",
@@ -154,13 +179,20 @@
         ],
         "responses": {
           "200": {
-            "description": "Course selection screen."
+            "description": "Displays course selection view"
           }
-        }
+        },
+        "security": [
+          {
+            "HasContributorOrAbovePermission": []
+          }
+        ]
       },
       "post": {
-        "operationId": "setCoursePost",
-        "summary": "Set course for draft apprenticeship.",
+        "summary": "Set Course",
+        "tags": [
+          "Draft Apprenticeship"
+        ],
         "parameters": [
           {
             "name": "providerId",
@@ -180,10 +212,9 @@
           }
         ],
         "requestBody": {
-          "description": "Draft apprenticeship course selection details",
           "required": true,
           "content": {
-            "application/json": {
+            "application/x-www-form-urlencoded": {
               "schema": {
                 "$ref": "#/components/schemas/SelectCourseViewModel"
               }
@@ -192,36 +223,114 @@
         },
         "responses": {
           "302": {
-            "description": "Redirects to delivery model selection screen."
+            "description": "Redirects to SelectDeliveryModel endpoint"
           }
-        }
+        },
+        "security": [
+          {
+            "HasContributorOrAbovePermission": []
+          }
+        ]
       }
     }
   },
   "components": {
     "schemas": {
+      "DraftApprenticeshipViewModel": {
+        "type": "object",
+        "properties": {
+          "providerId": {
+            "type": "integer"
+          },
+          "cohortReference": {
+            "type": "string"
+          },
+          "cacheKey": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "deliveryModel": {
+            "type": "string",
+            "enum": [
+              "Regular",
+              "PortableFlexiJob",
+              "FlexiJobAgency"
+            ]
+          }
+        }
+      },
       "SelectAddAnotherDraftApprenticeshipJourneyViewModel": {
         "type": "object",
         "properties": {
-          "ProviderId": {
+          "providerId": {
             "type": "integer"
           },
-          "CohortReference": {
+          "cohortReference": {
             "type": "string"
           },
-          "UseLearnerData": {
-            "type": "boolean"
+          "cohortId": {
+            "type": "integer"
+          },
+          "selection": {
+            "type": "string",
+            "enum": [
+              "Ilr",
+              "Manual"
+            ]
           }
         }
       },
       "SelectCourseViewModel": {
         "type": "object",
         "properties": {
-          "ProviderId": {
+          "providerId": {
             "type": "integer"
           },
-          "CourseCode": {
+          "courseCode": {
             "type": "string"
+          },
+          "standards": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Standard"
+            }
+          }
+        }
+      },
+      "Standard": {
+        "type": "object",
+        "properties": {
+          "courseCode": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "AccessCohort": {
+        "type": "oauth2",
+        "flows": {
+          "authorizationCode": {
+            "authorizationUrl": "https://example.com/auth",
+            "tokenUrl": "https://example.com/token",
+            "scopes": {
+              "AccessCohort": "Access cohort data"
+            }
+          }
+        }
+      },
+      "HasContributorOrAbovePermission": {
+        "type": "oauth2",
+        "flows": {
+          "authorizationCode": {
+            "authorizationUrl": "https://example.com/auth",
+            "tokenUrl": "https://example.com/token",
+            "scopes": {
+              "HasContributorOrAbovePermission": "Contributor-level access"
+            }
           }
         }
       }

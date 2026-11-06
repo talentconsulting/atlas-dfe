@@ -3,26 +3,27 @@
   "info": {
     "title": "Assessment API",
     "version": "1.0.0",
-    "description": "API for managing assessment-related operations."
+    "description": "API for managing assessments and associated entities within the Results and Certification system."
   },
   "paths": {
     "/api/Assessment/ProcessBulkAssessments": {
       "post": {
-        "operationId": "processBulkAssessments",
-        "summary": "Processes bulk assessment requests.",
+        "operationId": "ProcessBulkAssessmentsAsync",
+        "summary": "Processes bulk assessment entries.",
         "requestBody": {
+          "description": "Bulk process request data",
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/BulkProcessRequest"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
-            "description": "The bulk assessment process result.",
+            "description": "Bulk assessment processing has been completed.",
             "content": {
               "application/json": {
                 "schema": {
@@ -36,8 +37,8 @@
     },
     "/api/Assessment/GetAvailableAssessmentSeries/{aoUkprn}/{profileId}/{componentType}/{componentIds}": {
       "get": {
-        "operationId": "getAvailableAssessmentSeries",
-        "summary": "Retrieves available assessment series for a given profile and components.",
+        "operationId": "GetAvailableAssessmentSeriesAsync",
+        "summary": "Retrieves available assessment series.",
         "parameters": [
           {
             "name": "aoUkprn",
@@ -76,7 +77,7 @@
         ],
         "responses": {
           "200": {
-            "description": "The available assessment series.",
+            "description": "Available assessment series retrieved successfully.",
             "content": {
               "application/json": {
                 "schema": {
@@ -90,21 +91,22 @@
     },
     "/api/Assessment/AddAssessmentEntry": {
       "post": {
-        "operationId": "addAssessmentEntry",
-        "summary": "Adds an assessment entry for a profile.",
+        "operationId": "AddAssessmentEntryAsync",
+        "summary": "Adds a new assessment entry.",
         "requestBody": {
+          "description": "AddAssessmentEntry request data",
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/AddAssessmentEntryRequest"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
-            "description": "The result of adding an assessment entry.",
+            "description": "Assessment entry added successfully.",
             "content": {
               "application/json": {
                 "schema": {
@@ -118,8 +120,8 @@
     },
     "/api/Assessment/GetActiveAssessmentEntryDetails/{aoUkprn}/{assessmentId}/{componentType}": {
       "get": {
-        "operationId": "getActiveAssessmentEntryDetails",
-        "summary": "Retrieves active assessment entry details for a given profile and component.",
+        "operationId": "GetActiveAssessmentEntryDetailsAsync",
+        "summary": "Retrieves active assessment entry details.",
         "parameters": [
           {
             "name": "aoUkprn",
@@ -150,7 +152,7 @@
         ],
         "responses": {
           "200": {
-            "description": "The active assessment entry details.",
+            "description": "Active assessment entry details retrieved successfully.",
             "content": {
               "application/json": {
                 "schema": {
@@ -164,8 +166,8 @@
     },
     "/api/Assessment/GetActiveSpecialismAssessmentEntries/{aoUkprn}/{specialismAssessmentIds}": {
       "get": {
-        "operationId": "getActiveSpecialismAssessmentEntries",
-        "summary": "Retrieves active specialism assessment entries for the given assessments.",
+        "operationId": "GetActiveSpecialismAssessmentEntriesAsync",
+        "summary": "Retrieves active specialism assessment entries.",
         "parameters": [
           {
             "name": "aoUkprn",
@@ -187,7 +189,7 @@
         ],
         "responses": {
           "200": {
-            "description": "The active specialism assessment entry details.",
+            "description": "Active specialism assessment entries retrieved successfully.",
             "content": {
               "application/json": {
                 "schema": {
@@ -204,21 +206,22 @@
     },
     "/api/Assessment/RemoveAssessmentEntry": {
       "put": {
-        "operationId": "removeAssessmentEntry",
+        "operationId": "RemoveAssessmentEntryAsync",
         "summary": "Removes an assessment entry.",
         "requestBody": {
+          "description": "Remove assessment entry request",
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/RemoveAssessmentEntryRequest"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
-            "description": "The result of removing an assessment entry.",
+            "description": "Assessment entry removed successfully.",
             "content": {
               "application/json": {
                 "schema": {
@@ -232,11 +235,11 @@
     },
     "/api/Assessment/GetAssessmentSeries": {
       "get": {
-        "operationId": "getAssessmentSeries",
-        "summary": "Retrieves the list of assessment series.",
+        "operationId": "GetAssessmentSeriesAsync",
+        "summary": "Retrieves all assessment series details.",
         "responses": {
           "200": {
-            "description": "All available assessment series.",
+            "description": "Assessment series details retrieved successfully.",
             "content": {
               "application/json": {
                 "schema": {
@@ -280,19 +283,16 @@
           "performedBy": {
             "type": "string"
           }
-        },
-        "required": [
-          "aoUkprn",
-          "blobFileName",
-          "blobUniqueReference",
-          "fileType",
-          "documentType",
-          "loginUserType",
-          "performedBy"
-        ]
+        }
       },
       "BulkAssessmentResponse": {
-        "type": "object"
+        "type": "object",
+        "description": "Response for bulk assessment processing.",
+        "properties": {
+          "isSuccess": {
+            "type": "boolean"
+          }
+        }
       },
       "AvailableAssessmentSeries": {
         "type": "object",
@@ -308,12 +308,7 @@
           "assessmentSeriesName": {
             "type": "string"
           }
-        },
-        "required": [
-          "profileId",
-          "assessmentSeriesId",
-          "assessmentSeriesName"
-        ]
+        }
       },
       "AddAssessmentEntryRequest": {
         "type": "object",
@@ -333,9 +328,7 @@
           "specialismIds": {
             "type": "array",
             "items": {
-              "type": "integer",
-              "format": "int32",
-              "nullable": true
+              "type": "integer"
             }
           },
           "componentType": {
@@ -344,14 +337,7 @@
           "performedBy": {
             "type": "string"
           }
-        },
-        "required": [
-          "aoUkprn",
-          "profileId",
-          "assessmentSeriesId",
-          "componentType",
-          "performedBy"
-        ]
+        }
       },
       "AddAssessmentEntryResponse": {
         "type": "object",
@@ -363,11 +349,7 @@
           "isSuccess": {
             "type": "boolean"
           }
-        },
-        "required": [
-          "uln",
-          "isSuccess"
-        ]
+        }
       },
       "AssessmentEntryDetails": {
         "type": "object",
@@ -391,14 +373,7 @@
           "assessmentSeriesName": {
             "type": "string"
           }
-        },
-        "required": [
-          "profileId",
-          "uln",
-          "assessmentId",
-          "assessmentSeriesId",
-          "assessmentSeriesName"
-        ]
+        }
       },
       "RemoveAssessmentEntryRequest": {
         "type": "object",
@@ -414,9 +389,7 @@
           "specialismAssessmentIds": {
             "type": "array",
             "items": {
-              "type": "integer",
-              "format": "int32",
-              "nullable": true
+              "type": "integer"
             }
           },
           "componentType": {
@@ -425,13 +398,7 @@
           "performedBy": {
             "type": "string"
           }
-        },
-        "required": [
-          "assessmentId",
-          "aoUkprn",
-          "componentType",
-          "performedBy"
-        ]
+        }
       },
       "AssessmentSeriesDetails": {
         "type": "object",
@@ -468,25 +435,12 @@
           "resultPublishDate": {
             "type": "string",
             "format": "date-time"
+          },
+          "resultCalculationYear": {
+            "type": "integer",
+            "format": "int32"
           }
-        },
-        "required": [
-          "id",
-          "componentType",
-          "name",
-          "startDate",
-          "endDate",
-          "appealEndDate",
-          "resultPublishDate"
-        ]
-      },
-      "ComponentType": {
-        "type": "string",
-        "enum": [
-          "NotSpecified",
-          "Core",
-          "Specialism"
-        ]
+        }
       },
       "FileType": {
         "type": "string",
@@ -506,17 +460,7 @@
           "Ucas",
           "DataExports",
           "OverallResults",
-          "IndustryPlacements",
-          "AnalystOverallResults",
-          "AnalystCoreResults",
-          "CoreRomm",
-          "SpecialismRomm",
-          "ProviderAddressess",
-          "CertificateTracking",
-          "Withdrawals",
-          "ResultSlips",
-          "Romms",
-          "Aspose"
+          "IndustryPlacements"
         ]
       },
       "LoginUserType": {
@@ -526,6 +470,14 @@
           "AwardingOrganisation",
           "TrainingProvider",
           "Admin"
+        ]
+      },
+      "ComponentType": {
+        "type": "string",
+        "enum": [
+          "NotSpecified",
+          "Core",
+          "Specialism"
         ]
       }
     }

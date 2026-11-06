@@ -1,14 +1,15 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Skills and Strengths API",
-    "version": "1.0.0"
+    "title": "Find an Apprenticeship API",
+    "version": "1.0.0",
+    "description": "API documentation for managing apprentice applications, including skills and strengths."
   },
   "paths": {
     "/apply/{applicationId}/skillsandstrengths/": {
       "get": {
-        "summary": "Retrieve expected skills and strengths for an application",
         "operationId": "getSkillsAndStrengths",
+        "description": "Retrieve expected skills and strengths for an application.",
         "parameters": [
           {
             "name": "applicationId",
@@ -17,12 +18,13 @@
             "schema": {
               "type": "string",
               "format": "uuid"
-            }
+            },
+            "description": "Unique identifier of the application."
           }
         ],
         "responses": {
           "200": {
-            "description": "Skills and strengths retrieved successfully",
+            "description": "A successful response containing the skills and strengths for the application.",
             "content": {
               "application/json": {
                 "schema": {
@@ -34,13 +36,13 @@
         },
         "security": [
           {
-            "oauth2": []
+            "faaUser": []
           }
         ]
       },
       "post": {
-        "summary": "Update skills and strengths for an application",
-        "operationId": "postSkillsAndStrengths",
+        "operationId": "updateSkillsAndStrengths",
+        "description": "Update the skills and strengths for an application.",
         "parameters": [
           {
             "name": "applicationId",
@@ -49,10 +51,12 @@
             "schema": {
               "type": "string",
               "format": "uuid"
-            }
+            },
+            "description": "Unique identifier of the application."
           }
         ],
         "requestBody": {
+          "description": "Updated skills and strengths data.",
           "required": true,
           "content": {
             "application/json": {
@@ -64,15 +68,22 @@
         },
         "responses": {
           "200": {
-            "description": "Skills and strengths updated successfully"
+            "description": "Skills and strengths updated successfully."
           },
           "400": {
-            "description": "Invalid input"
+            "description": "Invalid input provided.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "null"
+                }
+              }
+            }
           }
         },
         "security": [
           {
-            "oauth2": []
+            "faaUser": []
           }
         ]
       }
@@ -85,29 +96,49 @@
         "properties": {
           "applicationId": {
             "type": "string",
-            "format": "uuid"
-          },
-          "isSectionComplete": {
-            "type": "boolean",
-            "nullable": true
+            "format": "uuid",
+            "description": "Unique identifier for the application."
           },
           "skillsAndStrengths": {
             "type": "string",
-            "nullable": true
+            "description": "Text describing skills and strengths."
           },
           "employer": {
             "type": "string",
-            "nullable": true
+            "description": "Employer associated with the application."
           },
           "expectedSkillsAndStrengths": {
             "type": "array",
             "items": {
               "type": "string"
             },
-            "nullable": true
+            "description": "List of expected skills and strengths."
+          },
+          "isSectionComplete": {
+            "type": "boolean",
+            "description": "Indicates if the section is marked as complete."
           },
           "autoSave": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Indicates whether the updates are auto-saved."
+          }
+        },
+        "required": [
+          "applicationId"
+        ]
+      }
+    },
+    "securitySchemes": {
+      "faaUser": {
+        "type": "oauth2",
+        "description": "OAuth2 security scheme for FAA users.",
+        "flows": {
+          "authorizationCode": {
+            "authorizationUrl": "https://auth.example.com/oauth/authorize",
+            "tokenUrl": "https://auth.example.com/oauth/token",
+            "scopes": {
+              "profile": "Access user profile"
+            }
           }
         }
       }

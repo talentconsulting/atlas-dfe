@@ -1,0 +1,215 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Funding Projection API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/jobs/{id}": {
+      "put": {
+        "summary": "Update import job state with results from import run",
+        "operationId": "UpdateJobState",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PutImportJobStateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImportJobStateResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "PutImportJobStateRequest": {
+        "type": "object",
+        "required": [
+          "AccountId",
+          "JobName",
+          "JobState",
+          "LastSuccessfulImportDate",
+          "LastAttemptedDate",
+          "LastAttemptSuccessful",
+          "TotalRecordsLastRun",
+          "FailedRecordsLastRun"
+        ],
+        "properties": {
+          "AccountId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "JobName": {
+            "$ref": "#/components/schemas/JobName"
+          },
+          "JobState": {
+            "$ref": "#/components/schemas/JobState"
+          },
+          "LastSuccessfulImportDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "LastAttemptedDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "LastAttemptSuccessful": {
+            "type": "boolean"
+          },
+          "TotalRecordsLastRun": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "FailedRecordsLastRun": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "ImportJobStateResponse": {
+        "type": "object",
+        "properties": {
+          "Id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "JobName": {
+            "$ref": "#/components/schemas/JobName"
+          },
+          "LastSuccessfulImportDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "LastAttemptedDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "LastAttemptSuccessful": {
+            "type": "boolean"
+          },
+          "TotalRecordsLastRun": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "FailedRecordsLastRun": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "UpdatedDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "CreatedDate": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "ValidationProblemDetails": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "status": {
+            "type": "integer"
+          },
+          "detail": {
+            "type": "string"
+          },
+          "instance": {
+            "type": "string"
+          },
+          "errors": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "status": {
+            "type": "integer"
+          },
+          "detail": {
+            "type": "string"
+          },
+          "instance": {
+            "type": "string"
+          }
+        }
+      },
+      "JobName": {
+        "type": "string",
+        "enum": [
+          "ImportLearnersCost"
+        ]
+      },
+      "JobState": {
+        "type": "string",
+        "enum": [
+          "Pending",
+          "Completed",
+          "Failed"
+        ]
+      }
+    }
+  }
+}

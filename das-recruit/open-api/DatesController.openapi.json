@@ -1,0 +1,190 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Employer Vacancy Management API",
+    "description": "API for managing employer job vacancies",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/accounts/{EmployerAccountId}/vacancies/{VacancyId}/dates": {
+      "get": {
+        "summary": "Get Dates",
+        "operationId": "Dates_Get",
+        "parameters": [
+          {
+            "name": "EmployerAccountId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "VacancyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "wizard",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "true"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success - returns a view with the DatesViewModel.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DatesViewModel"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Post Dates",
+        "operationId": "Dates_Post",
+        "parameters": [
+          {
+            "name": "EmployerAccountId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "VacancyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "wizard",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DatesEditModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success - redirects based on the wizard parameter"
+          },
+          "400": {
+            "description": "Bad Request - includes validation errors",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DatesViewModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "DatesViewModel": {
+        "type": "object",
+        "properties": {
+          "PageInfo": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "CanShowTrainingErrorHint": {
+            "type": "boolean"
+          },
+          "SoftValidationErrors": {
+            "type": "object",
+            "properties": {
+              "Errors": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "PropertyName": {
+                      "type": "string"
+                    },
+                    "ErrorMessage": {
+                      "type": "string"
+                    },
+                    "ErrorCode": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "DatesEditModel": {
+        "type": "object",
+        "properties": {
+          "EmployerAccountId": {
+            "type": "string"
+          },
+          "VacancyId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "ClosingDay": {
+            "type": "string"
+          },
+          "ClosingMonth": {
+            "type": "string"
+          },
+          "ClosingYear": {
+            "type": "string"
+          },
+          "ClosingDate": {
+            "type": "string",
+            "nullable": true,
+            "description": "Formatted as dd/MM/yyyy if valid, otherwise null."
+          },
+          "StartDay": {
+            "type": "string"
+          },
+          "StartMonth": {
+            "type": "string"
+          },
+          "StartYear": {
+            "type": "string"
+          },
+          "StartDate": {
+            "type": "string",
+            "nullable": true,
+            "description": "Formatted as dd/MM/yyyy if valid, otherwise null."
+          }
+        }
+      }
+    }
+  }
+}

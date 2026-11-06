@@ -2,13 +2,14 @@
   "openapi": "3.1.0",
   "info": {
     "title": "StubController API",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "description": "API for handling stub-based authentication flows in DAS Digital Certificates."
   },
   "paths": {
     "/stub/sign-in-stub": {
       "get": {
-        "operationId": "SignInStubGet",
-        "summary": "Render the sign-in page with stub data",
+        "operationId": "getSignInStub",
+        "summary": "Render the sign-in stub view.",
         "parameters": [
           {
             "name": "returnUrl",
@@ -16,22 +17,26 @@
             "required": false,
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "The URL to which the user will be redirected after signing in."
           }
         ],
         "responses": {
           "200": {
-            "description": "Successful rendering of the sign-in page"
+            "description": "The sign-in stub view rendered.",
+            "content": {
+              "text/html": {}
+            }
           }
         }
       },
       "post": {
-        "operationId": "SignInStubPost",
-        "summary": "Submit sign-in stub data",
+        "operationId": "postSignInStub",
+        "summary": "Handle sign-in stub submissions.",
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": {
+            "application/x-www-form-urlencoded": {
               "schema": {
                 "$ref": "#/components/schemas/SignInStubViewModel"
               }
@@ -40,15 +45,23 @@
         },
         "responses": {
           "302": {
-            "description": "Redirects to another URL (sign-in stub or signed-in stub)"
+            "description": "Redirect to another route.",
+            "headers": {
+              "Location": {
+                "description": "The route to which the user is redirected after processing the sign-in stub.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
           }
         }
       }
     },
     "/stub/signed-in-stub": {
       "get": {
-        "operationId": "SignedInStubGet",
-        "summary": "Render the signed-in stub page",
+        "operationId": "getSignedInStub",
+        "summary": "Render the signed-in stub view.",
         "parameters": [
           {
             "name": "returnUrl",
@@ -56,22 +69,23 @@
             "required": false,
             "schema": {
               "type": "string"
-            }
-          }
-        ],
-        "security": [
-          {
-            "Bearer": []
+            },
+            "description": "The URL to which the user will proceed after being signed in."
           }
         ],
         "responses": {
           "200": {
-            "description": "Successfully renders the signed-in stub page"
-          },
-          "401": {
-            "description": "Unauthorized access"
+            "description": "The signed-in stub view rendered.",
+            "content": {
+              "text/html": {}
+            }
           }
-        }
+        },
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ]
       }
     }
   },
@@ -82,27 +96,31 @@
         "properties": {
           "Id": {
             "type": "string",
-            "nullable": true
+            "nullable": true,
+            "description": "ID of the stub user."
           },
           "Email": {
             "type": "string",
-            "nullable": true
+            "nullable": true,
+            "description": "Email address of the stub user."
           },
           "Phone": {
             "type": "string",
-            "nullable": true
+            "nullable": true,
+            "description": "Phone number of the stub user."
           },
           "UserFile": {
             "type": "string",
             "format": "binary",
-            "nullable": true
+            "nullable": true,
+            "description": "File uploaded by the stub user."
           },
           "ReturnUrl": {
             "type": "string",
-            "nullable": true
+            "nullable": true,
+            "description": "The URL to redirect to after sign-in."
           }
-        },
-        "required": []
+        }
       },
       "Name": {
         "type": "object",
@@ -110,24 +128,35 @@
           "ValidSince": {
             "type": "string",
             "format": "date-time",
-            "nullable": true
+            "nullable": true,
+            "description": "The date from which the name is valid."
           },
           "ValidUntil": {
             "type": "string",
             "format": "date-time",
-            "nullable": true
+            "nullable": true,
+            "description": "The date until which the name is valid."
           },
           "FamilyName": {
-            "type": "string"
+            "type": "string",
+            "description": "Family name of the user."
           },
           "GivenNames": {
-            "type": "string"
+            "type": "string",
+            "description": "Given names of the user."
           }
         },
         "required": [
           "FamilyName",
           "GivenNames"
         ]
+      }
+    },
+    "securitySchemes": {
+      "cookieAuth": {
+        "type": "apiKey",
+        "name": ".AspNetCore.Cookies",
+        "in": "cookie"
       }
     }
   }

@@ -1,0 +1,238 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Employer Incentives API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/applications": {
+      "post": {
+        "summary": "Create Incentive Application",
+        "operationId": "createIncentiveApplication",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateIncentiveApplicationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        }
+      }
+    },
+    "/applications/{applicationId}": {
+      "put": {
+        "summary": "Update Incentive Application",
+        "operationId": "updateIncentiveApplication",
+        "parameters": [
+          {
+            "name": "applicationId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateIncentiveApplicationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Submit Incentive Application",
+        "operationId": "submitIncentiveApplication",
+        "parameters": [
+          {
+            "name": "applicationId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SubmitIncentiveApplicationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "409": {
+            "description": "Conflict"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CreateIncentiveApplicationRequest": {
+        "type": "object",
+        "properties": {
+          "IncentiveApplicationId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "AccountId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "AccountLegalEntityId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "Apprenticeships": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IncentiveApplicationApprenticeship"
+            }
+          }
+        },
+        "required": [
+          "IncentiveApplicationId",
+          "AccountId",
+          "AccountLegalEntityId",
+          "Apprenticeships"
+        ]
+      },
+      "UpdateIncentiveApplicationRequest": {
+        "type": "object",
+        "properties": {
+          "IncentiveApplicationId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "AccountId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "Apprenticeships": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IncentiveApplicationApprenticeship"
+            }
+          }
+        },
+        "required": [
+          "IncentiveApplicationId",
+          "AccountId",
+          "Apprenticeships"
+        ]
+      },
+      "SubmitIncentiveApplicationRequest": {
+        "type": "object",
+        "properties": {
+          "IncentiveApplicationId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "AccountId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "DateSubmitted": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "SubmittedByEmail": {
+            "type": "string"
+          },
+          "SubmittedByName": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "IncentiveApplicationId",
+          "AccountId",
+          "DateSubmitted",
+          "SubmittedByEmail",
+          "SubmittedByName"
+        ]
+      },
+      "IncentiveApplicationApprenticeship": {
+        "type": "object",
+        "properties": {
+          "ApprenticeshipId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "FirstName": {
+            "type": "string"
+          },
+          "LastName": {
+            "type": "string"
+          },
+          "DateOfBirth": {
+            "type": "string",
+            "format": "date"
+          },
+          "ULN": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "PlannedStartDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "ApprenticeshipEmployerTypeOnApproval": {
+            "type": "string"
+          },
+          "UKPRN": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "CourseName": {
+            "type": "string"
+          },
+          "EmploymentStartDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "ApprenticeshipId",
+          "FirstName",
+          "LastName",
+          "DateOfBirth",
+          "ULN",
+          "PlannedStartDate",
+          "ApprenticeshipEmployerTypeOnApproval",
+          "CourseName"
+        ]
+      }
+    }
+  }
+}

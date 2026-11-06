@@ -2,23 +2,30 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Registration API",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "description": "API for managing registrations, withdrawals, and academic year changes in the TL Results and Certification system."
   },
   "paths": {
-    "/registrations": {
-      "get": {
-        "operationId": "getRegistrationDashboard",
-        "summary": "Get the registration dashboard.",
-        "tags": [
-          "Registrations"
-        ],
+    "/api/Registration/ProcessBulkRegistrations": {
+      "post": {
+        "summary": "Processes bulk registrations",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BulkProcessRequest"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "Returns bulk processing response",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/BulkProcessResponse"
                 }
               }
             }
@@ -26,18 +33,76 @@
         }
       }
     },
-    "/upload-registrations-file/{requestErrorTypeId}": {
+    "/api/Registration/ProcessBulkWithdrawals": {
+      "post": {
+        "summary": "Processes bulk withdrawals",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BulkProcessRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Returns bulk processing response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BulkProcessResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Registration/AddRegistration": {
+      "post": {
+        "summary": "Adds a new registration",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegistrationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Returns success status",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Registration/FindUln/{aoUkprn}/{uln}": {
       "get": {
-        "operationId": "getUploadRegistrationsFile",
-        "summary": "Get the upload registrations file view.",
-        "tags": [
-          "Registrations"
-        ],
+        "summary": "Finds ULN registration",
         "parameters": [
           {
-            "name": "requestErrorTypeId",
+            "name": "aoUkprn",
             "in": "path",
-            "required": false,
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "uln",
+            "in": "path",
+            "required": true,
             "schema": {
               "type": "integer"
             }
@@ -45,40 +110,116 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "Returns ULN registration details",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/FindUlnResponse"
                 }
               }
             }
           }
         }
-      },
-      "post": {
-        "operationId": "postUploadRegistrationsFile",
-        "summary": "Submit the upload registrations file.",
-        "tags": [
-          "Registrations"
+      }
+    },
+    "/api/Registration/GetRegistrationDetails/{aoUkprn}/{profileId}/{status}": {
+      "get": {
+        "summary": "Fetch registration details",
+        "parameters": [
+          {
+            "name": "aoUkprn",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "profileId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "status",
+            "in": "path",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/RegistrationPathwayStatus"
+            }
+          }
         ],
+        "responses": {
+          "200": {
+            "description": "Returns registration details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RegistrationDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Registration/DeleteRegistration/{aoUkprn}/{profileId}": {
+      "delete": {
+        "summary": "Deletes a registration profile",
+        "parameters": [
+          {
+            "name": "aoUkprn",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "profileId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns deletion success status",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Registration/UpdateRegistration": {
+      "put": {
+        "summary": "Updates registration details",
         "requestBody": {
           "required": true,
           "content": {
-            "multipart/form-data": {
+            "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UploadRegistrationsRequestViewModel"
+                "$ref": "#/components/schemas/ManageRegistration"
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Successful upload",
+            "description": "Returns update success status",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "type": "boolean"
                 }
               }
             }
@@ -86,20 +227,26 @@
         }
       }
     },
-    "/upload-registrations-file-success": {
-      "get": {
-        "operationId": "getRegistrationsUploadSuccessful",
-        "summary": "Get the successful registrations upload page.",
-        "tags": [
-          "Registrations"
-        ],
+    "/api/Registration/WithdrawRegistration": {
+      "put": {
+        "summary": "Withdraws a registration",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WithdrawRegistrationRequest"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
-            "description": "Upload Successful",
+            "description": "Returns withdrawal success status",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "type": "boolean"
                 }
               }
             }
@@ -107,20 +254,26 @@
         }
       }
     },
-    "/registrations-upload-unsuccessful": {
-      "get": {
-        "operationId": "getRegistrationsUploadUnsuccessful",
-        "summary": "Get the unsuccessful registrations upload page.",
-        "tags": [
-          "Registrations"
-        ],
+    "/api/Registration/RejoinRegistration": {
+      "put": {
+        "summary": "Rejoins a withdrawn registration",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RejoinRegistrationRequest"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
-            "description": "Upload Unsuccessful",
+            "description": "Returns rejoin success status",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "type": "boolean"
                 }
               }
             }
@@ -128,20 +281,26 @@
         }
       }
     },
-    "/problem-with-registrations-upload": {
-      "get": {
-        "operationId": "getProblemWithRegistrationsUpload",
-        "summary": "Get the problem with registrations upload page.",
-        "tags": [
-          "Registrations"
-        ],
+    "/api/Registration/Reregistration": {
+      "post": {
+        "summary": "Performs re-registration",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReregistrationRequest"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
-            "description": "Page rendered successfully",
+            "description": "Returns success status for re-registration",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "type": "boolean"
                 }
               }
             }
@@ -149,31 +308,90 @@
         }
       }
     },
-    "/download-registration-errors": {
-      "get": {
-        "operationId": "getRegistrationErrorsFile",
-        "summary": "Download registration error file.",
-        "tags": [
-          "Registrations"
-        ],
+    "/api/Registration/SetRegistrationAsPendingWithdrawal": {
+      "put": {
+        "summary": "Sets a registration as pending withdrawal",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetRegistrationAsPendingWithdrawalRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Returns success status for setting a registration as pending withdrawal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Registration/ReinstateRegistrationFromPendingWithdrawal": {
+      "put": {
+        "summary": "Reinstates a registration from pending withdrawal",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReinstateRegistrationFromPendingWithdrawalRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Returns success status for reinstating a registration",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Registration/ProcessChangeAcademicYear/{profileId}": {
+      "post": {
+        "summary": "Processes academic year change",
         "parameters": [
           {
-            "name": "id",
-            "in": "query",
+            "name": "profileId",
+            "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "integer"
             }
           }
         ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeAcademicYearRequest"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
-            "description": "Error file downloaded",
+            "description": "Returns success status for academic year change",
             "content": {
-              "text/csv": {
+              "application/json": {
                 "schema": {
-                  "type": "string",
-                  "format": "binary"
+                  "type": "boolean"
                 }
               }
             }
@@ -184,23 +402,352 @@
   },
   "components": {
     "schemas": {
-      "UploadRegistrationsRequestViewModel": {
+      "BulkProcessRequest": {
         "type": "object",
         "properties": {
           "AoUkprn": {
             "type": "integer"
           },
-          "File": {
-            "type": "string",
-            "format": "binary",
-            "description": "CSV file required for upload"
+          "BlobFileName": {
+            "type": "string"
           },
-          "RequestErrorTypeId": {
+          "BlobUniqueReference": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "FileType": {
+            "$ref": "#/components/schemas/FileType"
+          },
+          "DocumentType": {
+            "$ref": "#/components/schemas/DocumentType"
+          },
+          "LoginUserType": {
+            "$ref": "#/components/schemas/LoginUserType"
+          },
+          "PerformedBy": {
+            "type": "string"
+          }
+        }
+      },
+      "BulkProcessResponse": {
+        "type": "object",
+        "properties": {
+          "IsSuccess": {
+            "type": "boolean"
+          },
+          "BlobUniqueReference": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "ErrorFileSize": {
+            "type": "number"
+          },
+          "Stats": {
+            "type": "object",
+            "properties": {
+              "TotalRecordsCount": {
+                "type": "integer"
+              },
+              "NewRecordsCount": {
+                "type": "integer"
+              },
+              "AmendedRecordsCount": {
+                "type": "integer"
+              },
+              "UnchangedRecordsCount": {
+                "type": "integer"
+              }
+            }
+          }
+        }
+      },
+      "RegistrationRequest": {
+        "type": "object",
+        "properties": {
+          "AoUkprn": {
+            "type": "integer"
+          },
+          "Uln": {
+            "type": "integer"
+          },
+          "FirstName": {
+            "type": "string"
+          },
+          "LastName": {
+            "type": "string"
+          },
+          "DateOfBirth": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "ProviderUkprn": {
+            "type": "integer"
+          },
+          "CoreCode": {
+            "type": "string"
+          },
+          "SpecialismCodes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "AcademicYear": {
+            "type": "integer"
+          },
+          "PerformedBy": {
+            "type": "string"
+          }
+        }
+      },
+      "FindUlnResponse": {
+        "type": "object",
+        "properties": {
+          "RegistrationProfileId": {
+            "type": "integer"
+          },
+          "Uln": {
+            "type": "integer"
+          },
+          "Status": {
+            "$ref": "#/components/schemas/RegistrationPathwayStatus"
+          },
+          "IsRegisteredWithOtherAo": {
+            "type": "boolean"
+          },
+          "RegisteredWithAoName": {
+            "type": "string"
+          }
+        }
+      },
+      "RegistrationDetails": {
+        "type": "object",
+        "properties": {
+          "Uln": {
+            "type": "integer"
+          },
+          "AoUkprn": {
+            "type": "integer"
+          },
+          "ProfileId": {
+            "type": "integer"
+          },
+          "Firstname": {
+            "type": "string"
+          },
+          "Lastname": {
+            "type": "string"
+          },
+          "DateofBirth": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "ProviderUkprn": {
+            "type": "integer"
+          },
+          "ProviderName": {
+            "type": "string"
+          },
+          "PathwayLarId": {
+            "type": "string"
+          },
+          "PathwayName": {
+            "type": "string"
+          },
+          "Specialisms": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SpecialismDetails"
+            }
+          },
+          "AcademicYear": {
+            "type": "integer"
+          },
+          "Status": {
+            "$ref": "#/components/schemas/RegistrationPathwayStatus"
+          },
+          "IsActiveWithOtherAo": {
+            "type": "boolean"
+          },
+          "HasActiveAssessmentEntriesForSpecialisms": {
+            "type": "boolean"
+          },
+          "HasActiveAssessmentResults": {
+            "type": "boolean"
+          },
+          "IsPathwayAvailable": {
+            "type": "boolean"
+          },
+          "EndYear": {
+            "type": "integer"
+          }
+        }
+      },
+      "ManageRegistration": {
+        "type": "object",
+        "properties": {
+          "ProfileId": {
+            "type": "integer"
+          },
+          "HasProfileChanged": {
+            "type": "boolean"
+          },
+          "HasProviderChanged": {
+            "type": "boolean"
+          },
+          "HasSpecialismsChanged": {
+            "type": "boolean"
+          }
+        }
+      },
+      "WithdrawRegistrationRequest": {
+        "type": "object",
+        "properties": {
+          "ProfileId": {
+            "type": "integer"
+          },
+          "AoUkprn": {
+            "type": "integer"
+          },
+          "PerformedBy": {
+            "type": "string"
+          }
+        }
+      },
+      "RejoinRegistrationRequest": {
+        "type": "object",
+        "properties": {
+          "ProfileId": {
+            "type": "integer"
+          },
+          "AoUkprn": {
+            "type": "integer"
+          },
+          "PerformedBy": {
+            "type": "string"
+          }
+        }
+      },
+      "ReregistrationRequest": {
+        "type": "object",
+        "properties": {
+          "ProfileId": {
             "type": "integer"
           }
         },
-        "required": [
-          "File"
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/RegistrationRequest"
+          }
+        ]
+      },
+      "SetRegistrationAsPendingWithdrawalRequest": {
+        "type": "object",
+        "properties": {
+          "ProfileId": {
+            "type": "integer"
+          },
+          "ProviderUkprn": {
+            "type": "integer"
+          },
+          "PerformedBy": {
+            "type": "string"
+          }
+        }
+      },
+      "ReinstateRegistrationFromPendingWithdrawalRequest": {
+        "type": "object",
+        "properties": {
+          "ProfileId": {
+            "type": "integer"
+          },
+          "ProviderUkprn": {
+            "type": "integer"
+          },
+          "PerformedBy": {
+            "type": "string"
+          }
+        }
+      },
+      "ChangeAcademicYearRequest": {
+        "type": "object",
+        "properties": {
+          "Uln": {
+            "type": "integer"
+          },
+          "ProfileId": {
+            "type": "integer"
+          },
+          "AoUkprn": {
+            "type": "integer"
+          },
+          "PerformedBy": {
+            "type": "string"
+          },
+          "AcademicYearChangeTo": {
+            "type": "string"
+          }
+        }
+      },
+      "SpecialismDetails": {
+        "type": "object",
+        "properties": {
+          "Code": {
+            "type": "string"
+          },
+          "Name": {
+            "type": "string"
+          }
+        }
+      },
+      "RegistrationPathwayStatus": {
+        "type": "string",
+        "enum": [
+          "NotSpecified",
+          "Active",
+          "InActive",
+          "Transferred",
+          "Withdrawn"
+        ]
+      },
+      "FileType": {
+        "type": "string",
+        "enum": [
+          "Csv",
+          "Xlsx",
+          "Pdf"
+        ]
+      },
+      "DocumentType": {
+        "type": "string",
+        "enum": [
+          "Registrations",
+          "Assessments",
+          "Results",
+          "Documents",
+          "Ucas",
+          "DataExports",
+          "OverallResults",
+          "IndustryPlacements",
+          "AnalystOverallResults",
+          "AnalystCoreResults",
+          "CoreRomm",
+          "SpecialismRomm",
+          "ProviderAddressess",
+          "CertificateTracking",
+          "Withdrawals",
+          "ResultSlips",
+          "Romms",
+          "Aspose"
+        ]
+      },
+      "LoginUserType": {
+        "type": "string",
+        "enum": [
+          "NotSpecified",
+          "AwardingOrganisation",
+          "TrainingProvider",
+          "Admin"
         ]
       }
     }

@@ -7,7 +7,7 @@
   "paths": {
     "/registrations/{registrationId}": {
       "get": {
-        "summary": "Get Registration",
+        "summary": "Get registration by ID",
         "operationId": "getRegistration",
         "parameters": [
           {
@@ -17,29 +17,28 @@
             "schema": {
               "type": "string",
               "format": "uuid"
-            }
+            },
+            "description": "Unique identifier for the registration"
           }
         ],
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Registration details",
             "content": {
               "application/json": {
-                "schema": {
-                  "type": "object"
-                }
+                "schema": {}
               }
             }
           },
           "404": {
-            "description": "Not Found"
+            "description": "Registration not found"
           }
         }
       }
     },
     "/registration/registration-details/{registrationId}": {
       "get": {
-        "summary": "Get Registration by ID",
+        "summary": "Get detailed registration by ID",
         "operationId": "getRegistrationById",
         "parameters": [
           {
@@ -49,29 +48,28 @@
             "schema": {
               "type": "string",
               "format": "uuid"
-            }
+            },
+            "description": "Unique identifier for the registration"
           }
         ],
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Detailed registration information",
             "content": {
               "application/json": {
-                "schema": {
-                  "type": "object"
-                }
+                "schema": {}
               }
             }
           },
           "404": {
-            "description": "Not Found"
+            "description": "Registration not found"
           }
         }
       }
     },
     "/registrations/reminders": {
       "get": {
-        "summary": "Get Registrations Needing Reminders",
+        "summary": "Get registrations needing reminders",
         "operationId": "getRegistrationsNeedingReminders",
         "parameters": [
           {
@@ -81,17 +79,16 @@
             "schema": {
               "type": "string",
               "format": "date-time"
-            }
+            },
+            "description": "Cut-off time for reminders"
           }
         ],
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "List of registrations needing reminders",
             "content": {
               "application/json": {
-                "schema": {
-                  "type": "object"
-                }
+                "schema": {}
               }
             }
           }
@@ -100,7 +97,7 @@
     },
     "/registrations": {
       "get": {
-        "summary": "Get Registrations by Account Details",
+        "summary": "Get registrations by account details",
         "operationId": "getRegistrationsByAccountDetails",
         "parameters": [
           {
@@ -109,7 +106,8 @@
             "required": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "First name of the apprentice"
           },
           {
             "name": "lastName",
@@ -117,7 +115,8 @@
             "required": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Last name of the apprentice"
           },
           {
             "name": "dateOfBirth",
@@ -125,18 +124,17 @@
             "required": true,
             "schema": {
               "type": "string",
-              "format": "date-time"
-            }
+              "format": "date"
+            },
+            "description": "Date of birth of the apprentice"
           }
         ],
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Registrations matching account details",
             "content": {
               "application/json": {
-                "schema": {
-                  "type": "object"
-                }
+                "schema": {}
               }
             }
           }
@@ -145,7 +143,7 @@
     },
     "/registrations/email": {
       "get": {
-        "summary": "Get Registration by Email",
+        "summary": "Get registration by email",
         "operationId": "getRegistrationByEmail",
         "parameters": [
           {
@@ -155,29 +153,28 @@
             "schema": {
               "type": "string",
               "format": "email"
-            }
+            },
+            "description": "Email address of the apprentice"
           }
         ],
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Registration details",
             "content": {
               "application/json": {
-                "schema": {
-                  "type": "object"
-                }
+                "schema": {}
               }
             }
           },
           "404": {
-            "description": "Not Found"
+            "description": "Registration not found"
           }
         }
       }
     },
     "/registrations/{apprenticeId}/reminder": {
       "post": {
-        "summary": "Send Registration Reminder",
+        "summary": "Mark registration reminder as sent",
         "operationId": "registrationReminderSent",
         "parameters": [
           {
@@ -187,7 +184,8 @@
             "schema": {
               "type": "string",
               "format": "uuid"
-            }
+            },
+            "description": "Unique identifier for the apprentice"
           }
         ],
         "requestBody": {
@@ -202,14 +200,14 @@
         },
         "responses": {
           "204": {
-            "description": "No Content"
+            "description": "Reminder marked as sent successfully"
           }
         }
       }
     },
     "/registrations/{apprenticeId}/firstseen": {
       "post": {
-        "summary": "Mark Registration as First Seen",
+        "summary": "Mark registration as first seen",
         "operationId": "registrationFirstSeen",
         "parameters": [
           {
@@ -219,7 +217,8 @@
             "schema": {
               "type": "string",
               "format": "uuid"
-            }
+            },
+            "description": "Unique identifier for the apprentice"
           }
         ],
         "requestBody": {
@@ -234,7 +233,7 @@
         },
         "responses": {
           "204": {
-            "description": "No Content"
+            "description": "Registration marked as first seen successfully"
           }
         }
       }
@@ -242,28 +241,30 @@
   },
   "components": {
     "schemas": {
-      "RegistrationReminderSentRequest": {
-        "type": "object",
-        "properties": {
-          "SentOn": {
-            "type": "string",
-            "format": "date-time"
-          }
-        },
-        "required": [
-          "SentOn"
-        ]
-      },
       "RegistrationFirstSeenRequest": {
         "type": "object",
         "properties": {
           "SeenOn": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "description": "Timestamp when the registration was first seen"
           }
         },
         "required": [
           "SeenOn"
+        ]
+      },
+      "RegistrationReminderSentRequest": {
+        "type": "object",
+        "properties": {
+          "SentOn": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp when the reminder was sent"
+          }
+        },
+        "required": [
+          "SentOn"
         ]
       }
     }

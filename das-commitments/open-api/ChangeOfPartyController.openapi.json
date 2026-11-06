@@ -2,21 +2,22 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Change of Party API",
+    "description": "API for managing changes of party requests related to apprenticeships.",
     "version": "1.0.0"
   },
   "paths": {
     "/api/apprenticeships/{apprenticeshipId}/change-of-party-requests": {
       "get": {
-        "summary": "Get all change of party requests for an apprenticeship",
-        "operationId": "GetAllChangeOfPartyRequests",
+        "summary": "Get all change of party requests",
+        "operationId": "getAllChangeOfPartyRequests",
         "parameters": [
           {
             "name": "apprenticeshipId",
             "in": "path",
             "required": true,
+            "description": "The ID of the apprenticeship",
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "integer"
             }
           }
         ],
@@ -34,16 +35,16 @@
         }
       },
       "post": {
-        "summary": "Create a new change of party request for an apprenticeship",
-        "operationId": "CreateChangeOfPartyRequest",
+        "summary": "Create change of party request",
+        "operationId": "createChangeOfPartyRequest",
         "parameters": [
           {
             "name": "apprenticeshipId",
             "in": "path",
             "required": true,
+            "description": "The ID of the apprenticeship",
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "integer"
             }
           }
         ],
@@ -59,23 +60,23 @@
         },
         "responses": {
           "200": {
-            "description": "Change of party request created successfully"
+            "description": "Request created successfully"
           }
         }
       }
     },
     "/api/apprenticeships/{apprenticeshipId}/change-of-provider-chain": {
       "get": {
-        "summary": "Get the change of provider chain for an apprenticeship",
-        "operationId": "GetChangeOfProviderChain",
+        "summary": "Get change of provider chain",
+        "operationId": "getChangeOfProviderChain",
         "parameters": [
           {
             "name": "apprenticeshipId",
             "in": "path",
             "required": true,
+            "description": "The ID of the apprenticeship",
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "integer"
             }
           }
         ],
@@ -95,16 +96,16 @@
     },
     "/api/apprenticeships/{apprenticeshipId}/change-of-employer-chain": {
       "get": {
-        "summary": "Get the change of employer chain for an apprenticeship",
-        "operationId": "GetChangeOfEmployerChain",
+        "summary": "Get change of employer chain",
+        "operationId": "getChangeOfEmployerChain",
         "parameters": [
           {
             "name": "apprenticeshipId",
             "in": "path",
             "required": true,
+            "description": "The ID of the apprenticeship",
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "integer"
             }
           }
         ],
@@ -132,12 +133,10 @@
             "$ref": "#/components/schemas/ChangeOfPartyRequestType"
           },
           "NewPartyId": {
-            "type": "integer",
-            "format": "int64"
+            "type": "integer"
           },
           "NewPrice": {
             "type": "integer",
-            "format": "int32",
             "nullable": true
           },
           "NewStartDate": {
@@ -157,14 +156,15 @@
           },
           "NewEmploymentPrice": {
             "type": "integer",
-            "format": "int32",
             "nullable": true
           },
           "DeliveryModel": {
-            "$ref": "#/components/schemas/DeliveryModel"
+            "$ref": "#/components/schemas/DeliveryModel",
+            "nullable": true
           },
           "HasOverlappingTrainingDates": {
-            "type": "boolean"
+            "type": "boolean",
+            "default": false
           },
           "UserInfo": {
             "$ref": "#/components/schemas/UserInfo"
@@ -196,18 +196,22 @@
             "type": "string"
           },
           "UserEmail": {
-            "type": "string"
+            "type": "string",
+            "format": "email"
           }
         }
       },
       "GetChangeOfPartyRequestsResponse": {
-        "type": "object"
+        "type": "object",
+        "additionalProperties": false
       },
       "GetChangeOfProviderChainResponse": {
-        "type": "object"
+        "type": "object",
+        "additionalProperties": false
       },
       "GetChangeOfEmployerChainResponse": {
-        "type": "object"
+        "type": "object",
+        "additionalProperties": false
       }
     }
   }

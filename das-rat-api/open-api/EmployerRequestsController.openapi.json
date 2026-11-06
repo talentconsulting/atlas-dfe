@@ -1,0 +1,300 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Employer Requests API",
+    "description": "API for managing Employer Requests.",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/api/employer-requests/{employerRequestId}": {
+      "get": {
+        "tags": [
+          "Employer Requests"
+        ],
+        "summary": "Retrieve an employer request by ID.",
+        "parameters": [
+          {
+            "name": "employerRequestId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success response containing the employer request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "EmployerRequest": {
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request due to validation or other errors.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/employer-requests/{employerRequestId}/responses/acknowledge": {
+      "put": {
+        "tags": [
+          "Employer Requests"
+        ],
+        "summary": "Acknowledge provider responses for an employer request.",
+        "parameters": [
+          {
+            "name": "employerRequestId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AcknowledgeProviderResponsesRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Provider responses acknowledged successfully."
+          },
+          "400": {
+            "description": "Bad Request due to validation or other errors.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/employer-requests/{employerRequestId}/cancel": {
+      "put": {
+        "tags": [
+          "Employer Requests"
+        ],
+        "summary": "Cancel an employer request.",
+        "parameters": [
+          {
+            "name": "employerRequestId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CancelEmployerRequestRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Employer request cancelled successfully."
+          },
+          "400": {
+            "description": "Bad Request due to validation or other errors.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/employer-requests": {
+      "get": {
+        "tags": [
+          "Employer Requests"
+        ],
+        "summary": "Retrieve employer requests by their IDs.",
+        "parameters": [
+          {
+            "name": "employerRequestIds",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "format": "uuid"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success response containing the list of employer requests.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "EmployerRequests": {
+                      "type": "array",
+                      "items": {
+                        "type": "object"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request due to errors."
+          }
+        }
+      }
+    },
+    "/api/employer-requests/expire": {
+      "put": {
+        "tags": [
+          "Employer Requests"
+        ],
+        "summary": "Queue a task to expire employer requests.",
+        "responses": {
+          "202": {
+            "description": "The request to expire employer requests was accepted."
+          },
+          "500": {
+            "description": "Internal server error occurred.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/employer-requests/response-notifications": {
+      "get": {
+        "tags": [
+          "Employer Requests"
+        ],
+        "summary": "Retrieve employer requests for response notifications.",
+        "responses": {
+          "200": {
+            "description": "Success response containing employer requests for response notifications.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "EmployerRequests": {
+                      "type": "array",
+                      "items": {
+                        "type": "object"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request due to errors."
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AcknowledgeProviderResponsesRequest": {
+        "type": "object",
+        "properties": {
+          "AcknowledgedBy": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "AcknowledgedBy"
+        ]
+      },
+      "CancelEmployerRequestRequest": {
+        "type": "object",
+        "properties": {
+          "CancelledBy": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "CancelledBy"
+        ]
+      }
+    }
+  }
+}

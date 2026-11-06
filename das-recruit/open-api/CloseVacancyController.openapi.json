@@ -1,0 +1,131 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Employer Vacancy Closure API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/{EmployerAccountId}/{VacancyId}/close": {
+      "get": {
+        "summary": "Get Close Vacancy Confirmation View",
+        "operationId": "getCloseVacancy",
+        "parameters": [
+          {
+            "name": "EmployerAccountId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "VacancyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      },
+      "post": {
+        "summary": "Post Close Vacancy",
+        "operationId": "postCloseVacancy",
+        "parameters": [
+          {
+            "name": "EmployerAccountId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "VacancyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CloseEditModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Vacancy successfully closed"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "VacancyRouteModel": {
+        "type": "object",
+        "properties": {
+          "EmployerAccountId": {
+            "type": "string",
+            "description": "The ID of the employer account"
+          },
+          "VacancyId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The ID of the vacancy"
+          }
+        },
+        "required": [
+          "EmployerAccountId",
+          "VacancyId"
+        ]
+      },
+      "CloseEditModel": {
+        "type": "object",
+        "properties": {
+          "EmployerAccountId": {
+            "type": "string",
+            "description": "The ID of the employer account"
+          },
+          "VacancyId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The ID of the vacancy"
+          },
+          "ConfirmClose": {
+            "type": "boolean",
+            "nullable": true,
+            "description": "Confirmation to close the vacancy"
+          }
+        },
+        "required": [
+          "EmployerAccountId",
+          "VacancyId"
+        ]
+      }
+    }
+  }
+}

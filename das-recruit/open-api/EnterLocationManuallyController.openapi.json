@@ -1,0 +1,175 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Enter Location Manually API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/{EmployerAccountId}/{VacancyId}/enter-location": {
+      "get": {
+        "operationId": "EnterLocationManually_Get",
+        "summary": "Handles manual entry of a location.",
+        "parameters": [
+          {
+            "name": "EmployerAccountId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "VacancyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "Origin",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "One",
+                "Many"
+              ]
+            }
+          },
+          {
+            "name": "Wizard",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "HTML content for the location input form.",
+            "content": {
+              "text/html": {}
+            }
+          },
+          "400": {
+            "description": "Validation error, bad input from the user."
+          }
+        }
+      },
+      "post": {
+        "operationId": "EnterLocationManually_Post",
+        "summary": "Submits entered location data.",
+        "parameters": [
+          {
+            "name": "EmployerAccountId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "VacancyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EnterLocationManuallyEditModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "302": {
+            "description": "Redirection based on origin."
+          },
+          "400": {
+            "description": "Validation error, bad input from the user."
+          },
+          "500": {
+            "description": "Error when the provided postcode is not within England."
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Address": {
+        "type": "object",
+        "properties": {
+          "AddressLine1": {
+            "type": "string"
+          },
+          "AddressLine2": {
+            "type": "string"
+          },
+          "AddressLine3": {
+            "type": "string"
+          },
+          "Postcode": {
+            "type": "string"
+          },
+          "Country": {
+            "type": "string"
+          }
+        }
+      },
+      "EnterLocationManuallyEditModel": {
+        "type": "object",
+        "properties": {
+          "EmployerAccountId": {
+            "type": "string"
+          },
+          "VacancyId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "Origin": {
+            "type": "string",
+            "enum": [
+              "One",
+              "Many"
+            ]
+          },
+          "Wizard": {
+            "type": "boolean"
+          },
+          "AddressLine1": {
+            "type": "string"
+          },
+          "AddressLine2": {
+            "type": "string"
+          },
+          "City": {
+            "type": "string"
+          },
+          "Postcode": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "EmployerAccountId",
+          "VacancyId",
+          "Origin",
+          "AddressLine1",
+          "City",
+          "Postcode"
+        ]
+      }
+    }
+  }
+}

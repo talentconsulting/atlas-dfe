@@ -1,14 +1,15 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Admin RoATP API",
-    "version": "1.0.0"
+    "title": "Admin RoATP Course API",
+    "version": "1.0.0",
+    "description": "API for managing courses and provider restrictions in the Admin RoATP platform."
   },
   "paths": {
     "/courses": {
       "get": {
         "summary": "Get all courses",
-        "operationId": "GetAllCourses",
+        "operationId": "getAllCourses",
         "responses": {
           "200": {
             "description": "List of all courses",
@@ -26,7 +27,7 @@
     "/courses/{larsCode}/providers/allowed": {
       "get": {
         "summary": "Get allowed providers by course",
-        "operationId": "GetAllowedProvidersByCourse",
+        "operationId": "getAllowedProvidersByCourse",
         "parameters": [
           {
             "name": "larsCode",
@@ -39,7 +40,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Details of allowed providers for the course",
+            "description": "Details of restricted course",
             "content": {
               "application/json": {
                 "schema": {
@@ -57,7 +58,7 @@
     "/courses/{larsCode}/providers/not-allowed": {
       "get": {
         "summary": "Get providers not allowed by course",
-        "operationId": "GetProvidersNotAllowedByCourse",
+        "operationId": "getProvidersNotAllowedByCourse",
         "parameters": [
           {
             "name": "larsCode",
@@ -70,7 +71,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Details of providers not allowed for the course",
+            "description": "Details of restricted course",
             "content": {
               "application/json": {
                 "schema": {
@@ -96,26 +97,6 @@
             "items": {
               "$ref": "#/components/schemas/CourseModel"
             }
-          }
-        }
-      },
-      "CourseModel": {
-        "type": "object",
-        "properties": {
-          "LarsCode": {
-            "type": "string"
-          },
-          "CourseType": {
-            "$ref": "#/components/schemas/CourseType"
-          },
-          "LearningType": {
-            "$ref": "#/components/schemas/LearningType"
-          },
-          "Title": {
-            "type": "string"
-          },
-          "Level": {
-            "type": "integer"
           }
         }
       },
@@ -161,6 +142,30 @@
           }
         }
       },
+      "CourseModel": {
+        "type": "object",
+        "properties": {
+          "LarsCode": {
+            "type": "string"
+          },
+          "CourseType": {
+            "$ref": "#/components/schemas/CourseType"
+          },
+          "LearningType": {
+            "$ref": "#/components/schemas/LearningType"
+          },
+          "Title": {
+            "type": "string"
+          },
+          "Level": {
+            "type": "integer"
+          },
+          "LastDateStarts": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
       "ProviderModel": {
         "type": "object",
         "properties": {
@@ -176,19 +181,19 @@
           }
         }
       },
-      "CourseType": {
-        "type": "string",
-        "enum": [
-          "Apprenticeship",
-          "ShortCourse"
-        ]
-      },
       "LearningType": {
         "type": "string",
         "enum": [
           "Apprenticeship",
           "FoundationApprenticeship",
           "ApprenticeshipUnit"
+        ]
+      },
+      "CourseType": {
+        "type": "string",
+        "enum": [
+          "Apprenticeship",
+          "ShortCourse"
         ]
       }
     }

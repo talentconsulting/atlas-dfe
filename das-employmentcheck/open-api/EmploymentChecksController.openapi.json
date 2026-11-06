@@ -1,0 +1,129 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Employment Check API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/api/employment-checks": {
+      "get": {
+        "summary": "Retrieve Employment Checks",
+        "description": "Fetch the latest employment checks for the provided list of apprenticeship IDs.",
+        "operationId": "getEmploymentChecks",
+        "parameters": [
+          {
+            "name": "apprenticeshipIds",
+            "in": "query",
+            "required": true,
+            "description": "List of apprenticeship IDs for which the employment checks are requested.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "format": "int64"
+              },
+              "minItems": 1,
+              "maxItems": 50
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved employment checks.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetEmploymentChecksResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request. Either apprenticeshipIds is missing, empty, or exceeds the allowed limit.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "GetEmploymentChecksResponse": {
+        "type": "object",
+        "properties": {
+          "Checks": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EvsCheckResponse"
+            },
+            "description": "List of employment check results."
+          }
+        },
+        "required": [
+          "Checks"
+        ]
+      },
+      "EvsCheckResponse": {
+        "type": "object",
+        "properties": {
+          "EmployerId": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Employer account ID for the apprenticeship."
+          },
+          "ApprenticeshipId": {
+            "type": "integer",
+            "format": "int64",
+            "description": "ID of the apprenticeship associated with the check."
+          },
+          "Uln": {
+            "type": "string",
+            "description": "Unique Learner Number."
+          },
+          "RequestDate": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Date of the employment check request."
+          },
+          "DateOfCheck": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Date the employment check was performed."
+          },
+          "Result": {
+            "$ref": "#/components/schemas/EvsCheckResult"
+          }
+        },
+        "required": [
+          "EmployerId",
+          "ApprenticeshipId",
+          "Uln",
+          "Result"
+        ]
+      },
+      "EvsCheckResult": {
+        "type": "object",
+        "properties": {
+          "Employed": {
+            "type": "boolean",
+            "description": "Indicates whether the individual was employed."
+          },
+          "CompletionStatus": {
+            "type": "integer",
+            "description": "Status code indicating the completion state of the employment check."
+          },
+          "ErrorCode": {
+            "type": "string",
+            "description": "Error code if an issue occurred during the employment check."
+          }
+        }
+      }
+    }
+  }
+}

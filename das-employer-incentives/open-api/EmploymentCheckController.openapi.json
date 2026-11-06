@@ -1,0 +1,92 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Employer Incentives API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/api/employmentchecks/{correlationId}": {
+      "put": {
+        "summary": "Update employment check for a given correlation ID",
+        "operationId": "updateEmploymentCheck",
+        "parameters": [
+          {
+            "name": "correlationId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Correlation ID for the employment check"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateEmploymentCheckRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Employment check updated successfully.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string",
+                  "example": "/employmentchecks/{correlationId}"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request. Could be caused by an invalid employment check error type or an invalid operation."
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "UpdateEmploymentCheckRequest": {
+        "type": "object",
+        "properties": {
+          "CorrelationId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The unique identifier of the employment check."
+          },
+          "Result": {
+            "type": "string",
+            "description": "The result of the employment check.",
+            "examples": [
+              "employed",
+              "notemployed",
+              "ninonotfound",
+              "ninofailure",
+              "ninoinvalid",
+              "payenotfound",
+              "payefailure",
+              "ninoandpayenotfound",
+              "hmrcfailure"
+            ]
+          },
+          "DateChecked": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The date when the employment check was performed."
+          }
+        },
+        "required": [
+          "CorrelationId",
+          "Result",
+          "DateChecked"
+        ]
+      }
+    }
+  }
+}

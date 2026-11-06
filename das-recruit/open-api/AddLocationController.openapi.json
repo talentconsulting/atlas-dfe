@@ -1,0 +1,141 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "AddLocation API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/account/{EmployerAccountId}/vacancy/{VacancyId}/add-location": {
+      "get": {
+        "operationId": "getAddLocation",
+        "summary": "Retrieve the Add Location page.",
+        "parameters": [
+          {
+            "name": "EmployerAccountId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "VacancyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "Origin",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "One",
+                "Many"
+              ]
+            }
+          },
+          {
+            "name": "Wizard",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": true
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "text/html": {}
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "postAddLocation",
+        "summary": "Submit data to add a location.",
+        "parameters": [
+          {
+            "name": "EmployerAccountId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "VacancyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddLocationEditModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "302": {
+            "description": "Redirect to another route upon successful processing."
+          },
+          "400": {
+            "description": "Invalid request or validation errors.",
+            "content": {
+              "text/html": {}
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AddLocationEditModel": {
+        "type": "object",
+        "properties": {
+          "Postcode": {
+            "type": "string"
+          },
+          "Origin": {
+            "type": "string",
+            "enum": [
+              "One",
+              "Many"
+            ]
+          },
+          "Wizard": {
+            "type": "boolean"
+          },
+          "EmployerAccountId": {
+            "type": "string"
+          },
+          "VacancyId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "Postcode",
+          "EmployerAccountId",
+          "VacancyId"
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,139 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Employer.Web API",
+    "version": "1.0.0",
+    "description": "API documentation for the Employer.Web Custom Wage Controller."
+  },
+  "paths": {
+    "/{EmployerAccountId}/{VacancyId}/custom-wage": {
+      "get": {
+        "operationId": "CustomWage_Get",
+        "summary": "Get the custom wage view model.",
+        "parameters": [
+          {
+            "name": "EmployerAccountId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The unique identifier for the employer account."
+          },
+          {
+            "name": "VacancyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "The unique identifier for the vacancy."
+          },
+          {
+            "name": "wizard",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "true",
+                "false"
+              ]
+            },
+            "description": "Indicates if the wizard mode is enabled."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns the custom wage view model.",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "CustomWage_Post",
+        "summary": "Submit custom wage edit model.",
+        "parameters": [
+          {
+            "name": "wizard",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "Indicates if the wizard mode is enabled."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/CustomWageEditModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful submission with potential validation errors.",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "302": {
+            "description": "Redirects to the 'AddExtraInformation_Get' route.",
+            "headers": {
+              "Location": {
+                "description": "URL to the 'AddExtraInformation_Get' route with parameters.",
+                "schema": {
+                  "type": "string",
+                  "format": "uri"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CustomWageEditModel": {
+        "type": "object",
+        "properties": {
+          "EmployerAccountId": {
+            "type": "string",
+            "description": "The unique identifier for the employer account."
+          },
+          "VacancyId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The unique identifier for the vacancy."
+          },
+          "FixedWageYearlyAmount": {
+            "type": "string",
+            "description": "The fixed yearly wage amount.",
+            "pattern": "^\\d+(\\.\\d{1,2})?$",
+            "example": "25000"
+          }
+        },
+        "required": [
+          "EmployerAccountId",
+          "VacancyId"
+        ]
+      }
+    }
+  }
+}

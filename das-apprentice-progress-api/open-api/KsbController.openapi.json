@@ -2,13 +2,12 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Apprentice Progress API",
-    "version": "1.0.0"
+    "version": "1.0"
   },
   "paths": {
     "/apprenticeships/{apprenticeshipIdentifier}/ksbs/": {
       "post": {
         "summary": "Add or update KSB progress",
-        "operationId": "AddUpdateKsbProgress",
         "parameters": [
           {
             "name": "apprenticeshipIdentifier",
@@ -31,7 +30,7 @@
         },
         "responses": {
           "200": {
-            "description": "Successful operation"
+            "description": "KSB progress successfully added or updated"
           }
         }
       }
@@ -39,7 +38,6 @@
     "/apprenticeships/{apprenticeshipIdentifier}/ksbs/{ksbProgressId}/taskid/{taskId}": {
       "delete": {
         "summary": "Remove task from KSB progress",
-        "operationId": "RemoveTaskToKsbProgress",
         "parameters": [
           {
             "name": "apprenticeshipIdentifier",
@@ -68,7 +66,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful operation"
+            "description": "Task successfully removed from KSB progress"
           }
         }
       }
@@ -76,7 +74,6 @@
     "/apprenticeships/{apprenticeshipIdentifier}/ksbsguids": {
       "get": {
         "summary": "Get KSBs by apprenticeship ID and GUID list",
-        "operationId": "GetKsbsByApprenticeshipIdAndGuidList",
         "parameters": [
           {
             "name": "apprenticeshipIdentifier",
@@ -89,7 +86,7 @@
           {
             "name": "guids",
             "in": "query",
-            "required": false,
+            "required": true,
             "schema": {
               "type": "array",
               "items": {
@@ -101,13 +98,17 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful operation",
+            "description": "Matching KSBs returned",
             "content": {
-              "application/json": {}
+              "application/json": {
+                "schema": {
+                  "type": "array"
+                }
+              }
             }
           },
           "404": {
-            "description": "Not Found"
+            "description": "No KSBs found for the provided identifiers"
           }
         }
       }
@@ -115,7 +116,6 @@
     "/apprenticeships/{apprenticeshipIdentifier}/ksbs": {
       "get": {
         "summary": "Get KSBs by apprenticeship ID",
-        "operationId": "GetKsbsByApprenticeshipId",
         "parameters": [
           {
             "name": "apprenticeshipIdentifier",
@@ -128,21 +128,24 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful operation",
+            "description": "KSBs retrieved successfully",
             "content": {
-              "application/json": {}
+              "application/json": {
+                "schema": {
+                  "type": "array"
+                }
+              }
             }
           },
           "404": {
-            "description": "Not Found"
+            "description": "No KSBs found for the given apprenticeship ID"
           }
         }
       }
     },
     "/apprenticeships/{apprenticeshipIdentifier}/ksbs/taskid/{taskId}": {
       "get": {
-        "summary": "Get KSBs progress for a task",
-        "operationId": "GetKsbsProgressForTask",
+        "summary": "Get KSB progress for specific task",
         "parameters": [
           {
             "name": "apprenticeshipIdentifier",
@@ -163,13 +166,17 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful operation",
+            "description": "KSB progress linked to the task retrieved",
             "content": {
-              "application/json": {}
+              "application/json": {
+                "schema": {
+                  "type": "array"
+                }
+              }
             }
           },
           "404": {
-            "description": "Not Found"
+            "description": "No KSB progress found for the given task ID"
           }
         }
       }
@@ -196,7 +203,9 @@
             "type": "string"
           },
           "Note": {
-            "type": "string"
+            "type": "string",
+            "maxLength": 1000,
+            "pattern": "^[^<>]*$"
           },
           "CurrentStatus": {
             "type": "integer",

@@ -1,200 +1,87 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "AdminProvider API",
+    "title": "Admin Provider API",
     "version": "1.0.0"
   },
   "paths": {
-    "/admin/find-provider-clear": {
+    "/api/AdminProvider/GetProvider/{providerId}": {
       "get": {
-        "tags": [
-          "AdminProvider"
-        ],
-        "operationId": "AdminFindProviderClear",
-        "summary": "Clears the provider search cache.",
-        "responses": {
-          "302": {
-            "description": "Redirect to find provider page."
-          }
-        }
-      }
-    },
-    "/admin/find-provider": {
-      "get": {
-        "tags": [
-          "AdminProvider"
-        ],
-        "operationId": "GetAdminFindProvider",
-        "summary": "Retrieve the current state of provider search.",
-        "responses": {
-          "200": {
-            "description": "Returns the provider search view model.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AdminFindProviderViewModel"
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "tags": [
-          "AdminProvider"
-        ],
-        "operationId": "PostAdminFindProvider",
-        "summary": "Submit a search for a provider.",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AdminFindProviderViewModel"
-              }
-            }
-          }
-        },
-        "responses": {
-          "302": {
-            "description": "Redirect based on search result."
-          }
-        }
-      }
-    },
-    "/admin/provider-details/{providerId}": {
-      "get": {
-        "tags": [
-          "AdminProvider"
-        ],
-        "operationId": "GetAdminProviderDetails",
-        "summary": "Retrieve the details of a provider.",
+        "summary": "Get Provider",
         "parameters": [
           {
             "name": "providerId",
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int32"
+              "type": "integer"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Returns provider details view model.",
+            "description": "Successful Response",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AdminProviderDetailsViewModel"
+                  "$ref": "#/components/schemas/GetProviderResponse"
                 }
               }
             }
-          },
-          "302": {
-            "description": "Redirect to the error page if provider not found."
           }
         }
       }
     },
-    "/admin/edit-provider/{providerId}": {
-      "get": {
-        "tags": [
-          "AdminProvider"
-        ],
-        "operationId": "GetAdminEditProvider",
-        "summary": "Retrieve the edit view for a provider.",
-        "parameters": [
-          {
-            "name": "providerId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Returns the provider edit view model.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AdminEditProviderViewModel"
-                }
-              }
-            }
-          },
-          "302": {
-            "description": "Redirect to the error page if provider not found."
-          }
-        }
-      }
-    },
-    "/admin/edit-provider": {
-      "post": {
-        "tags": [
-          "AdminProvider"
-        ],
-        "operationId": "PostAdminEditProvider",
-        "summary": "Submit changes to provider details.",
+    "/api/AdminProvider/UpdateProvider": {
+      "put": {
+        "summary": "Update Provider",
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/AdminEditProviderViewModel"
+                "$ref": "#/components/schemas/UpdateProviderRequest"
               }
             }
           }
         },
         "responses": {
-          "302": {
-            "description": "Redirect to the provider details page."
-          }
-        }
-      }
-    },
-    "/admin/add-provider": {
-      "get": {
-        "tags": [
-          "AdminProvider"
-        ],
-        "operationId": "GetAdminAddProvider",
-        "summary": "Retrieve the add provider form.",
-        "responses": {
           "200": {
-            "description": "Returns the add provider view model.",
+            "description": "Successful Response",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AdminAddProviderViewModel"
+                  "$ref": "#/components/schemas/UpdateProviderResponse"
                 }
               }
             }
           }
         }
-      },
+      }
+    },
+    "/api/AdminProvider/AddProvider": {
       "post": {
-        "tags": [
-          "AdminProvider"
-        ],
-        "operationId": "PostAdminAddProvider",
-        "summary": "Submit a new provider to the system.",
+        "summary": "Add Provider",
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/AdminAddProviderViewModel"
+                "$ref": "#/components/schemas/AddProviderRequest"
               }
             }
           }
         },
         "responses": {
-          "302": {
-            "description": "Redirect to the newly added provider details page."
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AddProviderResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -202,55 +89,70 @@
   },
   "components": {
     "schemas": {
-      "AdminFindProviderViewModel": {
+      "AddProviderRequest": {
         "type": "object",
         "properties": {
-          "Search": {
-            "type": "string",
-            "description": "Search term for provider.",
-            "maxLength": 400
-          }
-        }
-      },
-      "AdminProviderDetailsViewModel": {
-        "type": "object",
-        "properties": {
-          "ProviderId": {
-            "type": "integer",
-            "format": "int32"
+          "UkPrn": {
+            "type": "integer"
           },
           "Name": {
-            "type": "string"
-          },
-          "UkPrn": {
             "type": "string"
           },
           "DisplayName": {
             "type": "string"
           },
-          "IsActive": {
+          "CreatedBy": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "UkPrn",
+          "Name",
+          "DisplayName",
+          "CreatedBy"
+        ]
+      },
+      "AddProviderResponse": {
+        "type": "object",
+        "properties": {
+          "ProviderId": {
+            "type": "integer"
+          },
+          "Success": {
+            "type": "boolean"
+          },
+          "DuplicatedUkprnFound": {
+            "type": "boolean"
+          },
+          "DuplicatedNameFound": {
+            "type": "boolean"
+          },
+          "DuplicatedDisplayNameFound": {
             "type": "boolean"
           }
-        }
+        },
+        "required": [
+          "ProviderId",
+          "Success",
+          "DuplicatedUkprnFound",
+          "DuplicatedNameFound",
+          "DuplicatedDisplayNameFound"
+        ]
       },
-      "AdminEditProviderViewModel": {
+      "GetProviderResponse": {
         "type": "object",
         "properties": {
           "ProviderId": {
-            "type": "integer",
-            "format": "int32"
+            "type": "integer"
           },
           "UkPrn": {
-            "type": "string",
-            "pattern": "^\\d{8}$"
+            "type": "integer"
           },
           "Name": {
-            "type": "string",
-            "maxLength": 256
+            "type": "string"
           },
           "DisplayName": {
-            "type": "string",
-            "maxLength": 256
+            "type": "string"
           },
           "IsActive": {
             "type": "boolean"
@@ -260,29 +162,62 @@
           "ProviderId",
           "UkPrn",
           "Name",
-          "DisplayName"
+          "DisplayName",
+          "IsActive"
         ]
       },
-      "AdminAddProviderViewModel": {
+      "UpdateProviderRequest": {
         "type": "object",
         "properties": {
+          "ProviderId": {
+            "type": "integer"
+          },
           "UkPrn": {
-            "type": "string",
-            "pattern": "^\\d{8}$"
+            "type": "integer"
           },
           "Name": {
-            "type": "string",
-            "maxLength": 256
+            "type": "string"
           },
           "DisplayName": {
-            "type": "string",
-            "maxLength": 256
+            "type": "string"
+          },
+          "IsActive": {
+            "type": "boolean"
+          },
+          "ModifiedBy": {
+            "type": "string"
           }
         },
         "required": [
+          "ProviderId",
           "UkPrn",
           "Name",
-          "DisplayName"
+          "DisplayName",
+          "IsActive",
+          "ModifiedBy"
+        ]
+      },
+      "UpdateProviderResponse": {
+        "type": "object",
+        "properties": {
+          "Success": {
+            "type": "boolean"
+          },
+          "DuplicatedUkprnFound": {
+            "type": "boolean"
+          },
+          "DuplicatedNameFound": {
+            "type": "boolean"
+          },
+          "DuplicatedDisplayNameFound": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "Success",
+          "DuplicatedUkprnFound",
+          "DuplicatedNameFound",
+          "DuplicatedDisplayNameFound"
         ]
       }
     }

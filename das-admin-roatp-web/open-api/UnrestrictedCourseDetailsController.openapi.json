@@ -7,8 +7,8 @@
   "paths": {
     "/unrestricted-courses/{larsCode}": {
       "get": {
-        "operationId": "GetUnrestrictedCourseDetails",
-        "summary": "Get unrestricted course details",
+        "summary": "Get Unrestricted Course Details",
+        "operationId": "getUnrestrictedCourseDetails",
         "parameters": [
           {
             "name": "larsCode",
@@ -16,8 +16,7 @@
             "required": true,
             "schema": {
               "type": "string"
-            },
-            "description": "The unique identifier of the course (LARS code)."
+            }
           }
         ],
         "responses": {
@@ -27,30 +26,22 @@
               "text/html": {
                 "schema": {
                   "type": "string",
-                  "description": "HTML representation of the unrestricted course details view."
+                  "description": "HTML view rendered for the unrestricted course details."
                 }
               }
             }
           },
-          "302": {
-            "description": "The course is restricted and the user is redirected to the restricted course details route."
-          },
           "404": {
-            "description": "The course details were not found."
+            "description": "Course details not found."
+          },
+          "302": {
+            "description": "Redirect to the restricted course details."
           }
-        },
-        "security": [
-          {
-            "RoatpAdminTeam": []
-          }
-        ],
-        "tags": [
-          "CourseRestrictions"
-        ]
+        }
       },
       "post": {
-        "operationId": "SubmitUnrestrictedCourseDetails",
-        "summary": "Submit unrestricted course for restriction confirmation",
+        "summary": "Submit Restriction for a Course",
+        "operationId": "postRestrictCourse",
         "parameters": [
           {
             "name": "larsCode",
@@ -58,8 +49,7 @@
             "required": true,
             "schema": {
               "type": "string"
-            },
-            "description": "The unique identifier of the course (LARS code)."
+            }
           }
         ],
         "requestBody": {
@@ -74,40 +64,24 @@
         },
         "responses": {
           "302": {
-            "description": "Redirects the user to the restrict course confirmation route."
+            "description": "Redirect to the confirmation for restricting the course."
           }
-        },
-        "security": [
-          {
-            "RoatpAdminTeam": []
-          }
-        ],
-        "tags": [
-          "CourseRestrictions"
-        ]
+        }
       }
     }
   },
   "components": {
-    "securitySchemes": {
-      "RoatpAdminTeam": {
-        "type": "oauth2",
-        "description": "Requires the user to be part of the RoATP Admin team."
-      }
-    },
     "schemas": {
       "RestrictCourseSubmitModel": {
         "type": "object",
         "properties": {
           "LarsCode": {
             "type": "string",
-            "nullable": true,
-            "description": "The unique identifier of the course (LARS code)."
+            "nullable": true
           },
           "DisplayName": {
             "type": "string",
-            "nullable": true,
-            "description": "The display name of the course."
+            "nullable": true
           }
         }
       }

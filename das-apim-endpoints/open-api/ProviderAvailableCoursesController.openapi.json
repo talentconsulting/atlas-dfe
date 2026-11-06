@@ -2,20 +2,19 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Provider Available Courses API",
-    "version": "1.0.0",
-    "description": "API for retrieving provider available courses."
+    "version": "1.0.0"
   },
   "paths": {
     "/providers/{ukprn}/courses-tobe-allowed": {
       "get": {
+        "summary": "Get Provider Available Courses",
         "operationId": "GetProviderAvailableCourses",
-        "summary": "Retrieve available courses for a provider.",
         "parameters": [
           {
             "name": "ukprn",
             "in": "path",
             "required": true,
-            "description": "Unique Provider Reference Number (UKPRN).",
+            "description": "Unique identifier for the provider",
             "schema": {
               "type": "integer"
             }
@@ -24,7 +23,7 @@
             "name": "courseType",
             "in": "query",
             "required": false,
-            "description": "Type of course to filter.",
+            "description": "Filter by course type",
             "schema": {
               "$ref": "#/components/schemas/CourseType"
             }
@@ -32,7 +31,7 @@
         ],
         "responses": {
           "200": {
-            "description": "A list of available courses for the provider.",
+            "description": "Successful response",
             "content": {
               "application/json": {
                 "schema": {
@@ -40,6 +39,9 @@
                 }
               }
             }
+          },
+          "404": {
+            "description": "Not Found"
           }
         }
       }
@@ -52,8 +54,7 @@
         "enum": [
           "Apprenticeship",
           "ShortCourse"
-        ],
-        "description": "Type of course."
+        ]
       },
       "RestrictedCourseDetailsModel": {
         "type": "object",
@@ -84,7 +85,8 @@
           },
           "LastDateStarts": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "nullable": true
           },
           "IsCourseRestricted": {
             "type": "boolean"
@@ -95,19 +97,7 @@
               "$ref": "#/components/schemas/ProviderModel"
             }
           }
-        },
-        "required": [
-          "LarsCode",
-          "IfateReferenceNumber",
-          "CourseName",
-          "Level",
-          "Route",
-          "LearningType",
-          "CourseType",
-          "IsActiveAvailable",
-          "IsCourseRestricted",
-          "Providers"
-        ]
+        }
       },
       "LearningType": {
         "type": "string",
@@ -115,8 +105,7 @@
           "Apprenticeship",
           "FoundationApprenticeship",
           "ApprenticeshipUnit"
-        ],
-        "description": "Type of learning."
+        ]
       },
       "ProviderModel": {
         "type": "object",
@@ -129,13 +118,10 @@
           },
           "LastDateStarts": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "nullable": true
           }
-        },
-        "required": [
-          "Ukprn",
-          "ProviderName"
-        ]
+        }
       }
     }
   }

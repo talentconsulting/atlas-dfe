@@ -1,0 +1,78 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Accounts API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/accounts/create": {
+      "get": {
+        "operationId": "GetCreateAccountView",
+        "summary": "Renders the account creation page.",
+        "parameters": [
+          {
+            "name": "Username",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Username for the account."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Account creation view rendered successfully."
+          }
+        }
+      },
+      "post": {
+        "operationId": "PostCreateAccount",
+        "summary": "Submits an account creation request.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAccountViewModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "302": {
+            "description": "Redirected to the account created confirmation page."
+          }
+        }
+      }
+    },
+    "/accounts/created": {
+      "get": {
+        "operationId": "GetAccountCreatedView",
+        "summary": "Renders the account created confirmation page.",
+        "responses": {
+          "200": {
+            "description": "Account created confirmation page rendered successfully."
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CreateAccountViewModel": {
+        "type": "object",
+        "properties": {
+          "Username": {
+            "type": "string",
+            "description": "Username for the account.",
+            "nullable": false
+          }
+        },
+        "required": [
+          "Username"
+        ]
+      }
+    }
+  }
+}

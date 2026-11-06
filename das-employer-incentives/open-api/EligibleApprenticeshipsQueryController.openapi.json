@@ -1,0 +1,100 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Employer Incentives API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/eligible-apprenticeships/{uln}": {
+      "get": {
+        "summary": "Check if an apprenticeship is eligible",
+        "parameters": [
+          {
+            "name": "uln",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "description": "Unique Learner Number of the apprenticeship"
+          },
+          {
+            "name": "startDate",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "Start date of the apprenticeship"
+          },
+          {
+            "name": "isApproved",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "Indicates if the apprenticeship is approved"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The apprenticeship is eligible"
+          },
+          "404": {
+            "description": "The apprenticeship is not eligible"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Apprenticeship": {
+        "type": "object",
+        "properties": {
+          "UniqueLearnerNumber": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "StartDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "IsApproved": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "UniqueLearnerNumber",
+          "StartDate",
+          "IsApproved"
+        ]
+      },
+      "GetApprenticeshipEligibilityRequest": {
+        "type": "object",
+        "properties": {
+          "Apprenticeship": {
+            "$ref": "#/components/schemas/Apprenticeship"
+          }
+        },
+        "required": [
+          "Apprenticeship"
+        ]
+      },
+      "GetApprenticeshipEligibilityResponse": {
+        "type": "object",
+        "properties": {
+          "IsEligible": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "IsEligible"
+        ]
+      }
+    }
+  }
+}

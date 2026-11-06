@@ -1,15 +1,14 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "FAA Interview Adjustments API",
+    "title": "Interview Adjustments API",
     "version": "1.0.0",
-    "description": "API for managing interview adjustments and summaries in FAA applications"
+    "description": "API for managing interview adjustments in apprenticeship applications."
   },
   "paths": {
     "/apply/{applicationId}/interview-adjustments": {
       "get": {
-        "summary": "Get interview adjustments view",
-        "operationId": "getInterviewAdjustments",
+        "summary": "Retrieve interview adjustments for a specific application",
         "parameters": [
           {
             "name": "applicationId",
@@ -23,32 +22,35 @@
           {
             "name": "isEdit",
             "in": "query",
+            "required": false,
             "schema": {
-              "type": "boolean",
-              "default": false
+              "type": "boolean"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Successful response"
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InterviewAdjustmentsViewModel"
+                }
+              }
+            }
           },
           "302": {
-            "description": "Redirected to summary"
-          },
-          "400": {
-            "description": "Bad Request"
+            "description": "Redirect to summary view"
           }
         },
         "security": [
           {
-            "policyAuth": []
+            "BearerAuth": []
           }
         ]
       },
       "post": {
-        "summary": "Update interview adjustments",
-        "operationId": "postInterviewAdjustments",
+        "summary": "Submit updates to interview adjustments",
         "parameters": [
           {
             "name": "applicationId",
@@ -62,9 +64,9 @@
           {
             "name": "isEdit",
             "in": "query",
+            "required": false,
             "schema": {
-              "type": "boolean",
-              "default": false
+              "type": "boolean"
             }
           }
         ],
@@ -75,33 +77,34 @@
               "schema": {
                 "$ref": "#/components/schemas/InterviewAdjustmentsViewModel"
               }
-            },
-            "application/x-www-form-urlencoded": {
-              "schema": {
-                "$ref": "#/components/schemas/InterviewAdjustmentsViewModel"
-              }
             }
           }
         },
         "responses": {
           "302": {
-            "description": "Redirected to summary"
+            "description": "Redirect to summary view"
           },
           "400": {
-            "description": "Validation failed"
+            "description": "Validation errors",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ViewModelBase"
+                }
+              }
+            }
           }
         },
         "security": [
           {
-            "policyAuth": []
+            "BearerAuth": []
           }
         ]
       }
     },
     "/apply/{applicationId}/interview-adjustments/summary": {
       "get": {
-        "summary": "Get interview adjustments summary view",
-        "operationId": "getInterviewAdjustmentsSummary",
+        "summary": "Retrieve summary of interview adjustments for a specific application",
         "parameters": [
           {
             "name": "applicationId",
@@ -115,21 +118,24 @@
         ],
         "responses": {
           "200": {
-            "description": "Successfully retrieved summary"
-          },
-          "400": {
-            "description": "Bad Request"
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InterviewAdjustmentSummaryViewModel"
+                }
+              }
+            }
           }
         },
         "security": [
           {
-            "policyAuth": []
+            "BearerAuth": []
           }
         ]
       },
       "post": {
-        "summary": "Update interview adjustments summary",
-        "operationId": "postInterviewAdjustmentsSummary",
+        "summary": "Submit updates to the summary of interview adjustments",
         "parameters": [
           {
             "name": "applicationId",
@@ -153,15 +159,22 @@
         },
         "responses": {
           "302": {
-            "description": "Redirected to main application view"
+            "description": "Redirect to application view"
           },
           "400": {
-            "description": "Validation failed"
+            "description": "Validation errors",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ViewModelBase"
+                }
+              }
+            }
           }
         },
         "security": [
           {
-            "policyAuth": []
+            "BearerAuth": []
           }
         ]
       }
@@ -172,60 +185,78 @@
       "InterviewAdjustmentsViewModel": {
         "type": "object",
         "properties": {
-          "applicationId": {
+          "ApplicationId": {
             "type": "string",
             "format": "uuid"
           },
-          "doYouWantInterviewAdjustments": {
+          "DoYouWantInterviewAdjustments": {
             "type": "boolean",
             "nullable": true
           },
-          "interviewAdjustmentsDescription": {
+          "InterviewAdjustmentsDescription": {
             "type": "string",
             "nullable": true
           },
-          "backLinkUrl": {
+          "BackLinkUrl": {
             "type": "string",
             "nullable": true
           }
         },
         "required": [
-          "applicationId"
+          "ApplicationId"
         ]
       },
       "InterviewAdjustmentSummaryViewModel": {
         "type": "object",
         "properties": {
-          "applicationId": {
+          "ApplicationId": {
             "type": "string",
             "format": "uuid"
           },
-          "isSupportRequestRequired": {
+          "IsSupportRequestRequired": {
             "type": "boolean"
           },
-          "supportRequestAnswer": {
+          "SupportRequestAnswer": {
             "type": "string",
             "nullable": true
           },
-          "isSectionCompleted": {
+          "IsSectionCompleted": {
             "type": "boolean",
             "nullable": true
           },
-          "backLinkUrl": {
+          "BackLinkUrl": {
             "type": "string",
             "nullable": true
           }
         },
         "required": [
-          "applicationId"
+          "ApplicationId"
+        ]
+      },
+      "ViewModelBase": {
+        "type": "object",
+        "properties": {
+          "Valid": {
+            "type": "boolean"
+          },
+          "ErrorDictionary": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        },
+        "required": [
+          "Valid",
+          "ErrorDictionary"
         ]
       }
     },
     "securitySchemes": {
-      "policyAuth": {
-        "type": "apiKey",
-        "name": "Authorization",
-        "in": "header"
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
       }
     }
   }

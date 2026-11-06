@@ -1,15 +1,14 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "AdditionalQuestion API",
-    "version": "1.0.0",
-    "description": "API for managing additional questions in the application process."
+    "title": "Additional Question API",
+    "version": "1.0.0"
   },
   "paths": {
     "/apply/{applicationId}/additional-question/{additionalQuestion}/{additionalQuestionId}": {
       "get": {
-        "operationId": "getAdditionalQuestion",
-        "summary": "Retrieve an additional question for an application.",
+        "summary": "Retrieve additional question details",
+        "operationId": "GetAdditionalQuestion",
         "parameters": [
           {
             "name": "applicationId",
@@ -18,8 +17,7 @@
             "schema": {
               "type": "string",
               "format": "uuid"
-            },
-            "description": "Unique identifier for the application."
+            }
           },
           {
             "name": "additionalQuestion",
@@ -27,8 +25,7 @@
             "required": true,
             "schema": {
               "type": "integer"
-            },
-            "description": "Numeric identifier for the additional question."
+            }
           },
           {
             "name": "additionalQuestionId",
@@ -37,31 +34,33 @@
             "schema": {
               "type": "string",
               "format": "uuid"
-            },
-            "description": "Unique identifier for the additional question."
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Successful retrieval of the additional question.",
+            "description": "Success",
             "content": {
-              "application/json": {
+              "text/html": {
                 "schema": {
-                  "$ref": "#/components/schemas/AddAdditionalQuestionViewModel"
+                  "type": "string"
                 }
               }
             }
+          },
+          "404": {
+            "description": "Not Found"
           }
         },
         "security": [
           {
-            "OAuth2": []
+            "oauth2": []
           }
         ]
       },
       "post": {
-        "operationId": "addAdditionalQuestion",
-        "summary": "Submit an answer for an additional question.",
+        "summary": "Submit additional question answer",
+        "operationId": "PostAdditionalQuestionAnswer",
         "parameters": [
           {
             "name": "applicationId",
@@ -70,8 +69,7 @@
             "schema": {
               "type": "string",
               "format": "uuid"
-            },
-            "description": "Unique identifier for the application."
+            }
           },
           {
             "name": "additionalQuestion",
@@ -79,8 +77,7 @@
             "required": true,
             "schema": {
               "type": "integer"
-            },
-            "description": "Numeric identifier for the additional question."
+            }
           },
           {
             "name": "additionalQuestionId",
@@ -89,13 +86,17 @@
             "schema": {
               "type": "string",
               "format": "uuid"
-            },
-            "description": "Unique identifier for the additional question."
+            }
           }
         ],
         "requestBody": {
           "required": true,
           "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/AddAdditionalQuestionViewModel"
+              }
+            },
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/AddAdditionalQuestionViewModel"
@@ -105,15 +106,24 @@
         },
         "responses": {
           "302": {
-            "description": "Redirection to the application summary page."
+            "description": "Redirect to application route",
+            "headers": {
+              "Location": {
+                "description": "Redirect URL",
+                "schema": {
+                  "type": "string",
+                  "format": "uri"
+                }
+              }
+            }
           },
           "400": {
-            "description": "Validation errors in the submitted answer."
+            "description": "Validation Error"
           }
         },
         "security": [
           {
-            "OAuth2": []
+            "oauth2": []
           }
         ]
       }
@@ -126,35 +136,37 @@
         "properties": {
           "ApplicationId": {
             "type": "string",
-            "format": "uuid",
-            "description": "Unique identifier for the application."
+            "format": "uuid"
           },
           "AdditionalQuestionLabel": {
             "type": "string",
-            "nullable": true,
-            "description": "Label or text for the additional question."
+            "nullable": true
           },
           "AdditionalQuestionAnswer": {
             "type": "string",
-            "nullable": true,
-            "description": "Answer provided for the additional question."
+            "nullable": true
           },
           "IsSectionCompleted": {
             "type": "boolean",
-            "nullable": true,
-            "description": "Indicates if the section is completed."
+            "nullable": true
           }
-        }
+        },
+        "required": [
+          "ApplicationId"
+        ]
       }
     },
     "securitySchemes": {
-      "OAuth2": {
+      "oauth2": {
         "type": "oauth2",
         "flows": {
           "authorizationCode": {
-            "authorizationUrl": "/oauth/authorize",
-            "tokenUrl": "/oauth/token",
-            "scopes": {}
+            "authorizationUrl": "https://example.com/auth",
+            "tokenUrl": "https://example.com/token",
+            "scopes": {
+              "read": "Read access",
+              "write": "Write access"
+            }
           }
         }
       }

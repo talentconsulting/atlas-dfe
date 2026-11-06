@@ -7,10 +7,8 @@
   "paths": {
     "/apply/{applicationId}/disability-confident": {
       "get": {
-        "tags": [
-          "Disability Confident"
-        ],
-        "summary": "Get Disability Confident details",
+        "operationId": "GetDisabilityConfident",
+        "summary": "Retrieve disability confident information for a specific application",
         "parameters": [
           {
             "name": "applicationId",
@@ -26,32 +24,27 @@
             "in": "query",
             "required": false,
             "schema": {
-              "type": "boolean"
+              "type": "boolean",
+              "default": false
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Disability Confident details",
+            "description": "Disability confident information retrieved successfully",
             "content": {
-              "text/html": {}
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DisabilityConfidentViewModel"
+                }
+              }
             }
-          },
-          "302": {
-            "description": "Redirect if not in edit mode"
           }
-        },
-        "security": [
-          {
-            "OAuth2": []
-          }
-        ]
+        }
       },
       "post": {
-        "tags": [
-          "Disability Confident"
-        ],
-        "summary": "Update Disability Confident details",
+        "operationId": "UpdateDisabilityConfident",
+        "summary": "Update disability confident information for a specific application",
         "parameters": [
           {
             "name": "applicationId",
@@ -67,7 +60,8 @@
             "in": "query",
             "required": false,
             "schema": {
-              "type": "boolean"
+              "type": "boolean",
+              "default": false
             }
           }
         ],
@@ -83,28 +77,18 @@
         },
         "responses": {
           "200": {
-            "description": "Validation failed and returns updated view",
-            "content": {
-              "text/html": {}
-            }
+            "description": "Disability confident information updated successfully"
           },
-          "302": {
-            "description": "Redirect on successful update"
+          "400": {
+            "description": "Validation error"
           }
-        },
-        "security": [
-          {
-            "OAuth2": []
-          }
-        ]
+        }
       }
     },
     "/apply/{applicationId}/disability-confident/confirm": {
       "get": {
-        "tags": [
-          "Disability Confident Confirmation"
-        ],
-        "summary": "Get Disability Confident confirmation details",
+        "operationId": "GetDisabilityConfidentSummary",
+        "summary": "Retrieve summary information for disability confident application",
         "parameters": [
           {
             "name": "applicationId",
@@ -120,29 +104,27 @@
             "in": "query",
             "required": false,
             "schema": {
-              "type": "boolean"
+              "type": "boolean",
+              "default": false
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Disability Confident summary",
+            "description": "Disability confident summary retrieved successfully",
             "content": {
-              "text/html": {}
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DisabilityConfidentSummaryViewModel"
+                }
+              }
             }
           }
-        },
-        "security": [
-          {
-            "OAuth2": []
-          }
-        ]
+        }
       },
       "post": {
-        "tags": [
-          "Disability Confident Confirmation"
-        ],
-        "summary": "Confirm and save Disability Confident section",
+        "operationId": "UpdateDisabilityConfidentSummary",
+        "summary": "Update summary information for disability confident application",
         "parameters": [
           {
             "name": "applicationId",
@@ -158,7 +140,8 @@
             "in": "query",
             "required": false,
             "schema": {
-              "type": "boolean"
+              "type": "boolean",
+              "default": false
             }
           }
         ],
@@ -174,20 +157,12 @@
         },
         "responses": {
           "200": {
-            "description": "Validation failed and returns updated view",
-            "content": {
-              "text/html": {}
-            }
+            "description": "Disability confident summary updated successfully"
           },
-          "302": {
-            "description": "Redirect on successful confirmation"
+          "400": {
+            "description": "Validation error"
           }
-        },
-        "security": [
-          {
-            "OAuth2": []
-          }
-        ]
+        }
       }
     }
   },
@@ -236,18 +211,6 @@
           "applicationId",
           "isApplyUnderDisabilityConfidentSchemeRequired"
         ]
-      }
-    },
-    "securitySchemes": {
-      "OAuth2": {
-        "type": "oauth2",
-        "flows": {
-          "authorizationCode": {
-            "authorizationUrl": "https://example.com/auth",
-            "tokenUrl": "https://example.com/token",
-            "scopes": {}
-          }
-        }
       }
     }
   }

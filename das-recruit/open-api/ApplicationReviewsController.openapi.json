@@ -1,0 +1,317 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Application Reviews API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/{EmployerAccountId}/{VacancyId}/unsuccessful": {
+      "get": {
+        "operationId": "getApplicationReviewsToUnsuccessful",
+        "summary": "Retrieve unsuccessful application reviews",
+        "parameters": [
+          {
+            "name": "EmployerAccountId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "VacancyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "sortColumn",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/SortColumn"
+            }
+          },
+          {
+            "name": "sortOrder",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/SortOrder"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful retrieval",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApplicationReviewsToUnsuccessfulViewModel"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "postApplicationReviewsToUnsuccessful",
+        "summary": "Submit updates to application reviews status",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApplicationReviewsToUnsuccessfulViewModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "302": {
+            "description": "Redirect to feedback page"
+          }
+        }
+      }
+    },
+    "/{EmployerAccountId}/{VacancyId}/unsuccessful-feedback": {
+      "get": {
+        "operationId": "getApplicationReviewsFeedback",
+        "summary": "Retrieve feedback for application reviews",
+        "parameters": [
+          {
+            "name": "EmployerAccountId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "VacancyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful retrieval",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApplicationReviewsFeedbackViewModel"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "postApplicationReviewsFeedback",
+        "summary": "Submit feedback for application reviews",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApplicationReviewsFeedbackViewModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "302": {
+            "description": "Redirect based on review outcomes"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ApplicationReviewsToUnsuccessfulViewModel": {
+        "type": "object",
+        "properties": {
+          "VacancyReference": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "VacancyApplications": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VacancyApplication"
+            }
+          },
+          "PositionsFilledBannerHeader": {
+            "type": "string"
+          },
+          "PositionsFilledBannerBody": {
+            "type": "string"
+          },
+          "ApplicationsToUnsuccessful": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "EmployerAccountId": {
+            "type": "string"
+          },
+          "VacancyId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "IsMultipleApplications": {
+            "type": "boolean"
+          },
+          "SortColumn": {
+            "$ref": "#/components/schemas/SortColumn"
+          },
+          "SortOrder": {
+            "$ref": "#/components/schemas/SortOrder"
+          }
+        }
+      },
+      "ApplicationReviewsFeedbackViewModel": {
+        "type": "object",
+        "properties": {
+          "CandidateFeedback": {
+            "type": "string"
+          },
+          "ApplicationsToUnsuccessful": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VacancyApplication"
+            }
+          },
+          "EmployerAccountId": {
+            "type": "string"
+          },
+          "VacancyId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "Outcome": {
+            "$ref": "#/components/schemas/ApplicationReviewStatus"
+          },
+          "IsMultipleApplications": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ApplicationReviewStatus": {
+        "type": "string",
+        "enum": [
+          "New",
+          "Successful",
+          "Unsuccessful",
+          "Shared",
+          "InReview",
+          "Interviewing",
+          "EmployerInterviewing",
+          "EmployerUnsuccessful",
+          "PendingShared",
+          "PendingToMakeUnsuccessful",
+          "AllShared"
+        ]
+      },
+      "SortColumn": {
+        "type": "string",
+        "enum": [
+          "Default",
+          "Name",
+          "ApplicationID",
+          "Status",
+          "DateApplied",
+          "Applicant",
+          "Response",
+          "DateReviewed",
+          "DateShared"
+        ]
+      },
+      "SortOrder": {
+        "type": "string",
+        "enum": [
+          "Default",
+          "Ascending",
+          "Descending"
+        ]
+      },
+      "VacancyApplication": {
+        "type": "object",
+        "properties": {
+          "SubmittedDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "Status": {
+            "$ref": "#/components/schemas/ApplicationReviewStatus"
+          },
+          "CandidateId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "FirstName": {
+            "type": "string"
+          },
+          "LastName": {
+            "type": "string"
+          },
+          "DateOfBirth": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "ApplicationReviewId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "DisabilityStatus": {
+            "type": "string",
+            "enum": [
+              "Unknown",
+              "No",
+              "PreferNotToSay",
+              "Yes"
+            ]
+          },
+          "IsWithdrawn": {
+            "type": "boolean"
+          },
+          "DateSharedWithEmployer": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "ReviewedDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "VacancyReference": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "CandidateFeedback": {
+            "type": "string"
+          },
+          "ApplicationId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "CandidateAppliedLocations": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}

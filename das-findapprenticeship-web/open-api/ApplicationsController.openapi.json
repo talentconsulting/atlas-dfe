@@ -3,13 +3,13 @@
   "info": {
     "title": "Applications API",
     "version": "1.0.0",
-    "description": "API for handling apprenticeship applications."
+    "description": "Endpoints for managing apprenticeship applications."
   },
   "paths": {
     "/applications": {
       "get": {
+        "operationId": "ViewApplications",
         "summary": "Retrieve all applications.",
-        "operationId": "getApplications",
         "parameters": [
           {
             "name": "tab",
@@ -24,7 +24,8 @@
                 "Successful",
                 "Unsuccessful"
               ]
-            }
+            },
+            "description": "Filter applications based on their tab."
           },
           {
             "name": "showEqualityQuestionsBanner",
@@ -32,16 +33,17 @@
             "required": false,
             "schema": {
               "type": "boolean"
-            }
+            },
+            "description": "Flag to display equality questions banner."
           }
         ],
         "responses": {
           "200": {
-            "description": "Applications retrieved successfully.",
+            "description": "A list of applications.",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetIndexQueryResult"
+                  "$ref": "#/components/schemas/ViewApplicationsResponse"
                 }
               }
             }
@@ -51,8 +53,8 @@
     },
     "/applications/{applicationId}/withdraw": {
       "get": {
-        "summary": "Prepare withdrawal of an application.",
-        "operationId": "getWithdrawApplication",
+        "operationId": "GetWithdrawApplication",
+        "summary": "Retrieve an application for withdrawal.",
         "parameters": [
           {
             "name": "applicationId",
@@ -61,12 +63,13 @@
             "schema": {
               "type": "string",
               "format": "uuid"
-            }
+            },
+            "description": "ID of the application to be withdrawn."
           }
         ],
         "responses": {
           "200": {
-            "description": "Withdrawal view model created.",
+            "description": "Details of the application for withdrawal.",
             "content": {
               "application/json": {
                 "schema": {
@@ -78,38 +81,29 @@
         }
       },
       "post": {
+        "operationId": "WithdrawApplication",
         "summary": "Withdraw an application.",
-        "operationId": "postWithdrawApplication",
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/PostWithdrawApplicationViewModel"
+                "$ref": "#/components/schemas/PostWithdrawApplication"
               }
             }
           }
         },
         "responses": {
-          "303": {
-            "description": "Redirect to application list after withdrawal.",
-            "headers": {
-              "Location": {
-                "description": "Redirect URL.",
-                "schema": {
-                  "type": "string",
-                  "format": "uri"
-                }
-              }
-            }
+          "302": {
+            "description": "Redirect to view applications."
           }
         }
       }
     },
     "/applications/{applicationId}/view": {
       "get": {
-        "summary": "View application details.",
-        "operationId": "getApplicationView",
+        "operationId": "ViewApplication",
+        "summary": "View details of a specific application.",
         "parameters": [
           {
             "name": "applicationId",
@@ -118,12 +112,13 @@
             "schema": {
               "type": "string",
               "format": "uuid"
-            }
+            },
+            "description": "ID of the application to be viewed."
           }
         ],
         "responses": {
           "200": {
-            "description": "Application view model retrieved.",
+            "description": "Details of the specific application.",
             "content": {
               "application/json": {
                 "schema": {
@@ -137,8 +132,8 @@
     },
     "/applications/{applicationId}/delete": {
       "get": {
-        "summary": "Confirm deletion of an application.",
-        "operationId": "getConfirmDeleteApplication",
+        "operationId": "ConfirmDeleteApplication",
+        "summary": "Confirm application deletion.",
         "parameters": [
           {
             "name": "applicationId",
@@ -147,12 +142,13 @@
             "schema": {
               "type": "string",
               "format": "uuid"
-            }
+            },
+            "description": "ID of the application to be deleted."
           }
         ],
         "responses": {
           "200": {
-            "description": "Deletion confirmation view model retrieved.",
+            "description": "Details for confirming application deletion.",
             "content": {
               "application/json": {
                 "schema": {
@@ -164,8 +160,8 @@
         }
       },
       "post": {
+        "operationId": "DeleteApplication",
         "summary": "Delete an application.",
-        "operationId": "postDeleteApplication",
         "parameters": [
           {
             "name": "applicationId",
@@ -174,21 +170,13 @@
             "schema": {
               "type": "string",
               "format": "uuid"
-            }
+            },
+            "description": "ID of the application to be deleted."
           }
         ],
         "responses": {
-          "303": {
-            "description": "Redirect to application list after deletion.",
-            "headers": {
-              "Location": {
-                "description": "Redirect URL.",
-                "schema": {
-                  "type": "string",
-                  "format": "uri"
-                }
-              }
-            }
+          "302": {
+            "description": "Redirect to view applications."
           }
         }
       }
@@ -196,7 +184,60 @@
   },
   "components": {
     "schemas": {
-      "GetIndexQueryResult": {
+      "WithdrawApplicationViewModel": {
+        "type": "object",
+        "properties": {
+          "applicationId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "advertTitle": {
+            "type": "string"
+          },
+          "employerName": {
+            "type": "string"
+          },
+          "submittedDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "closesOnDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "closesToday": {
+            "type": "boolean"
+          },
+          "closesTomorrow": {
+            "type": "boolean"
+          },
+          "isClosed": {
+            "type": "boolean"
+          },
+          "employmentWorkLocation": {
+            "type": "string"
+          }
+        }
+      },
+      "PostWithdrawApplication": {
+        "type": "object",
+        "properties": {
+          "applicationId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "withdrawApplication": {
+            "type": "boolean"
+          },
+          "advertTitle": {
+            "type": "string"
+          },
+          "employerName": {
+            "type": "string"
+          }
+        }
+      },
+      "ViewApplicationsResponse": {
         "type": "object",
         "properties": {
           "applications": {
@@ -223,6 +264,10 @@
           "employerName": {
             "type": "string"
           },
+          "closingDate": {
+            "type": "string",
+            "format": "date-time"
+          },
           "status": {
             "type": "string",
             "enum": [
@@ -233,42 +278,16 @@
               "Unsuccessful",
               "Expired"
             ]
-          }
-        }
-      },
-      "WithdrawApplicationViewModel": {
-        "type": "object",
-        "properties": {
-          "applicationId": {
-            "type": "string",
-            "format": "uuid"
           },
-          "advertTitle": {
+          "workLocation": {
             "type": "string"
           },
-          "employerName": {
-            "type": "string"
-          }
-        }
-      },
-      "PostWithdrawApplicationViewModel": {
-        "type": "object",
-        "properties": {
-          "applicationId": {
+          "apprenticeshipType": {
             "type": "string",
-            "format": "uuid"
-          },
-          "withdrawApplication": {
-            "type": "boolean",
-            "nullable": true
-          },
-          "advertTitle": {
-            "type": "string",
-            "nullable": true
-          },
-          "employerName": {
-            "type": "string",
-            "nullable": true
+            "enum": [
+              "Standard",
+              "Foundation"
+            ]
           }
         }
       },
@@ -280,17 +299,51 @@
             "format": "uuid"
           },
           "candidate": {
-            "type": "object",
-            "properties": {
-              "id": {
-                "type": "string",
-                "format": "uuid"
-              },
-              "email": {
-                "type": "string",
-                "format": "email"
-              }
-            }
+            "$ref": "#/components/schemas/CandidateDetailsSection"
+          },
+          "applicationStatus": {
+            "type": "string",
+            "enum": [
+              "Draft",
+              "Submitted",
+              "Withdrawn",
+              "Successful",
+              "Unsuccessful",
+              "Expired"
+            ]
+          },
+          "vacancyDetails": {
+            "$ref": "#/components/schemas/VacancyDetailsSection"
+          }
+        }
+      },
+      "CandidateDetailsSection": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "firstName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          }
+        }
+      },
+      "VacancyDetailsSection": {
+        "type": "object",
+        "properties": {
+          "employerName": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
           }
         }
       },
@@ -301,10 +354,17 @@
             "type": "string",
             "format": "uuid"
           },
+          "applicationStartDate": {
+            "type": "string",
+            "format": "date"
+          },
           "vacancyTitle": {
             "type": "string"
           },
           "employerName": {
+            "type": "string"
+          },
+          "workLocation": {
             "type": "string"
           }
         }

@@ -1,0 +1,100 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Notifications API",
+    "description": "API for sending email notifications.",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/api/email": {
+      "post": {
+        "summary": "Send an email notification",
+        "description": "This endpoint allows authorized users to send an email notification.",
+        "operationId": "postEmail",
+        "security": [
+          {
+            "OAuth2": [
+              "SendEmail"
+            ]
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Email"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Email sent successfully."
+          },
+          "400": {
+            "description": "Validation failure for the request."
+          },
+          "500": {
+            "description": "Internal server error."
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Email": {
+        "type": "object",
+        "properties": {
+          "SystemId": {
+            "type": "string",
+            "description": "The Id of the system that requested the message to be sent."
+          },
+          "TemplateId": {
+            "type": "string",
+            "description": "The Id of the message template to send."
+          },
+          "Subject": {
+            "type": "string",
+            "description": "The text to use as the email subject."
+          },
+          "RecipientsAddress": {
+            "type": "string",
+            "description": "The email address of the recipient."
+          },
+          "ReplyToAddress": {
+            "type": "string",
+            "description": "The email address to use as the sender/reply address."
+          },
+          "Tokens": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "Keys and values of tokens to substitute in the template text."
+          }
+        },
+        "required": [
+          "TemplateId",
+          "RecipientsAddress",
+          "Subject"
+        ],
+        "description": "Details of the email notification to be sent."
+      }
+    },
+    "securitySchemes": {
+      "OAuth2": {
+        "type": "oauth2",
+        "flows": {
+          "implicit": {
+            "authorizationUrl": "https://example.com/oauth/authorize",
+            "scopes": {
+              "SendEmail": "Permission to send email notifications."
+            }
+          }
+        }
+      }
+    }
+  }
+}

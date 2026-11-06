@@ -1,0 +1,209 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Standards API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/api/Standards/refresh": {
+      "put": {
+        "summary": "Refresh standards",
+        "operationId": "refreshStandards",
+        "requestBody": {
+          "description": "Parameters for refreshing standards",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RefreshStandardsParameters"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Standards refreshed successfully"
+          },
+          "400": {
+            "description": "Validation error or other error occurred",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Standards/{standardReference}": {
+      "get": {
+        "summary": "Get a specific standard",
+        "operationId": "getStandard",
+        "parameters": [
+          {
+            "name": "standardReference",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The reference of the standard to retrieve"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Standard retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardsParameter"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error or other error occurred",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Standards": {
+      "post": {
+        "summary": "Cache standard",
+        "operationId": "cacheStandard",
+        "requestBody": {
+          "description": "Parameters for caching a standard",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CacheStandardRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Standard cached successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardsParameter"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error or other error occurred",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "RefreshStandardsParameters": {
+        "type": "object",
+        "properties": {
+          "Standards": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StandardsParameter"
+            }
+          }
+        },
+        "required": [
+          "Standards"
+        ]
+      },
+      "StandardsParameter": {
+        "type": "object",
+        "properties": {
+          "StandardReference": {
+            "type": "string"
+          },
+          "StandardTitle": {
+            "type": "string"
+          },
+          "StandardLevel": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "StandardSector": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "StandardReference",
+          "StandardTitle",
+          "StandardLevel",
+          "StandardSector"
+        ]
+      },
+      "CacheStandardRequest": {
+        "type": "object",
+        "properties": {
+          "StandardReference": {
+            "type": "string"
+          },
+          "StandardTitle": {
+            "type": "string"
+          },
+          "StandardLevel": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "StandardSector": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "StandardReference",
+          "StandardTitle",
+          "StandardLevel",
+          "StandardSector"
+        ]
+      }
+    }
+  }
+}

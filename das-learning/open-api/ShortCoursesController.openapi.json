@@ -2,13 +2,13 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Short Courses API",
-    "version": "1.0.0",
-    "description": "API for managing short courses."
+    "description": "API for managing short courses.",
+    "version": "1.0.0"
   },
   "paths": {
     "/{ukprn}/academicyears/{academicYear}/shortCourses": {
       "get": {
-        "summary": "Get paginated short courses by academic year.",
+        "summary": "Get paginated short courses for a provider within an academic year.",
         "parameters": [
           {
             "name": "ukprn",
@@ -43,15 +43,13 @@
             "required": false,
             "schema": {
               "type": "integer",
-              "default": 20,
-              "minimum": 1,
-              "maximum": 100
+              "default": 20
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Paginated list of short courses.",
+            "description": "Successful response.",
             "content": {
               "application/json": {
                 "schema": {
@@ -65,7 +63,7 @@
     },
     "/{ukprn}/{collectionYear}/shortCourses": {
       "get": {
-        "summary": "Get paginated short courses for earnings.",
+        "summary": "Get paginated short courses for earnings within a collection year.",
         "parameters": [
           {
             "name": "ukprn",
@@ -100,15 +98,13 @@
             "required": false,
             "schema": {
               "type": "integer",
-              "default": 20,
-              "minimum": 1,
-              "maximum": 100
+              "default": 20
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Paginated list of short courses for earnings.",
+            "description": "Successful response.",
             "content": {
               "application/json": {
                 "schema": {
@@ -122,7 +118,7 @@
     },
     "/shortCourses": {
       "post": {
-        "summary": "Create a draft short course learner record.",
+        "summary": "Create a new draft short course learner.",
         "requestBody": {
           "required": true,
           "content": {
@@ -135,7 +131,7 @@
         },
         "responses": {
           "200": {
-            "description": "The newly created short course record.",
+            "description": "Successful response.",
             "content": {
               "application/json": {
                 "schema": {
@@ -145,7 +141,7 @@
             }
           },
           "204": {
-            "description": "No content."
+            "description": "No content returned because the creation resulted in no results."
           }
         }
       }
@@ -178,13 +174,14 @@
             "required": false,
             "schema": {
               "type": "integer",
+              "format": "int32",
               "default": 0
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Result indicating the short course was removed.",
+            "description": "Successful response.",
             "content": {
               "application/json": {
                 "schema": {
@@ -194,12 +191,12 @@
             }
           },
           "404": {
-            "description": "Short course record not found."
+            "description": "Record not found."
           }
         }
       },
       "put": {
-        "summary": "Update a short course learner record.",
+        "summary": "Update an existing short course learner record.",
         "parameters": [
           {
             "name": "learnerKey",
@@ -223,7 +220,7 @@
         },
         "responses": {
           "200": {
-            "description": "Updated short course record.",
+            "description": "Successful response.",
             "content": {
               "application/json": {
                 "schema": {
@@ -241,33 +238,33 @@
       "GetShortCoursesByAcademicYearResponse": {
         "type": "object",
         "properties": {
-          "items": {
+          "Page": {
+            "type": "integer"
+          },
+          "TotalItems": {
+            "type": "integer"
+          },
+          "PageSize": {
+            "type": "integer"
+          },
+          "TotalPages": {
+            "type": "integer"
+          },
+          "Items": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/ShortCourseLearnerItem"
             }
-          },
-          "page": {
-            "type": "integer"
-          },
-          "totalItems": {
-            "type": "integer"
-          },
-          "pageSize": {
-            "type": "integer"
-          },
-          "totalPages": {
-            "type": "integer"
           }
         }
       },
       "ShortCourseLearnerItem": {
         "type": "object",
         "properties": {
-          "uln": {
+          "Uln": {
             "type": "string"
           },
-          "key": {
+          "Key": {
             "type": "string",
             "format": "uuid"
           }
@@ -276,37 +273,37 @@
       "GetShortCoursesForEarningsResponse": {
         "type": "object",
         "properties": {
-          "items": {
+          "Page": {
+            "type": "integer"
+          },
+          "TotalItems": {
+            "type": "integer"
+          },
+          "PageSize": {
+            "type": "integer"
+          },
+          "TotalPages": {
+            "type": "integer"
+          },
+          "Items": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/GetShortCoursesForEarningsItem"
             }
-          },
-          "page": {
-            "type": "integer"
-          },
-          "totalItems": {
-            "type": "integer"
-          },
-          "pageSize": {
-            "type": "integer"
-          },
-          "totalPages": {
-            "type": "integer"
           }
         }
       },
       "GetShortCoursesForEarningsItem": {
         "type": "object",
         "properties": {
-          "learnerKey": {
+          "LearnerKey": {
             "type": "string",
             "format": "uuid"
           },
-          "learner": {
+          "Learner": {
             "$ref": "#/components/schemas/GetShortCoursesForEarningsLearner"
           },
-          "episodes": {
+          "Episodes": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/GetShortCoursesForEarningsEpisode"
@@ -317,16 +314,16 @@
       "GetShortCoursesForEarningsLearner": {
         "type": "object",
         "properties": {
-          "uln": {
+          "Uln": {
             "type": "string"
           },
-          "firstName": {
+          "FirstName": {
             "type": "string"
           },
-          "lastName": {
+          "LastName": {
             "type": "string"
           },
-          "dateOfBirth": {
+          "DateOfBirth": {
             "type": "string",
             "format": "date"
           }
@@ -335,24 +332,23 @@
       "GetShortCoursesForEarningsEpisode": {
         "type": "object",
         "properties": {
-          "learningKey": {
+          "LearningKey": {
             "type": "string",
             "format": "uuid"
           },
-          "courseCode": {
+          "CourseCode": {
             "type": "string"
           },
-          "isApproved": {
+          "IsApproved": {
             "type": "boolean"
           },
-          "price": {
-            "type": "number",
-            "format": "decimal"
+          "Price": {
+            "type": "number"
           },
-          "learnerRef": {
+          "LearnerRef": {
             "type": "string"
           },
-          "employerType": {
+          "EmployerType": {
             "type": "string",
             "enum": [
               "NonLevy",
@@ -364,24 +360,23 @@
       "CreateDraftShortCourseRequest": {
         "type": "object",
         "properties": {
-          "ukprn": {
+          "Ukprn": {
             "type": "integer",
             "format": "int64"
           },
-          "academicYear": {
-            "type": "integer",
-            "format": "int32"
+          "AcademicYear": {
+            "type": "integer"
           },
-          "learnerUpdateDetails": {
+          "LearnerUpdateDetails": {
             "$ref": "#/components/schemas/ShortCourseLearnerUpdateDetails"
           },
-          "learningSupport": {
+          "LearningSupport": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/LearningSupportDetails"
             }
           },
-          "onProgramme": {
+          "OnProgramme": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/OnProgramme"
@@ -392,37 +387,37 @@
       "ShortCourseLearnerUpdateDetails": {
         "type": "object",
         "properties": {
-          "firstName": {
+          "LearnerRef": {
             "type": "string"
           },
-          "lastName": {
+          "FirstName": {
             "type": "string"
           },
-          "emailAddress": {
+          "LastName": {
+            "type": "string"
+          },
+          "EmailAddress": {
             "type": "string",
-            "format": "email"
+            "nullable": true
           },
-          "dateOfBirth": {
+          "DateOfBirth": {
             "type": "string",
             "format": "date"
           },
-          "uln": {
+          "Uln": {
             "type": "integer",
             "format": "int64"
-          },
-          "learnerRef": {
-            "type": "string"
           }
         }
       },
       "LearningSupportDetails": {
         "type": "object",
         "properties": {
-          "startDate": {
+          "StartDate": {
             "type": "string",
             "format": "date"
           },
-          "endDate": {
+          "EndDate": {
             "type": "string",
             "format": "date"
           }
@@ -431,34 +426,36 @@
       "OnProgramme": {
         "type": "object",
         "properties": {
-          "courseCode": {
+          "CourseCode": {
             "type": "string"
           },
-          "ukprn": {
+          "Ukprn": {
             "type": "integer",
             "format": "int64"
           },
-          "startDate": {
+          "StartDate": {
             "type": "string",
             "format": "date"
           },
-          "withdrawalDate": {
+          "WithdrawalDate": {
             "type": "string",
-            "format": "date"
+            "format": "date",
+            "nullable": true
           },
-          "withdrawalReasonCode": {
+          "WithdrawalReasonCode": {
             "type": "integer",
-            "format": "int16"
+            "nullable": true
           },
-          "completionDate": {
+          "CompletionDate": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "ExpectedEndDate": {
             "type": "string",
             "format": "date"
           },
-          "expectedEndDate": {
-            "type": "string",
-            "format": "date"
-          },
-          "milestones": {
+          "Milestones": {
             "type": "array",
             "items": {
               "type": "string",
@@ -468,11 +465,10 @@
               ]
             }
           },
-          "price": {
-            "type": "number",
-            "format": "decimal"
+          "Price": {
+            "type": "number"
           },
-          "learningType": {
+          "LearningType": {
             "type": "string",
             "enum": [
               "Apprenticeship",
@@ -482,10 +478,31 @@
           }
         }
       },
+      "UpdateShortCourseRequest": {
+        "type": "object",
+        "properties": {
+          "Ukprn": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "AcademicYear": {
+            "type": "integer"
+          },
+          "LearnerUpdateDetails": {
+            "$ref": "#/components/schemas/ShortCourseLearnerUpdateDetails"
+          },
+          "OnProgramme": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OnProgramme"
+            }
+          }
+        }
+      },
       "CreateDraftShortCourseCommandResponse": {
         "type": "object",
         "properties": {
-          "results": {
+          "Results": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/ShortCourseCommandResult"
@@ -496,7 +513,7 @@
       "RemoveShortCourseResult": {
         "type": "object",
         "properties": {
-          "results": {
+          "Results": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/RemoveShortCourseItemResult"
@@ -507,148 +524,16 @@
       "RemoveShortCourseItemResult": {
         "type": "object",
         "properties": {
-          "removedEpisodeKey": {
+          "RemovedEpisodeKey": {
             "type": "string",
             "format": "uuid"
-          },
-          "learningKey": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "learnerKey": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "learner": {
-            "$ref": "#/components/schemas/ShortCourseLearner"
-          },
-          "episode": {
-            "$ref": "#/components/schemas/ShortCourseCommandEpisode"
-          }
-        }
-      },
-      "ShortCourseLearner": {
-        "type": "object",
-        "properties": {
-          "uln": {
-            "type": "string"
-          },
-          "firstName": {
-            "type": "string"
-          },
-          "lastName": {
-            "type": "string"
-          },
-          "dateOfBirth": {
-            "type": "string",
-            "format": "date"
-          }
-        }
-      },
-      "ShortCourseCommandEpisode": {
-        "type": "object",
-        "properties": {
-          "episodeKey": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "ukprn": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "employerAccountId": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "courseCode": {
-            "type": "string"
-          },
-          "courseType": {
-            "type": "string"
-          },
-          "learningType": {
-            "type": "string",
-            "enum": [
-              "Apprenticeship",
-              "FoundationApprenticeship",
-              "ApprenticeshipUnit"
-            ]
-          },
-          "startDate": {
-            "type": "string",
-            "format": "date"
-          },
-          "plannedEndDate": {
-            "type": "string",
-            "format": "date"
-          },
-          "withdrawalDate": {
-            "type": "string",
-            "format": "date"
-          },
-          "ageAtStart": {
-            "type": "integer"
-          },
-          "isApproved": {
-            "type": "boolean"
-          },
-          "price": {
-            "type": "number",
-            "format": "decimal"
-          },
-          "learnerRef": {
-            "type": "string"
-          },
-          "employerType": {
-            "type": "string",
-            "enum": [
-              "NonLevy",
-              "Levy"
-            ]
-          },
-          "approvalsApprenticeshipId": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "isRemoved": {
-            "type": "boolean"
-          },
-          "transferSenderId": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "completionDate": {
-            "type": "string",
-            "format": "date"
-          }
-        }
-      },
-      "UpdateShortCourseRequest": {
-        "type": "object",
-        "properties": {
-          "ukprn": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "academicYear": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "learnerUpdateDetails": {
-            "$ref": "#/components/schemas/ShortCourseLearnerUpdateDetails"
-          },
-          "onProgramme": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/OnProgramme"
-            }
           }
         }
       },
       "UpdateShortCourseResponse": {
         "type": "object",
         "properties": {
-          "results": {
+          "Results": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/UpdateShortCourseItemResult"
@@ -659,7 +544,7 @@
       "UpdateShortCourseItemResult": {
         "type": "object",
         "properties": {
-          "changes": {
+          "Changes": {
             "type": "array",
             "items": {
               "type": "string",
@@ -675,17 +560,55 @@
               ]
             }
           },
-          "isNewLearning": {
+          "IsNewLearning": {
             "type": "boolean"
           },
-          "isNewEpisode": {
+          "IsNewEpisode": {
             "type": "boolean"
           },
-          "isIgnored": {
+          "IsIgnored": {
             "type": "boolean"
           },
-          "isRemoved": {
+          "IsRemoved": {
             "type": "boolean"
+          }
+        }
+      },
+      "ShortCourseCommandResult": {
+        "type": "object",
+        "properties": {
+          "LearningKey": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "LearnerKey": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "Learner": {
+            "$ref": "#/components/schemas/ShortCourseLearner"
+          },
+          "Episode": {
+            "type": "object",
+            "nullable": true
+          }
+        }
+      },
+      "ShortCourseLearner": {
+        "type": "object",
+        "properties": {
+          "Uln": {
+            "type": "string"
+          },
+          "FirstName": {
+            "type": "string"
+          },
+          "LastName": {
+            "type": "string"
+          },
+          "DateOfBirth": {
+            "type": "string",
+            "format": "date"
           }
         }
       }

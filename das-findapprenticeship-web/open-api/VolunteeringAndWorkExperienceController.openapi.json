@@ -7,7 +7,7 @@
   "paths": {
     "/apply/{applicationId}/volunteering-and-work-experience": {
       "get": {
-        "summary": "Retrieve volunteering and work experience information",
+        "summary": "Retrieve volunteering and work experiences for an application",
         "operationId": "getVolunteeringAndWorkExperience",
         "parameters": [
           {
@@ -22,20 +22,32 @@
         ],
         "responses": {
           "200": {
-            "description": "Volunteering and Work Experience information retrieved successfully",
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/VolunteeringAndWorkExperienceViewModel"
+                  "$ref": "#/components/schemas/VolunteeringAndWorkExperiencesQueryResult"
                 }
               }
             }
+          },
+          "302": {
+            "description": "Redirect to summary page"
           }
         }
       },
       "post": {
-        "summary": "Update whether to add volunteering and work experience",
+        "summary": "Update volunteering and work experience section for an application",
         "operationId": "postVolunteeringAndWorkExperience",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VolunteeringAndWorkExperienceViewModel"
+              }
+            }
+          }
+        },
         "parameters": [
           {
             "name": "applicationId",
@@ -47,26 +59,19 @@
             }
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/VolunteeringAndWorkExperienceViewModel"
-              }
-            }
-          }
-        },
         "responses": {
-          "204": {
-            "description": "Update successful"
+          "200": {
+            "description": "OK"
+          },
+          "302": {
+            "description": "Redirect to another section"
           }
         }
       }
     },
     "/apply/{applicationId}/volunteering-and-work-experience/add": {
       "get": {
-        "summary": "Get view for adding a new work experience entry",
+        "summary": "Load the add volunteering and work experience page",
         "operationId": "getAddVolunteeringAndWorkExperience",
         "parameters": [
           {
@@ -81,20 +86,25 @@
         ],
         "responses": {
           "200": {
-            "description": "View for adding a volunteering or work experience",
+            "description": "OK",
             "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AddVolunteeringAndWorkExperienceViewModel"
-                }
-              }
+              "text/html": {}
             }
           }
         }
       },
       "post": {
-        "summary": "Add a new volunteering or work experience entry",
+        "summary": "Submit new volunteering or work experience",
         "operationId": "postAddVolunteeringAndWorkExperience",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddVolunteeringAndWorkExperienceViewModel"
+              }
+            }
+          }
+        },
         "parameters": [
           {
             "name": "applicationId",
@@ -106,26 +116,19 @@
             }
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AddVolunteeringAndWorkExperienceViewModel"
-              }
-            }
-          }
-        },
         "responses": {
-          "201": {
-            "description": "Volunteering or work experience added successfully"
+          "200": {
+            "description": "Created"
+          },
+          "302": {
+            "description": "Redirect to summary view"
           }
         }
       }
     },
     "/apply/{applicationId}/volunteering-and-work-experience/summary": {
       "get": {
-        "summary": "Retrieve summary information of volunteering and work experiences",
+        "summary": "View summary of volunteering and work experiences",
         "operationId": "getVolunteeringAndWorkExperienceSummary",
         "parameters": [
           {
@@ -140,7 +143,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Summary of volunteering and work experience retrieved successfully",
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
@@ -148,14 +151,16 @@
                 }
               }
             }
+          },
+          "302": {
+            "description": "Redirect to another section"
           }
         }
       },
       "post": {
-        "summary": "Update summary completion status of volunteering and work experiences",
+        "summary": "Update summary of volunteering and work experiences",
         "operationId": "postVolunteeringAndWorkExperienceSummary",
         "requestBody": {
-          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -164,16 +169,30 @@
             }
           }
         },
+        "parameters": [
+          {
+            "name": "applicationId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
         "responses": {
-          "204": {
-            "description": "Update successful"
+          "200": {
+            "description": "Updated summary successfully"
+          },
+          "302": {
+            "description": "Redirect to another section"
           }
         }
       }
     },
     "/apply/{applicationId}/volunteering-and-work-experience/{volunteeringWorkExperienceId}": {
       "get": {
-        "summary": "Retrieve volunteering/work experience details for editing",
+        "summary": "Get volunteering and work experience item for editing",
         "operationId": "getEditVolunteeringAndWorkExperience",
         "parameters": [
           {
@@ -197,7 +216,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Volunteering/work experience details retrieved successfully",
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
@@ -209,10 +228,9 @@
         }
       },
       "post": {
-        "summary": "Update volunteering/work experience details",
+        "summary": "Update volunteering and work experience details",
         "operationId": "postEditVolunteeringAndWorkExperience",
         "requestBody": {
-          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -242,15 +260,18 @@
           }
         ],
         "responses": {
-          "204": {
-            "description": "Update successful"
+          "200": {
+            "description": "Updated successfully"
+          },
+          "302": {
+            "description": "Redirect to summary page"
           }
         }
       }
     },
     "/apply/{applicationId}/volunteering-and-work-experience/{volunteeringWorkExperienceId}/delete": {
       "get": {
-        "summary": "Retrieve volunteering/work experience details for deletion",
+        "summary": "Get delete volunteering and work experience confirmation view",
         "operationId": "getDeleteVolunteeringAndWorkExperience",
         "parameters": [
           {
@@ -274,7 +295,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Volunteering/work experience details retrieved for deletion",
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
@@ -286,18 +307,8 @@
         }
       },
       "post": {
-        "summary": "Delete volunteering/work experience entry",
+        "summary": "Delete a volunteering or work experience",
         "operationId": "postDeleteVolunteeringAndWorkExperience",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/DeleteVolunteeringOrWorkExperienceViewModel"
-              }
-            }
-          }
-        },
         "parameters": [
           {
             "name": "applicationId",
@@ -319,8 +330,11 @@
           }
         ],
         "responses": {
-          "204": {
-            "description": "Deletion successful"
+          "200": {
+            "description": "Deleted successfully"
+          },
+          "302": {
+            "description": "Redirect to summary page"
           }
         }
       }
@@ -331,77 +345,77 @@
       "VolunteeringAndWorkExperienceViewModel": {
         "type": "object",
         "properties": {
-          "applicationId": {
+          "ApplicationId": {
             "type": "string",
             "format": "uuid"
           },
-          "backLinkUrl": {
+          "BackLinkUrl": {
             "type": "string",
             "nullable": true
           },
-          "doYouWantToAddAnyVolunteeringOrWorkExperience": {
+          "DoYouWantToAddAnyVolunteeringOrWorkExperience": {
             "type": "boolean",
             "nullable": true
           }
         },
         "required": [
-          "applicationId"
+          "ApplicationId"
         ]
       },
       "AddVolunteeringAndWorkExperienceViewModel": {
         "type": "object",
         "properties": {
-          "applicationId": {
+          "ApplicationId": {
             "type": "string",
             "format": "uuid"
           },
-          "companyName": {
+          "CompanyName": {
             "type": "string",
             "nullable": true
           },
-          "description": {
+          "Description": {
             "type": "string",
             "nullable": true
           },
-          "startDate": {
+          "StartDate": {
             "type": "string",
-            "format": "date-time",
+            "format": "date",
             "nullable": true
           },
-          "endDate": {
+          "EndDate": {
             "type": "string",
-            "format": "date-time",
+            "format": "date",
             "nullable": true
           },
-          "isCurrentRole": {
+          "IsCurrentRole": {
             "type": "boolean",
             "nullable": true
           }
         },
         "required": [
-          "applicationId"
+          "ApplicationId"
         ]
       },
       "VolunteeringAndWorkExperienceSummaryViewModel": {
         "type": "object",
         "properties": {
-          "applicationId": {
+          "ApplicationId": {
             "type": "string",
             "format": "uuid"
           },
-          "backLinkUrl": {
+          "BackLinkUrl": {
             "type": "string",
             "nullable": true
           },
-          "addAnotherVolunteeringAndWorkExperienceLinkUrl": {
+          "AddAnotherVolunteeringAndWorkExperienceLinkUrl": {
             "type": "string",
             "nullable": true
           },
-          "isSectionCompleted": {
+          "IsSectionCompleted": {
             "type": "boolean",
             "nullable": true
           },
-          "workHistories": {
+          "WorkHistories": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/WorkHistoryViewModel"
@@ -409,103 +423,157 @@
           }
         },
         "required": [
-          "applicationId"
+          "ApplicationId"
         ]
       },
       "EditVolunteeringAndWorkExperienceViewModel": {
         "type": "object",
         "properties": {
-          "applicationId": {
+          "ApplicationId": {
             "type": "string",
             "format": "uuid"
           },
-          "volunteeringOrWorkExperienceId": {
+          "VolunteeringOrWorkExperienceId": {
             "type": "string",
             "format": "uuid"
           },
-          "companyName": {
+          "CompanyName": {
             "type": "string",
             "nullable": true
           },
-          "description": {
+          "Description": {
             "type": "string",
             "nullable": true
           },
-          "startDate": {
+          "StartDate": {
             "type": "string",
-            "format": "date-time",
+            "format": "date",
             "nullable": true
           },
-          "endDate": {
+          "EndDate": {
             "type": "string",
-            "format": "date-time",
+            "format": "date",
             "nullable": true
           },
-          "isCurrentRole": {
+          "IsCurrentRole": {
             "type": "boolean",
             "nullable": true
           }
         },
         "required": [
-          "applicationId",
-          "volunteeringOrWorkExperienceId"
+          "ApplicationId",
+          "VolunteeringOrWorkExperienceId"
         ]
       },
       "DeleteVolunteeringOrWorkExperienceViewModel": {
         "type": "object",
         "properties": {
-          "applicationId": {
+          "ApplicationId": {
             "type": "string",
             "format": "uuid"
           },
-          "volunteeringWorkExperienceId": {
+          "VolunteeringWorkExperienceId": {
             "type": "string",
             "format": "uuid"
           },
-          "dates": {
+          "Dates": {
             "type": "string",
             "nullable": true
           },
-          "organisation": {
+          "Organisation": {
             "type": "string",
             "nullable": true
           },
-          "description": {
+          "Description": {
             "type": "string",
             "nullable": true
           }
         },
         "required": [
-          "applicationId",
-          "volunteeringWorkExperienceId"
+          "ApplicationId",
+          "VolunteeringWorkExperienceId"
         ]
       },
       "WorkHistoryViewModel": {
         "type": "object",
         "properties": {
-          "id": {
+          "Id": {
             "type": "string",
             "format": "uuid"
           },
-          "employer": {
+          "Employer": {
             "type": "string",
             "nullable": true
           },
-          "jobTitle": {
+          "JobTitle": {
             "type": "string",
             "nullable": true
           },
-          "jobDates": {
+          "JobDates": {
             "type": "string",
             "nullable": true
           },
-          "description": {
+          "Description": {
             "type": "string",
             "nullable": true
           }
         },
         "required": [
-          "id"
+          "Id"
+        ]
+      },
+      "VolunteeringAndWorkExperiencesQueryResult": {
+        "type": "object",
+        "properties": {
+          "IsSectionCompleted": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "VolunteeringAndWorkExperiences": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VolunteeringAndWorkExperience"
+            }
+          }
+        }
+      },
+      "VolunteeringAndWorkExperience": {
+        "type": "object",
+        "properties": {
+          "Id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "Employer": {
+            "type": "string",
+            "nullable": true
+          },
+          "JobTitle": {
+            "type": "string",
+            "nullable": true
+          },
+          "StartDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "EndDate": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "ApplicationId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "Description": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "Id",
+          "StartDate",
+          "ApplicationId"
         ]
       }
     }

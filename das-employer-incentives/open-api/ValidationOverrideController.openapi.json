@@ -1,0 +1,130 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Employer Incentives API",
+    "description": "API for managing Employer Incentives",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/validation-overrides": {
+      "post": {
+        "summary": "Add validation overrides",
+        "operationId": "AddValidationOverrides",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ValidationOverrideRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ValidationOverrideRequest": {
+        "type": "object",
+        "properties": {
+          "validationOverrides": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ValidationOverride"
+            }
+          }
+        },
+        "required": [
+          "validationOverrides"
+        ]
+      },
+      "ValidationOverride": {
+        "type": "object",
+        "properties": {
+          "accountLegalEntityId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "uln": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "validationSteps": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ValidationStep"
+            }
+          },
+          "serviceRequest": {
+            "$ref": "#/components/schemas/ServiceRequest"
+          }
+        },
+        "required": [
+          "accountLegalEntityId",
+          "uln",
+          "validationSteps",
+          "serviceRequest"
+        ]
+      },
+      "ValidationStep": {
+        "type": "object",
+        "properties": {
+          "validationType": {
+            "$ref": "#/components/schemas/ValidationType"
+          },
+          "expiryDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "remove": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "validationType",
+          "expiryDate"
+        ]
+      },
+      "ValidationType": {
+        "type": "string",
+        "enum": [
+          "NotSet",
+          "HasDaysInLearning",
+          "IsInLearning",
+          "HasNoDataLocks",
+          "EmployedBeforeSchemeStarted",
+          "EmployedAtStartOfApprenticeship",
+          "EmployedAt365Days"
+        ]
+      },
+      "ServiceRequest": {
+        "type": "object",
+        "properties": {
+          "taskId": {
+            "type": "string"
+          },
+          "decisionReference": {
+            "type": "string"
+          },
+          "taskCreatedDate": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "taskId",
+          "decisionReference"
+        ]
+      }
+    }
+  }
+}

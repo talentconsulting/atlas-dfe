@@ -1,0 +1,139 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Service Bus Support API",
+    "description": "API for managing and retrieving Service Bus queue information.",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/queues/index": {
+      "get": {
+        "summary": "Get queues with message counts and investigation data.",
+        "operationId": "getQueuesIndex",
+        "parameters": [
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Sort parameter for queues."
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Order parameter for sorting (e.g., asc, desc)."
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Search parameter for filtering queue names."
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "description": "Offset for pagination."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "description": "Limit for the number of queues returned."
+          },
+          {
+            "name": "filterEmptyQueues",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "Filter out queues with no messages."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of queues with message counts and investigation details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueueInformationModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "QueueInformationModel": {
+        "type": "object",
+        "properties": {
+          "Total": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Total number of queues."
+          },
+          "Rows": {
+            "type": "array",
+            "description": "List of queue information.",
+            "items": {
+              "$ref": "#/components/schemas/QueueCountInfo"
+            }
+          }
+        },
+        "required": [
+          "Total",
+          "Rows"
+        ]
+      },
+      "QueueCountInfo": {
+        "type": "object",
+        "properties": {
+          "Id": {
+            "type": "string",
+            "description": "Unique identifier of the queue."
+          },
+          "Name": {
+            "type": "string",
+            "description": "Name of the queue."
+          },
+          "MessageCount": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Number of messages currently in the queue."
+          },
+          "MessageCountInvestigation": {
+            "type": "string",
+            "description": "Message count under investigation with user details."
+          }
+        },
+        "required": [
+          "Id",
+          "Name",
+          "MessageCount",
+          "MessageCountInvestigation"
+        ]
+      }
+    }
+  }
+}

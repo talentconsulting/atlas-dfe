@@ -1,22 +1,41 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Statement of Achievement API",
+    "title": "Statement Of Achievement API",
     "version": "1.0.0",
-    "description": "API for managing Statement of Achievement requests and related functionality."
+    "description": "API for managing Statement of Achievement services."
   },
   "paths": {
-    "/SoA-unavailable": {
+    "/api/StatementOfAchievement/FindSoaLearnerRecord/{providerUkprn}/{uln}": {
       "get": {
-        "summary": "Statements of Achievement Not Available",
-        "operationId": "getStatementsOfAchievementNotAvailable",
+        "summary": "Find a SOA learner record",
+        "parameters": [
+          {
+            "name": "providerUkprn",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "uln",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
         "responses": {
           "200": {
-            "description": "Returns a view indicating Statements of Achievement are not available.",
+            "description": "Successful response",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/NotAvailableViewModel"
+                  "$ref": "#/components/schemas/FindSoaLearnerRecord"
                 }
               }
             }
@@ -24,17 +43,36 @@
         }
       }
     },
-    "/postal-address-missing": {
+    "/api/StatementOfAchievement/GetSoaLearnerRecordDetails/{providerUkprn}/{profileId}": {
       "get": {
-        "summary": "Postal Address Missing",
-        "operationId": "getPostalAddressMissing",
+        "summary": "Get SOA learner record details",
+        "parameters": [
+          {
+            "name": "providerUkprn",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "profileId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
         "responses": {
           "200": {
-            "description": "Returns a view for a missing postal address.",
+            "description": "Successful response",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PostalAddressMissingViewModel"
+                  "$ref": "#/components/schemas/SoaLearnerRecordDetails"
                 }
               }
             }
@@ -42,44 +80,26 @@
         }
       }
     },
-    "/request-statement-of-achievement-unique-learner-number": {
-      "get": {
-        "summary": "Request Statement of Achievement by ULN",
-        "operationId": "getRequestSoaUniqueLearnerNumber",
-        "responses": {
-          "200": {
-            "description": "Returns a view to request a statement of achievement by ULN.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RequestSoaUniqueLearnerNumberViewModel"
-                }
-              }
-            }
-          }
-        }
-      },
+    "/api/StatementOfAchievement/CreateSoaPrintingRequest": {
       "post": {
-        "summary": "Submit Statement of Achievement Request by ULN",
-        "operationId": "postRequestSoaUniqueLearnerNumber",
+        "summary": "Create a SOA printing request",
         "requestBody": {
-          "description": "Data for the request",
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/RequestSoaUniqueLearnerNumberViewModel"
+                "$ref": "#/components/schemas/SoaPrintingRequest"
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Process the ULN and determine the request's eligibility.",
+            "description": "Successful response",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/SoaPrintingResponse"
                 }
               }
             }
@@ -87,116 +107,26 @@
         }
       }
     },
-    "/request-statement-of-achievement-ULN-not-registered": {
+    "/api/StatementOfAchievement/GetPrintRequestSnapshot/{providerUkprn}/{profileId}/{pathwayId}": {
       "get": {
-        "summary": "ULN Not Registered",
-        "operationId": "getRequestSoaUlnNotFound",
-        "responses": {
-          "200": {
-            "description": "Returns a view indicating the ULN is not registered.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RequestSoaUlnNotFoundViewModel"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/request-statement-of-achievement-ULN-not-withdrawn": {
-      "get": {
-        "summary": "ULN Not Withdrawn",
-        "operationId": "getRequestSoaUlnNotWithdrawn",
-        "responses": {
-          "200": {
-            "description": "Returns a view indicating the ULN has not been withdrawn.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RequestSoaUlnNotWithdrawnViewModel"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/request-statement-of-achievement-not-available-no-ip-status": {
-      "get": {
-        "summary": "Statement of Achievement Not Available Due to Missing Industry Placement Status",
-        "operationId": "getRequestSoaNotAvailableNoIpStatus",
-        "responses": {
-          "200": {
-            "description": "Returns a view indicating missing industry placement status.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RequestSoaNotAvailableNoIpStatusViewModel"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/request-statement-of-achievement-not-available-no-results": {
-      "get": {
-        "summary": "Statement of Achievement Not Available Due to Missing Results",
-        "operationId": "getRequestSoaNotAvailableNoResults",
-        "responses": {
-          "200": {
-            "description": "Returns a view indicating missing results.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RequestSoaNotAvailableNoResultsViewModel"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/request-statement-of-achievement-check-and-submit/{profileId}": {
-      "get": {
-        "summary": "Check and Submit Statement of Achievement Request",
+        "summary": "Get print request snapshot",
         "parameters": [
+          {
+            "name": "providerUkprn",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
           {
             "name": "profileId",
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer"
-            }
-          }
-        ],
-        "operationId": "getRequestSoaCheckAndSubmit",
-        "responses": {
-          "200": {
-            "description": "Returns the Check and Submit view.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SoaLearnerRecordDetailsViewModel"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/request-statement-of-achievement-already-requested/{profileId}/{pathwayId}": {
-      "get": {
-        "summary": "Statement of Achievement Already Requested",
-        "parameters": [
-          {
-            "name": "profileId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer"
+              "type": "integer",
+              "format": "int32"
             }
           },
           {
@@ -204,18 +134,18 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "format": "int32"
             }
           }
         ],
-        "operationId": "getRequestSoaAlreadySubmitted",
         "responses": {
           "200": {
-            "description": "Returns a view indicating the SoA has already been requested.",
+            "description": "Successful response",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/PrintRequestSnapshot"
                 }
               }
             }
@@ -226,76 +156,317 @@
   },
   "components": {
     "schemas": {
-      "NotAvailableViewModel": {
-        "type": "object",
-        "properties": {
-          "SoaAvailableDate": {
-            "type": "string",
-            "format": "date-time"
-          }
-        }
-      },
-      "PostalAddressMissingViewModel": {
-        "type": "object"
-      },
-      "RequestSoaUniqueLearnerNumberViewModel": {
-        "type": "object",
-        "properties": {
-          "SearchUln": {
-            "type": "string",
-            "description": "Unique Learner Number, must be 10 digits."
-          }
-        }
-      },
-      "RequestSoaUlnNotFoundViewModel": {
-        "type": "object",
-        "properties": {
-          "Uln": {
-            "type": "string"
-          }
-        }
-      },
-      "RequestSoaUlnNotWithdrawnViewModel": {
-        "type": "object",
-        "properties": {
-          "Uln": {
-            "type": "string"
-          }
-        }
-      },
-      "RequestSoaNotAvailableNoIpStatusViewModel": {
-        "type": "object"
-      },
-      "RequestSoaNotAvailableNoResultsViewModel": {
-        "type": "object"
-      },
-      "SoaLearnerRecordDetailsViewModel": {
+      "FindSoaLearnerRecord": {
         "type": "object",
         "properties": {
           "ProfileId": {
-            "type": "integer"
+            "type": "integer",
+            "format": "int32"
           },
           "Uln": {
-            "type": "string"
+            "type": "integer",
+            "format": "int64"
           },
           "LearnerName": {
             "type": "string"
           },
           "DateofBirth": {
             "type": "string",
-            "format": "date"
+            "format": "date-time"
           },
-          "ProviderDisplayName": {
+          "ProviderName": {
+            "type": "string"
+          },
+          "TlevelTitle": {
+            "type": "string"
+          },
+          "TlevelCode": {
+            "type": "string"
+          },
+          "Status": {
+            "type": "string",
+            "nullable": true
+          },
+          "IsIndustryPlacementAdded": {
+            "type": "boolean"
+          },
+          "HasPathwayResult": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "IndustryPlacementStatus": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "SoaLearnerRecordDetails": {
+        "type": "object",
+        "properties": {
+          "ProfileId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Uln": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "MathsStatus": {
+            "type": "string",
+            "nullable": true
+          },
+          "EnglishStatus": {
+            "type": "string",
+            "nullable": true
+          },
+          "Firstname": {
+            "type": "string"
+          },
+          "Lastname": {
+            "type": "string"
+          },
+          "DateofBirth": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "ProviderName": {
+            "type": "string"
+          },
+          "ProviderUkprn": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "TlevelTitle": {
             "type": "string"
           },
           "RegistrationPathwayId": {
-            "type": "integer"
+            "type": "integer",
+            "format": "int32"
           },
-          "PathwayDisplayName": {
+          "PathwayName": {
+            "type": "string"
+          },
+          "PathwayCode": {
             "type": "string"
           },
           "PathwayGrade": {
+            "type": "string",
+            "nullable": true
+          },
+          "SpecialismName": {
+            "type": "string",
+            "nullable": true
+          },
+          "SpecialismCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "SpecialismGrade": {
+            "type": "string",
+            "nullable": true
+          },
+          "IndustryPlacementStatus": {
+            "type": "string",
+            "nullable": true
+          },
+          "ProviderAddress": {
+            "$ref": "#/components/schemas/Address"
+          },
+          "Status": {
+            "type": "string",
+            "nullable": true
+          },
+          "LastRequestedOn": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        }
+      },
+      "SoaPrintingRequest": {
+        "type": "object",
+        "properties": {
+          "ProviderUkprn": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "AddressId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "RegistrationPathwayId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Uln": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "LearnerName": {
             "type": "string"
+          },
+          "LearningDetails": {
+            "$ref": "#/components/schemas/LearningDetails"
+          },
+          "SoaPrintingDetails": {
+            "$ref": "#/components/schemas/SoaPrintingDetails"
+          },
+          "PerformedBy": {
+            "type": "string"
+          }
+        }
+      },
+      "SoaPrintingResponse": {
+        "type": "object",
+        "properties": {
+          "Uln": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "LearnerName": {
+            "type": "string"
+          },
+          "IsSuccess": {
+            "type": "boolean"
+          }
+        }
+      },
+      "PrintRequestSnapshot": {
+        "type": "object",
+        "properties": {
+          "RequestDetails": {
+            "type": "string"
+          },
+          "RegistrationPathwayStatus": {
+            "type": "string"
+          },
+          "RequestedOn": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "RequestedBy": {
+            "type": "string"
+          }
+        }
+      },
+      "Address": {
+        "type": "object",
+        "properties": {
+          "AddressId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "DepartmentName": {
+            "type": "string",
+            "nullable": true
+          },
+          "OrganisationName": {
+            "type": "string",
+            "nullable": true
+          },
+          "AddressLine1": {
+            "type": "string"
+          },
+          "AddressLine2": {
+            "type": "string",
+            "nullable": true
+          },
+          "Town": {
+            "type": "string"
+          },
+          "Postcode": {
+            "type": "string"
+          }
+        }
+      },
+      "LearningDetails": {
+        "type": "object",
+        "properties": {
+          "TLevelTitle": {
+            "type": "string"
+          },
+          "Grade": {
+            "type": "string",
+            "nullable": true
+          },
+          "Date": {
+            "type": "string",
+            "nullable": true
+          },
+          "Core": {
+            "type": "string",
+            "nullable": true
+          },
+          "CoreGrade": {
+            "type": "string",
+            "nullable": true
+          },
+          "OccupationalSpecialism": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OccupationalSpecialismDetails"
+            }
+          },
+          "IndustryPlacement": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "SoaPrintingDetails": {
+        "type": "object",
+        "properties": {
+          "Uln": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "Name": {
+            "type": "string"
+          },
+          "Dateofbirth": {
+            "type": "string",
+            "nullable": true
+          },
+          "ProviderName": {
+            "type": "string"
+          },
+          "TlevelTitle": {
+            "type": "string"
+          },
+          "Core": {
+            "type": "string",
+            "nullable": true
+          },
+          "CoreGrade": {
+            "type": "string",
+            "nullable": true
+          },
+          "Specialism": {
+            "type": "string",
+            "nullable": true
+          },
+          "SpecialismGrade": {
+            "type": "string",
+            "nullable": true
+          },
+          "IndustryPlacement": {
+            "type": "string",
+            "nullable": true
+          },
+          "ProviderAddress": {
+            "$ref": "#/components/schemas/Address"
+          }
+        }
+      },
+      "OccupationalSpecialismDetails": {
+        "type": "object",
+        "properties": {
+          "Specialism": {
+            "type": "string"
+          },
+          "Grade": {
+            "type": "string",
+            "nullable": true
           }
         }
       }

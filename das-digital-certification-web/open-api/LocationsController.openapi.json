@@ -1,29 +1,29 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Locations API",
+    "title": "Digital Certificates API - Locations Controller",
     "version": "1.0.0"
   },
   "paths": {
     "/locations": {
       "get": {
-        "summary": "Get locations",
-        "description": "Retrieve a list of locations matching a search term.",
+        "summary": "Search locations by term",
+        "description": "Returns a list of locations matching the search term.",
         "operationId": "getLocations",
         "parameters": [
           {
             "name": "searchTerm",
             "in": "query",
             "required": false,
+            "description": "The term to search for locations.",
             "schema": {
               "type": "string"
-            },
-            "description": "The term to search for locations."
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "A list of matching locations.",
             "content": {
               "application/json": {
                 "schema": {
@@ -32,21 +32,10 @@
                     "locations": {
                       "type": "array",
                       "items": {
-                        "type": "object",
-                        "properties": {
-                          "name": {
-                            "type": "string"
-                          }
-                        },
-                        "required": [
-                          "name"
-                        ]
+                        "$ref": "#/components/schemas/Location"
                       }
                     }
-                  },
-                  "required": [
-                    "locations"
-                  ]
+                  }
                 }
               }
             }
@@ -54,19 +43,38 @@
         },
         "security": [
           {
-            "IsVerified": []
+            "PolicyNames.IsVerified": []
           }
         ]
       }
     }
   },
   "components": {
-    "schemas": {},
+    "schemas": {
+      "Location": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the location."
+          }
+        },
+        "required": [
+          "name"
+        ]
+      }
+    },
     "securitySchemes": {
-      "IsVerified": {
-        "type": "http",
-        "scheme": "bearer",
-        "description": "Requires the user to be verified according to the IsVerified policy."
+      "PolicyNames.IsVerified": {
+        "type": "oauth2",
+        "description": "Policy for verified access.",
+        "flows": {
+          "authorizationCode": {
+            "authorizationUrl": "https://example.com/auth",
+            "tokenUrl": "https://example.com/token",
+            "scopes": {}
+          }
+        }
       }
     }
   }

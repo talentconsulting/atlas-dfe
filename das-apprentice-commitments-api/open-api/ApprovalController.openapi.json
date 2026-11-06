@@ -2,15 +2,15 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Apprentice Commitments API",
+    "description": "API for managing apprentice commitments",
     "version": "1.0.0"
   },
   "paths": {
     "/approvals": {
       "post": {
-        "summary": "Apprenticeship Created",
-        "operationId": "ApprenticeshipCreated",
+        "summary": "Create a new apprenticeship registration",
+        "operationId": "apprenticeshipCreated",
         "requestBody": {
-          "description": "Create a new apprenticeship registration.",
           "required": true,
           "content": {
             "application/json": {
@@ -22,15 +22,14 @@
         },
         "responses": {
           "200": {
-            "description": "Apprenticeship successfully created."
+            "description": "Apprenticeship registration successfully created"
           }
         }
       },
       "put": {
-        "summary": "Change of Circumstances",
-        "operationId": "ChangeOfCircumstances",
+        "summary": "Change registration details for an apprenticeship",
+        "operationId": "changeOfCircumstances",
         "requestBody": {
-          "description": "Update an apprenticeship registration due to a change of circumstances.",
           "required": true,
           "content": {
             "application/json": {
@@ -42,17 +41,16 @@
         },
         "responses": {
           "200": {
-            "description": "Apprenticeship registration successfully updated."
+            "description": "Apprenticeship registration successfully updated"
           }
         }
       }
     },
     "/approvals/stopped": {
       "post": {
-        "summary": "Stopped Apprenticeship",
-        "operationId": "StoppedApprenticeship",
+        "summary": "Stop an apprenticeship",
+        "operationId": "stoppedApprenticeship",
         "requestBody": {
-          "description": "Mark an apprenticeship as stopped.",
           "required": true,
           "content": {
             "application/json": {
@@ -64,40 +62,41 @@
         },
         "responses": {
           "200": {
-            "description": "Apprenticeship successfully marked as stopped."
+            "description": "Apprenticeship successfully stopped"
           }
         }
       }
     },
     "/approvals/{commitmentsApprenticeshipId}/registration": {
       "get": {
-        "summary": "Get Approvals Registration",
-        "operationId": "GetApprovalsRegistration",
+        "summary": "Retrieve registration details for a specific apprenticeship",
+        "operationId": "getApprovalsRegistration",
         "parameters": [
           {
             "name": "commitmentsApprenticeshipId",
             "in": "path",
             "required": true,
-            "description": "ID of the commitments apprenticeship.",
             "schema": {
               "type": "integer",
               "format": "int64"
-            }
+            },
+            "description": "ID of the commitments apprenticeship"
           }
         ],
         "responses": {
           "200": {
-            "description": "Approvals registration successfully retrieved.",
+            "description": "Successfully retrieved registration details",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApprovalsRegistrationQueryResponse"
+                  "type": "object",
+                  "additionalProperties": true
                 }
               }
             }
           },
           "404": {
-            "description": "Approvals registration not found."
+            "description": "Registration details not found for the provided apprenticeship ID"
           }
         }
       }
@@ -166,15 +165,15 @@
           },
           "PlannedStartDate": {
             "type": "string",
-            "format": "date"
+            "format": "date-time"
           },
           "PlannedEndDate": {
             "type": "string",
-            "format": "date"
+            "format": "date-time"
           },
           "EmploymentEndDate": {
             "type": "string",
-            "format": "date",
+            "format": "date-time",
             "nullable": true
           },
           "RecognisePriorLearning": {
@@ -183,10 +182,12 @@
           },
           "DurationReducedByHours": {
             "type": "integer",
+            "format": "int16",
             "nullable": true
           },
           "DurationReducedBy": {
             "type": "integer",
+            "format": "int16",
             "nullable": true
           },
           "ApprenticeshipType": {
@@ -257,15 +258,15 @@
           },
           "PlannedStartDate": {
             "type": "string",
-            "format": "date"
+            "format": "date-time"
           },
           "PlannedEndDate": {
             "type": "string",
-            "format": "date"
+            "format": "date-time"
           },
           "EmploymentEndDate": {
             "type": "string",
-            "format": "date",
+            "format": "date-time",
             "nullable": true
           },
           "RecognisePriorLearning": {
@@ -274,10 +275,12 @@
           },
           "DurationReducedByHours": {
             "type": "integer",
+            "format": "int16",
             "nullable": true
           },
           "DurationReducedBy": {
             "type": "integer",
+            "format": "int16",
             "nullable": true
           },
           "ApprenticeshipType": {
@@ -298,10 +301,6 @@
             "format": "date-time"
           }
         }
-      },
-      "ApprovalsRegistrationQueryResponse": {
-        "type": "object",
-        "properties": {}
       },
       "DeliveryModel": {
         "type": "string",

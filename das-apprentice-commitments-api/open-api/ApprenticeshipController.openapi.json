@@ -2,15 +2,15 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Apprentice Commitments API",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "description": "API for apprenticeship registrations and commitments."
   },
   "paths": {
     "/apprenticeships": {
       "post": {
-        "operationId": "CreateApprenticeship",
-        "summary": "Create a new apprenticeship.",
+        "summary": "Create an apprenticeship from registration",
+        "operationId": "createApprenticeship",
         "requestBody": {
-          "description": "Request body to create apprenticeship.",
           "required": true,
           "content": {
             "application/json": {
@@ -22,18 +22,23 @@
         },
         "responses": {
           "200": {
-            "description": "Apprenticeship created successfully."
+            "description": "Apprenticeship created successfully"
           },
           "500": {
-            "description": "Internal server error."
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
           }
         }
       }
     },
     "/apprentices/{id}/apprenticeships": {
       "get": {
-        "operationId": "GetApprenticeApprenticeships",
-        "summary": "Get apprenticeships for a specific apprentice.",
+        "summary": "Get apprenticeships for an apprentice",
+        "operationId": "getApprenticeApprenticeships",
         "parameters": [
           {
             "name": "id",
@@ -47,15 +52,10 @@
         ],
         "responses": {
           "200": {
-            "description": "List of apprenticeships.",
+            "description": "List of apprenticeships",
             "content": {
               "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Apprenticeship"
-                  }
-                }
+                "schema": {}
               }
             }
           }
@@ -64,8 +64,8 @@
     },
     "/apprentices/{apprenticeId}/apprenticeships/{apprenticeshipId}": {
       "get": {
-        "operationId": "GetApprenticeship",
-        "summary": "Get details of a specific apprenticeship.",
+        "summary": "Get details of an apprenticeship",
+        "operationId": "getApprenticeship",
         "parameters": [
           {
             "name": "apprenticeId",
@@ -81,30 +81,27 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "integer"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Details of the apprenticeship.",
+            "description": "Apprenticeship details",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Apprenticeship"
-                }
+                "schema": {}
               }
             }
           },
           "404": {
-            "description": "Apprenticeship not found."
+            "description": "Apprenticeship not found"
           }
         }
       },
       "patch": {
-        "operationId": "PatchApprenticeship",
-        "summary": "Apply changes to a specific apprenticeship.",
+        "summary": "Patch an apprenticeship",
+        "operationId": "patchApprenticeship",
         "parameters": [
           {
             "name": "apprenticeId",
@@ -120,33 +117,36 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "integer"
             }
           }
         ],
         "requestBody": {
-          "description": "JSON patch document with changes to apply.",
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "type": "object"
+                "type": "object",
+                "properties": {
+                  "changes": {
+                    "$ref": "#/components/schemas/JsonPatchDocument"
+                  }
+                }
               }
             }
           }
         },
         "responses": {
-          "200": {
-            "description": "Changes applied successfully."
+          "204": {
+            "description": "Patch applied successfully"
           }
         }
       }
     },
     "/apprentices/{apprenticeId}/apprenticeships/{apprenticeshipId}/confirmed/latest": {
       "get": {
-        "operationId": "MyApprenticeship",
-        "summary": "Get the latest confirmed revision of an apprenticeship.",
+        "summary": "Get latest confirmed apprenticeship",
+        "operationId": "getLatestConfirmedApprenticeship",
         "parameters": [
           {
             "name": "apprenticeId",
@@ -162,32 +162,29 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "integer"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "The latest confirmed revision.",
+            "description": "Details of the latest confirmed apprenticeship",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Revision"
-                }
+                "schema": {}
               }
             }
           },
           "404": {
-            "description": "Revision not found."
+            "description": "Apprenticeship not found"
           }
         }
       }
     },
     "/apprentices/{apprenticeId}/apprenticeships/{apprenticeshipId}/revisions": {
       "get": {
-        "operationId": "GetApprenticeshipRevisions",
-        "summary": "Get all revisions of a specific apprenticeship.",
+        "summary": "Get apprenticeship revisions",
+        "operationId": "getApprenticeshipRevisions",
         "parameters": [
           {
             "name": "apprenticeId",
@@ -203,27 +200,21 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "integer"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "List of revisions.",
+            "description": "List of apprenticeship revisions",
             "content": {
               "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Revision"
-                  }
-                }
+                "schema": {}
               }
             }
           },
           "404": {
-            "description": "Revisions not found."
+            "description": "Revisions not found"
           }
         }
       }
@@ -257,65 +248,29 @@
           "DateOfBirth"
         ]
       },
-      "Apprenticeship": {
+      "JsonPatchDocument": {
         "type": "object",
         "properties": {
-          "Id": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "ApprenticeId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "Revisions": {
+          "operations": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/Revision"
+              "type": "object",
+              "properties": {
+                "op": {
+                  "type": "string"
+                },
+                "path": {
+                  "type": "string"
+                },
+                "value": {}
+              },
+              "required": [
+                "op",
+                "path"
+              ]
             }
           }
-        },
-        "required": [
-          "Id",
-          "ApprenticeId",
-          "Revisions"
-        ]
-      },
-      "Revision": {
-        "type": "object",
-        "properties": {
-          "Id": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "ApprenticeshipId": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "CommitmentsApprenticeshipId": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "CommitmentsApprovedOn": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "ConfirmedOn": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "Details": {
-            "type": "object",
-            "nullable": true
-          }
-        },
-        "required": [
-          "Id",
-          "ApprenticeshipId",
-          "CommitmentsApprenticeshipId",
-          "CommitmentsApprovedOn"
-        ]
+        }
       }
     }
   }

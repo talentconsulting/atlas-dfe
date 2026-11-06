@@ -1,0 +1,145 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Provider Allowed Courses API",
+    "version": "1.0.0",
+    "description": "API for managing provider allowed courses."
+  },
+  "paths": {
+    "/providers/{ukprn}/{routeLearningType}/allowed-courses": {
+      "get": {
+        "summary": "Get allowed courses for a provider and route learning type.",
+        "operationId": "getProviderAllowedCourses",
+        "parameters": [
+          {
+            "name": "ukprn",
+            "in": "path",
+            "required": true,
+            "description": "The UKPRN of the provider.",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "routeLearningType",
+            "in": "path",
+            "required": true,
+            "description": "The type of route learning.",
+            "schema": {
+              "$ref": "#/components/schemas/RouteLearningType"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Allowed courses retrieved successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AllowedCoursesViewModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Organisation not found or invalid route learning type.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "Error message text."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "rolesAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "RouteLearningType": {
+        "type": "string",
+        "enum": [
+          "Apprenticeship",
+          "ApprenticeshipUnit"
+        ],
+        "description": "Type of route learning."
+      },
+      "AllowedCourseItemViewModel": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Course title."
+          },
+          "level": {
+            "type": "integer",
+            "description": "Course level."
+          },
+          "changeUrl": {
+            "type": "string",
+            "description": "URL to change course details."
+          },
+          "larsCode": {
+            "type": "integer",
+            "description": "LARS code of the course."
+          }
+        }
+      },
+      "AllowedCoursesViewModel": {
+        "type": "object",
+        "properties": {
+          "routeLearningType": {
+            "$ref": "#/components/schemas/RouteLearningType",
+            "description": "Selected route learning type."
+          },
+          "providerName": {
+            "type": "string",
+            "description": "Legal name of the provider."
+          },
+          "backLinkUrl": {
+            "type": "string",
+            "description": "URL for the back link."
+          },
+          "addUrl": {
+            "type": "string",
+            "description": "URL to add a new allowed course."
+          },
+          "totalCount": {
+            "type": "integer",
+            "description": "Total count of allowed courses."
+          },
+          "courses": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AllowedCourseItemViewModel"
+            },
+            "description": "List of allowed courses."
+          },
+          "successBannerMessage": {
+            "type": "string",
+            "description": "Message displayed in the success banner."
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "rolesAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "Authorization scheme for RoATP admin team role-based access."
+      }
+    }
+  }
+}

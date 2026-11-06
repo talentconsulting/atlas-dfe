@@ -1,19 +1,20 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Employer Commitments API",
+    "title": "Apprentice Management API",
     "version": "1.0.0",
-    "description": "API for managing employer commitments and apprenticeships."
+    "description": "API for managing apprenticeships."
   },
   "paths": {
     "/{accountHashedId}/apprentices": {
       "get": {
-        "operationId": "getApprenticesIndex",
+        "operationId": "GetApprenticeIndex",
         "parameters": [
           {
             "name": "accountHashedId",
             "in": "path",
             "required": true,
+            "description": "Hashed Account Identifier",
             "schema": {
               "type": "string"
             }
@@ -21,19 +22,20 @@
         ],
         "responses": {
           "200": {
-            "description": "Successfully retrieved apprentices index"
+            "description": "Success"
           }
         }
       }
     },
     "/{accountHashedId}/apprentices/download": {
       "get": {
-        "operationId": "downloadApprentices",
+        "operationId": "DownloadApprenticeData",
         "parameters": [
           {
             "name": "accountHashedId",
             "in": "path",
             "required": true,
+            "description": "Hashed Account Identifier",
             "schema": {
               "type": "string"
             }
@@ -41,19 +43,23 @@
         ],
         "responses": {
           "200": {
-            "description": "Successfully downloaded apprentices data"
+            "description": "File downloaded successfully",
+            "content": {
+              "application/octet-stream": {}
+            }
           }
         }
       }
     },
     "/{accountHashedId}/apprentices/{apprenticeshipHashedId}/details/editenddate": {
       "get": {
-        "operationId": "editApprenticeshipEndDate",
+        "operationId": "EditEndDate",
         "parameters": [
           {
             "name": "accountHashedId",
             "in": "path",
             "required": true,
+            "description": "Hashed Account Identifier",
             "schema": {
               "type": "string"
             }
@@ -62,6 +68,7 @@
             "name": "apprenticeshipHashedId",
             "in": "path",
             "required": true,
+            "description": "Hashed Apprenticeship Identifier",
             "schema": {
               "type": "string"
             }
@@ -69,7 +76,103 @@
         ],
         "responses": {
           "200": {
-            "description": "Successfully edited apprenticeship end date"
+            "description": "End date view model loaded"
+          }
+        }
+      },
+      "post": {
+        "operationId": "UpdateEndDate",
+        "parameters": [
+          {
+            "name": "accountHashedId",
+            "in": "path",
+            "required": true,
+            "description": "Hashed Account Identifier",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "apprenticeshipHashedId",
+            "in": "path",
+            "required": true,
+            "description": "Hashed Apprenticeship Identifier",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EditEndDateViewModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "End date successfully updated"
+          }
+        }
+      }
+    },
+    "/{accountHashedId}/apprentices/{apprenticeshipHashedId}/details/changestatus": {
+      "get": {
+        "operationId": "ChangeApprenticeStatus",
+        "parameters": [
+          {
+            "name": "accountHashedId",
+            "in": "path",
+            "required": true,
+            "description": "Hashed Account Identifier",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "apprenticeshipHashedId",
+            "in": "path",
+            "required": true,
+            "description": "Hashed Apprenticeship Identifier",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Apprenticeship status view loaded"
+          }
+        }
+      },
+      "post": {
+        "operationId": "UpdateApprenticeStatus",
+        "parameters": [
+          {
+            "name": "accountHashedId",
+            "in": "path",
+            "required": true,
+            "description": "Hashed Account Identifier",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "apprenticeshipHashedId",
+            "in": "path",
+            "required": true,
+            "description": "Hashed Apprenticeship Identifier",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "302": {
+            "description": "Redirection based on chosen status"
           }
         }
       }
@@ -77,7 +180,30 @@
   },
   "components": {
     "schemas": {
-      "view": {}
+      "EditEndDateViewModel": {
+        "type": "object",
+        "properties": {
+          "accountHashedId": {
+            "type": "string"
+          },
+          "apprenticeshipHashedId": {
+            "type": "string"
+          },
+          "apprenticeshipId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date"
+          }
+        },
+        "required": [
+          "accountHashedId",
+          "apprenticeshipHashedId",
+          "apprenticeshipId"
+        ]
+      }
     }
   }
 }

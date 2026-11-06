@@ -1,0 +1,192 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Title Management API",
+    "version": "1.0.0",
+    "description": "API for managing vacancy titles within the employer web application."
+  },
+  "paths": {
+    "/accounts/{employerAccountId}/create-vacancy": {
+      "get": {
+        "operationId": "CreateVacancy_Get",
+        "summary": "Get the details for creating a new vacancy.",
+        "parameters": [
+          {
+            "name": "employerAccountId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns the view for creating a vacancy."
+          }
+        }
+      },
+      "post": {
+        "operationId": "CreateVacancy_Post",
+        "summary": "Submit details for creating a new vacancy.",
+        "parameters": [
+          {
+            "name": "wizard",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TitleEditModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "302": {
+            "description": "Redirects to the next step based on the wizard state and success status."
+          },
+          "400": {
+            "description": "Validation errors occurred."
+          }
+        }
+      }
+    },
+    "/accounts/{employerAccountId}/vacancies/{vacancyId}/title": {
+      "get": {
+        "operationId": "Title_Get",
+        "summary": "Get the title for a specific vacancy.",
+        "parameters": [
+          {
+            "name": "employerAccountId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "vacancyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "wizard",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "true",
+                "false"
+              ],
+              "default": "true"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns the view for editing the vacancy title."
+          }
+        }
+      },
+      "post": {
+        "operationId": "Title_Post",
+        "summary": "Submit changes to the vacancy title.",
+        "parameters": [
+          {
+            "name": "wizard",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TitleEditModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "302": {
+            "description": "Redirects to the next step based on wizard state and success status."
+          },
+          "400": {
+            "description": "Validation errors occurred."
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "TitleEditModel": {
+        "type": "object",
+        "properties": {
+          "EmployerAccountId": {
+            "type": "string"
+          },
+          "VacancyId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "Title": {
+            "type": "string"
+          },
+          "ReferredUkprn": {
+            "type": "string",
+            "nullable": true
+          },
+          "ReferredFromMa": {
+            "type": "boolean"
+          },
+          "ReferredProgrammeId": {
+            "type": "string",
+            "nullable": true
+          },
+          "ReferredFromSavedFavourites": {
+            "type": "boolean",
+            "readOnly": true
+          }
+        },
+        "required": [
+          "EmployerAccountId"
+        ]
+      },
+      "VacancyRouteModel": {
+        "type": "object",
+        "properties": {
+          "EmployerAccountId": {
+            "type": "string"
+          },
+          "VacancyId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "EmployerAccountId",
+          "VacancyId"
+        ]
+      }
+    }
+  }
+}

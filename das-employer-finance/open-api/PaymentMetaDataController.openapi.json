@@ -1,20 +1,24 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Payment MetaData API",
+    "title": "Employer Finance API",
     "version": "1.0.0"
   },
   "paths": {
     "/api/payments/{paymentId}/metadata/staging": {
       "put": {
-        "summary": "Update Payment MetaData Staging",
+        "summary": "Update Payment Metadata Staging",
         "operationId": "updatePaymentMetaDataStaging",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "paymentId",
             "in": "path",
             "required": true,
-            "description": "The ID of the payment to update metadata for.",
             "schema": {
               "type": "string",
               "format": "uuid"
@@ -33,20 +37,18 @@
         },
         "responses": {
           "200": {
-            "description": "Successfully updated payment metadata staging.",
+            "description": "Successful operation",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
                   "properties": {
                     "upserted": {
-                      "type": "boolean",
-                      "description": "Indicates whether the metadata was upserted."
+                      "type": "boolean"
                     },
                     "metadataId": {
                       "type": "string",
-                      "format": "uuid",
-                      "description": "The unique ID of the updated metadata."
+                      "format": "uuid"
                     }
                   }
                 }
@@ -54,30 +56,23 @@
             }
           },
           "400": {
-            "description": "Bad request, typically due to validation errors.",
+            "description": "Bad Request",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "example": {
-                    "error": "Request body is required."
-                  }
+                  "additionalProperties": true
                 }
               }
             }
           },
           "404": {
-            "description": "Payment not found."
+            "description": "Not Found"
           },
           "500": {
-            "description": "Internal server error, could not update payment metadata staging."
+            "description": "Internal Server Error"
           }
-        },
-        "security": [
-          {
-            "Authorization": []
-          }
-        ]
+        }
       }
     }
   },
@@ -86,98 +81,89 @@
       "PaymentMetaDataStaging": {
         "type": "object",
         "properties": {
-          "id": {
+          "Id": {
             "type": "integer",
             "format": "int64"
           },
-          "providerName": {
+          "ProviderName": {
             "type": "string"
           },
-          "standardCode": {
+          "StandardCode": {
             "type": "integer",
             "format": "int64",
             "nullable": true
           },
-          "frameworkCode": {
+          "FrameworkCode": {
             "type": "integer",
             "nullable": true
           },
-          "programmeType": {
+          "ProgrammeType": {
             "type": "integer",
             "nullable": true
           },
-          "pathwayCode": {
+          "PathwayCode": {
             "type": "integer",
             "nullable": true
           },
-          "pathwayName": {
+          "PathwayName": {
             "type": "string"
           },
-          "apprenticeshipCourseName": {
+          "ApprenticeshipCourseName": {
             "type": "string"
           },
-          "apprenticeshipCourseStartDate": {
+          "ApprenticeshipCourseStartDate": {
             "type": "string",
             "format": "date-time",
             "nullable": true
           },
-          "apprenticeshipCourseLevel": {
+          "ApprenticeshipCourseLevel": {
             "type": "integer",
             "nullable": true
           },
-          "apprenticeName": {
+          "ApprenticeName": {
             "type": "string"
           },
-          "apprenticeNINumber": {
+          "ApprenticeNINumber": {
             "type": "string"
           },
-          "isHistoricProviderName": {
+          "IsHistoricProviderName": {
             "type": "boolean"
           },
-          "learningType": {
+          "LearningType": {
             "type": "string"
           },
-          "courseCode": {
+          "CourseCode": {
             "type": "string"
           },
-          "cohortId": {
+          "CohortId": {
             "type": "integer",
             "format": "int64",
             "nullable": true
           },
-          "createdBy": {
+          "CreatedBy": {
             "type": "string"
           },
-          "correlationId": {
+          "CorrelationId": {
             "type": "string",
             "format": "uuid",
             "nullable": true
           },
-          "paymentId": {
+          "PaymentId": {
             "type": "string",
             "format": "uuid"
           }
         },
         "required": [
-          "id",
-          "providerName",
-          "pathwayName",
-          "apprenticeshipCourseName",
-          "apprenticeName",
-          "apprenticeNINumber",
-          "isHistoricProviderName",
-          "learningType",
-          "courseCode",
-          "createdBy",
-          "paymentId"
+          "Id",
+          "ProviderName",
+          "PaymentId"
         ]
       }
     },
     "securitySchemes": {
-      "Authorization": {
+      "BearerAuth": {
         "type": "http",
-        "scheme": "bearer",
-        "bearerFormat": "JWT"
+        "scheme": "bearer"
       }
     }
   }

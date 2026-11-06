@@ -1,0 +1,73 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Employer Incentives API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/api/jobs": {
+      "put": {
+        "tags": [
+          "JobCommand"
+        ],
+        "summary": "Add a job",
+        "description": "Endpoint to add a job and process the corresponding commands.",
+        "operationId": "AddJob",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/JobRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "JobRequest": {
+        "type": "object",
+        "properties": {
+          "Type": {
+            "$ref": "#/components/schemas/JobType"
+          },
+          "Data": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object"
+            }
+          }
+        },
+        "required": [
+          "Type",
+          "Data"
+        ]
+      },
+      "JobType": {
+        "type": "string",
+        "enum": [
+          "RefreshLegalEntities",
+          "RefreshEmploymentChecks"
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,120 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Manage Unrestricted Provider API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/providers/{ukprn}/restrict/confirm": {
+      "get": {
+        "summary": "Confirm Restrict Provider",
+        "operationId": "getConfirmRestrictProvider",
+        "parameters": [
+          {
+            "name": "ukprn",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The UKPRN (UK Provider Reference Number) of the provider"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Provider details returned successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConfirmRestrictProviderViewModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Provider not found"
+          }
+        },
+        "tags": [
+          "ManageUnrestrictedProvider"
+        ]
+      },
+      "post": {
+        "summary": "Restrict Provider",
+        "operationId": "postConfirmRestrictProvider",
+        "parameters": [
+          {
+            "name": "ukprn",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The UKPRN (UK Provider Reference Number) of the provider"
+          }
+        ],
+        "responses": {
+          "302": {
+            "description": "Redirected to provider allowed courses page",
+            "headers": {
+              "Location": {
+                "description": "Redirect URL",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Provider not found"
+          },
+          "500": {
+            "description": "Failed to restrict provider"
+          }
+        },
+        "tags": [
+          "ManageUnrestrictedProvider"
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ConfirmRestrictProviderViewModel": {
+        "type": "object",
+        "properties": {
+          "Ukprn": {
+            "type": "integer"
+          },
+          "ProviderName": {
+            "type": "string"
+          },
+          "CancelUrl": {
+            "type": "string",
+            "format": "uri"
+          }
+        },
+        "required": [
+          "Ukprn",
+          "ProviderName",
+          "CancelUrl"
+        ]
+      },
+      "RestrictProviderRequest": {
+        "type": "object",
+        "properties": {
+          "UserId": {
+            "type": "string"
+          },
+          "UserDisplayName": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "UserId",
+          "UserDisplayName"
+        ]
+      }
+    }
+  }
+}

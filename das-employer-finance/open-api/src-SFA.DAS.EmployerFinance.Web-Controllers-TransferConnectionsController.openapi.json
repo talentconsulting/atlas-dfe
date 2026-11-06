@@ -1,14 +1,14 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Employer Finance API",
+    "title": "Transfer Connections API",
     "version": "1.0.0"
   },
   "paths": {
     "/accounts/{hashedAccountId}/transfers/connections": {
       "get": {
-        "operationId": "TransferConnections_Index",
-        "summary": "Get transfer connections for a specific employer account",
+        "summary": "Get Transfer Connections",
+        "operationId": "getTransferConnections",
         "parameters": [
           {
             "name": "hashedAccountId",
@@ -17,33 +17,16 @@
             "schema": {
               "type": "string"
             },
-            "description": "The hashed identifier of the employer account."
+            "description": "Hashed identifier of the account."
           }
         ],
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "Successful response returns a view model of transfer connections.",
             "content": {
-              "text/html": {
+              "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "apprenticeshipEmployerType": {
-                      "type": "string"
-                    },
-                    "transferAllowanceViewModel": {
-                      "$ref": "#/components/schemas/TransferAllowanceViewModel"
-                    },
-                    "transferConnectionInvitationAuthorizationViewModel": {
-                      "$ref": "#/components/schemas/TransferConnectionInvitationAuthorizationViewModel"
-                    },
-                    "transferConnectionInvitationsViewModel": {
-                      "$ref": "#/components/schemas/TransferConnectionInvitationsViewModel"
-                    },
-                    "transferRequest": {
-                      "$ref": "#/components/schemas/TransferRequestsViewModel"
-                    }
-                  }
+                  "$ref": "#/components/schemas/TransferViewModel"
                 }
               }
             }
@@ -54,108 +37,151 @@
   },
   "components": {
     "schemas": {
+      "TransferViewModel": {
+        "type": "object",
+        "properties": {
+          "ApprenticeshipEmployerType": {
+            "type": "string"
+          },
+          "TransferAllowanceViewModel": {
+            "$ref": "#/components/schemas/TransferAllowanceViewModel"
+          },
+          "TransferConnectionInvitationAuthorizationViewModel": {
+            "$ref": "#/components/schemas/TransferConnectionInvitationAuthorizationViewModel"
+          },
+          "TransferConnectionInvitationsViewModel": {
+            "$ref": "#/components/schemas/TransferConnectionInvitationsViewModel"
+          },
+          "TransferRequest": {
+            "$ref": "#/components/schemas/TransferRequestsViewModel"
+          }
+        }
+      },
       "TransferAllowanceViewModel": {
         "type": "object",
         "properties": {
-          "accountId": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "remainingTransferAllowance": {
+          "RemainingTransferAllowance": {
             "type": "number",
             "format": "decimal"
           },
-          "transferAllowanceUsed": {
+          "TransferTotalCost": {
             "type": "number",
             "format": "decimal"
           }
-        },
-        "description": "Details about the transfer allowance for an employer account."
+        }
       },
       "TransferConnectionInvitationAuthorizationViewModel": {
         "type": "object",
         "properties": {
-          "hashedAccountId": {
+          "HashedAccountId": {
             "type": "string"
           },
-          "canSendTransfers": {
+          "IsAuthorized": {
             "type": "boolean"
           }
-        },
-        "description": "Authorization details for transfer connections."
+        }
       },
       "TransferConnectionInvitationsViewModel": {
         "type": "object",
         "properties": {
-          "accountId": {
+          "AccountId": {
             "type": "integer",
             "format": "int64"
           },
-          "hashedAccountId": {
+          "HashedAccountId": {
             "type": "string"
           },
-          "transferSenderConnectionInvitations": {
+          "TransferSenderConnectionInvitations": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/TransferConnectionInvitationDto"
             }
           },
-          "transferReceiverConnectionInvitations": {
+          "TransferReceiverConnectionInvitations": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/TransferConnectionInvitationDto"
             }
           }
-        },
-        "description": "View model containing details about transfer connection invitations."
+        }
       },
       "TransferConnectionInvitationDto": {
         "type": "object",
         "properties": {
-          "changes": {
+          "Changes": {
             "type": "string"
           },
-          "id": {
+          "Id": {
             "type": "integer",
             "format": "int64"
           },
-          "status": {
+          "Status": {
             "type": "string"
           },
-          "createdDate": {
+          "CreatedDate": {
             "type": "string",
             "format": "date-time"
           },
-          "receiverAccount": {
-            "type": "object",
-            "additionalProperties": true
+          "ReceiverAccount": {
+            "$ref": "#/components/schemas/AccountDto"
           },
-          "senderAccount": {
-            "type": "object",
-            "additionalProperties": true
+          "SenderAccount": {
+            "$ref": "#/components/schemas/AccountDto"
           },
-          "hashedId": {
+          "HashedId": {
             "type": "string"
           }
-        },
-        "description": "Details of a single transfer connection invitation."
+        }
       },
       "TransferRequestsViewModel": {
         "type": "object",
         "properties": {
-          "accountId": {
+          "AccountId": {
             "type": "integer",
             "format": "int64"
           },
-          "transferRequests": {
+          "TransferRequests": {
             "type": "array",
             "items": {
-              "type": "object",
-              "additionalProperties": true
+              "$ref": "#/components/schemas/TransferRequestDto"
             }
           }
-        },
-        "description": "View model containing transfer requests for an employer account."
+        }
+      },
+      "TransferRequestDto": {
+        "type": "object",
+        "properties": {
+          "Id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "Status": {
+            "type": "string"
+          },
+          "RequestedAmount": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "CreatedDate": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "AccountDto": {
+        "type": "object",
+        "properties": {
+          "Id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "Name": {
+            "type": "string"
+          },
+          "HashedId": {
+            "type": "string"
+          }
+        }
       }
     }
   }

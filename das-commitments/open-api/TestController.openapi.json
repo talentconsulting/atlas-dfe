@@ -1,107 +1,190 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "CommitmentsV2 API",
-    "version": "1.0.0",
-    "description": "API documentation for CommitmentsV2."
+    "title": "SFA.DAS.CommitmentsV2 API",
+    "version": "1.0.0"
   },
   "paths": {
     "/api/test/provider": {
       "get": {
         "summary": "Get Provider Secure Endpoint",
         "operationId": "GetProvider",
+        "responses": {
+          "200": {
+            "description": "Successful response with a string message."
+          }
+        },
         "security": [
           {
             "ProviderAuth": []
           }
-        ],
-        "responses": {
-          "200": {
-            "description": "Provider Secure Endpoint reached",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        }
+        ]
       }
     },
     "/api/test/employer": {
       "get": {
         "summary": "Get Employer Secure Endpoint",
         "operationId": "GetEmployer",
+        "responses": {
+          "200": {
+            "description": "Successful response with a string message."
+          }
+        },
         "security": [
           {
             "EmployerAuth": []
           }
-        ],
-        "responses": {
-          "200": {
-            "description": "Employer Secure Endpoint reached",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        }
+        ]
       }
     },
-    "/api/test/{id}": {
+    "/api/test": {
       "get": {
-        "summary": "Get Secure Endpoint by Id",
-        "operationId": "GetSecureEndpoint",
+        "summary": "Get Secure Endpoint",
+        "operationId": "Get",
         "parameters": [
           {
             "name": "id",
-            "in": "path",
+            "in": "query",
             "required": true,
             "schema": {
               "type": "integer"
             }
           }
         ],
-        "security": [
-          {
-            "DefaultAuth": []
-          }
-        ],
         "responses": {
           "200": {
-            "description": "Secure Endpoint reached",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
+            "description": "Successful response with a string message."
           }
-        }
+        },
+        "security": [
+          {
+            "GlobalAuth": []
+          }
+        ]
       }
     }
   },
   "components": {
+    "schemas": {
+      "Provider": {
+        "type": "object",
+        "properties": {
+          "Ukprn": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "Name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "Ukprn",
+          "Name"
+        ]
+      },
+      "GetAllProvidersResponse": {
+        "type": "object",
+        "properties": {
+          "Providers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Provider"
+            }
+          }
+        },
+        "required": [
+          "Providers"
+        ]
+      },
+      "UserInfo": {
+        "type": "object",
+        "properties": {
+          "UserId": {
+            "type": "string"
+          },
+          "UserDisplayName": {
+            "type": "string"
+          },
+          "UserEmail": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "UserId",
+          "UserDisplayName",
+          "UserEmail"
+        ]
+      },
+      "ChangeOfPartyRequest": {
+        "type": "object",
+        "properties": {
+          "Id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "ChangeOfPartyType": {
+            "type": "string"
+          },
+          "OriginatingParty": {
+            "type": "string"
+          },
+          "Status": {
+            "type": "string"
+          },
+          "EmployerName": {
+            "type": "string"
+          },
+          "StartDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "EndDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "Price": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "CohortId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "WithParty": {
+            "type": "string"
+          },
+          "NewApprenticeshipId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "ProviderId": {
+            "type": "integer",
+            "format": "int64"
+          }
+        },
+        "required": [
+          "Id",
+          "ChangeOfPartyType",
+          "OriginatingParty",
+          "Status"
+        ]
+      }
+    },
     "securitySchemes": {
       "ProviderAuth": {
         "type": "http",
         "scheme": "bearer",
-        "description": "Authorization required for provider access."
+        "description": "Provider authorization via bearer token."
       },
       "EmployerAuth": {
         "type": "http",
         "scheme": "bearer",
-        "description": "Authorization required for employer access."
+        "description": "Employer authorization via bearer token."
       },
-      "DefaultAuth": {
+      "GlobalAuth": {
         "type": "http",
         "scheme": "bearer",
-        "description": "Default authorization required."
+        "description": "Global authorization via bearer token."
       }
     }
   }

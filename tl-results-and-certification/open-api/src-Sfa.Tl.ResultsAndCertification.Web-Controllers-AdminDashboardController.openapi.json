@@ -1,64 +1,76 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Admin Dashboard API",
-    "description": "API for managing administrative actions in the TL Results and Certification system.",
+    "title": "AdminDashboard Controller API",
+    "description": "APIs for managing administrative tasks and learner records.",
     "version": "1.0.0"
   },
   "paths": {
     "/admin/home": {
       "get": {
-        "operationId": "GetAdminHome",
-        "summary": "Redirects to the Home route.",
+        "tags": [
+          "AdminDashboard"
+        ],
+        "summary": "Redirect to the admin home page.",
+        "operationId": "AdminHome",
         "responses": {
-          "302": {
-            "description": "Redirect to the Home route."
+          "307": {
+            "description": "Redirect to home page."
           }
         }
       }
     },
     "/admin/search-learner-records-clear": {
       "get": {
-        "operationId": "AdminSearchLearnersRecordsClearAsync",
-        "summary": "Clears cached search data and redirects to learner record search.",
+        "tags": [
+          "AdminDashboard"
+        ],
+        "summary": "Clears search criteria for learner records.",
+        "operationId": "AdminSearchLearnersRecordsClear",
         "responses": {
-          "302": {
-            "description": "Redirect to learner record search."
+          "307": {
+            "description": "Redirect to admin search learner records."
           }
         }
       }
     },
     "/admin/search-learner-records/{pageNumber}": {
       "get": {
-        "operationId": "AdminSearchLearnersAsync",
-        "summary": "Search for learner records.",
+        "tags": [
+          "AdminDashboard"
+        ],
+        "summary": "Search for learner records using pagination.",
+        "operationId": "AdminSearchLearners",
         "parameters": [
           {
             "name": "pageNumber",
             "in": "path",
-            "required": true,
+            "required": false,
             "schema": {
               "type": "integer",
-              "nullable": true
-            }
+              "default": 1
+            },
+            "description": "Page number for pagination."
           }
         ],
         "responses": {
           "200": {
-            "description": "Search results for learners."
+            "description": "A list of learner records."
           },
           "404": {
-            "description": "Learner search results not found."
+            "description": "No learner records found."
           }
         }
       }
     },
     "/admin/search-learner-records-search-key": {
       "post": {
-        "operationId": "AdminSearchLearnersRecordsApplySearchKeyAsync",
-        "summary": "Apply search key to filter learner records.",
+        "tags": [
+          "AdminDashboard"
+        ],
+        "summary": "Apply a search key to filter learner records.",
+        "operationId": "SubmitAdminSearchLearnerRecordsApplySearchKey",
         "requestBody": {
-          "description": "Search key details.",
           "required": true,
           "content": {
             "application/json": {
@@ -69,29 +81,34 @@
           }
         },
         "responses": {
-          "302": {
-            "description": "Redirect to learner search results."
+          "307": {
+            "description": "Redirect to admin search learner records."
           }
         }
       }
     },
     "/admin/search-learner-records-clear-key": {
       "post": {
-        "operationId": "AdminSearchLearnerClearKeyAsync",
-        "summary": "Clears the search key used for filtering learner records.",
+        "tags": [
+          "AdminDashboard"
+        ],
+        "summary": "Clear the search key for learner records.",
+        "operationId": "SubmitAdminSearchLearnerClearKey",
         "responses": {
-          "302": {
-            "description": "Redirects to refreshed results."
+          "307": {
+            "description": "Redirect to admin search learner records."
           }
         }
       }
     },
     "/admin/search-learner-records-filters": {
       "post": {
-        "operationId": "AdminSearchLearnerRecordsApplyFiltersAsync",
-        "summary": "Apply filters to refine learner records search criteria.",
+        "tags": [
+          "AdminDashboard"
+        ],
+        "summary": "Apply filters to search learner records.",
+        "operationId": "SubmitAdminSearchLearnerRecordsApplyFilters",
         "requestBody": {
-          "description": "Filter criteria.",
           "required": true,
           "content": {
             "application/json": {
@@ -102,35 +119,42 @@
           }
         },
         "responses": {
-          "302": {
-            "description": "Redirects to search results with applied filters."
+          "307": {
+            "description": "Redirect to admin search learner records."
           }
         }
       }
     },
     "/admin/search-learner-records-clear-filters": {
       "post": {
-        "operationId": "AdminSearchLearnerClearFiltersAsync",
-        "summary": "Clears all applied filters from the search criteria.",
+        "tags": [
+          "AdminDashboard"
+        ],
+        "summary": "Clear filters for learner records search.",
+        "operationId": "SubmitAdminSearchLearnerClearFilters",
         "responses": {
-          "302": {
-            "description": "Redirects to refreshed results."
+          "307": {
+            "description": "Redirect to admin search learner records."
           }
         }
       }
     },
-    "/admin/learner-record/{pathwayId}": {
+    "/admin/learner-record/{pathwayid}": {
       "get": {
-        "operationId": "AdminLearnerRecordAsync",
+        "tags": [
+          "AdminDashboard"
+        ],
         "summary": "Retrieve learner record by pathway ID.",
+        "operationId": "AdminLearnerRecord",
         "parameters": [
           {
-            "name": "pathwayId",
+            "name": "pathwayid",
             "in": "path",
             "required": true,
             "schema": {
               "type": "integer"
-            }
+            },
+            "description": "The pathway ID of the learner."
           }
         ],
         "responses": {
@@ -143,10 +167,13 @@
         }
       }
     },
-    "/admin/change-start-year-clear/{registrationPathwayId}": {
+    "/admin/change-uln-clear/{registrationPathwayId}": {
       "get": {
-        "operationId": "ChangeStartYearClearAsync",
-        "summary": "Clears cached data for start year change.",
+        "tags": [
+          "AdminDashboard"
+        ],
+        "summary": "Clear ULN change information for a learner.",
+        "operationId": "AdminChangeUlnClear",
         "parameters": [
           {
             "name": "registrationPathwayId",
@@ -154,12 +181,63 @@
             "required": true,
             "schema": {
               "type": "integer"
-            }
+            },
+            "description": "The registration pathway ID of the learner."
           }
         ],
         "responses": {
-          "302": {
-            "description": "Redirects to start year change form."
+          "307": {
+            "description": "Redirect to AdminChangeUln endpoint."
+          }
+        }
+      }
+    },
+    "/admin/change-uln/{registrationPathwayId}": {
+      "get": {
+        "tags": [
+          "AdminDashboard"
+        ],
+        "summary": "View details for updating ULN of a learner.",
+        "operationId": "AdminChangeUln",
+        "parameters": [
+          {
+            "name": "registrationPathwayId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The registration pathway ID of the learner."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Details retrieved for updating ULN."
+          },
+          "404": {
+            "description": "Learner record not found."
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "AdminDashboard"
+        ],
+        "summary": "Submit changes to a learner's ULN.",
+        "operationId": "SubmitChangeUln",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdminChangeUlnViewModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "307": {
+            "description": "Redirect to review ULN changes."
           }
         }
       }
@@ -174,12 +252,10 @@
             "$ref": "#/components/schemas/AdminSearchLearnerFiltersViewModel"
           },
           "SearchKey": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "PageNumber": {
-            "type": "integer",
-            "nullable": true
+            "type": "integer"
           },
           "IsSearchKeyApplied": {
             "type": "boolean"
@@ -196,45 +272,57 @@
             "type": "string"
           },
           "SelectedProviderId": {
-            "type": "integer",
-            "nullable": true
+            "type": "integer"
           },
           "AwardingOrganisations": {
             "type": "array",
             "items": {
-              "type": "object",
-              "properties": {
-                "Id": {
-                  "type": "integer"
-                },
-                "Name": {
-                  "type": "string"
-                },
-                "IsSelected": {
-                  "type": "boolean"
-                }
-              }
+              "type": "object"
             }
           },
           "AcademicYears": {
             "type": "array",
             "items": {
-              "type": "object",
-              "properties": {
-                "Id": {
-                  "type": "integer"
-                },
-                "Name": {
-                  "type": "string"
-                },
-                "IsSelected": {
-                  "type": "boolean"
-                }
-              }
+              "type": "object"
             }
           },
           "IsApplyFiltersSelected": {
             "type": "boolean"
+          }
+        }
+      },
+      "AdminChangeUlnViewModel": {
+        "type": "object",
+        "properties": {
+          "RegistrationPathwayId": {
+            "type": "integer"
+          },
+          "Uln": {
+            "type": "integer"
+          },
+          "FirstName": {
+            "type": "string"
+          },
+          "LastName": {
+            "type": "string"
+          },
+          "ProviderName": {
+            "type": "string"
+          },
+          "ProviderUkprn": {
+            "type": "integer"
+          },
+          "TlevelName": {
+            "type": "string"
+          },
+          "AcademicYear": {
+            "type": "integer"
+          },
+          "DisplayAcademicYear": {
+            "type": "string"
+          },
+          "UlnTo": {
+            "type": "string"
           }
         }
       }

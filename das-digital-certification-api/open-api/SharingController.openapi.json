@@ -1,14 +1,14 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Digital Certification Sharing API",
+    "title": "Digital Certificates Sharing API",
     "version": "1.0.0",
-    "description": "API for managing certificate sharing, email sharing, and access operations."
+    "description": "API for managing digital certificate sharing and related operations."
   },
   "paths": {
     "/api/sharing/sharingemail/emaillinkcode/{emailLinkCode}": {
       "get": {
-        "summary": "Get Sharing by Email Link Code",
+        "summary": "Retrieve sharing email details by email link code",
         "parameters": [
           {
             "name": "emailLinkCode",
@@ -22,7 +22,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Successful response",
             "content": {
               "application/json": {
                 "schema": {
@@ -32,20 +32,27 @@
             }
           },
           "404": {
-            "description": "Not Found"
+            "description": "Entity not found"
           },
           "400": {
-            "description": "Bad Request"
+            "description": "Validation errors",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
           },
           "500": {
-            "description": "Server Error"
+            "description": "Internal server error"
           }
         }
       }
     },
     "/api/sharing/linkcode/{linkCode}": {
       "get": {
-        "summary": "Get Sharing by Link Code",
+        "summary": "Retrieve sharing details by link code",
         "parameters": [
           {
             "name": "linkCode",
@@ -59,7 +66,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Successful response",
             "content": {
               "application/json": {
                 "schema": {
@@ -69,17 +76,17 @@
             }
           },
           "404": {
-            "description": "Not Found"
+            "description": "Entity not found"
           },
           "500": {
-            "description": "Server Error"
+            "description": "Internal server error"
           }
         }
       }
     },
     "/api/sharing/{id}": {
       "delete": {
-        "summary": "Delete Sharing",
+        "summary": "Delete sharing by ID",
         "parameters": [
           {
             "name": "id",
@@ -93,24 +100,32 @@
         ],
         "responses": {
           "204": {
-            "description": "No Content"
+            "description": "Sharing deleted successfully"
           },
           "404": {
-            "description": "Not Found"
+            "description": "Entity not found"
           },
           "400": {
-            "description": "Bad Request"
+            "description": "Validation errors",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
           },
           "500": {
-            "description": "Server Error"
+            "description": "Internal server error"
           }
         }
       }
     },
     "/api/sharing": {
       "post": {
-        "summary": "Create Sharing",
+        "summary": "Create a new sharing",
         "requestBody": {
+          "description": "Sharing creation request data",
           "required": true,
           "content": {
             "application/json": {
@@ -122,7 +137,7 @@
         },
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Sharing created successfully",
             "content": {
               "application/json": {
                 "schema": {
@@ -132,17 +147,24 @@
             }
           },
           "400": {
-            "description": "Bad Request"
+            "description": "Validation errors",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
           },
           "500": {
-            "description": "Server Error"
+            "description": "Internal server error"
           }
         }
       }
     },
     "/api/sharing/{id}/email": {
       "post": {
-        "summary": "Create Sharing Email",
+        "summary": "Create sharing email for a given sharing ID",
         "parameters": [
           {
             "name": "id",
@@ -155,6 +177,7 @@
           }
         ],
         "requestBody": {
+          "description": "Sharing email creation request data",
           "required": true,
           "content": {
             "application/json": {
@@ -166,7 +189,7 @@
         },
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Sharing email created successfully",
             "content": {
               "application/json": {
                 "schema": {
@@ -176,21 +199,29 @@
             }
           },
           "404": {
-            "description": "Not Found"
+            "description": "Entity not found"
           },
           "400": {
-            "description": "Bad Request"
+            "description": "Validation errors",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
           },
           "500": {
-            "description": "Server Error"
+            "description": "Internal server error"
           }
         }
       }
     },
     "/api/sharing/sharingaccess": {
       "post": {
-        "summary": "Create Sharing Access",
+        "summary": "Create sharing access",
         "requestBody": {
+          "description": "Sharing access creation request data",
           "required": true,
           "content": {
             "application/json": {
@@ -202,21 +233,29 @@
         },
         "responses": {
           "204": {
-            "description": "No Content"
+            "description": "Sharing access created successfully"
           },
           "400": {
-            "description": "Bad Request"
+            "description": "Validation errors",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
           },
           "500": {
-            "description": "Server Error"
+            "description": "Internal server error"
           }
         }
       }
     },
     "/api/sharing/sharingemailaccess": {
       "post": {
-        "summary": "Create Sharing Email Access",
+        "summary": "Create sharing email access",
         "requestBody": {
+          "description": "Sharing email access creation request data",
           "required": true,
           "content": {
             "application/json": {
@@ -228,13 +267,20 @@
         },
         "responses": {
           "204": {
-            "description": "No Content"
+            "description": "Sharing email access created successfully"
           },
           "400": {
-            "description": "Bad Request"
+            "description": "Validation errors",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
           },
           "500": {
-            "description": "Server Error"
+            "description": "Internal server error"
           }
         }
       }
@@ -242,6 +288,127 @@
   },
   "components": {
     "schemas": {
+      "CreateSharingRequest": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "certificateId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "certificateType": {
+            "type": "string",
+            "enum": [
+              "Unknown",
+              "Standard",
+              "Framework"
+            ]
+          },
+          "courseName": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "userId",
+          "certificateId",
+          "certificateType",
+          "courseName"
+        ]
+      },
+      "CreateSharingResponse": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "certificateId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "certificateType": {
+            "type": "string",
+            "enum": [
+              "Unknown",
+              "Standard",
+              "Framework"
+            ]
+          },
+          "courseName": {
+            "type": "string"
+          },
+          "sharingId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "sharingNumber": {
+            "type": "integer"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "linkCode": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "expiryTime": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "CreateSharingEmailRequest": {
+        "type": "object",
+        "properties": {
+          "emailAddress": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "emailAddress"
+        ]
+      },
+      "CreateSharingEmailResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "emailLinkCode": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      },
+      "CreateSharingAccessRequest": {
+        "type": "object",
+        "properties": {
+          "sharingId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "sharingId"
+        ]
+      },
+      "CreateSharingEmailAccessRequest": {
+        "type": "object",
+        "properties": {
+          "sharingEmailId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "sharingEmailId"
+        ]
+      },
       "GetSharingByEmailLinkCodeResponse": {
         "type": "object",
         "properties": {
@@ -319,8 +486,7 @@
             "format": "uuid"
           },
           "sharingNumber": {
-            "type": "integer",
-            "format": "int32"
+            "type": "integer"
           },
           "createdAt": {
             "type": "string",
@@ -349,119 +515,6 @@
           }
         }
       },
-      "CreateSharingRequest": {
-        "type": "object",
-        "required": [
-          "userId",
-          "certificateId",
-          "certificateType",
-          "courseName"
-        ],
-        "properties": {
-          "userId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "certificateId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "certificateType": {
-            "type": "string",
-            "enum": [
-              "Unknown",
-              "Standard",
-              "Framework"
-            ]
-          },
-          "courseName": {
-            "type": "string"
-          }
-        }
-      },
-      "CreateSharingResponse": {
-        "type": "object",
-        "properties": {
-          "userId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "certificateId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "certificateType": {
-            "type": "string",
-            "enum": [
-              "Unknown",
-              "Standard",
-              "Framework"
-            ]
-          },
-          "courseName": {
-            "type": "string"
-          },
-          "sharingId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "sharingNumber": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "linkCode": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "expiryTime": {
-            "type": "string",
-            "format": "date-time"
-          }
-        }
-      },
-      "CreateSharingAccessRequest": {
-        "type": "object",
-        "properties": {
-          "sharingId": {
-            "type": "string",
-            "format": "uuid"
-          }
-        }
-      },
-      "CreateSharingEmailRequest": {
-        "type": "object",
-        "properties": {
-          "emailAddress": {
-            "type": "string"
-          }
-        }
-      },
-      "CreateSharingEmailResponse": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "emailLinkCode": {
-            "type": "string",
-            "format": "uuid"
-          }
-        }
-      },
-      "CreateSharingEmailAccessRequest": {
-        "type": "object",
-        "properties": {
-          "sharingEmailId": {
-            "type": "string",
-            "format": "uuid"
-          }
-        }
-      },
       "SharingEmailDetailGetById": {
         "type": "object",
         "properties": {
@@ -486,6 +539,35 @@
               "type": "string",
               "format": "date-time"
             }
+          }
+        }
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "integer",
+            "nullable": true
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true
+          },
+          "instance": {
+            "type": "string",
+            "nullable": true
+          },
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": true
           }
         }
       }

@@ -3,29 +3,137 @@
   "info": {
     "title": "Digital Certificates API",
     "version": "1.0.0",
-    "description": "API Endpoints related to digital certificates and their associated functionality."
+    "description": "API for managing digital certification operations, including certificate sharing, delivery request, and related services."
   },
   "paths": {
     "/certificates/list": {
       "get": {
-        "operationId": "CertificatesList",
-        "summary": "Retrieve a list of certificates",
+        "operationId": "CertificatesListRouteGet",
+        "summary": "Retrieve list of certificates.",
         "security": [
           {
-            "IsUlnAuthorised": []
+            "DigitalCertificatesPolicyNames.IsUlnAuthorised": []
           }
         ],
         "responses": {
           "200": {
-            "description": "Successful operation"
+            "description": "Certificate list fetched successfully."
+          }
+        }
+      }
+    },
+    "/certificates/{certificateId}/standard": {
+      "get": {
+        "operationId": "CertificateStandardRouteGet",
+        "summary": "Fetch standard certificate details.",
+        "parameters": [
+          {
+            "name": "certificateId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "security": [
+          {
+            "DigitalCertificatesPolicyNames.IsCertificateOwner": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Standard certificate details retrieved successfully."
+          }
+        }
+      }
+    },
+    "/certificates/{certificateId}/framework": {
+      "get": {
+        "operationId": "CertificateFrameworkRouteGet",
+        "summary": "Fetch framework certificate details.",
+        "parameters": [
+          {
+            "name": "certificateId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "security": [
+          {
+            "DigitalCertificatesPolicyNames.IsCertificateOwner": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Framework certificate details retrieved successfully."
+          }
+        }
+      }
+    },
+    "/certificates/{certificateId}/standard/download": {
+      "get": {
+        "operationId": "DownloadCertificateStandardPdfRouteGet",
+        "summary": "Download standard certificate as PDF.",
+        "parameters": [
+          {
+            "name": "certificateId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "security": [
+          {
+            "DigitalCertificatesPolicyNames.IsCertificateOwner": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Standard certificate PDF downloaded successfully."
+          }
+        }
+      }
+    },
+    "/certificates/{certificateId}/framework/download": {
+      "get": {
+        "operationId": "DownloadCertificateFrameworkPdfRouteGet",
+        "summary": "Download framework certificate as PDF.",
+        "parameters": [
+          {
+            "name": "certificateId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "security": [
+          {
+            "DigitalCertificatesPolicyNames.IsCertificateOwner": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Framework certificate PDF downloaded successfully."
           }
         }
       }
     },
     "/certificates/{certificateId}/delivery-request/add-address": {
       "get": {
-        "operationId": "AddAddress",
-        "summary": "Retrieve form to add a delivery address for a certificate",
+        "operationId": "AddAddressRouteGet",
+        "summary": "Get form for adding a new delivery address.",
         "parameters": [
           {
             "name": "certificateId",
@@ -39,6 +147,7 @@
           {
             "name": "backRoute",
             "in": "query",
+            "required": false,
             "schema": {
               "type": "string"
             }
@@ -46,18 +155,18 @@
         ],
         "security": [
           {
-            "IsCertificateOwner": []
+            "DigitalCertificatesPolicyNames.IsCertificateOwner": []
           }
         ],
         "responses": {
           "200": {
-            "description": "Successful operation"
+            "description": "Form fetched successfully."
           }
         }
       },
       "post": {
-        "operationId": "AddAddressPost",
-        "summary": "Submit a new address for certificate delivery",
+        "operationId": "AddAddressRoutePost",
+        "summary": "Add a new delivery address.",
         "parameters": [
           {
             "name": "certificateId",
@@ -81,20 +190,20 @@
         },
         "security": [
           {
-            "IsCertificateOwner": []
+            "DigitalCertificatesPolicyNames.IsCertificateOwner": []
           }
         ],
         "responses": {
           "200": {
-            "description": "Successful operation"
+            "description": "Address added successfully."
           }
         }
       }
     },
     "/certificates/{certificateId}/delivery-request/select-address": {
       "get": {
-        "operationId": "SelectAddress",
-        "summary": "Retrieve possible addresses for certificate delivery",
+        "operationId": "SelectAddressRouteGet",
+        "summary": "Get form for selecting a delivery address.",
         "parameters": [
           {
             "name": "certificateId",
@@ -108,18 +217,18 @@
         ],
         "security": [
           {
-            "IsCertificateOwner": []
+            "DigitalCertificatesPolicyNames.IsCertificateOwner": []
           }
         ],
         "responses": {
           "200": {
-            "description": "Successful operation"
+            "description": "Form fetched successfully."
           }
         }
       },
       "post": {
-        "operationId": "SelectAddressPost",
-        "summary": "Select from predefined addresses for certificate delivery",
+        "operationId": "SelectAddressRoutePost",
+        "summary": "Submit selected delivery address.",
         "parameters": [
           {
             "name": "certificateId",
@@ -143,45 +252,20 @@
         },
         "security": [
           {
-            "IsCertificateOwner": []
+            "DigitalCertificatesPolicyNames.IsCertificateOwner": []
           }
         ],
         "responses": {
           "200": {
-            "description": "Successful operation"
+            "description": "Address selected successfully."
           }
         }
       }
     },
-    "/certificates/{certificateId}/delivery-request/check-and-submit": {
-      "get": {
-        "operationId": "CheckAndSubmit",
-        "summary": "View and confirm certificate delivery request",
-        "parameters": [
-          {
-            "name": "certificateId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "security": [
-          {
-            "IsCertificateOwner": []
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful operation"
-          }
-        }
-      },
+    "/certificates/{certificateId}/contact/create": {
       "post": {
-        "operationId": "CheckAndSubmitPost",
-        "summary": "Submit the certificate delivery request",
+        "operationId": "ContactUsForCertificateCreateRoutePost",
+        "summary": "Create a contact request for a certificate.",
         "parameters": [
           {
             "name": "certificateId",
@@ -195,20 +279,20 @@
         ],
         "security": [
           {
-            "IsCertificateOwner": []
+            "DigitalCertificatesPolicyNames.IsCertificateOwner": []
           }
         ],
         "responses": {
           "200": {
-            "description": "Successful operation"
+            "description": "Contact request created successfully."
           }
         }
       }
     },
-    "/certificates/{certificateId}/delivery-request/confirmation": {
-      "get": {
-        "operationId": "PrintRequestConfirmation",
-        "summary": "View the confirmation of the certificate delivery request",
+    "/certificates/{certificateId}/sharing/{sharingId}/send-email": {
+      "post": {
+        "operationId": "ShareByEmailRoutePost",
+        "summary": "Send certificate sharing via email.",
         "parameters": [
           {
             "name": "certificateId",
@@ -218,43 +302,9 @@
               "type": "string",
               "format": "uuid"
             }
-          }
-        ],
-        "security": [
+          },
           {
-            "IsCertificateOwner": []
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful operation"
-          }
-        }
-      }
-    },
-    "/certificates/contact": {
-      "get": {
-        "operationId": "ContactUs",
-        "summary": "View the contact us page",
-        "security": [
-          {
-            "IsUlnAuthorised": []
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful operation"
-          }
-        }
-      }
-    },
-    "/certificates/{certificateId}/contact": {
-      "get": {
-        "operationId": "ContactUsForCertificate",
-        "summary": "View the contact us page for a specific certificate",
-        "parameters": [
-          {
-            "name": "certificateId",
+            "name": "sharingId",
             "in": "path",
             "required": true,
             "schema": {
@@ -263,14 +313,24 @@
             }
           }
         ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ShareByEmailViewModel"
+              }
+            }
+          }
+        },
         "security": [
           {
-            "IsCertificateOwner": []
+            "DigitalCertificatesPolicyNames.IsCertificateOwner": []
           }
         ],
         "responses": {
           "200": {
-            "description": "Successful operation"
+            "description": "Email sharing request processed successfully."
           }
         }
       }
@@ -281,81 +341,99 @@
       "AddAddressManualViewModel": {
         "type": "object",
         "properties": {
-          "CertificateId": {
+          "certificateId": {
             "type": "string",
             "format": "uuid"
           },
-          "CourseName": {
-            "type": "string"
+          "courseName": {
+            "type": "string",
+            "nullable": true
           },
-          "GivenNames": {
-            "type": "string"
+          "givenNames": {
+            "type": "string",
+            "nullable": true
           },
-          "FamilyName": {
-            "type": "string"
+          "familyName": {
+            "type": "string",
+            "nullable": true
           },
-          "BackRoute": {
-            "type": "string"
+          "backRoute": {
+            "type": "string",
+            "nullable": true
           },
-          "Organisation": {
-            "type": "string"
+          "organisation": {
+            "type": "string",
+            "nullable": true
           },
-          "AddressLine1": {
-            "type": "string"
+          "addressLine1": {
+            "type": "string",
+            "nullable": true
           },
-          "AddressLine2": {
-            "type": "string"
+          "addressLine2": {
+            "type": "string",
+            "nullable": true
           },
-          "TownOrCity": {
-            "type": "string"
+          "townOrCity": {
+            "type": "string",
+            "nullable": true
           },
-          "County": {
-            "type": "string"
+          "county": {
+            "type": "string",
+            "nullable": true
           },
-          "Postcode": {
-            "type": "string"
+          "postcode": {
+            "type": "string",
+            "nullable": true
           }
-        },
-        "required": [
-          "CertificateId"
-        ]
+        }
       },
       "SelectAddressViewModel": {
         "type": "object",
         "properties": {
-          "CertificateId": {
+          "certificateId": {
             "type": "string",
             "format": "uuid"
           },
-          "CourseName": {
-            "type": "string"
+          "courseName": {
+            "type": "string",
+            "nullable": true
           },
-          "GivenNames": {
-            "type": "string"
+          "givenNames": {
+            "type": "string",
+            "nullable": true
           },
-          "FamilyName": {
-            "type": "string"
+          "familyName": {
+            "type": "string",
+            "nullable": true
           },
-          "SearchTerm": {
-            "type": "string"
+          "searchTerm": {
+            "type": "string",
+            "nullable": true
           },
-          "SelectedAddress": {
-            "type": "string"
+          "selectedAddress": {
+            "type": "string",
+            "nullable": true
           }
-        },
-        "required": [
-          "CertificateId"
-        ]
+        }
+      },
+      "ShareByEmailViewModel": {
+        "type": "object",
+        "properties": {
+          "emailAddress": {
+            "type": "string",
+            "nullable": true
+          }
+        }
       }
     },
     "securitySchemes": {
-      "IsUlnAuthorised": {
-        "type": "oauth2",
-        "description": "Requires the user to be ULN authorised."
+      "DigitalCertificatesPolicyNames.IsCertificateOwner": {
+        "type": "http",
+        "scheme": "bearer"
       },
-      "IsCertificateOwner": {
-        "type": "oauth2",
-        "description": "Requires the user to be the owner of the certificate."
+      "DigitalCertificatesPolicyNames.IsUlnAuthorised": {
+        "type": "http",
+        "scheme": "bearer"
       }
     }
   }

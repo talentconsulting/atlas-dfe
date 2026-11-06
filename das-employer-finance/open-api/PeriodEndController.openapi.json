@@ -1,19 +1,23 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Period End API",
-    "description": "API for managing period ends in employer finance.",
+    "title": "Employer Finance API",
     "version": "1.0.0"
   },
   "paths": {
     "/api/period-ends": {
       "get": {
+        "summary": "Get all period ends",
+        "description": "Retrieves all period ends.",
         "operationId": "getAllPeriodEnds",
-        "summary": "Get All Period Ends",
-        "description": "Retrieve all period ends.",
+        "security": [
+          {
+            "ApiRoles_ReadAllEmployerAccountBalances": []
+          }
+        ],
         "responses": {
           "200": {
-            "description": "List of period ends retrieved successfully.",
+            "description": "Successful operation.",
             "content": {
               "application/json": {
                 "schema": {
@@ -28,17 +32,17 @@
           "404": {
             "description": "No period ends found."
           }
-        },
+        }
+      },
+      "post": {
+        "summary": "Create a period end",
+        "description": "Creates a new period end from the request body.",
+        "operationId": "createPeriodEnd",
         "security": [
           {
             "ApiRoles_ReadAllEmployerAccountBalances": []
           }
-        ]
-      },
-      "post": {
-        "operationId": "createPeriodEnd",
-        "summary": "Create Period End",
-        "description": "Create a new period end.",
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -64,35 +68,35 @@
             "description": "Invalid request body."
           },
           "500": {
-            "description": "Could not create period end."
+            "description": "Internal server error. Could not create period end."
           }
-        },
-        "security": [
-          {
-            "ApiRoles_ReadAllEmployerAccountBalances": []
-          }
-        ]
+        }
       }
     },
     "/api/period-ends/{periodEndId}": {
       "get": {
+        "summary": "Get a period end by ID",
+        "description": "Retrieves a specific period end by its ID.",
         "operationId": "getPeriodEndById",
-        "summary": "Get Period End by ID",
-        "description": "Retrieve a period end by its ID.",
+        "security": [
+          {
+            "ApiRoles_ReadAllEmployerAccountBalances": []
+          }
+        ],
         "parameters": [
           {
             "name": "periodEndId",
             "in": "path",
             "required": true,
+            "description": "The ID of the period end to retrieve.",
             "schema": {
               "type": "string"
-            },
-            "description": "The unique identifier of the period end."
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Period end retrieved successfully.",
+            "description": "Successful operation.",
             "content": {
               "application/json": {
                 "schema": {
@@ -104,16 +108,19 @@
           "404": {
             "description": "Period end not found."
           }
-        },
-        "security": [
-          {
-            "ApiRoles_ReadAllEmployerAccountBalances": []
-          }
-        ]
+        }
       }
     }
   },
   "components": {
+    "securitySchemes": {
+      "ApiRoles_ReadAllEmployerAccountBalances": {
+        "type": "apiKey",
+        "name": "Authorization",
+        "in": "header",
+        "description": "API key required to access this endpoint with the role ReadAllEmployerAccountBalances."
+      }
+    },
     "schemas": {
       "PeriodEnd": {
         "type": "object",
@@ -144,24 +151,10 @@
             "format": "date-time"
           },
           "PaymentsForPeriod": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           }
-        },
-        "required": [
-          "PeriodEndId",
-          "CalendarPeriodMonth",
-          "CalendarPeriodYear",
-          "CompletionDateTime",
-          "PaymentsForPeriod"
-        ]
-      }
-    },
-    "securitySchemes": {
-      "ApiRoles_ReadAllEmployerAccountBalances": {
-        "type": "apiKey",
-        "name": "Authorization",
-        "in": "header",
-        "description": "API key for accessing endpoints that require the ReadAllEmployerAccountBalances role."
+        }
       }
     }
   }

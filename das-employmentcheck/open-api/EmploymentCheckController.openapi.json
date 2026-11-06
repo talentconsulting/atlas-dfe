@@ -1,0 +1,105 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Employment Check API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/api/EmploymentCheck/RegisterCheck": {
+      "post": {
+        "operationId": "RegisterCheck",
+        "summary": "Register a new employment check",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterCheckRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RegisterCheckResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RegisterCheckResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "RegisterCheckRequest": {
+        "type": "object",
+        "properties": {
+          "CorrelationId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "CheckType": {
+            "type": "string"
+          },
+          "Uln": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "ApprenticeshipAccountId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "ApprenticeshipId": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "MinDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "MaxDate": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "CorrelationId",
+          "CheckType",
+          "Uln",
+          "ApprenticeshipAccountId",
+          "MinDate",
+          "MaxDate"
+        ]
+      },
+      "RegisterCheckResponse": {
+        "type": "object",
+        "properties": {
+          "ErrorMessage": {
+            "type": "string",
+            "nullable": true
+          },
+          "ErrorType": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      }
+    }
+  }
+}

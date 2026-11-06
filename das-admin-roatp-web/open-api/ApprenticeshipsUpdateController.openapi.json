@@ -7,22 +7,21 @@
   "paths": {
     "/providers/{ukprn}/apprenticeships": {
       "get": {
-        "summary": "Get apprenticeships for a provider",
+        "summary": "Get the apprenticeship offering status for a provider",
         "parameters": [
           {
             "name": "ukprn",
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int32"
+              "type": "integer"
             },
-            "description": "UK Provider Reference Number"
+            "description": "Unique identifier for the provider (UKPRN)"
           }
         ],
         "responses": {
           "200": {
-            "description": "Success response displaying the apprenticeships offered by the provider",
+            "description": "Success",
             "content": {
               "application/json": {
                 "schema": {
@@ -32,22 +31,21 @@
             }
           },
           "302": {
-            "description": "Redirect to home if the provider is invalid or session data is missing"
+            "description": "Redirect to the home route if the organization or session data cannot be retrieved"
           }
         }
       },
       "post": {
-        "summary": "Update apprenticeships for a provider",
+        "summary": "Submit updates to the apprenticeship offering status for a provider",
         "parameters": [
           {
             "name": "ukprn",
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int32"
+              "type": "integer"
             },
-            "description": "UK Provider Reference Number"
+            "description": "Unique identifier for the provider (UKPRN)"
           }
         ],
         "requestBody": {
@@ -62,22 +60,34 @@
         },
         "responses": {
           "302": {
-            "description": "Redirect to the next appropriate page if the input is valid",
-            "headers": {
-              "Location": {
-                "schema": {
-                  "type": "string"
-                },
-                "description": "The URL for the next page"
-              }
-            }
+            "description": "Redirect to the home route or apprenticeship units update route after processing"
           },
           "400": {
-            "description": "Validation error, showing the invalid fields and resubmitting the form",
+            "description": "Validation errors occurred in the submitted data",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/OfferApprenticeshipsViewModel"
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "field": {
+                            "type": "string"
+                          },
+                          "message": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "field",
+                          "message"
+                        ]
+                      }
+                    }
+                  }
                 }
               }
             }
@@ -92,44 +102,50 @@
         "type": "object",
         "properties": {
           "IsApprenticeshipsOffered": {
-            "type": "boolean",
-            "nullable": true,
-            "description": "Indicates if the provider offers apprenticeships"
+            "type": [
+              "boolean",
+              "null"
+            ],
+            "description": "Indicates whether apprenticeships are offered by the provider"
           },
           "ApprenticeshipsSelection": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/ApprenticeshipsSelectionModel"
             },
-            "description": "List of apprenticeship selection options"
+            "description": "List of options available for apprenticeship offering"
           }
-        }
+        },
+        "required": [
+          "ApprenticeshipsSelection"
+        ]
       },
       "OfferApprenticeshipsSubmitModel": {
         "type": "object",
         "properties": {
           "IsApprenticeshipsOffered": {
-            "type": "boolean",
-            "nullable": true,
-            "description": "Flag indicating if the provider offers apprenticeships"
+            "type": [
+              "boolean",
+              "null"
+            ],
+            "description": "Indicates whether apprenticeships are offered by the provider"
           }
-        },
-        "required": []
+        }
       },
       "ApprenticeshipsSelectionModel": {
         "type": "object",
         "properties": {
           "Id": {
             "type": "boolean",
-            "description": "The selection identifier (true for Yes, false for No)"
+            "description": "Identifier for the selection option"
           },
           "Description": {
             "type": "string",
-            "description": "Description of the selection option"
+            "description": "Text describing the selection option"
           },
           "IsSelected": {
             "type": "boolean",
-            "description": "Indicates if this option is selected"
+            "description": "Indicates whether this option is selected"
           }
         },
         "required": [

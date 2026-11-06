@@ -7,18 +7,17 @@
   "paths": {
     "/providers/new/select": {
       "get": {
-        "operationId": "getSelectProviderPage",
-        "summary": "Select a new provider.",
+        "operationId": "SelectProvider_Index_Get",
         "tags": [
-          "Providers"
+          "SelectProvider"
         ],
         "responses": {
           "200": {
-            "description": "Renders the select provider page.",
+            "description": "Returns the Select Provider view model",
             "content": {
-              "text/html": {
+              "application/json": {
                 "schema": {
-                  "type": "string"
+                  "$ref": "#/components/schemas/SelectProviderViewModel"
                 }
               }
             }
@@ -26,10 +25,9 @@
         }
       },
       "post": {
-        "operationId": "postSelectProvider",
-        "summary": "Submit provider selection.",
+        "operationId": "SelectProvider_Index_Post",
         "tags": [
-          "Providers"
+          "SelectProvider"
         ],
         "requestBody": {
           "required": true,
@@ -42,39 +40,38 @@
           }
         },
         "responses": {
-          "200": {
-            "description": "Renders the select provider page with validation errors.",
+          "302": {
+            "description": "Redirect to a new page based on the existence of the provider"
+          },
+          "400": {
+            "description": "Validation errors",
             "content": {
-              "text/html": {
+              "application/json": {
                 "schema": {
-                  "type": "string"
+                  "$ref": "#/components/schemas/SelectProviderViewModel"
                 }
               }
             }
           },
-          "302": {
-            "description": "Redirects the user either to provider details or provider not found pages."
-          },
           "500": {
-            "description": "Unexpected service responses handled by the system."
+            "description": "Unexpected errors"
           }
         }
       }
     },
     "/providers/new/not-found": {
       "get": {
-        "operationId": "getProviderNotFound",
-        "summary": "Provider not found in UKRLP.",
+        "operationId": "ProviderNotFoundInUkrlp_Get",
         "tags": [
-          "Providers"
+          "SelectProvider"
         ],
         "responses": {
           "200": {
-            "description": "Renders the provider not found page.",
+            "description": "Returns the view model for when a provider is not found in UKRLP",
             "content": {
-              "text/html": {
+              "application/json": {
                 "schema": {
-                  "type": "string"
+                  "$ref": "#/components/schemas/ProviderNotFoundInUkrlpViewModel"
                 }
               }
             }
@@ -85,13 +82,30 @@
   },
   "components": {
     "schemas": {
+      "SelectProviderViewModel": {
+        "type": "object",
+        "properties": {
+          "Ukprn": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
       "SelectProviderSubmitModel": {
         "type": "object",
         "properties": {
           "Ukprn": {
             "type": "string",
-            "nullable": true,
-            "description": "Unique Provider Reference Number."
+            "nullable": true
+          }
+        },
+        "required": []
+      },
+      "ProviderNotFoundInUkrlpViewModel": {
+        "type": "object",
+        "properties": {
+          "AddANewTrainingProviderUrl": {
+            "type": "string"
           }
         }
       }

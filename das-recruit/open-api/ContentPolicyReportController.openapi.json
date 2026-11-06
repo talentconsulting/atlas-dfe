@@ -1,0 +1,78 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Content Policy Report API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/contentpolicyreport/report": {
+      "post": {
+        "summary": "Report a Content Security Policy (CSP) violation",
+        "description": "Endpoint to report a CSP violation. Allows anonymous access.",
+        "operationId": "ReportCspViolation",
+        "requestBody": {
+          "description": "CSP report data",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CspReportRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "CSP violation report received successfully"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CspReportRequest": {
+        "type": "object",
+        "properties": {
+          "csp-report": {
+            "$ref": "#/components/schemas/CspReport"
+          }
+        }
+      },
+      "CspReport": {
+        "type": "object",
+        "properties": {
+          "document-uri": {
+            "type": "string",
+            "description": "The URI of the document in which the violation occurred."
+          },
+          "referrer": {
+            "type": "string",
+            "description": "The referrer of the document in which the violation occurred."
+          },
+          "violated-directive": {
+            "type": "string",
+            "description": "The specific directive that was violated."
+          },
+          "effective-directive": {
+            "type": "string",
+            "description": "The directive that the user agent enforced that led to the violation."
+          },
+          "original-policy": {
+            "type": "string",
+            "description": "The original Content Security Policy."
+          },
+          "blocked-uri": {
+            "type": "string",
+            "description": "The URI that was blocked due to the violation."
+          },
+          "status-code": {
+            "type": "integer",
+            "description": "The HTTP status code of the violation."
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}

@@ -1,50 +1,51 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "AddRestrictedCourseLastStartDate API",
+    "title": "Add Restricted Course Last Start Date API",
     "version": "1.0.0"
   },
   "paths": {
     "/providers/{ukprn}/restricted-courses/add/set-last-start-date": {
       "get": {
-        "tags": [
-          "ManageUnrestrictedProvider"
-        ],
-        "summary": "Get the view for adding a restricted course last start date.",
+        "summary": "View the restricted course last start date form",
+        "operationId": "GetRestrictedCourseLastStartDateForm",
         "parameters": [
           {
             "name": "ukprn",
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer"
-            },
-            "description": "UKPRN of the provider."
+              "type": "integer",
+              "format": "int32"
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "HTML view rendering the form for setting the last start date for a restricted course."
+            "description": "Form to set last start date for a restricted course displayed successfully"
           },
           "302": {
-            "description": "Redirects to the provider restricted apprenticeships route if session does not exist."
+            "description": "Redirects to provider restricted apprenticeships route if no session is found"
           }
-        }
+        },
+        "security": [
+          {
+            "RoatpAdminTeamRole": []
+          }
+        ]
       },
       "post": {
-        "tags": [
-          "ManageUnrestrictedProvider"
-        ],
-        "summary": "Submit the restricted course last start date.",
+        "summary": "Submit the restricted course last start date",
+        "operationId": "SubmitRestrictedCourseLastStartDate",
         "parameters": [
           {
             "name": "ukprn",
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer"
-            },
-            "description": "UKPRN of the provider."
+              "type": "integer",
+              "format": "int32"
+            }
           }
         ],
         "requestBody": {
@@ -59,28 +60,17 @@
         },
         "responses": {
           "302": {
-            "description": "Redirects to the provider restricted apprenticeships route if session does not exist or submission succeeds."
+            "description": "Redirects to provider restricted apprenticeships route if operation is successful"
           },
           "400": {
-            "description": "Validation errors occurred.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "errors": {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      },
-                      "description": "Validation error messages."
-                    }
-                  }
-                }
-              }
-            }
+            "description": "Validation errors in the submitted data"
           }
-        }
+        },
+        "security": [
+          {
+            "RoatpAdminTeamRole": []
+          }
+        ]
       }
     }
   },
@@ -91,31 +81,33 @@
         "properties": {
           "Day": {
             "type": "string",
-            "nullable": true,
-            "description": "The day of the last start date."
+            "nullable": true
           },
           "Month": {
             "type": "string",
-            "nullable": true,
-            "description": "The month of the last start date."
+            "nullable": true
           },
           "Year": {
             "type": "string",
-            "nullable": true,
-            "description": "The year of the last start date."
+            "nullable": true
           },
           "LarsCode": {
             "type": "string",
-            "nullable": true,
-            "description": "LARS code for the course."
+            "nullable": true
           },
           "CourseLastDateStarts": {
             "type": "string",
             "format": "date-time",
-            "nullable": true,
-            "description": "Last date starts for the course."
+            "nullable": true
           }
         }
+      }
+    },
+    "securitySchemes": {
+      "RoatpAdminTeamRole": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "Requires user to belong to the Roatp Admin Team role"
       }
     }
   }

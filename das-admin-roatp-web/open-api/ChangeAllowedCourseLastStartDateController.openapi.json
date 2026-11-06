@@ -1,0 +1,158 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Change Allowed Course Last Start Date API",
+    "version": "1.0.0",
+    "description": "API to manage restricted providers and their allowed courses' last start dates in ROATP."
+  },
+  "paths": {
+    "/providers/{ukprn}/{routeLearningType}/allowed-courses/{larsCode}/change": {
+      "get": {
+        "summary": "Get view to change allowed course's last start date",
+        "operationId": "GetChangeAllowedCourseLastStartDate",
+        "parameters": [
+          {
+            "name": "ukprn",
+            "in": "path",
+            "required": true,
+            "description": "Unique identifier for the provider",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "routeLearningType",
+            "in": "path",
+            "required": true,
+            "description": "Route learning type of the course",
+            "schema": {
+              "$ref": "#/components/schemas/RouteLearningType"
+            }
+          },
+          {
+            "name": "larsCode",
+            "in": "path",
+            "required": true,
+            "description": "Identifier for the LARS course",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "HTML view for changing the last start date of allowed course."
+          },
+          "404": {
+            "description": "Resource not found."
+          }
+        }
+      },
+      "post": {
+        "summary": "Submit data to change allowed course's last start date",
+        "operationId": "PostChangeAllowedCourseLastStartDate",
+        "parameters": [
+          {
+            "name": "ukprn",
+            "in": "path",
+            "required": true,
+            "description": "Unique identifier for the provider",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "routeLearningType",
+            "in": "path",
+            "required": true,
+            "description": "Route learning type of the course",
+            "schema": {
+              "$ref": "#/components/schemas/RouteLearningType"
+            }
+          },
+          {
+            "name": "larsCode",
+            "in": "path",
+            "required": true,
+            "description": "Identifier for the LARS course",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Submit model for changing the allowed course's last start date",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeAllowedCourseLastStartDateSubmitModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "302": {
+            "description": "Redirect to corresponding action route based on submitted option."
+          },
+          "404": {
+            "description": "Resource not found."
+          },
+          "400": {
+            "description": "Validation errors encountered.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ChangeAllowedCourseLastStartDateSubmitModel": {
+        "type": "object",
+        "properties": {
+          "SelectedOption": {
+            "type": "string",
+            "nullable": true,
+            "description": "The selected option for changing the last start date"
+          }
+        }
+      },
+      "RouteLearningType": {
+        "type": "string",
+        "enum": [
+          "Apprenticeship",
+          "ApprenticeshipUnit"
+        ],
+        "description": "The type of route learning for the course"
+      },
+      "ValidationError": {
+        "type": "object",
+        "properties": {
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "field": {
+                  "type": "string",
+                  "description": "Field name causing the error"
+                },
+                "message": {
+                  "type": "string",
+                  "description": "Error message"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

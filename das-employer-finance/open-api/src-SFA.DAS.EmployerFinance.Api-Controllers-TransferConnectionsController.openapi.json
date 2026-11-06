@@ -1,14 +1,14 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Employer Finance API",
+    "title": "EmployerFinance API",
     "version": "1.0.0"
   },
   "paths": {
     "/api/accounts/{hashedAccountId}/transfers/connections": {
       "get": {
-        "operationId": "GetTransferConnections",
-        "summary": "Retrieve transfer connections for the given hashed account ID.",
+        "summary": "Get Transfer Connections by Hashed Account ID",
+        "operationId": "GetTransferConnectionsByHashed",
         "parameters": [
           {
             "name": "hashedAccountId",
@@ -17,12 +17,12 @@
             "schema": {
               "type": "string"
             },
-            "description": "The hashed ID of the account."
+            "description": "The hashed account ID."
           }
         ],
         "responses": {
           "200": {
-            "description": "Successful response with transfer connections.",
+            "description": "A list of transfer connections.",
             "content": {
               "application/json": {
                 "schema": {
@@ -37,25 +37,24 @@
         },
         "security": [
           {
-            "ApiRolesAuthorization": []
+            "ApiRolesReadUserAccounts": []
           }
         ]
       }
     },
     "/api/accounts/internal/{accountId}/transfers/connections": {
       "get": {
-        "operationId": "InternalGetTransferConnections",
-        "summary": "Retrieve transfer connections for the given internal account ID with an optional status filter.",
+        "summary": "Get Transfer Connections by Account ID and Status",
+        "operationId": "GetTransferConnectionsByInternalAccount",
         "parameters": [
           {
             "name": "accountId",
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "integer"
             },
-            "description": "The internal account ID."
+            "description": "The account ID."
           },
           {
             "name": "status",
@@ -64,12 +63,12 @@
             "schema": {
               "$ref": "#/components/schemas/TransferConnectionInvitationStatus"
             },
-            "description": "The status of the transfer connections to filter by."
+            "description": "Filter by transfer connection invitation status. Defaults to 'Approved'."
           }
         ],
         "responses": {
           "200": {
-            "description": "Successful response with transfer connections.",
+            "description": "A list of transfer connections.",
             "content": {
               "application/json": {
                 "schema": {
@@ -84,7 +83,7 @@
         },
         "security": [
           {
-            "ApiRolesAuthorization": []
+            "ApiRolesReadUserAccounts": []
           }
         ]
       }
@@ -94,7 +93,8 @@
     "schemas": {
       "TransferConnection": {
         "type": "object",
-        "additionalProperties": true
+        "description": "A transfer connection entity.",
+        "properties": {}
       },
       "TransferConnectionInvitationStatus": {
         "type": "string",
@@ -102,20 +102,16 @@
           "Pending",
           "Approved",
           "Rejected"
-        ]
+        ],
+        "description": "The status of a transfer connection invitation."
       }
     },
     "securitySchemes": {
-      "ApiRolesAuthorization": {
-        "type": "oauth2",
-        "flows": {
-          "implicit": {
-            "authorizationUrl": "https://example.com/oauth/authorize",
-            "scopes": {
-              "read:userAccounts": "Read access to user accounts"
-            }
-          }
-        }
+      "ApiRolesReadUserAccounts": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "Authorization",
+        "description": "API key for accessing resources requiring the 'ReadUserAccounts' policy."
       }
     }
   }

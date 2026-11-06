@@ -1,110 +1,120 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Service API",
+    "title": "ServiceController API",
     "version": "1.0.0",
-    "description": "API for handling authentication and service-related operations in the SFA.DAS.FAA.Web project."
+    "description": "API for ServiceController in SFA DAS FAA Web application."
   },
   "paths": {
     "/signout": {
-      "get": {
-        "operationId": "SignOut",
-        "summary": "Signs the user out of the service.",
+      "post": {
+        "operationId": "signOut",
+        "summary": "Sign out user from the service.",
+        "tags": [
+          "Service"
+        ],
         "parameters": [],
         "responses": {
           "302": {
-            "description": "Redirects the user to the configured sign-out page."
+            "description": "User has been redirected after sign-out."
           }
         }
       }
     },
     "/service/signout": {
-      "get": {
-        "operationId": "ServiceSignOut",
-        "deprecated": true,
-        "summary": "Deprecated version of signout endpoint.",
+      "post": {
+        "operationId": "serviceSignOut",
+        "summary": "Sign out user from the service endpoint.",
+        "tags": [
+          "Service"
+        ],
         "parameters": [],
         "responses": {
           "302": {
-            "description": "Redirects the user to the configured sign-out page.",
-            "deprecated": true
+            "description": "User has been redirected after service sign-out."
           }
         }
       }
     },
     "/signin": {
-      "get": {
-        "security": [
-          {
-            "PolicyNames_IsFaaUser": []
-          }
+      "post": {
+        "operationId": "signIn",
+        "summary": "Sign in user with the given query parameter value.",
+        "tags": [
+          "Service"
         ],
-        "operationId": "SignIn",
-        "summary": "Signs the user in to the service with optional redirection logic.",
         "parameters": [
           {
             "name": "signInValue",
             "in": "query",
             "required": true,
             "schema": {
-              "type": "string",
-              "description": "A query string containing encoded sign-in redirect data."
-            }
+              "type": "string"
+            },
+            "description": "Protected value for signing in."
           }
         ],
         "responses": {
           "302": {
-            "description": "Redirects to the specified action and controller as needed."
+            "description": "Redirects user upon successful sign-in."
           }
         }
       }
     },
     "/account-unavailable": {
       "get": {
-        "security": [
-          {
-            "PolicyNames_IsAuthenticated": []
-          }
+        "operationId": "accountUnavailable",
+        "summary": "Indicates account unavailability.",
+        "tags": [
+          "Service"
         ],
-        "operationId": "AccountUnavailable",
-        "summary": "Displays the account unavailable page for authenticated users.",
         "responses": {
           "200": {
-            "description": "HTML view of account unavailable page."
+            "description": "Page displayed for unavailable accounts."
           }
         }
       }
     },
     "/account-details": {
       "get": {
-        "operationId": "GetAccountDetails",
-        "summary": "Displays account details for debugging or stub purposes in non-PRD environments.",
+        "operationId": "getAccountDetails",
+        "summary": "Fetch account details for a user.",
+        "tags": [
+          "Service"
+        ],
         "parameters": [
           {
             "name": "returnUrl",
             "in": "query",
             "required": true,
             "schema": {
-              "type": "string",
-              "description": "URL to return to after viewing account details."
-            }
+              "type": "string"
+            },
+            "description": "Return URL."
           }
         ],
         "responses": {
           "404": {
-            "description": "Not found if the environment is PRD."
+            "description": "Not Found if in a production environment."
           },
           "200": {
-            "description": "HTML view showing stub account details.",
+            "description": "Returns account details view.",
             "content": {
-              "text/html": {}
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StubAuthenticationViewModel"
+                }
+              }
             }
           }
         }
       },
       "post": {
-        "operationId": "PostAccountDetails",
-        "summary": "Handles submission of form inputs and sign-in for stub authentication in non-PRD environments.",
+        "operationId": "updateAccountDetails",
+        "summary": "Update account details.",
+        "tags": [
+          "Service"
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -117,42 +127,44 @@
         },
         "responses": {
           "404": {
-            "description": "Not found if the environment is PRD."
+            "description": "Not Found if in a production environment."
           },
           "302": {
-            "description": "Redirects to the provided returnUrl from input form."
+            "description": "Redirects to the signed-in route."
           }
         }
       }
     },
     "/Stub-Auth": {
       "get": {
-        "security": [
-          {
-            "PolicyNames_IsAuthenticated": []
-          }
+        "operationId": "stubSignedIn",
+        "summary": "Indicate user is signed in under stub authentication.",
+        "tags": [
+          "Service"
         ],
-        "operationId": "StubSignedIn",
-        "summary": "Displays signed-in state for stubbed authentication views.",
         "parameters": [
           {
             "name": "returnUrl",
             "in": "query",
             "required": true,
             "schema": {
-              "type": "string",
-              "description": "URL to redirect to after verifying signed-in stub details."
-            }
+              "type": "string"
+            },
+            "description": "Return URL."
           }
         ],
         "responses": {
           "404": {
-            "description": "Not found if the environment is PRD."
+            "description": "Not Found if in a production environment."
           },
           "200": {
-            "description": "HTML view showing sign-in state for stubbed authentication.",
+            "description": "Returns Stub Signed-in View.",
             "content": {
-              "text/html": {}
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccountStubViewModel"
+                }
+              }
             }
           }
         }
@@ -166,26 +178,30 @@
         "properties": {
           "MobilePhone": {
             "type": "integer",
-            "description": "Stub user's mobile phone number."
+            "description": "User's mobile phone number."
           },
           "ReturnUrl": {
             "type": "string",
-            "description": "The URL to which the user should be redirected after submitting the form."
+            "description": "Return URL after authentication."
           }
-        },
-        "required": [
-          "MobilePhone"
-        ]
-      }
-    },
-    "securitySchemes": {
-      "PolicyNames_IsFaaUser": {
-        "type": "http",
-        "scheme": "bearer"
+        }
       },
-      "PolicyNames_IsAuthenticated": {
-        "type": "http",
-        "scheme": "bearer"
+      "AccountStubViewModel": {
+        "type": "object",
+        "properties": {
+          "Email": {
+            "type": "string",
+            "description": "User email address."
+          },
+          "Id": {
+            "type": "string",
+            "description": "User identifier."
+          },
+          "ReturnUrl": {
+            "type": "string",
+            "description": "Return URL after authentication."
+          }
+        }
       }
     }
   }

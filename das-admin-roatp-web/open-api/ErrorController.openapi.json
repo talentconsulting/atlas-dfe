@@ -2,60 +2,41 @@
   "openapi": "3.1.0",
   "info": {
     "title": "ErrorController API",
+    "description": "API for handling error presentation in the application.",
     "version": "1.0.0"
   },
   "paths": {
     "/Error/{status}": {
       "get": {
-        "operationId": "getErrorStatus",
+        "summary": "Handle status-specific error pages",
         "parameters": [
           {
             "name": "status",
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer",
-              "description": "HTTP status code indicating the type of error."
-            }
+              "type": "integer"
+            },
+            "description": "HTTP status code determining the error page (e.g., 403 or 404)."
           },
           {
             "name": "returnUrl",
             "in": "query",
             "required": false,
             "schema": {
-              "type": "string",
-              "format": "uri",
-              "description": "Optional URL to return to after error handling."
-            }
+              "type": "string"
+            },
+            "description": "URL to return to after handling the error."
           }
         ],
         "responses": {
-          "403": {
-            "description": "Access Denied view returned.",
+          "200": {
+            "description": "Error page rendered based on status code.",
             "content": {
               "text/html": {
                 "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Page Not Found view returned.",
-            "content": {
-              "text/html": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "default": {
-            "description": "Service Error view returned for other status codes.",
-            "content": {
-              "text/html": {
-                "schema": {
-                  "type": "string"
+                  "type": "string",
+                  "description": "HTML response of the error page."
                 }
               }
             }
@@ -69,15 +50,12 @@
       "AccessDeniedViewModel": {
         "type": "object",
         "properties": {
-          "dfESignInServiceHelpUrl": {
+          "DfESignInServiceHelpUrl": {
             "type": "string",
-            "format": "uri",
-            "description": "URL for help with DfE Sign In service."
+            "description": "URL for accessing help related to sign-in service."
           }
         },
-        "required": [
-          "dfESignInServiceHelpUrl"
-        ]
+        "description": "View model used when access is denied."
       }
     }
   }

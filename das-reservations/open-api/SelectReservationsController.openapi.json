@@ -1,26 +1,23 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Select Reservations API",
-    "version": "1.0.0"
+    "title": "Reservations API",
+    "version": "1.0.0",
+    "description": "API for managing reservations related to cohorts, employers, and providers."
   },
   "paths": {
     "/{ukPrn}/reservations/{accountLegalEntityPublicHashedId}/select": {
       "get": {
-        "summary": "Select a reservation (provider route)",
-        "operationId": "GetProviderReservationSelection",
-        "security": [
-          {
-            "OAuth2": []
-          }
-        ],
+        "summary": "Get reservation selection view",
+        "operationId": "GetReservationSelectionProvider",
         "parameters": [
           {
             "name": "ukPrn",
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "format": "int32"
             }
           },
           {
@@ -34,28 +31,35 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful response returning the reservation selection view."
+            "description": "Successful operation"
+          },
+          "403": {
+            "description": "Access cohort policy required"
+          },
+          "404": {
+            "description": "Account legal entity not found"
           },
           "500": {
-            "description": "Server error."
+            "description": "Internal server error"
           }
-        }
-      },
-      "post": {
-        "summary": "Submit reservation selection (provider route)",
-        "operationId": "PostProviderReservationSelection",
+        },
         "security": [
           {
-            "OAuth2": []
+            "AccessCohortPolicy": []
           }
-        ],
+        ]
+      },
+      "post": {
+        "summary": "Submit reservation selection",
+        "operationId": "PostReservationSelectionProvider",
         "parameters": [
           {
             "name": "ukPrn",
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "format": "int32"
             }
           },
           {
@@ -79,26 +83,29 @@
         },
         "responses": {
           "200": {
-            "description": "Successfully submitted reservation."
+            "description": "Successful operation"
           },
-          "400": {
-            "description": "Validation error."
+          "403": {
+            "description": "Access cohort policy required"
+          },
+          "404": {
+            "description": "Account legal entity not found"
           },
           "500": {
-            "description": "Server error."
+            "description": "Internal server error"
           }
-        }
+        },
+        "security": [
+          {
+            "AccessCohortPolicy": []
+          }
+        ]
       }
     },
     "/accounts/{employerAccountId}/reservations/{accountLegalEntityPublicHashedId}/select": {
       "get": {
-        "summary": "Select a reservation (employer route)",
-        "operationId": "GetEmployerReservationSelection",
-        "security": [
-          {
-            "OAuth2": []
-          }
-        ],
+        "summary": "Get reservation selection view for employer",
+        "operationId": "GetReservationSelectionEmployer",
         "parameters": [
           {
             "name": "employerAccountId",
@@ -119,21 +126,27 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful response returning the reservation selection view."
+            "description": "Successful operation"
+          },
+          "403": {
+            "description": "Access cohort policy required"
+          },
+          "404": {
+            "description": "Account legal entity not found"
           },
           "500": {
-            "description": "Server error."
+            "description": "Internal server error"
           }
-        }
-      },
-      "post": {
-        "summary": "Submit reservation selection (employer route)",
-        "operationId": "PostEmployerReservationSelection",
+        },
         "security": [
           {
-            "OAuth2": []
+            "AccessCohortPolicy": []
           }
-        ],
+        ]
+      },
+      "post": {
+        "summary": "Submit reservation selection for employer",
+        "operationId": "PostReservationSelectionEmployer",
         "parameters": [
           {
             "name": "employerAccountId",
@@ -164,15 +177,23 @@
         },
         "responses": {
           "200": {
-            "description": "Successfully submitted reservation."
+            "description": "Successful operation"
           },
-          "400": {
-            "description": "Validation error."
+          "403": {
+            "description": "Access cohort policy required"
+          },
+          "404": {
+            "description": "Account legal entity not found"
           },
           "500": {
-            "description": "Server error."
+            "description": "Internal server error"
           }
-        }
+        },
+        "security": [
+          {
+            "AccessCohortPolicy": []
+          }
+        ]
       }
     }
   },
@@ -182,46 +203,57 @@
         "type": "object",
         "properties": {
           "CohortReference": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "TransferSenderId": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "EncodedPledgeApplicationId": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "JourneyData": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "SelectedReservationId": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "nullable": true
           },
           "AvailableReservations": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/AvailableReservationViewModel"
-            }
+            },
+            "nullable": true
           },
           "AccountId": {
             "type": "integer",
             "format": "int64"
           },
           "BackLink": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "ProviderId": {
-            "type": "integer"
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
           },
           "MoreReservationsAvailable": {
             "type": "boolean"
           },
           "ApprenticeshipSessionKey": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "nullable": true
           },
           "BeforeProviderSelected": {
-            "type": "boolean"
+            "type": "boolean",
+            "nullable": true
           }
         }
       },
@@ -239,9 +271,16 @@
             "type": "string"
           },
           "CreatedDateDescription": {
-            "type": "string"
+            "type": "string",
+            "format": "date-time"
           }
         }
+      }
+    },
+    "securitySchemes": {
+      "AccessCohortPolicy": {
+        "type": "http",
+        "scheme": "bearer"
       }
     }
   }

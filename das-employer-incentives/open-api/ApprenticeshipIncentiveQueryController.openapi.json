@@ -1,0 +1,73 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Employer Incentives API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/api/accounts/{accountId}/legalEntities/{accountLegalEntityId}/apprenticeshipIncentives": {
+      "get": {
+        "summary": "Get Apprenticeship Incentives for an AccountLegalEntity",
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "description": "The ID of the account"
+          },
+          {
+            "name": "accountLegalEntityId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "description": "The ID of the Account Legal Entity"
+          },
+          {
+            "name": "includeWithdrawn",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "Flag indicating whether to include withdrawn incentives"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of apprenticeship incentives",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GetApprenticeshipIncentiveSchema"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No apprenticeship incentives found"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "GetApprenticeshipIncentiveSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": true,
+        "description": "A minimal schema for apprenticeship incentives response"
+      }
+    }
+  }
+}

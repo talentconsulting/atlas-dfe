@@ -7,9 +7,8 @@
   "paths": {
     "/{ukprn}/fm36/{collectionYear}/{collectionPeriod}": {
       "post": {
-        "summary": "Gets the FM36 earnings for the provider",
-        "description": "Although this endpoint is a POST, it is used to retrieve data.",
-        "operationId": "GetFm36Earnings",
+        "summary": "Gets the fm36 earnings for the provider",
+        "description": "Retrieves earnings data for learning activities on the DAS funding platform (providers opted into the new earnings calculation). Paging options are available using query parameters.",
         "parameters": [
           {
             "name": "ukprn",
@@ -18,7 +17,8 @@
             "schema": {
               "type": "integer",
               "format": "int64"
-            }
+            },
+            "description": "Unique identifier for the provider"
           },
           {
             "name": "collectionYear",
@@ -26,8 +26,9 @@
             "required": true,
             "schema": {
               "type": "integer",
-              "format": "int32"
-            }
+              "format": "int16"
+            },
+            "description": "Year for the collection (e.g., fiscal year)"
           },
           {
             "name": "collectionPeriod",
@@ -35,8 +36,29 @@
             "required": true,
             "schema": {
               "type": "integer",
+              "format": "int8"
+            },
+            "description": "Period number in the collection year"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
               "format": "int32"
-            }
+            },
+            "description": "Optional page number for paginated results"
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "description": "Optional number of items per page"
           }
         ],
         "requestBody": {
@@ -49,13 +71,18 @@
                   "type": "string",
                   "format": "uuid"
                 }
-              }
+              },
+              "example": [
+                "123e4567-e89b-12d3-a456-426614174000",
+                "987e6543-e21b-34d5-a654-123456789abc"
+              ]
             }
-          }
+          },
+          "description": "List of learning keys (UUIDs) for which earnings data is retrieved"
         },
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "Successful response containing fm36 earnings data",
             "content": {
               "application/json": {
                 "schema": {
@@ -72,7 +99,54 @@
     "schemas": {
       "GetFm36DataResponse": {
         "type": "object",
-        "additionalProperties": true
+        "description": "Response object containing fm36 earnings data",
+        "properties": {
+          "earnings": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "description": "Earnings entry",
+              "properties": {
+                "amount": {
+                  "type": "number",
+                  "format": "decimal",
+                  "description": "Earning amount"
+                },
+                "learningKey": {
+                  "type": "string",
+                  "format": "uuid",
+                  "description": "UUID of the learning activity"
+                }
+              }
+            }
+          },
+          "paging": {
+            "type": "object",
+            "description": "Paging information for the response",
+            "properties": {
+              "page": {
+                "type": "integer",
+                "format": "int32",
+                "description": "Current page number"
+              },
+              "pageSize": {
+                "type": "integer",
+                "format": "int32",
+                "description": "Number of items per page"
+              },
+              "totalPages": {
+                "type": "integer",
+                "format": "int32",
+                "description": "Total number of pages"
+              },
+              "totalItems": {
+                "type": "integer",
+                "format": "int64",
+                "description": "Total number of items"
+              }
+            }
+          }
+        }
       }
     }
   }

@@ -1,0 +1,77 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Alerts API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/{employerAccountId}/dismiss-alert": {
+      "post": {
+        "operationId": "DismissAlert",
+        "summary": "Dismiss an alert",
+        "parameters": [
+          {
+            "name": "employerAccountId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AlertDismissalEditModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "302": {
+            "description": "Redirects to the provided URL or to the dashboard based on the request."
+          },
+          "400": {
+            "description": "Bad request if the alert type is invalid or missing."
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AlertDismissalEditModel": {
+        "type": "object",
+        "properties": {
+          "Ukprn": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "AlertType": {
+            "type": "string",
+            "enum": [
+              "TransferredVacanciesBlockedProvider",
+              "TransferredVacanciesEmployerRevokedPermission",
+              "ClosedVacanciesBlockedProvider",
+              "ClosedVacanciesWithdrawnByQa"
+            ]
+          },
+          "ReturnUrl": {
+            "type": "string",
+            "format": "uri"
+          },
+          "EmployerAccountId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "Ukprn",
+          "AlertType",
+          "EmployerAccountId"
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Employer Incentives API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/earningsRecalculations": {
+      "post": {
+        "summary": "Recalculate Earnings",
+        "description": "Triggers earnings recalculations for specified incentive learner identifiers.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RecalculateEarningsRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "RecalculateEarningsRequest": {
+        "type": "object",
+        "properties": {
+          "IncentiveLearnerIdentifiers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IncentiveLearnerIdentifier"
+            }
+          }
+        },
+        "required": [
+          "IncentiveLearnerIdentifiers"
+        ]
+      },
+      "IncentiveLearnerIdentifier": {
+        "type": "object",
+        "properties": {
+          "AccountLegalEntityId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "ULN": {
+            "type": "integer",
+            "format": "int64"
+          }
+        },
+        "required": [
+          "AccountLegalEntityId",
+          "ULN"
+        ]
+      }
+    }
+  }
+}

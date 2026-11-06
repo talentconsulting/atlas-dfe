@@ -1,14 +1,16 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "AdminAssessmentSeriesDates API",
+    "title": "Admin Assessment Series Dates API",
+    "description": "API for managing admin assessment series dates in the Results and Certification service.",
     "version": "1.0.0"
   },
   "paths": {
     "/admin/search-assessment-series-dates-clear": {
       "get": {
         "operationId": "SearchAssessmentSeriesDatesClear",
-        "summary": "Clears assessment series search criteria.",
+        "summary": "Clears the search criteria for assessment series dates.",
+        "parameters": [],
         "responses": {
           "302": {
             "description": "Redirects to the search assessment series dates route."
@@ -19,26 +21,21 @@
     "/admin/search-assessment-series-dates": {
       "get": {
         "operationId": "SearchAssessmentSeriesDates",
-        "summary": "Searches for assessment series dates with optional pagination.",
+        "summary": "Searches for assessment series dates based on cached criteria or loads default filters.",
         "parameters": [
           {
             "name": "pageNumber",
             "in": "query",
-            "description": "Page number for pagination.",
             "required": false,
             "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": null
-            }
+              "type": "integer"
+            },
+            "description": "The page number for paginated results."
           }
         ],
         "responses": {
           "200": {
-            "description": "Displays a list of assessment series dates.",
-            "content": {
-              "text/html": {}
-            }
+            "description": "Returns a view containing the list of assessment series dates."
           }
         }
       }
@@ -46,7 +43,7 @@
     "/admin/search-assessment-series-dates-apply-filters": {
       "post": {
         "operationId": "SearchAssessmentSeriesDatesApplyFilters",
-        "summary": "Applies filters to search assessment series dates.",
+        "summary": "Applies filters for searching assessment series dates.",
         "requestBody": {
           "required": true,
           "content": {
@@ -59,7 +56,10 @@
         },
         "responses": {
           "302": {
-            "description": "Redirects to the search assessment series dates route with filters applied."
+            "description": "Redirects to the search assessment series dates route with updated filters."
+          },
+          "404": {
+            "description": "No AdminAssessmentSeriesDatesViewModel cache data found."
           }
         }
       }
@@ -67,39 +67,45 @@
     "/admin/search-assessment-series-dates-clear-filters": {
       "post": {
         "operationId": "SearchAssessmentSeriesDatesClearFilters",
-        "summary": "Clears filters applied to assessment series dates search.",
+        "summary": "Clears applied filters for assessment series date search.",
         "responses": {
           "302": {
-            "description": "Redirects to the search assessment series dates route with filters cleared."
+            "description": "Redirects to the search assessment series dates route with cleared filters."
+          },
+          "404": {
+            "description": "No AdminAssessmentSeriesDatesViewModel cache data found."
           }
         }
       }
     },
     "/admin/assessment-series-date/{assessmentId}": {
       "get": {
-        "operationId": "AdminAssessmentSeriesDateDetails",
-        "summary": "Fetches details for a specific assessment series date.",
+        "operationId": "AdminAssessmentSeriesDate",
+        "summary": "Gets the details of a specific assessment series date.",
         "parameters": [
           {
             "name": "assessmentId",
             "in": "path",
-            "description": "The ID of the assessment series.",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
+              "type": "integer"
+            },
+            "description": "The unique identifier of the assessment series."
           }
         ],
         "responses": {
-          "302": {
-            "description": "Redirects to the problem with service route if no data is found."
-          },
           "200": {
-            "description": "Displays details for the specified assessment series date.",
+            "description": "Returns the details of the specified assessment series date.",
             "content": {
-              "text/html": {}
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminAssessmentSeriesDetailsViewModel"
+                }
+              }
             }
+          },
+          "302": {
+            "description": "Redirects to the problem with service route if data is not found."
           }
         }
       }
@@ -114,14 +120,17 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/FilterLookupData"
-            }
+            },
+            "description": "List of active filters applied to the search."
           },
           "AreFiltersApplied": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Indicates if filters are applied."
           },
           "PageNumber": {
             "type": "integer",
-            "format": "int32"
+            "nullable": true,
+            "description": "Page number for results."
           }
         }
       },
@@ -130,18 +139,27 @@
         "properties": {
           "Id": {
             "type": "integer",
-            "format": "int32"
+            "description": "The unique identifier of the filter."
           },
           "Name": {
-            "type": "string"
+            "type": "string",
+            "description": "The name of the filter."
           },
           "CoreCode": {
-            "type": "string"
+            "type": "string",
+            "nullable": true,
+            "description": "The core code associated with the filter."
           },
           "IsSelected": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Indicates whether the filter is selected."
           }
         }
+      },
+      "AdminAssessmentSeriesDetailsViewModel": {
+        "type": "object",
+        "description": "Details of an assessment series date.",
+        "additionalProperties": false
       }
     }
   }

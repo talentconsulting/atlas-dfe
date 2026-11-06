@@ -1,0 +1,84 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "SFA DAS Notifications API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/api/sms": {
+      "post": {
+        "summary": "Send SMS notification",
+        "description": "Send an SMS notification using the provided notification details.",
+        "operationId": "sendSmsNotification",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "Sms"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Sms"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Notification sent successfully."
+          },
+          "400": {
+            "description": "Validation failure. The request contains invalid data."
+          },
+          "401": {
+            "description": "Unauthorized. The user does not have enough permissions."
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Sms": {
+        "type": "object",
+        "properties": {
+          "SystemId": {
+            "type": "string",
+            "description": "The Id of the system that requested the message to be sent."
+          },
+          "TemplateId": {
+            "type": "string",
+            "description": "The Id of the message to send."
+          },
+          "RecipientsNumber": {
+            "type": "string",
+            "description": "The phone number to send the SMS to."
+          },
+          "Tokens": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "Keys + values of tokens to substitute in the template text."
+          }
+        },
+        "required": [
+          "TemplateId",
+          "RecipientsNumber",
+          "Tokens"
+        ]
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    }
+  }
+}

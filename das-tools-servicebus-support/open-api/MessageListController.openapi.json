@@ -1,0 +1,408 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Service Bus Support API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/MessageList": {
+      "get": {
+        "summary": "Retrieve and display the list of messages.",
+        "operationId": "MessageList_Index",
+        "parameters": [
+          {
+            "name": "returnOffset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 0
+            }
+          },
+          {
+            "name": "returnLimit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 10
+            }
+          },
+          {
+            "name": "returnSearch",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          },
+          {
+            "name": "returnSort",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          },
+          {
+            "name": "returnOrder",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          },
+          {
+            "name": "returnGetQuantity",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 250
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          }
+        }
+      }
+    },
+    "/MessageList/ReceiveMessagesFromQueue": {
+      "post": {
+        "summary": "Receive messages from a queue.",
+        "operationId": "MessageList_ReceiveMessages",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReceiveMessagesModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "302": {
+            "description": "Redirect to updated queue list."
+          }
+        }
+      }
+    },
+    "/MessageList/ReleaseSelectedMessages": {
+      "post": {
+        "summary": "Release selected messages from a queue.",
+        "operationId": "MessageList_ReleaseSelectedMessages",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReleaseSelectedMessages"
+              }
+            }
+          }
+        },
+        "responses": {
+          "302": {
+            "description": "Redirect to updated queue view."
+          }
+        }
+      }
+    },
+    "/MessageList/ReleaseAllMessages": {
+      "get": {
+        "summary": "Release all messages from a queue.",
+        "operationId": "MessageList_ReleaseAllMessages",
+        "parameters": [
+          {
+            "name": "queue",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "302": {
+            "description": "Redirect to the service bus view."
+          }
+        }
+      }
+    },
+    "/MessageList/ReplayMessages": {
+      "post": {
+        "summary": "Replay selected messages from a queue.",
+        "operationId": "MessageList_ReplayMessages",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReplayMessagesModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "302": {
+            "description": "Redirect to updated queue view after replaying messages."
+          }
+        }
+      }
+    },
+    "/MessageList/ReplayMessagesToDestination": {
+      "post": {
+        "summary": "Replay selected messages to a specific destination.",
+        "operationId": "MessageList_ReplayMessagesToDestination",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReplayMessagesToDestinationModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "302": {
+            "description": "Redirect to updated queue after replaying to destination."
+          }
+        }
+      }
+    },
+    "/MessageList/DeleteMessages": {
+      "post": {
+        "summary": "Delete selected messages from a queue.",
+        "operationId": "MessageList_DeleteMessages",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeleteMessagesModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "302": {
+            "description": "Redirect to updated queue view after deletion."
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "DeleteMessagesModel": {
+        "type": "object",
+        "properties": {
+          "Ids": {
+            "type": "string"
+          },
+          "ReturnOffset": {
+            "type": "integer"
+          },
+          "ReturnLimit": {
+            "type": "integer",
+            "default": 10
+          },
+          "ReturnSearch": {
+            "type": "string",
+            "nullable": true
+          },
+          "ReturnSort": {
+            "type": "string",
+            "nullable": true
+          },
+          "ReturnOrder": {
+            "type": "string",
+            "nullable": true
+          },
+          "ReturnGetQuantity": {
+            "type": "integer",
+            "default": 250
+          }
+        },
+        "required": [
+          "Ids"
+        ]
+      },
+      "ReceiveMessagesModel": {
+        "type": "object",
+        "properties": {
+          "QueueName": {
+            "type": "string"
+          },
+          "GetQuantity": {
+            "type": "integer"
+          },
+          "ReturnOffset": {
+            "type": "integer"
+          },
+          "ReturnLimit": {
+            "type": "integer",
+            "default": 10
+          },
+          "ReturnSearch": {
+            "type": "string",
+            "nullable": true
+          },
+          "ReturnSort": {
+            "type": "string",
+            "nullable": true
+          },
+          "ReturnOrder": {
+            "type": "string",
+            "nullable": true
+          },
+          "ReturnGetQuantity": {
+            "type": "integer",
+            "default": 250
+          }
+        },
+        "required": [
+          "QueueName",
+          "GetQuantity"
+        ]
+      },
+      "ReleaseSelectedMessages": {
+        "type": "object",
+        "properties": {
+          "Ids": {
+            "type": "string"
+          },
+          "QueueName": {
+            "type": "string"
+          },
+          "ReturnOffset": {
+            "type": "integer"
+          },
+          "ReturnLimit": {
+            "type": "integer",
+            "default": 10
+          },
+          "ReturnSearch": {
+            "type": "string",
+            "nullable": true
+          },
+          "ReturnSort": {
+            "type": "string",
+            "nullable": true
+          },
+          "ReturnOrder": {
+            "type": "string",
+            "nullable": true
+          },
+          "ReturnGetQuantity": {
+            "type": "integer",
+            "default": 250
+          }
+        },
+        "required": [
+          "Ids",
+          "QueueName"
+        ]
+      },
+      "ReplayMessagesModel": {
+        "type": "object",
+        "properties": {
+          "Ids": {
+            "type": "string"
+          },
+          "QueueName": {
+            "type": "string"
+          },
+          "ReturnOffset": {
+            "type": "integer"
+          },
+          "ReturnLimit": {
+            "type": "integer",
+            "default": 10
+          },
+          "ReturnSearch": {
+            "type": "string",
+            "nullable": true
+          },
+          "ReturnSort": {
+            "type": "string",
+            "nullable": true
+          },
+          "ReturnOrder": {
+            "type": "string",
+            "nullable": true
+          },
+          "ReturnGetQuantity": {
+            "type": "integer",
+            "default": 250
+          }
+        },
+        "required": [
+          "Ids",
+          "QueueName"
+        ]
+      },
+      "ReplayMessagesToDestinationModel": {
+        "type": "object",
+        "properties": {
+          "Ids": {
+            "type": "string"
+          },
+          "QueueName": {
+            "type": "string"
+          },
+          "DestinationName": {
+            "type": "string"
+          },
+          "DestinationKind": {
+            "type": "string"
+          },
+          "ConfirmationName": {
+            "type": "string",
+            "nullable": true
+          },
+          "Confirmed": {
+            "type": "boolean"
+          },
+          "ReturnOffset": {
+            "type": "integer"
+          },
+          "ReturnLimit": {
+            "type": "integer",
+            "default": 10
+          },
+          "ReturnSearch": {
+            "type": "string",
+            "nullable": true
+          },
+          "ReturnSort": {
+            "type": "string",
+            "nullable": true
+          },
+          "ReturnOrder": {
+            "type": "string",
+            "nullable": true
+          },
+          "ReturnGetQuantity": {
+            "type": "integer",
+            "default": 250
+          }
+        },
+        "required": [
+          "Ids",
+          "QueueName",
+          "DestinationName",
+          "DestinationKind",
+          "Confirmed"
+        ]
+      }
+    }
+  }
+}

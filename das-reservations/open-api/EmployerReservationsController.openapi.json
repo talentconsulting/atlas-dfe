@@ -1,13 +1,17 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "EmployerReservations API",
+    "title": "Employer Reservations API",
     "version": "1.0.0"
   },
   "paths": {
     "/accounts/{employerAccountId}/reservations/start": {
       "get": {
-        "operationId": "StartReservation",
+        "operationId": "GetEmployerStart",
+        "tags": [
+          "EmployerReservations"
+        ],
+        "summary": "Get the starting page for employer reservations",
         "parameters": [
           {
             "name": "employerAccountId",
@@ -20,17 +24,21 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful response"
+            "description": "Successful response rendering the employer start HTML page"
           },
           "500": {
-            "description": "Validation error or server error"
+            "description": "Internal Server Error"
           }
         }
       }
     },
     "/accounts/{employerAccountId}/reservations/select-legal-entity/{id}": {
       "get": {
-        "operationId": "SelectLegalEntity",
+        "operationId": "GetEmployerSelectLegalEntity",
+        "tags": [
+          "EmployerReservations"
+        ],
+        "summary": "Get the page for selecting a legal entity",
         "parameters": [
           {
             "name": "employerAccountId",
@@ -46,21 +54,26 @@
             "required": false,
             "schema": {
               "type": "string",
-              "format": "uuid"
+              "format": "uuid",
+              "nullable": true
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Successful response"
+            "description": "Successful response rendering the legal entity selection HTML page"
           },
           "500": {
-            "description": "Server error"
+            "description": "Internal Server Error"
           }
         }
       },
       "post": {
-        "operationId": "PostSelectLegalEntity",
+        "operationId": "PostEmployerSelectLegalEntity",
+        "tags": [
+          "EmployerReservations"
+        ],
+        "summary": "Submit the selected legal entity",
         "parameters": [
           {
             "name": "employerAccountId",
@@ -76,7 +89,8 @@
             "required": false,
             "schema": {
               "type": "string",
-              "format": "uuid"
+              "format": "uuid",
+              "nullable": true
             }
           }
         ],
@@ -92,17 +106,21 @@
         },
         "responses": {
           "200": {
-            "description": "Successful response"
+            "description": "Successful response processing the selected legal entity"
           },
           "500": {
-            "description": "Validation error or server error"
+            "description": "Internal Server Error"
           }
         }
       }
     },
     "/accounts/{employerAccountId}/reservations/{id}/select-course": {
       "get": {
-        "operationId": "SelectCourse",
+        "operationId": "GetEmployerSelectCourse",
+        "tags": [
+          "EmployerReservations"
+        ],
+        "summary": "Get the page for selecting a course for a reservation",
         "parameters": [
           {
             "name": "employerAccountId",
@@ -124,12 +142,16 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful response"
+            "description": "Successful response rendering the course selection HTML page"
           }
         }
       },
       "post": {
-        "operationId": "PostSelectCourse",
+        "operationId": "PostEmployerSelectCourse",
+        "tags": [
+          "EmployerReservations"
+        ],
+        "summary": "Submit the selected course for a reservation",
         "parameters": [
           {
             "name": "employerAccountId",
@@ -161,20 +183,24 @@
         },
         "responses": {
           "200": {
-            "description": "Successful response"
+            "description": "Successful response processing the selected course"
           },
           "400": {
             "description": "Validation error"
           },
           "500": {
-            "description": "Server error"
+            "description": "Internal Server Error"
           }
         }
       }
     },
     "/accounts/{employerAccountId}/reservations/{id}/course-guidance": {
       "get": {
-        "operationId": "CourseGuidance",
+        "operationId": "GetEmployerCourseGuidance",
+        "tags": [
+          "EmployerReservations"
+        ],
+        "summary": "Get the page for course guidance",
         "parameters": [
           {
             "name": "employerAccountId",
@@ -196,14 +222,18 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful response"
+            "description": "Successful response rendering the course guidance HTML page"
           }
         }
       }
     },
     "/accounts/{employerAccountId}/reservations/owner-sign-agreement": {
       "get": {
-        "operationId": "OwnerSignAgreement",
+        "operationId": "GetEmployerOwnerSignAgreement",
+        "tags": [
+          "EmployerReservations"
+        ],
+        "summary": "Get the page for employer owner to sign the agreement",
         "parameters": [
           {
             "name": "employerAccountId",
@@ -216,14 +246,18 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful response"
+            "description": "Successful response rendering the owner agreement HTML page"
           }
         }
       }
     },
     "/accounts/{employerAccountId}/reservations/transactor-sign-agreement": {
       "get": {
-        "operationId": "TransactorSignAgreement",
+        "operationId": "GetEmployerTransactorSignAgreement",
+        "tags": [
+          "EmployerReservations"
+        ],
+        "summary": "Get the page for employer transactor to sign the agreement",
         "parameters": [
           {
             "name": "employerAccountId",
@@ -236,10 +270,10 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful response"
+            "description": "Successful response rendering the transactor agreement HTML page"
           },
           "500": {
-            "description": "Server error"
+            "description": "Internal Server Error"
           }
         }
       }
@@ -265,7 +299,8 @@
             "type": "string"
           },
           "ApprenticeTrainingKnown": {
-            "type": "boolean"
+            "type": "boolean",
+            "nullable": true
           }
         },
         "required": [
@@ -277,7 +312,8 @@
         "properties": {
           "UkPrn": {
             "type": "integer",
-            "format": "uint32"
+            "format": "uint32",
+            "nullable": true
           },
           "EmployerAccountId": {
             "type": "string"
@@ -287,46 +323,59 @@
           },
           "Id": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "nullable": true
           },
           "AccountLegalEntityPublicHashedId": {
             "type": "string"
           },
           "FromReview": {
-            "type": "boolean"
+            "type": "boolean",
+            "nullable": true
           },
           "IsFromManage": {
-            "type": "boolean"
+            "type": "boolean",
+            "nullable": true
           },
           "IsFromSelect": {
-            "type": "boolean"
+            "type": "boolean",
+            "nullable": true
           },
           "PreviousPage": {
             "type": "string"
           },
           "CohortReference": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "ProviderId": {
             "type": "integer",
-            "format": "uint32"
+            "format": "uint32",
+            "nullable": true
           },
           "JourneyData": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "SearchTerm": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "SortField": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "ReverseSort": {
             "type": "boolean"
           },
           "UseLearnerData": {
-            "type": "boolean"
+            "type": "boolean",
+            "nullable": true
           }
-        }
+        },
+        "required": [
+          "EmployerAccountId"
+        ]
       }
     }
   }
