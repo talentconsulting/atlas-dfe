@@ -1,0 +1,172 @@
+{
+  "repository": "SkillsFundingAgency/das-funding-projection-api",
+  "ref": "23ab140b020c61b422c637389d5595209e8e1e36",
+  "path": "src",
+  "localServices": [
+    {
+      "name": "SQL Server",
+      "kind": "database",
+      "technology": "sqlserver",
+      "configurationKeys": [
+        "ConnectionStrings:SqlConnectionString"
+      ],
+      "evidence": [
+        {
+          "sourceFile": "src/FundingProjection.Data/Configuration/ApprenticeshipPaymentSummaryEntityConfiguration.cs",
+          "reason": "The code defines entity configurations for a database schema using Entity Framework Core, indicating the use of SQL Server."
+        },
+        {
+          "sourceFile": "src/FundingProjection.Data/Configuration/EmployerFundingProjectionEntityConfiguration.cs",
+          "reason": "The code defines entity configurations for a database schema using Entity Framework Core, indicating the use of SQL Server."
+        },
+        {
+          "sourceFile": "src/FundingProjection.Data/Configuration/ImportJobStateConfiguration.cs",
+          "reason": "The code defines entity configurations for a database schema using Entity Framework Core, indicating the use of SQL Server."
+        },
+        {
+          "sourceFile": "src/FundingProjection.Data/FundingProjectionDataContext.cs",
+          "reason": "Direct dependency of the FundingProjectionDataContext DbContext on ConnectionStrings.SqlConnectionString"
+        },
+        {
+          "sourceFile": "src/FundingProjection.Api/AppStart/AddServiceRegistrationExtension.cs",
+          "reason": "Use of UseSqlServer method with SqlConnectionString for EF Core configuration"
+        }
+      ]
+    },
+    {
+      "name": "Azure Service Bus",
+      "kind": "message-broker",
+      "technology": "servicebus",
+      "configurationKeys": [
+        "QueueConstants.ServiceBusConnection",
+        "QueueConstants.ServiceBusConnection:fullyQualifiedNamespace",
+        "ServiceBusConnection"
+      ],
+      "evidence": [
+        {
+          "sourceFile": "src/FundingProjection.Api/appsettings.json",
+          "reason": "A Service Bus connection string is defined in the appsettings.json file."
+        },
+        {
+          "sourceFile": "src/FundingProjection.Api/AppStart/AddServiceRegistrationExtension.cs",
+          "reason": "ServiceBusClient dependency using QueueConstants.ServiceBusConnection and fullyQualifiedNamespace"
+        },
+        {
+          "sourceFile": "src/FundingProjection.Domain/Services/EventService.cs",
+          "reason": "ServiceBusClient injected into EventService for messaging"
+        }
+      ]
+    },
+    {
+      "name": "Azurite",
+      "kind": "object-storage",
+      "technology": "azurite",
+      "configurationKeys": [
+        "ConfigurationStorageConnectionString"
+      ],
+      "evidence": [
+        {
+          "sourceFile": "src/FundingProjection.Api/appsettings.json",
+          "reason": "An Azure Storage connection string is defined, set to use a local emulator (Azurite)."
+        }
+      ]
+    }
+  ],
+  "configurationKeys": [
+    {
+      "key": "AllowedHosts",
+      "sourceFile": "src/FundingProjection.Api/appsettings.json",
+      "reason": "The allowed hosts configuration is defined in appsettings.json."
+    },
+    {
+      "key": "APPINSIGHTS_INSTRUMENTATIONKEY",
+      "sourceFile": "src/FundingProjection.Api/appsettings.json",
+      "reason": "Application Insights instrumentation key is defined in appsettings.json."
+    },
+    {
+      "key": "APPLICATIONINSIGHTS_CONNECTION_STRING",
+      "sourceFile": "src/FundingProjection.Api/appsettings.json",
+      "reason": "Application Insights connection string is defined in appsettings.json."
+    },
+    {
+      "key": "ConfigNames",
+      "sourceFile": "src/FundingProjection.Api/appsettings.json",
+      "reason": "Indicates a required configuration key defined in appsettings.json."
+    },
+    {
+      "key": "ConfigurationStorageConnectionString",
+      "sourceFile": "src/FundingProjection.Api/appsettings.json",
+      "reason": "The Azure Storage connection string for configuration storage is defined in appsettings.json."
+    },
+    {
+      "key": "ConnectionStrings:SqlConnectionString",
+      "sourceFile": "src/FundingProjection.Api/AppStart/AddServiceRegistrationExtension.cs",
+      "reason": "SQL Server connection string required for EF Core database configuration"
+    },
+    {
+      "key": "ConnectionStrings:SqlConnectionString",
+      "sourceFile": "src/FundingProjection.Data/FundingProjectionDataContext.cs",
+      "reason": "SQL Server configuration accessed for DbContext initialization"
+    },
+    {
+      "key": "Environment",
+      "sourceFile": "src/FundingProjection.Api/appsettings.json",
+      "reason": "Environment variable is defined in appsettings.json."
+    },
+    {
+      "key": "EnvironmentName",
+      "sourceFile": "src/FundingProjection.Api/appsettings.json",
+      "reason": "Environment name is defined in appsettings.json."
+    },
+    {
+      "key": "Logging:LogLevel:Default",
+      "sourceFile": "src/FundingProjection.Api/appsettings.Development.json",
+      "reason": "The logging configuration is defined in appsettings.Development.json for local development."
+    },
+    {
+      "key": "Logging:LogLevel:Default",
+      "sourceFile": "src/FundingProjection.Api/appsettings.json",
+      "reason": "The logging configuration is defined in appsettings.json."
+    },
+    {
+      "key": "Logging:LogLevel:Microsoft.AspNetCore",
+      "sourceFile": "src/FundingProjection.Api/appsettings.Development.json",
+      "reason": "The logging configuration is defined in appsettings.Development.json for local development."
+    },
+    {
+      "key": "Logging:LogLevel:Microsoft.AspNetCore",
+      "sourceFile": "src/FundingProjection.Api/appsettings.json",
+      "reason": "The logging configuration is defined in appsettings.json."
+    },
+    {
+      "key": "LoggingRedisConnectionString",
+      "sourceFile": "src/FundingProjection.Api/appsettings.json",
+      "reason": "The logging Redis configuration is defined in appsettings.json."
+    },
+    {
+      "key": "QueueConstants.ServiceBusConnection",
+      "sourceFile": "src/FundingProjection.Api/AppStart/AddServiceRegistrationExtension.cs",
+      "reason": "Service Bus connection string accessed in AddServiceBusRegistration"
+    },
+    {
+      "key": "QueueConstants.ServiceBusConnection:fullyQualifiedNamespace",
+      "sourceFile": "src/FundingProjection.Api/AppStart/AddServiceRegistrationExtension.cs",
+      "reason": "Alternative Service Bus namespace configuration for ServiceBusClient"
+    },
+    {
+      "key": "ResourceEnvironmentName",
+      "sourceFile": "src/FundingProjection.Api/appsettings.json",
+      "reason": "Resource environment name is defined in appsettings.json."
+    },
+    {
+      "key": "ServiceBusConnection",
+      "sourceFile": "src/FundingProjection.Api/appsettings.json",
+      "reason": "The Service Bus connection string is defined in appsettings.json."
+    },
+    {
+      "key": "Version",
+      "sourceFile": "src/FundingProjection.Api/appsettings.json",
+      "reason": "Version is defined in appsettings.json."
+    }
+  ]
+}
