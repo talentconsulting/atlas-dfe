@@ -5,13 +5,17 @@
   "systemName": "Funding Apprenticeship Earnings",
   "containers": [
     {
-      "id": "funding-apprenticeship-earnings",
+      "id": "funding-apprenticeship-earnings-api",
       "name": "Funding Apprenticeship Earnings",
       "type": "api",
       "evidence": [
         {
+          "sourceFile": "src/InnerApi/SFA.DAS.Funding.ApprenticeshipEarnings.InnerApi.csproj",
+          "reason": "ASP.NET Core Web SDK project file."
+        },
+        {
           "sourceFile": "src/InnerApi/Program.cs",
-          "reason": "ASP.NET Core WebApplication startup logic indicating an API container."
+          "reason": "ASP.NET Core application entry point."
         }
       ]
     },
@@ -22,26 +26,26 @@
       "evidence": [
         {
           "sourceFile": "src/MessageHandlers/Program.cs",
-          "reason": "Azure Function app entry point."
+          "reason": "HostBuilder and entry-point usage for a background job or message handler."
         },
         {
           "sourceFile": "src/MessageHandlers/SFA.DAS.Funding.ApprenticeshipEarnings.MessageHandlers.csproj",
-          "reason": "Azure Function app project file."
+          "reason": "SDK and configuration indicate a deployed Azure Functions project."
         }
       ]
     }
   ],
   "dependencies": [
     {
-      "sourceId": "funding-apprenticeship-earnings",
-      "name": "SQL Server",
+      "sourceId": "funding-apprenticeship-earnings-api",
+      "name": "SQL Database",
       "kind": "database",
       "classification": "internal",
       "direction": "outbound",
       "client": "ApprenticeshipEarningsDataContext",
-      "technology": "Entity Framework Core",
+      "technology": "SQL Server",
       "configurationKeys": [
-        "ApplicationSettings:DbConnectionString"
+        "DbConnectionString"
       ],
       "authentication": {
         "type": null,
@@ -50,35 +54,43 @@
       "operations": [],
       "resources": [
         {
-          "type": "connection-string",
-          "name": "ApplicationSettings:DbConnectionString",
+          "type": "database",
+          "name": "SQL Database",
           "direction": "outbound",
-          "sourceFile": "src/Infrastructure/ServiceCollectionExtensions.cs"
+          "sourceFile": "src/Infrastructure/HealthChecks/DbHealthCheck.cs"
         }
       ],
       "evidence": [
         {
-          "sourceFile": "src/DataAccess/ApprenticeshipEarningsDataContext.cs",
-          "reason": "ApprenticeshipEarningsDataContext DbContext subclass."
+          "sourceFile": "src/Infrastructure/ServiceCollectionExtensions.cs",
+          "reason": "Adds Entity Framework DbContext with SQL Server connection string."
         },
         {
-          "sourceFile": "src/Infrastructure/ServiceCollectionExtensions.cs",
-          "reason": "Entity Framework DbContext registered with SQL Server provider and connection string."
+          "sourceFile": "src/DataAccess/ApprenticeshipEarningsDataContext.cs",
+          "reason": "Entity Framework DbContext defined for SQL Server database connections."
+        },
+        {
+          "sourceFile": "src/Infrastructure/HealthChecks/DbHealthCheck.cs",
+          "reason": "Health check using direct SQL connection with a SqlConnection."
         }
       ],
       "confidence": "high",
-      "targetId": "database-sql-server",
+      "targetId": "database-sql-database",
       "description": "Reads from and writes to"
     },
     {
       "sourceId": "funding-apprenticeship-earnings-jobs",
-      "name": "SQL Server",
+      "name": "SQL Database",
       "kind": "database",
       "classification": "internal",
       "direction": "outbound",
-      "client": null,
-      "technology": "Microsoft SQL Server",
-      "configurationKeys": [],
+      "client": "ApprenticeshipEarningsDataContext",
+      "technology": "SQL Server",
+      "configurationKeys": [
+        "ConfigNames",
+        "ConfigurationStorageConnectionString",
+        "EnvironmentName"
+      ],
       "authentication": {
         "type": null,
         "configurationKeys": []
@@ -89,44 +101,46 @@
           "type": "database",
           "name": null,
           "direction": "outbound",
-          "sourceFile": "src/Queries/GetFm36Data/GetFm36DataQueryHandler.cs"
-        },
-        {
-          "type": "database",
-          "name": null,
-          "direction": "outbound",
-          "sourceFile": "src/Queries/GetFm99ShortCourseEarnings/GetFm99ShortCourseEarningsQueryHandler.cs"
+          "sourceFile": "src/MessageHandlers/Startup.cs"
         }
       ],
       "evidence": [
         {
-          "sourceFile": "src/Queries/GetFm36Data/GetFm36DataQueryHandler.cs",
-          "reason": "ApprenticeshipEarningsDataContext used for querying apprenticeship data with SQL Server."
+          "sourceFile": "src/MessageHandlers/Startup.cs",
+          "reason": "AddAzureTableStorage configured for ApplicationSettings."
         },
         {
           "sourceFile": "src/Queries/GetFm99ShortCourseEarnings/GetFm99ShortCourseEarningsQueryHandler.cs",
-          "reason": "ApprenticeshipEarningsDataContext used for querying short course data."
+          "reason": "DbContext usage for Short Course data queries."
+        },
+        {
+          "sourceFile": "src/Queries/GetShortCourse/GetShortCourseQueryHandler.cs",
+          "reason": "DbContext usage for ShortCourseEntity operations."
+        },
+        {
+          "sourceFile": "src/Queries/GetFm36Data/GetFm36DataQueryHandler.cs",
+          "reason": "DbContext usage for interaction with SQL Server database."
         }
       ],
       "confidence": "high",
-      "targetId": "database-sql-server",
+      "targetId": "database-sql-database",
       "description": "Reads from and writes to"
     },
     {
-      "sourceId": "funding-apprenticeship-earnings",
+      "sourceId": "funding-apprenticeship-earnings-api",
       "name": "Courses API",
       "kind": "http-api",
       "classification": "internal",
       "direction": "outbound",
       "client": "ICoursesApiClient",
-      "technology": "HttpClient",
+      "technology": null,
       "configurationKeys": [
-        "ApplicationSettings:EarningOuterApiConfiguration:BaseUrl"
+        "EarningOuterApiConfiguration.BaseUrl"
       ],
       "authentication": {
-        "type": "API key",
+        "type": "subscription-key",
         "configurationKeys": [
-          "ApplicationSettings:EarningOuterApiConfiguration:Key"
+          "EarningOuterApiConfiguration.Key"
         ]
       },
       "operations": [],
@@ -134,7 +148,7 @@
       "evidence": [
         {
           "sourceFile": "src/Infrastructure/ServiceCollectionExtensions.cs",
-          "reason": "HttpClient registered for IEarningsOuterApiClient with API key and base URL configuration."
+          "reason": "HttpClient configured for outward calls to the Earnings Outer API."
         },
         {
           "sourceFile": "das-apim-endpoints/src/Earnings/SFA.DAS.Earnings/Application/Training/GetStandardQueryHandler.cs",
@@ -161,20 +175,20 @@
       }
     },
     {
-      "sourceId": "funding-apprenticeship-earnings",
+      "sourceId": "funding-apprenticeship-earnings-api",
       "name": "Collection Calendar API",
       "kind": "http-api",
       "classification": "internal",
       "direction": "outbound",
       "client": "ICollectionCalendarApiClient",
-      "technology": "HttpClient",
+      "technology": null,
       "configurationKeys": [
-        "ApplicationSettings:EarningOuterApiConfiguration:BaseUrl"
+        "EarningOuterApiConfiguration.BaseUrl"
       ],
       "authentication": {
-        "type": "API key",
+        "type": "subscription-key",
         "configurationKeys": [
-          "ApplicationSettings:EarningOuterApiConfiguration:Key"
+          "EarningOuterApiConfiguration.Key"
         ]
       },
       "operations": [],
@@ -182,7 +196,7 @@
       "evidence": [
         {
           "sourceFile": "src/Infrastructure/ServiceCollectionExtensions.cs",
-          "reason": "HttpClient registered for IEarningsOuterApiClient with API key and base URL configuration."
+          "reason": "HttpClient configured for outward calls to the Earnings Outer API."
         },
         {
           "sourceFile": "das-apim-endpoints/src/Earnings/SFA.DAS.Earnings.Api/AppStart/AddServiceRegistrationExtensions.cs",
@@ -204,20 +218,20 @@
       }
     },
     {
-      "sourceId": "funding-apprenticeship-earnings",
+      "sourceId": "funding-apprenticeship-earnings-api",
       "name": "Learning API",
       "kind": "http-api",
       "classification": "internal",
       "direction": "outbound",
       "client": "ILearningApiClient",
-      "technology": "HttpClient",
+      "technology": null,
       "configurationKeys": [
-        "ApplicationSettings:EarningOuterApiConfiguration:BaseUrl"
+        "EarningOuterApiConfiguration.BaseUrl"
       ],
       "authentication": {
-        "type": "API key",
+        "type": "subscription-key",
         "configurationKeys": [
-          "ApplicationSettings:EarningOuterApiConfiguration:Key"
+          "EarningOuterApiConfiguration.Key"
         ]
       },
       "operations": [],
@@ -225,7 +239,7 @@
       "evidence": [
         {
           "sourceFile": "src/Infrastructure/ServiceCollectionExtensions.cs",
-          "reason": "HttpClient registered for IEarningsOuterApiClient with API key and base URL configuration."
+          "reason": "HttpClient configured for outward calls to the Earnings Outer API."
         },
         {
           "sourceFile": "das-apim-endpoints/src/Earnings/SFA.DAS.Earnings.Api/AppStart/AddServiceRegistrationExtensions.cs",
@@ -256,7 +270,7 @@
       "client": "ICoursesApiClient",
       "technology": null,
       "configurationKeys": [
-        "EarningOuterApiConfiguration"
+        "ApplicationSettings.EarningOuterApiConfiguration"
       ],
       "authentication": {
         "type": null,
@@ -267,7 +281,7 @@
       "evidence": [
         {
           "sourceFile": "src/MessageHandlers/Startup.cs",
-          "reason": "Earnings Outer API registered as an HTTP client during service setup."
+          "reason": "AddEarningsOuterApiClient registered with configuration."
         },
         {
           "sourceFile": "das-apim-endpoints/src/Earnings/SFA.DAS.Earnings/Application/Training/GetStandardQueryHandler.cs",
@@ -302,7 +316,7 @@
       "client": "ICollectionCalendarApiClient",
       "technology": null,
       "configurationKeys": [
-        "EarningOuterApiConfiguration"
+        "ApplicationSettings.EarningOuterApiConfiguration"
       ],
       "authentication": {
         "type": null,
@@ -313,7 +327,7 @@
       "evidence": [
         {
           "sourceFile": "src/MessageHandlers/Startup.cs",
-          "reason": "Earnings Outer API registered as an HTTP client during service setup."
+          "reason": "AddEarningsOuterApiClient registered with configuration."
         },
         {
           "sourceFile": "das-apim-endpoints/src/Earnings/SFA.DAS.Earnings.Api/AppStart/AddServiceRegistrationExtensions.cs",
@@ -343,7 +357,7 @@
       "client": "ILearningApiClient",
       "technology": null,
       "configurationKeys": [
-        "EarningOuterApiConfiguration"
+        "ApplicationSettings.EarningOuterApiConfiguration"
       ],
       "authentication": {
         "type": null,
@@ -354,7 +368,7 @@
       "evidence": [
         {
           "sourceFile": "src/MessageHandlers/Startup.cs",
-          "reason": "Earnings Outer API registered as an HTTP client during service setup."
+          "reason": "AddEarningsOuterApiClient registered with configuration."
         },
         {
           "sourceFile": "das-apim-endpoints/src/Earnings/SFA.DAS.Earnings.Api/AppStart/AddServiceRegistrationExtensions.cs",
@@ -377,74 +391,43 @@
       }
     },
     {
-      "sourceId": "funding-apprenticeship-earnings",
-      "name": "Azure Service Bus",
-      "kind": "message-broker",
-      "classification": "third-party",
-      "direction": "outbound",
-      "client": "ServiceBusClient",
-      "technology": null,
-      "configurationKeys": [
-        "NServiceBusConnectionString"
-      ],
-      "authentication": {
-        "type": "DefaultAzureCredential",
-        "configurationKeys": []
-      },
-      "operations": [],
-      "resources": [
-        {
-          "type": "namespace",
-          "name": null,
-          "direction": "outbound",
-          "sourceFile": "src/Infrastructure/HealthChecks/ServiceBusReceiveHealthCheck.cs"
-        }
-      ],
-      "evidence": [
-        {
-          "sourceFile": "src/Infrastructure/ServiceCollectionExtensions.cs",
-          "reason": "NServiceBus endpoint configuration for sending messages via Azure Service Bus."
-        },
-        {
-          "sourceFile": "src/Infrastructure/HealthChecks/ServiceBusReceiveHealthCheck.cs",
-          "reason": "ServiceBusClient creation with connection string and DefaultAzureCredential."
-        }
-      ],
-      "confidence": "high",
-      "targetId": "message-broker-azure-service-bus",
-      "description": "Publishes messages to and consumes messages from"
-    },
-    {
       "sourceId": "funding-apprenticeship-earnings-jobs",
-      "name": "NServiceBus",
+      "name": "NServiceBus Service Bus",
       "kind": "message-broker",
       "classification": "third-party",
       "direction": "outbound",
       "client": null,
       "technology": "Azure Service Bus",
       "configurationKeys": [
-        "NServiceBusConnectionString"
+        "ApplicationSettings.NServiceBusConnectionString"
       ],
       "authentication": {
         "type": null,
         "configurationKeys": []
       },
       "operations": [],
-      "resources": [],
+      "resources": [
+        {
+          "type": "message-broker",
+          "name": null,
+          "direction": "outbound",
+          "sourceFile": "src/MessageHandlers/Startup.cs"
+        }
+      ],
       "evidence": [
         {
           "sourceFile": "src/MessageHandlers/Startup.cs",
-          "reason": "NServiceBus configured for sending and subscribing using the connection string."
+          "reason": "NServiceBus configuration registered for sending and subscribing."
         }
       ],
       "confidence": "high",
-      "targetId": "message-broker-nservicebus",
+      "targetId": "message-broker-nservicebus-service-bus",
       "description": "Publishes messages to and consumes messages from"
     }
   ],
   "resolution": {
     "overlay": "dfe-overlay/apim-routing.json",
-    "apimCommit": "7c83d23270959bfc4da9e92d355f95e1f2f4d257",
+    "apimCommit": "8f86379a3c31e6e3898d77e476475c8b323f0cb0",
     "precision": "area"
   }
 }

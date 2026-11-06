@@ -2,49 +2,49 @@
   "repository": "SkillsFundingAgency/das-tools-servicebus-support",
   "ref": "master",
   "path": "src",
-  "systemName": "Tools Servicebus Support",
+  "systemName": "SFA.DAS.Tools.Servicebus.Support",
   "containers": [
     {
-      "id": "tools-servicebus-support-functions",
-      "name": "Tools Servicebus Support Functions",
-      "type": "api",
+      "id": "sfa-das-tools-servicebus-support-functions",
+      "name": "SFA.DAS.Tools.Servicebus.Support Functions",
+      "type": "job",
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.Tools.Servicebus.Support.Functions/Program.cs",
-          "reason": "Azure Functions app setup in Program.cs"
+          "reason": "Azure Functions Worker application entry point"
         }
       ]
     },
     {
-      "id": "tools-servicebus-support-web",
-      "name": "Tools Servicebus Support Web",
-      "type": "web",
-      "evidence": [
-        {
-          "sourceFile": "src/SFA.DAS.Tools.Servicebus.Support.Web/Program.cs",
-          "reason": "ASP.NET Core Web application setup in Program.cs"
-        }
-      ]
-    },
-    {
-      "id": "tools-servicebus-support-web-2",
-      "name": "Tools Servicebus Support",
+      "id": "sfa-das-tools-servicebus-support-web",
+      "name": "SFA.DAS.Tools.Servicebus.Support",
       "type": "web",
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.Tools.Servicebus.Support.Web/SFA.DAS.Tools.Servicebus.Support.Web.csproj",
-          "reason": "Presence of web SDK project and references indicative of a web application."
+          "reason": "Contains a web project definition with SDK Microsoft.NET.Sdk.Web."
         },
         {
           "sourceFile": "src/SFA.DAS.Tools.Servicebus.Support.Web/Startup.cs",
-          "reason": "Startup file with web-specific middleware and routing configuration."
+          "reason": "Defines ASP.NET Core Startup class with service and middleware configuration."
+        }
+      ]
+    },
+    {
+      "id": "sfa-das-tools-servicebus-support-web-2",
+      "name": "SFA.DAS.Tools.Servicebus.Support Web",
+      "type": "web",
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Tools.Servicebus.Support.Web/Program.cs",
+          "reason": "ASP.NET Core web application entry point"
         }
       ]
     }
   ],
   "dependencies": [
     {
-      "sourceId": "tools-servicebus-support-web",
+      "sourceId": "sfa-das-tools-servicebus-support-web-2",
       "name": "Redis",
       "kind": "cache",
       "classification": "third-party",
@@ -55,15 +55,17 @@
         "RedisConnectionString"
       ],
       "authentication": {
-        "type": null,
-        "configurationKeys": []
+        "type": "key",
+        "configurationKeys": [
+          "RedisConnectionString"
+        ]
       },
       "operations": [],
       "resources": [],
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.Tools.Servicebus.Support.Web/App_Start/DistributedCacheConfigurationExtension.cs",
-          "reason": "ConnectionMultiplexer.Connect evident for Redis"
+          "reason": "ConnectionMultiplexer.Connect used for Redis cache"
         }
       ],
       "confidence": "high",
@@ -71,10 +73,10 @@
       "description": "Caches data in"
     },
     {
-      "sourceId": "tools-servicebus-support-web-2",
-      "name": "Redis",
+      "sourceId": "sfa-das-tools-servicebus-support-web",
+      "name": "Redis Distributed Cache",
       "kind": "cache",
-      "classification": "third-party",
+      "classification": "unknown",
       "direction": "outbound",
       "client": null,
       "technology": "Redis",
@@ -84,29 +86,32 @@
         "configurationKeys": []
       },
       "operations": [],
-      "resources": [],
+      "resources": [
+        {
+          "type": "cache",
+          "name": null,
+          "direction": "outbound",
+          "sourceFile": "src/SFA.DAS.Tools.Servicebus.Support.Web/Startup.cs"
+        }
+      ],
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.Tools.Servicebus.Support.Web/Startup.cs",
-          "reason": "Call to services.AddDistributedCache suggesting Redis as the backer."
-        },
-        {
-          "sourceFile": "src/SFA.DAS.Tools.Servicebus.Support.Web/SFA.DAS.Tools.Servicebus.Support.Web.csproj",
-          "reason": "Redis distributed cache registration evidenced by Microsoft.AspNetCore.DataProtection.StackExchangeRedis package."
+          "reason": "Calls AddDistributedCache with custom Redis configuration in Startup.cs."
         }
       ],
       "confidence": "high",
-      "targetId": "cache-redis",
+      "targetId": "cache-redis-distributed-cache",
       "description": "Caches data in"
     },
     {
-      "sourceId": "tools-servicebus-support-web-2",
+      "sourceId": "sfa-das-tools-servicebus-support-web",
       "name": "Application Insights",
       "kind": "cloud-service",
-      "classification": "third-party",
+      "classification": "unknown",
       "direction": "outbound",
       "client": null,
-      "technology": "Application Insights",
+      "technology": null,
       "configurationKeys": [
         "APPLICATIONINSIGHTS_CONNECTION_STRING"
       ],
@@ -115,11 +120,18 @@
         "configurationKeys": []
       },
       "operations": [],
-      "resources": [],
+      "resources": [
+        {
+          "type": "cloud-service",
+          "name": null,
+          "direction": "outbound",
+          "sourceFile": "src/SFA.DAS.Tools.Servicebus.Support.Web/Startup.cs"
+        }
+      ],
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.Tools.Servicebus.Support.Web/Startup.cs",
-          "reason": "Application Insights connection string evidenced in AddOpenTelemetryRegistration."
+          "reason": "Calls AddOpenTelemetryRegistration with Application Insights connection string."
         }
       ],
       "confidence": "high",
@@ -127,97 +139,151 @@
       "description": "Uses"
     },
     {
-      "sourceId": "tools-servicebus-support-web-2",
-      "name": "Azure Table Storage",
+      "sourceId": "sfa-das-tools-servicebus-support-functions",
+      "name": "Azure Active Directory",
       "kind": "cloud-service",
       "classification": "third-party",
+      "direction": "outbound",
+      "client": "AzureServiceTokenProvider",
+      "technology": "Azure Active Directory",
+      "configurationKeys": [],
+      "authentication": {
+        "type": "managed-identity",
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Tools.Servicebus.Support.Audit/SecureHttpClient.cs",
+          "reason": "AzureServiceTokenProvider used to acquire a managed identity token"
+        }
+      ],
+      "confidence": "high",
+      "targetId": "cloud-service-azure-active-directory",
+      "description": "Uses"
+    },
+    {
+      "sourceId": "sfa-das-tools-servicebus-support-web",
+      "name": "Azure Table Storage Configuration",
+      "kind": "cloud-service",
+      "classification": "unknown",
       "direction": "outbound",
       "client": null,
       "technology": "Azure Table Storage",
       "configurationKeys": [
-        "ConfigurationStorageConnectionString"
+        "ConfigNames",
+        "ConfigurationStorageConnectionString",
+        "EnvironmentName"
       ],
       "authentication": {
         "type": null,
         "configurationKeys": []
       },
       "operations": [],
-      "resources": [],
+      "resources": [
+        {
+          "type": "cloud-service",
+          "name": null,
+          "direction": "outbound",
+          "sourceFile": "src/SFA.DAS.Tools.Servicebus.Support.Web/Startup.cs"
+        }
+      ],
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.Tools.Servicebus.Support.Web/Startup.cs",
-          "reason": "Azure Table Storage configuration and client registration in the ConfigurationBuilder."
+          "reason": "Adds Azure Table Storage configuration provider in Startup.cs."
         }
       ],
       "confidence": "high",
-      "targetId": "cloud-service-azure-table-storage",
+      "targetId": "cloud-service-azure-table-storage-configuration",
       "description": "Uses"
     },
     {
-      "sourceId": "tools-servicebus-support-functions",
-      "name": "Cosmos",
+      "sourceId": "sfa-das-tools-servicebus-support-functions",
+      "name": "Cosmos DB",
       "kind": "database",
       "classification": "third-party",
       "direction": "outbound",
       "client": "CosmosClient",
-      "technology": "Azure CosmosDB",
+      "technology": "Azure Cosmos DB",
       "configurationKeys": [
-        "CosmosDbSettings"
+        "CosmosDbSettings.AuthKey",
+        "CosmosDbSettings.Url"
       ],
       "authentication": {
-        "type": null,
-        "configurationKeys": []
+        "type": "key",
+        "configurationKeys": [
+          "CosmosDbSettings.AuthKey"
+        ]
       },
       "operations": [],
-      "resources": [],
+      "resources": [
+        {
+          "type": "database",
+          "name": "CosmosDbSettings.DatabaseName",
+          "direction": "outbound",
+          "sourceFile": "src/SFA.DAS.Tools.Servicebus.Support.Functions/IoC.cs"
+        }
+      ],
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.Tools.Servicebus.Support.Functions/IoC.cs",
-          "reason": "CosmosClient used for outbound interactions in a service registration"
+          "reason": "CosmosClient registered in dependency injection"
         }
       ],
       "confidence": "high",
-      "targetId": "database-cosmos",
+      "targetId": "database-cosmos-db",
       "description": "Reads from and writes to"
     },
     {
-      "sourceId": "tools-servicebus-support-web",
-      "name": "Cosmos",
+      "sourceId": "sfa-das-tools-servicebus-support-web-2",
+      "name": "Cosmos DB",
       "kind": "database",
       "classification": "third-party",
       "direction": "outbound",
       "client": "CosmosClient",
-      "technology": "Azure CosmosDB",
+      "technology": "Azure Cosmos DB",
       "configurationKeys": [
-        "CosmosDbSettings"
+        "CosmosDbSettings.AuthKey",
+        "CosmosDbSettings.Url"
       ],
       "authentication": {
-        "type": null,
-        "configurationKeys": []
+        "type": "key",
+        "configurationKeys": [
+          "CosmosDbSettings.AuthKey"
+        ]
       },
       "operations": [],
-      "resources": [],
+      "resources": [
+        {
+          "type": "database",
+          "name": "CosmosDbSettings.DatabaseName",
+          "direction": "outbound",
+          "sourceFile": "src/SFA.DAS.Tools.Servicebus.Support.Web/App_Start/ConfigureServices.cs"
+        }
+      ],
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.Tools.Servicebus.Support.Web/App_Start/ConfigureServices.cs",
-          "reason": "CosmosClient used for outbound interactions in a service registration"
+          "reason": "CosmosClient registered in dependency injection"
         }
       ],
       "confidence": "high",
-      "targetId": "database-cosmos",
+      "targetId": "database-cosmos-db",
       "description": "Reads from and writes to"
     },
     {
-      "sourceId": "tools-servicebus-support-functions",
-      "name": "Audit",
+      "sourceId": "sfa-das-tools-servicebus-support-functions",
+      "name": "Unknown HTTP API",
       "kind": "http-api",
-      "classification": "internal",
+      "classification": "unknown",
       "direction": "outbound",
-      "client": "SecureHttpClient",
+      "client": null,
       "technology": null,
       "configurationKeys": [],
       "authentication": {
-        "type": "Bearer",
+        "type": "token",
         "configurationKeys": []
       },
       "operations": [
@@ -232,44 +298,17 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.Tools.Servicebus.Support.Audit/SecureHttpClient.cs",
-          "reason": "HttpClient evident for outbound HTTP API with authorization"
+          "reason": "HttpClient with Bearer token used to post data to an unspecified API"
         }
       ],
-      "confidence": "high",
-      "targetId": "http-api-audit",
+      "confidence": "medium",
+      "targetId": "http-api-unknown-http-api",
       "description": "Calls the API of"
-    },
-    {
-      "sourceId": "tools-servicebus-support-functions",
-      "name": "Service Bus",
-      "kind": "message-broker",
-      "classification": "third-party",
-      "direction": "outbound",
-      "client": "IAsbService",
-      "technology": "Azure Service Bus",
-      "configurationKeys": [
-        "ServiceBusErrorManagementSettings"
-      ],
-      "authentication": {
-        "type": null,
-        "configurationKeys": []
-      },
-      "operations": [],
-      "resources": [],
-      "evidence": [
-        {
-          "sourceFile": "src/SFA.DAS.Tools.Servicebus.Support.Functions/IoC.cs",
-          "reason": "IAsbService is registered and used for Azure Service Bus"
-        }
-      ],
-      "confidence": "high",
-      "targetId": "message-broker-service-bus",
-      "description": "Publishes messages to and consumes messages from"
     }
   ],
   "resolution": {
     "overlay": "dfe-overlay/apim-routing.json",
-    "apimCommit": "7c83d23270959bfc4da9e92d355f95e1f2f4d257",
+    "apimCommit": "8f86379a3c31e6e3898d77e476475c8b323f0cb0",
     "precision": "area"
   }
 }

@@ -11,11 +11,11 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.DigitalCertificates.Api/Program.cs",
-          "reason": "ASP.NET Web API entry point evidenced by `CreateHostBuilder` and `UseStartup` calls."
+          "reason": "ASP.NET Core application entry point using CreateHostBuilder."
         },
         {
-          "sourceFile": "src/SFA.DAS.DigitalCertificates.Api/Startup.cs",
-          "reason": "ASP.NET Web API setup in Startup class."
+          "sourceFile": "src/SFA.DAS.DigitalCertificates.Api/SFA.DAS.DigitalCertificates.Api.csproj",
+          "reason": "Project file targeting Microsoft.NET.Sdk.Web, indicating a web API."
         }
       ]
     }
@@ -23,46 +23,46 @@
   "dependencies": [
     {
       "sourceId": "digital-certificates",
-      "name": "Azure Token Credentials",
+      "name": "Azure Key Vault Authentication",
       "kind": "cloud-service",
       "classification": "third-party",
       "direction": "outbound",
       "client": "ChainedTokenCredential",
-      "technology": "Azure.Identity",
+      "technology": "Azure Key Vault",
       "configurationKeys": [],
       "authentication": {
-        "type": null,
+        "type": "Azure Managed Identity",
         "configurationKeys": []
       },
       "operations": [],
       "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.DigitalCertificates.Api/AppStart/AddDatabaseRegistrations.cs",
-          "reason": "Azure Credentials constructed for ChainedTokenCredential registration."
+          "sourceFile": "src/SFA.DAS.DigitalCertificates.Data/DigitalCertificatesDataContext.cs",
+          "reason": "Authentication for SQL Server database is done using Azure Managed Identity with ChainedTokenCredential."
         },
         {
-          "sourceFile": "src/SFA.DAS.DigitalCertificates.Data/DigitalCertificatesDataContext.cs",
-          "reason": "Azure Credentials used for database authentication."
+          "sourceFile": "src/SFA.DAS.DigitalCertificates.Api/AppStart/AddDatabaseRegistrations.cs",
+          "reason": "ChainedTokenCredential registration with support for Azure Key Vault authentication."
         }
       ],
       "confidence": "high",
-      "targetId": "cloud-service-azure-token-credentials",
+      "targetId": "cloud-service-azure-key-vault-authentication",
       "description": "Uses"
     },
     {
       "sourceId": "digital-certificates",
-      "name": "Application Database",
+      "name": "Digital Certificates Database",
       "kind": "database",
       "classification": "internal",
       "direction": "outbound",
-      "client": "SqlConnection",
-      "technology": "Microsoft.EntityFrameworkCore.SqlServer",
+      "client": "DbContext",
+      "technology": "SQL Server",
       "configurationKeys": [
         "ApplicationSettings:DbConnectionString"
       ],
       "authentication": {
-        "type": "managed",
+        "type": "Azure Managed Identity",
         "configurationKeys": []
       },
       "operations": [],
@@ -77,21 +77,21 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.DigitalCertificates.Api/AppStart/AddDatabaseRegistrations.cs",
-          "reason": "Database connection registered using `AddDbContext` with SQL Server."
+          "reason": "AddDbContext for DigitalCertificatesDataContext using SQL Server, configured via AppSettings:DbConnectionString."
         },
         {
           "sourceFile": "src/SFA.DAS.DigitalCertificates.Data/DigitalCertificatesDataContext.cs",
-          "reason": "Entity Framework DbContext subclass for SQL Server with connection configuration from application settings."
+          "reason": "DbContext class implementing database operations, with SQL Server configuration."
         }
       ],
       "confidence": "high",
-      "targetId": "database-application-database",
+      "targetId": "database-digital-certificates-database",
       "description": "Reads from and writes to"
     }
   ],
   "resolution": {
     "overlay": "dfe-overlay/apim-routing.json",
-    "apimCommit": "7c83d23270959bfc4da9e92d355f95e1f2f4d257",
+    "apimCommit": "8f86379a3c31e6e3898d77e476475c8b323f0cb0",
     "precision": "area"
   }
 }

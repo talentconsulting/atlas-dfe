@@ -5,127 +5,93 @@
   "systemName": "Employment Check",
   "containers": [
     {
-      "id": "employment-check",
-      "name": "Employment Check",
-      "type": "job",
-      "evidence": [
-        {
-          "sourceFile": "src/SFA.DAS.EmploymentCheck.Functions/SFA.DAS.EmploymentCheck.Functions.csproj",
-          "reason": "Azure Functions v4 target framework indicates a deployed job."
-        },
-        {
-          "sourceFile": "src/SFA.DAS.EmploymentCheck.Functions/StartUp.cs",
-          "reason": "WebJobsStartup attribute indicates an Azure Functions entry point."
-        }
-      ]
-    },
-    {
-      "id": "employment-check-2",
+      "id": "employment-check-api",
       "name": "Employment Check",
       "type": "api",
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.EmploymentCheck.Api/Program.cs",
-          "reason": "ASP.NET Core web application entry point."
+          "reason": "ASP.NET Core Web application entry point."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.EmploymentCheck.Api/SFA.DAS.EmploymentCheck.Api.csproj",
+          "reason": "Project file specifies 'Microsoft.NET.Sdk.Web' indicating an ASP.NET Core Web application."
         }
       ]
     },
     {
-      "id": "employment-check-data-seeder",
-      "name": "Employment Check Data Seeder",
+      "id": "employmentcheck-data-seeder",
+      "name": "EmploymentCheck Data Seeder",
       "type": "job",
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.EmploymentCheck.DataSeeder/Program.cs",
-          "reason": "Contains the entry point for a data seeder job."
+          "reason": "Main method serves as entry point for the data seeder job."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.EmploymentCheck.DataSeeder/SFA.DAS.EmploymentCheck.DataSeeder.csproj",
+          "reason": "Project file indicates executable job targeting .NET."
+        }
+      ]
+    },
+    {
+      "id": "employmentcheck-jobs",
+      "name": "EmploymentCheck Jobs",
+      "type": "job",
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.EmploymentCheck.Functions/SFA.DAS.EmploymentCheck.Functions.csproj",
+          "reason": "Azure Functions project using the `Microsoft.NET.Sdk.Functions` SDK."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.EmploymentCheck.Functions/StartUp.cs",
+          "reason": "Startup class for Azure Functions."
         }
       ]
     }
   ],
   "dependencies": [
     {
-      "sourceId": "employment-check-data-seeder",
-      "name": "Employment Check Database",
-      "kind": "database",
-      "classification": "internal",
+      "sourceId": "employmentcheck-jobs",
+      "name": "Azure Table Storage",
+      "kind": "cloud-service",
+      "classification": "unknown",
       "direction": "outbound",
-      "client": "Microsoft.Data.SqlClient.SqlConnection",
-      "technology": "SQL Server",
+      "client": null,
+      "technology": null,
       "configurationKeys": [
-        "DbConnectionString"
+        "ConfigNames",
+        "ConfigurationStorageConnectionString"
       ],
       "authentication": {
-        "type": "Azure Active Directory",
+        "type": null,
         "configurationKeys": []
       },
       "operations": [],
-      "resources": [
-        {
-          "type": "database",
-          "name": "Employment Check Database",
-          "direction": "outbound",
-          "sourceFile": "src/SFA.DAS.EmploymentCheck.Data/DbConnection.cs"
-        }
-      ],
+      "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.EmploymentCheck.Data/DbConnection.cs",
-          "reason": "Construction of SqlConnection for the Employment Check Database with Azure AD authentication."
-        },
-        {
-          "sourceFile": "src/SFA.DAS.EmploymentCheck.DataSeeder/DataAccess.cs",
-          "reason": "Uses a SQL connection for accessing Employment Check Database objects and tables."
+          "sourceFile": "src/SFA.DAS.EmploymentCheck.Functions/StartUp.cs",
+          "reason": "Azure Table Storage configuration for retrieving application settings."
         }
       ],
-      "confidence": "high",
-      "targetId": "database-employment-check-database",
-      "description": "Reads from and writes to"
+      "confidence": "medium",
+      "targetId": "cloud-service-azure-table-storage",
+      "description": "Uses"
     },
     {
-      "sourceId": "employment-check",
+      "sourceId": "employment-check-api",
       "name": "Employment Check Database",
       "kind": "database",
       "classification": "internal",
       "direction": "outbound",
       "client": "SqlConnection",
-      "technology": "SQL Server",
-      "configurationKeys": [],
-      "authentication": {
-        "type": "connection-string",
-        "configurationKeys": []
-      },
-      "operations": [],
-      "resources": [
-        {
-          "type": "database",
-          "name": "(localdb)\\MSSQLLocalDB",
-          "direction": "outbound",
-          "sourceFile": "src/SFA.DAS.EmploymentCheck.Tests.Database/SqlDatabase.cs"
-        }
-      ],
-      "evidence": [
-        {
-          "sourceFile": "src/SFA.DAS.EmploymentCheck.Tests.Database/SqlDatabase.cs",
-          "reason": "SqlConnection connected to (localdb)\\MSSQLLocalDB database."
-        }
-      ],
-      "confidence": "high",
-      "targetId": "database-employment-check-database",
-      "description": "Reads from and writes to"
-    },
-    {
-      "sourceId": "employment-check-2",
-      "name": "Employment Check Database",
-      "kind": "database",
-      "classification": "internal",
-      "direction": "outbound",
-      "client": "SqlConnection",
-      "technology": "Azure SQL Database",
+      "technology": "Microsoft SQL Server",
       "configurationKeys": [
-        "EmploymentCheckSettings:DbConnectionString"
+        "EmploymentCheckSettings.DbConnectionString"
       ],
       "authentication": {
-        "type": "OAuth2",
+        "type": "OAuth",
         "configurationKeys": [
           "AzureServiceTokenProvider",
           "DefaultAzureCredential"
@@ -134,20 +100,20 @@
       "operations": [],
       "resources": [
         {
-          "type": "SQL Table",
-          "name": "[Business].[EmploymentCheck]",
+          "type": "database",
+          "name": "Employment Check",
           "direction": "outbound",
-          "sourceFile": "src/SFA.DAS.EmploymentCheck.Api/Repositories/EmploymentCheckRepository.cs"
+          "sourceFile": "src/SFA.DAS.EmploymentCheck.Api/Application/Helpers/DbConnection.cs"
         }
       ],
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.EmploymentCheck.Api/Application/Helpers/DbConnection.cs",
-          "reason": "Supports EmploymentCheckRepository with database connection logic, including OAuth2 authentication."
+          "reason": "Database connection created with SqlConnection through Azure credentials."
         },
         {
           "sourceFile": "src/SFA.DAS.EmploymentCheck.Api/Repositories/EmploymentCheckRepository.cs",
-          "reason": "Uses DbConnection.CreateSqlConnection to create SqlConnection."
+          "reason": "Repository uses SQL connections for database transactions."
         }
       ],
       "confidence": "high",
@@ -155,138 +121,85 @@
       "description": "Reads from and writes to"
     },
     {
-      "sourceId": "employment-check",
-      "name": "Data Collections",
-      "kind": "http-api",
+      "sourceId": "employmentcheck-data-seeder",
+      "name": "Employment Check Database",
+      "kind": "database",
       "classification": "internal",
       "direction": "outbound",
-      "client": "DataCollectionsApiClient",
-      "technology": "HttpClient",
+      "client": null,
+      "technology": "Microsoft SQL",
       "configurationKeys": [
-        "DcApiSettings"
+        "DbConnectionString"
       ],
+      "authentication": {
+        "type": "Azure Managed Identity",
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [
+        {
+          "type": "database",
+          "name": "Employment Check Database",
+          "direction": "outbound",
+          "sourceFile": "src/SFA.DAS.EmploymentCheck.DataSeeder/DataAccess.cs"
+        }
+      ],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.EmploymentCheck.DataSeeder/DataAccess.cs",
+          "reason": "SqlConnection created via Azure Managed Identity for Microsoft SQL operations."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "database-employment-check-database",
+      "description": "Reads from and writes to"
+    },
+    {
+      "sourceId": "employmentcheck-jobs",
+      "name": "Employment Check Database",
+      "kind": "database",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": null,
+      "technology": "SQL Server",
+      "configurationKeys": [],
       "authentication": {
         "type": null,
         "configurationKeys": []
       },
       "operations": [],
-      "resources": [],
-      "evidence": [
+      "resources": [
         {
-          "sourceFile": "src/SFA.DAS.EmploymentCheck.Functions/StartUp.cs",
-          "reason": "DataCollectionsApiClient configuration in DcApiSettings."
-        },
+          "type": "database",
+          "name": null,
+          "direction": "outbound",
+          "sourceFile": "src/SFA.DAS.EmploymentCheck.Functions/ServiceCollectionExtensions.cs"
+        }
+      ],
+      "evidence": [
         {
           "sourceFile": "src/SFA.DAS.EmploymentCheck.Functions/ServiceCollectionExtensions.cs",
-          "reason": "DataCollectionsApiClient registered with configuration."
-        }
-      ],
-      "confidence": "high",
-      "targetId": "http-api-data-collections",
-      "description": "Calls the API of"
-    },
-    {
-      "sourceId": "employment-check-2",
-      "name": "Data Collections",
-      "kind": "http-api",
-      "classification": "internal",
-      "direction": "outbound",
-      "client": "DataCollectionsApiClient",
-      "technology": "HTTP",
-      "configurationKeys": [
-        "DataCollectionsApiConfiguration"
-      ],
-      "authentication": {
-        "type": "OAuth2",
-        "configurationKeys": [
-          "DataCollectionsApiConfiguration:ClientId",
-          "DataCollectionsApiConfiguration:ClientSecret",
-          "DataCollectionsApiConfiguration:IdentifierUri",
-          "DataCollectionsApiConfiguration:Tenant"
-        ]
-      },
-      "operations": [],
-      "resources": [],
-      "evidence": [
-        {
-          "sourceFile": "src/SFA.DAS.EmploymentCheck.Application/Services/Learner/DataCollectionsApiClient.cs",
-          "reason": "HttpClient and RetrieveAuthenticationToken method."
-        }
-      ],
-      "confidence": "high",
-      "targetId": "http-api-data-collections",
-      "description": "Calls the API of"
-    },
-    {
-      "sourceId": "employment-check",
-      "name": "Employer Account",
-      "kind": "http-api",
-      "classification": "internal",
-      "direction": "outbound",
-      "client": "EmployerAccountApiClient",
-      "technology": "HttpClient",
-      "configurationKeys": [
-        "AccountsInnerApi"
-      ],
-      "authentication": {
-        "type": null,
-        "configurationKeys": []
-      },
-      "operations": [],
-      "resources": [],
-      "evidence": [
-        {
-          "sourceFile": "src/SFA.DAS.EmploymentCheck.Functions/StartUp.cs",
-          "reason": "EmployerAccountApiClient configured with AccountsInnerApi."
+          "reason": "Employment check database repositories registered using Entity Framework."
         },
         {
-          "sourceFile": "src/SFA.DAS.EmploymentCheck.Functions/ServiceCollectionExtensions.cs",
-          "reason": "EmployerAccountApiClient registered with configuration."
+          "sourceFile": "src/SFA.DAS.EmploymentCheck.Tests.Database/SqlDatabase.cs",
+          "reason": "Unit testing setup to create and delete test SQL Server databases."
         }
       ],
       "confidence": "high",
-      "targetId": "http-api-employer-account",
-      "description": "Calls the API of"
+      "targetId": "database-employment-check-database",
+      "description": "Reads from and writes to"
     },
     {
-      "sourceId": "employment-check-2",
-      "name": "Employer Account",
-      "kind": "http-api",
-      "classification": "internal",
-      "direction": "outbound",
-      "client": "EmployerAccountApiClient",
-      "technology": "HTTP",
-      "configurationKeys": [
-        "EmployerAccountApiConfiguration"
-      ],
-      "authentication": {
-        "type": "OAuth2",
-        "configurationKeys": [
-          "EmployerAccountApiConfiguration:Identifier"
-        ]
-      },
-      "operations": [],
-      "resources": [],
-      "evidence": [
-        {
-          "sourceFile": "src/SFA.DAS.EmploymentCheck.Application/Services/EmployerAccount/EmployerAccountApiClient.cs",
-          "reason": "HttpClient and AddAuthenticationHeader method."
-        }
-      ],
-      "confidence": "high",
-      "targetId": "http-api-employer-account",
-      "description": "Calls the API of"
-    },
-    {
-      "sourceId": "employment-check",
-      "name": "HMRC ESFA Levy",
+      "sourceId": "employmentcheck-jobs",
+      "name": "Apprenticeship Levy",
       "kind": "http-api",
       "classification": "third-party",
       "direction": "outbound",
       "client": "ApprenticeshipLevyApiClient",
       "technology": "HttpClient",
       "configurationKeys": [
-        "HmrcApiSettings"
+        "HmrcApiSettings:BaseUrl"
       ],
       "authentication": {
         "type": null,
@@ -296,16 +209,101 @@
       "resources": [],
       "evidence": [
         {
+          "sourceFile": "src/SFA.DAS.EmploymentCheck.Functions/StartUp.cs",
+          "reason": "HMRC API configuration registration for Apprentice Levy API."
+        },
+        {
           "sourceFile": "src/SFA.DAS.EmploymentCheck.Functions/ServiceCollectionExtensions.cs",
-          "reason": "ApprenticeshipLevyApiClient constructed with HttpClient and configured with HmrcApiSettings."
+          "reason": "HttpClient constructed for interacting with HMRC Apprenticeship Levy API."
         }
       ],
       "confidence": "high",
-      "targetId": "http-api-hmrc-esfa-levy",
+      "targetId": "http-api-apprenticeship-levy",
       "description": "Calls the API of"
     },
     {
-      "sourceId": "employment-check",
+      "sourceId": "employment-check-api",
+      "name": "Data Collections API",
+      "kind": "http-api",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": "DataCollectionsApiClient",
+      "technology": "HTTP",
+      "configurationKeys": [
+        "DataCollectionsApiConfiguration.BaseUrl",
+        "DataCollectionsApiConfiguration.ClientId",
+        "DataCollectionsApiConfiguration.ClientSecret",
+        "DataCollectionsApiConfiguration.IdentifierUri",
+        "DataCollectionsApiConfiguration.Tenant"
+      ],
+      "authentication": {
+        "type": "OAuth",
+        "configurationKeys": [
+          "DcTokenService.GetTokenAsync"
+        ]
+      },
+      "operations": [
+        {
+          "method": "GET",
+          "methodName": "Get",
+          "path": null,
+          "sourceFile": "src/SFA.DAS.EmploymentCheck.Application/Services/Learner/DataCollectionsApiClient.cs"
+        }
+      ],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.EmploymentCheck.Application/Services/Learner/DataCollectionsApiClient.cs",
+          "reason": "HTTP client used for Data Collections API with OAuth authentication."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.EmploymentCheck.Application/Services/Learner/DcTokenService.cs",
+          "reason": "Token service provides authentication support for Data Collections API."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "http-api-data-collections-api",
+      "description": "Calls the API of"
+    },
+    {
+      "sourceId": "employment-check-api",
+      "name": "Employer Account",
+      "kind": "http-api",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": "EmployerAccountApiClient",
+      "technology": "HTTP",
+      "configurationKeys": [
+        "EmployerAccountApiConfiguration.BaseUrl",
+        "EmployerAccountApiConfiguration.Identifier"
+      ],
+      "authentication": {
+        "type": "OAuth",
+        "configurationKeys": [
+          "AzureClientCredentialHelper.GetAccessTokenAsync"
+        ]
+      },
+      "operations": [
+        {
+          "method": "GET",
+          "methodName": "Get",
+          "path": null,
+          "sourceFile": "src/SFA.DAS.EmploymentCheck.Application/Services/EmployerAccount/EmployerAccountApiClient.cs"
+        }
+      ],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.EmploymentCheck.Application/Services/EmployerAccount/EmployerAccountApiClient.cs",
+          "reason": "HTTP client used for Employer Account API with authentication."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "http-api-employer-account",
+      "description": "Calls the API of"
+    },
+    {
+      "sourceId": "employmentcheck-jobs",
       "name": "Token Service",
       "kind": "http-api",
       "classification": "internal",
@@ -313,7 +311,7 @@
       "client": "TokenServiceApiClient",
       "technology": "HttpClient",
       "configurationKeys": [
-        "TokenService"
+        "TokenService:BaseUrl"
       ],
       "authentication": {
         "type": null,
@@ -324,21 +322,46 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.EmploymentCheck.Functions/StartUp.cs",
-          "reason": "TokenServiceApiClient configured with TokenService and constructed."
+          "reason": "Token Service configuration registration in Startup."
         },
         {
           "sourceFile": "src/SFA.DAS.EmploymentCheck.Functions/ServiceCollectionExtensions.cs",
-          "reason": "TokenServiceApiClient constructed and configured."
+          "reason": "TokenServiceApiClient created for API communication with Token Service."
         }
       ],
       "confidence": "high",
       "targetId": "http-api-token-service",
       "description": "Calls the API of"
+    },
+    {
+      "sourceId": "employmentcheck-jobs",
+      "name": "Azure Service Bus",
+      "kind": "message-broker",
+      "classification": "unknown",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.EmploymentCheck.Functions/SFA.DAS.EmploymentCheck.Functions.csproj",
+          "reason": "Reference to `NServiceBus.Transport.AzureServiceBus`, indicating use of Azure Service Bus."
+        }
+      ],
+      "confidence": "medium",
+      "targetId": "message-broker-azure-service-bus",
+      "description": "Publishes messages to and consumes messages from"
     }
   ],
   "resolution": {
     "overlay": "dfe-overlay/apim-routing.json",
-    "apimCommit": "7c83d23270959bfc4da9e92d355f95e1f2f4d257",
+    "apimCommit": "8f86379a3c31e6e3898d77e476475c8b323f0cb0",
     "precision": "area"
   }
 }

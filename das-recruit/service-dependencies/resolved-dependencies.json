@@ -6,16 +6,16 @@
   "containers": [
     {
       "id": "recruit-employer-web",
-      "name": "Recruit",
+      "name": "Recruit Employer Web",
       "type": "web",
       "evidence": [
         {
           "sourceFile": "src/Employer/Employer.Web/Program.cs",
-          "reason": "ASP.NET Core application entry point with WebHost.CreateDefaultBuilder."
+          "reason": "ASP.NET Core Web application entry point with IWebHostBuilder."
         },
         {
           "sourceFile": "src/Employer/Employer.Web/Employer.Web.csproj",
-          "reason": "Project type detected as ASP.NET Core Web SDK."
+          "reason": "Project file for a web application."
         }
       ]
     },
@@ -26,26 +26,11 @@
       "evidence": [
         {
           "sourceFile": "src/Provider/Provider.Web/Program.cs",
-          "reason": "ASP.NET Core application entry point with WebHost.CreateDefaultBuilder."
+          "reason": "ASP.NET Core Web application entry point with IWebHostBuilder."
         },
         {
           "sourceFile": "src/Provider/Provider.Web/Provider.Web.csproj",
-          "reason": "Project type detected as ASP.NET Core Web SDK."
-        }
-      ]
-    },
-    {
-      "id": "recruit-vacancies-jobs",
-      "name": "Recruit Vacancies Jobs",
-      "type": "job",
-      "evidence": [
-        {
-          "sourceFile": "src/Jobs/Recruit.Vacancies.Jobs/Program.cs",
-          "reason": "Job-style entry point using HostBuilder and Azure WebJobs integration."
-        },
-        {
-          "sourceFile": "src/Jobs/Recruit.Vacancies.Jobs/Recruit.Vacancies.Jobs.csproj",
-          "reason": "Project configuration suggests a background job setup targeting console execution."
+          "reason": "Project file for a web application."
         }
       ]
     }
@@ -53,12 +38,12 @@
   "dependencies": [
     {
       "sourceId": "recruit-employer-web",
-      "name": "Redis",
+      "name": "Redis Cache",
       "kind": "cache",
       "classification": "third-party",
       "direction": "outbound",
       "client": null,
-      "technology": "StackExchange.Redis",
+      "technology": "Redis",
       "configurationKeys": [],
       "authentication": {
         "type": null,
@@ -68,17 +53,68 @@
       "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/Shared/Recruit.Shared.Web/Recruit.Shared.Web.csproj",
-          "reason": "Detected usage of package StackExchange.Redis."
-        },
+          "sourceFile": "src/Employer/Employer.Web/Employer.Web.csproj",
+          "reason": "StackExchange.Redis package reference detected."
+        }
+      ],
+      "confidence": "medium",
+      "targetId": "cache-redis-cache",
+      "description": "Caches data in"
+    },
+    {
+      "sourceId": "recruit-employer-web",
+      "name": "Azure Table Storage",
+      "kind": "cloud-service",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": "Azure Table Storage",
+      "configurationKeys": [
+        "SFA.DAS.Configuration.AzureTableStorage"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
         {
           "sourceFile": "src/Employer/Employer.Web/Employer.Web.csproj",
-          "reason": "Detected usage of the package Microsoft.AspNetCore.DataProtection.StackExchangeRedis."
+          "reason": "Azure Table Storage package reference detected."
+        }
+      ],
+      "confidence": "medium",
+      "targetId": "cloud-service-azure-table-storage",
+      "description": "Uses"
+    },
+    {
+      "sourceId": "recruit-employer-web",
+      "name": "Account Api",
+      "kind": "http-api",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "AccountApiClient",
+      "technology": "HttpClient",
+      "configurationKeys": [
+        "AccountApiConfiguration:BaseAddress"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/Shared/Recruit.Vacancies.Client/Ioc/ServiceCollectionExtensions.cs",
+          "reason": "AccountApiClient registered with specific configuration section."
         }
       ],
       "confidence": "high",
-      "targetId": "cache-redis",
-      "description": "Caches data in"
+      "targetId": "http-api-account-api",
+      "description": "Calls the API of",
+      "targetRepo": "das-employer-accounts"
     },
     {
       "sourceId": "recruit-employer-web",
@@ -89,22 +125,25 @@
       "client": "IRecruitApiClient",
       "technology": "HttpClient",
       "configurationKeys": [
-        "OuterApiConfiguration:BaseUrl"
+        "OuterApiConfiguration:BaseUrl",
+        "OuterApiConfiguration:Key"
       ],
       "authentication": {
-        "type": null,
-        "configurationKeys": []
+        "type": "apiKey",
+        "configurationKeys": [
+          "OuterApiConfiguration:Key"
+        ]
       },
       "operations": [],
       "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/Shared/Recruit.Vacancies.Client/Infrastructure/OuterApi/OuterApiClient.cs",
-          "reason": "HttpClient configured with base URL from OuterApiConfiguration."
+          "sourceFile": "src/Shared/Recruit.Vacancies.Client/Ioc/ServiceCollectionExtensions.cs",
+          "reason": "HttpClient and configuration for OuterApi registered in the service collection."
         },
         {
-          "sourceFile": "src/Shared/Recruit.Vacancies.Client/Ioc/ServiceCollectionExtensions.cs",
-          "reason": "OuterApiClient registered with HttpClientFactory."
+          "sourceFile": "src/Shared/Recruit.Vacancies.Client/Infrastructure/OuterApi/OuterApiClient.cs",
+          "reason": "HttpClient configured with unique base URL and an API key."
         },
         {
           "sourceFile": "das-apim-endpoints/src/Recruit/SFA.DAS.Recruit/Application/ApplicationReview/Command/PatchApplicationReview/PatchApplicationReviewCommandHandler.cs",
@@ -131,13 +170,13 @@
           {
             "method": "GET",
             "methodName": "Get",
-            "path": "{GetUrl}",
+            "path": "<route from IGetApiRequest.GetUrl>",
             "sourceFile": "src/Shared/Recruit.Vacancies.Client/Infrastructure/OuterApi/OuterApiClient.cs"
           },
           {
             "method": "POST",
             "methodName": "Post",
-            "path": "{PostUrl}",
+            "path": "<route from IPostApiRequest.PostUrl>",
             "sourceFile": "src/Shared/Recruit.Vacancies.Client/Infrastructure/OuterApi/OuterApiClient.cs"
           }
         ],
@@ -155,22 +194,25 @@
       "client": "ICandidateApiClient",
       "technology": "HttpClient",
       "configurationKeys": [
-        "OuterApiConfiguration:BaseUrl"
+        "OuterApiConfiguration:BaseUrl",
+        "OuterApiConfiguration:Key"
       ],
       "authentication": {
-        "type": null,
-        "configurationKeys": []
+        "type": "apiKey",
+        "configurationKeys": [
+          "OuterApiConfiguration:Key"
+        ]
       },
       "operations": [],
       "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/Shared/Recruit.Vacancies.Client/Infrastructure/OuterApi/OuterApiClient.cs",
-          "reason": "HttpClient configured with base URL from OuterApiConfiguration."
+          "sourceFile": "src/Shared/Recruit.Vacancies.Client/Ioc/ServiceCollectionExtensions.cs",
+          "reason": "HttpClient and configuration for OuterApi registered in the service collection."
         },
         {
-          "sourceFile": "src/Shared/Recruit.Vacancies.Client/Ioc/ServiceCollectionExtensions.cs",
-          "reason": "OuterApiClient registered with HttpClientFactory."
+          "sourceFile": "src/Shared/Recruit.Vacancies.Client/Infrastructure/OuterApi/OuterApiClient.cs",
+          "reason": "HttpClient configured with unique base URL and an API key."
         },
         {
           "sourceFile": "das-apim-endpoints/src/Recruit/SFA.DAS.Recruit/Application/ApplicationReview/Queries/GetApplicationReviewById/GetApplicationReviewByIdQueryHandler.cs",
@@ -197,13 +239,13 @@
           {
             "method": "GET",
             "methodName": "Get",
-            "path": "{GetUrl}",
+            "path": "<route from IGetApiRequest.GetUrl>",
             "sourceFile": "src/Shared/Recruit.Vacancies.Client/Infrastructure/OuterApi/OuterApiClient.cs"
           },
           {
             "method": "POST",
             "methodName": "Post",
-            "path": "{PostUrl}",
+            "path": "<route from IPostApiRequest.PostUrl>",
             "sourceFile": "src/Shared/Recruit.Vacancies.Client/Infrastructure/OuterApi/OuterApiClient.cs"
           }
         ],
@@ -221,22 +263,25 @@
       "client": "IAccountsApiClient",
       "technology": "HttpClient",
       "configurationKeys": [
-        "OuterApiConfiguration:BaseUrl"
+        "OuterApiConfiguration:BaseUrl",
+        "OuterApiConfiguration:Key"
       ],
       "authentication": {
-        "type": null,
-        "configurationKeys": []
+        "type": "apiKey",
+        "configurationKeys": [
+          "OuterApiConfiguration:Key"
+        ]
       },
       "operations": [],
       "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/Shared/Recruit.Vacancies.Client/Infrastructure/OuterApi/OuterApiClient.cs",
-          "reason": "HttpClient configured with base URL from OuterApiConfiguration."
+          "sourceFile": "src/Shared/Recruit.Vacancies.Client/Ioc/ServiceCollectionExtensions.cs",
+          "reason": "HttpClient and configuration for OuterApi registered in the service collection."
         },
         {
-          "sourceFile": "src/Shared/Recruit.Vacancies.Client/Ioc/ServiceCollectionExtensions.cs",
-          "reason": "OuterApiClient registered with HttpClientFactory."
+          "sourceFile": "src/Shared/Recruit.Vacancies.Client/Infrastructure/OuterApi/OuterApiClient.cs",
+          "reason": "HttpClient configured with unique base URL and an API key."
         },
         {
           "sourceFile": "das-apim-endpoints/src/Recruit/SFA.DAS.Recruit/Application/Queries/GetAccount/GetAccountQueryHandler.cs",
@@ -264,13 +309,13 @@
           {
             "method": "GET",
             "methodName": "Get",
-            "path": "{GetUrl}",
+            "path": "<route from IGetApiRequest.GetUrl>",
             "sourceFile": "src/Shared/Recruit.Vacancies.Client/Infrastructure/OuterApi/OuterApiClient.cs"
           },
           {
             "method": "POST",
             "methodName": "Post",
-            "path": "{PostUrl}",
+            "path": "<route from IPostApiRequest.PostUrl>",
             "sourceFile": "src/Shared/Recruit.Vacancies.Client/Infrastructure/OuterApi/OuterApiClient.cs"
           }
         ],
@@ -288,22 +333,25 @@
       "client": "IRoatpCourseManagementApiClient",
       "technology": "HttpClient",
       "configurationKeys": [
-        "OuterApiConfiguration:BaseUrl"
+        "OuterApiConfiguration:BaseUrl",
+        "OuterApiConfiguration:Key"
       ],
       "authentication": {
-        "type": null,
-        "configurationKeys": []
+        "type": "apiKey",
+        "configurationKeys": [
+          "OuterApiConfiguration:Key"
+        ]
       },
       "operations": [],
       "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/Shared/Recruit.Vacancies.Client/Infrastructure/OuterApi/OuterApiClient.cs",
-          "reason": "HttpClient configured with base URL from OuterApiConfiguration."
+          "sourceFile": "src/Shared/Recruit.Vacancies.Client/Ioc/ServiceCollectionExtensions.cs",
+          "reason": "HttpClient and configuration for OuterApi registered in the service collection."
         },
         {
-          "sourceFile": "src/Shared/Recruit.Vacancies.Client/Ioc/ServiceCollectionExtensions.cs",
-          "reason": "OuterApiClient registered with HttpClientFactory."
+          "sourceFile": "src/Shared/Recruit.Vacancies.Client/Infrastructure/OuterApi/OuterApiClient.cs",
+          "reason": "HttpClient configured with unique base URL and an API key."
         },
         {
           "sourceFile": "das-apim-endpoints/src/Recruit/SFA.DAS.Recruit/Application/Queries/GetProvider/GetProviderQueryHandler.cs",
@@ -330,13 +378,13 @@
           {
             "method": "GET",
             "methodName": "Get",
-            "path": "{GetUrl}",
+            "path": "<route from IGetApiRequest.GetUrl>",
             "sourceFile": "src/Shared/Recruit.Vacancies.Client/Infrastructure/OuterApi/OuterApiClient.cs"
           },
           {
             "method": "POST",
             "methodName": "Post",
-            "path": "{PostUrl}",
+            "path": "<route from IPostApiRequest.PostUrl>",
             "sourceFile": "src/Shared/Recruit.Vacancies.Client/Infrastructure/OuterApi/OuterApiClient.cs"
           }
         ],
@@ -354,22 +402,25 @@
       "client": "IBusinessMetricsApiClient",
       "technology": "HttpClient",
       "configurationKeys": [
-        "OuterApiConfiguration:BaseUrl"
+        "OuterApiConfiguration:BaseUrl",
+        "OuterApiConfiguration:Key"
       ],
       "authentication": {
-        "type": null,
-        "configurationKeys": []
+        "type": "apiKey",
+        "configurationKeys": [
+          "OuterApiConfiguration:Key"
+        ]
       },
       "operations": [],
       "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/Shared/Recruit.Vacancies.Client/Infrastructure/OuterApi/OuterApiClient.cs",
-          "reason": "HttpClient configured with base URL from OuterApiConfiguration."
+          "sourceFile": "src/Shared/Recruit.Vacancies.Client/Ioc/ServiceCollectionExtensions.cs",
+          "reason": "HttpClient and configuration for OuterApi registered in the service collection."
         },
         {
-          "sourceFile": "src/Shared/Recruit.Vacancies.Client/Ioc/ServiceCollectionExtensions.cs",
-          "reason": "OuterApiClient registered with HttpClientFactory."
+          "sourceFile": "src/Shared/Recruit.Vacancies.Client/Infrastructure/OuterApi/OuterApiClient.cs",
+          "reason": "HttpClient configured with unique base URL and an API key."
         },
         {
           "sourceFile": "das-apim-endpoints/src/Recruit/SFA.DAS.Recruit/Application/Queries/GetVacancyMetrics/GetVacancyMetricsQueryHandler.cs",
@@ -392,13 +443,13 @@
           {
             "method": "GET",
             "methodName": "Get",
-            "path": "{GetUrl}",
+            "path": "<route from IGetApiRequest.GetUrl>",
             "sourceFile": "src/Shared/Recruit.Vacancies.Client/Infrastructure/OuterApi/OuterApiClient.cs"
           },
           {
             "method": "POST",
             "methodName": "Post",
-            "path": "{PostUrl}",
+            "path": "<route from IPostApiRequest.PostUrl>",
             "sourceFile": "src/Shared/Recruit.Vacancies.Client/Infrastructure/OuterApi/OuterApiClient.cs"
           }
         ],
@@ -416,22 +467,25 @@
       "client": "ICoursesApiClient",
       "technology": "HttpClient",
       "configurationKeys": [
-        "OuterApiConfiguration:BaseUrl"
+        "OuterApiConfiguration:BaseUrl",
+        "OuterApiConfiguration:Key"
       ],
       "authentication": {
-        "type": null,
-        "configurationKeys": []
+        "type": "apiKey",
+        "configurationKeys": [
+          "OuterApiConfiguration:Key"
+        ]
       },
       "operations": [],
       "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/Shared/Recruit.Vacancies.Client/Infrastructure/OuterApi/OuterApiClient.cs",
-          "reason": "HttpClient configured with base URL from OuterApiConfiguration."
+          "sourceFile": "src/Shared/Recruit.Vacancies.Client/Ioc/ServiceCollectionExtensions.cs",
+          "reason": "HttpClient and configuration for OuterApi registered in the service collection."
         },
         {
-          "sourceFile": "src/Shared/Recruit.Vacancies.Client/Ioc/ServiceCollectionExtensions.cs",
-          "reason": "OuterApiClient registered with HttpClientFactory."
+          "sourceFile": "src/Shared/Recruit.Vacancies.Client/Infrastructure/OuterApi/OuterApiClient.cs",
+          "reason": "HttpClient configured with unique base URL and an API key."
         },
         {
           "sourceFile": "das-apim-endpoints/src/Recruit/SFA.DAS.Recruit/Application/Queries/GetVacancyPreview/GetVacancyPreviewQueryHandler.cs",
@@ -459,13 +513,13 @@
           {
             "method": "GET",
             "methodName": "Get",
-            "path": "{GetUrl}",
+            "path": "<route from IGetApiRequest.GetUrl>",
             "sourceFile": "src/Shared/Recruit.Vacancies.Client/Infrastructure/OuterApi/OuterApiClient.cs"
           },
           {
             "method": "POST",
             "methodName": "Post",
-            "path": "{PostUrl}",
+            "path": "<route from IPostApiRequest.PostUrl>",
             "sourceFile": "src/Shared/Recruit.Vacancies.Client/Infrastructure/OuterApi/OuterApiClient.cs"
           }
         ],
@@ -483,22 +537,25 @@
       "client": "ILocationApiClient",
       "technology": "HttpClient",
       "configurationKeys": [
-        "OuterApiConfiguration:BaseUrl"
+        "OuterApiConfiguration:BaseUrl",
+        "OuterApiConfiguration:Key"
       ],
       "authentication": {
-        "type": null,
-        "configurationKeys": []
+        "type": "apiKey",
+        "configurationKeys": [
+          "OuterApiConfiguration:Key"
+        ]
       },
       "operations": [],
       "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/Shared/Recruit.Vacancies.Client/Infrastructure/OuterApi/OuterApiClient.cs",
-          "reason": "HttpClient configured with base URL from OuterApiConfiguration."
+          "sourceFile": "src/Shared/Recruit.Vacancies.Client/Ioc/ServiceCollectionExtensions.cs",
+          "reason": "HttpClient and configuration for OuterApi registered in the service collection."
         },
         {
-          "sourceFile": "src/Shared/Recruit.Vacancies.Client/Ioc/ServiceCollectionExtensions.cs",
-          "reason": "OuterApiClient registered with HttpClientFactory."
+          "sourceFile": "src/Shared/Recruit.Vacancies.Client/Infrastructure/OuterApi/OuterApiClient.cs",
+          "reason": "HttpClient configured with unique base URL and an API key."
         },
         {
           "sourceFile": "das-apim-endpoints/src/Recruit/SFA.DAS.Recruit/Application/Queries/GetAddresses/GetAddressesQueryHandler.cs",
@@ -525,13 +582,13 @@
           {
             "method": "GET",
             "methodName": "Get",
-            "path": "{GetUrl}",
+            "path": "<route from IGetApiRequest.GetUrl>",
             "sourceFile": "src/Shared/Recruit.Vacancies.Client/Infrastructure/OuterApi/OuterApiClient.cs"
           },
           {
             "method": "POST",
             "methodName": "Post",
-            "path": "{PostUrl}",
+            "path": "<route from IPostApiRequest.PostUrl>",
             "sourceFile": "src/Shared/Recruit.Vacancies.Client/Infrastructure/OuterApi/OuterApiClient.cs"
           }
         ],
@@ -549,22 +606,25 @@
       "client": "IEmployerProfilesApiClient",
       "technology": "HttpClient",
       "configurationKeys": [
-        "OuterApiConfiguration:BaseUrl"
+        "OuterApiConfiguration:BaseUrl",
+        "OuterApiConfiguration:Key"
       ],
       "authentication": {
-        "type": null,
-        "configurationKeys": []
+        "type": "apiKey",
+        "configurationKeys": [
+          "OuterApiConfiguration:Key"
+        ]
       },
       "operations": [],
       "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/Shared/Recruit.Vacancies.Client/Infrastructure/OuterApi/OuterApiClient.cs",
-          "reason": "HttpClient configured with base URL from OuterApiConfiguration."
+          "sourceFile": "src/Shared/Recruit.Vacancies.Client/Ioc/ServiceCollectionExtensions.cs",
+          "reason": "HttpClient and configuration for OuterApi registered in the service collection."
         },
         {
-          "sourceFile": "src/Shared/Recruit.Vacancies.Client/Ioc/ServiceCollectionExtensions.cs",
-          "reason": "OuterApiClient registered with HttpClientFactory."
+          "sourceFile": "src/Shared/Recruit.Vacancies.Client/Infrastructure/OuterApi/OuterApiClient.cs",
+          "reason": "HttpClient configured with unique base URL and an API key."
         },
         {
           "sourceFile": "das-apim-endpoints/src/Recruit/SFA.DAS.Recruit.Api/AppStart/AddServiceRegistrationExtension.cs",
@@ -583,13 +643,13 @@
           {
             "method": "GET",
             "methodName": "Get",
-            "path": "{GetUrl}",
+            "path": "<route from IGetApiRequest.GetUrl>",
             "sourceFile": "src/Shared/Recruit.Vacancies.Client/Infrastructure/OuterApi/OuterApiClient.cs"
           },
           {
             "method": "POST",
             "methodName": "Post",
-            "path": "{PostUrl}",
+            "path": "<route from IPostApiRequest.PostUrl>",
             "sourceFile": "src/Shared/Recruit.Vacancies.Client/Infrastructure/OuterApi/OuterApiClient.cs"
           }
         ],
@@ -607,22 +667,25 @@
       "client": "IProviderRelationshipsApiClient",
       "technology": "HttpClient",
       "configurationKeys": [
-        "OuterApiConfiguration:BaseUrl"
+        "OuterApiConfiguration:BaseUrl",
+        "OuterApiConfiguration:Key"
       ],
       "authentication": {
-        "type": null,
-        "configurationKeys": []
+        "type": "apiKey",
+        "configurationKeys": [
+          "OuterApiConfiguration:Key"
+        ]
       },
       "operations": [],
       "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/Shared/Recruit.Vacancies.Client/Infrastructure/OuterApi/OuterApiClient.cs",
-          "reason": "HttpClient configured with base URL from OuterApiConfiguration."
+          "sourceFile": "src/Shared/Recruit.Vacancies.Client/Ioc/ServiceCollectionExtensions.cs",
+          "reason": "HttpClient and configuration for OuterApi registered in the service collection."
         },
         {
-          "sourceFile": "src/Shared/Recruit.Vacancies.Client/Ioc/ServiceCollectionExtensions.cs",
-          "reason": "OuterApiClient registered with HttpClientFactory."
+          "sourceFile": "src/Shared/Recruit.Vacancies.Client/Infrastructure/OuterApi/OuterApiClient.cs",
+          "reason": "HttpClient configured with unique base URL and an API key."
         },
         {
           "sourceFile": "das-apim-endpoints/src/Recruit/SFA.DAS.Recruit.Api/AppStart/AddServiceRegistrationExtension.cs",
@@ -641,13 +704,13 @@
           {
             "method": "GET",
             "methodName": "Get",
-            "path": "{GetUrl}",
+            "path": "<route from IGetApiRequest.GetUrl>",
             "sourceFile": "src/Shared/Recruit.Vacancies.Client/Infrastructure/OuterApi/OuterApiClient.cs"
           },
           {
             "method": "POST",
             "methodName": "Post",
-            "path": "{PostUrl}",
+            "path": "<route from IPostApiRequest.PostUrl>",
             "sourceFile": "src/Shared/Recruit.Vacancies.Client/Infrastructure/OuterApi/OuterApiClient.cs"
           }
         ],
@@ -677,12 +740,12 @@
       "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/Shared/Recruit.Vacancies.Client/Infrastructure/OuterApi/OuterApiClient.cs",
-          "reason": "HttpClient configured with base URL from OuterApiConfiguration."
+          "sourceFile": "src/Shared/Recruit.Vacancies.Client/Ioc/ServiceCollectionExtensions.cs",
+          "reason": "HttpClient and configuration for OuterApi registered in the service collection."
         },
         {
-          "sourceFile": "src/Shared/Recruit.Vacancies.Client/Ioc/ServiceCollectionExtensions.cs",
-          "reason": "OuterApiClient registered with HttpClientFactory."
+          "sourceFile": "src/Shared/Recruit.Vacancies.Client/Infrastructure/OuterApi/OuterApiClient.cs",
+          "reason": "HttpClient configured with unique base URL and an API key."
         },
         {
           "sourceFile": "das-apim-endpoints/src/Recruit/SFA.DAS.Recruit/Application/ApplicationReview/Events/ApplicationReviewShared/ApplicationReviewSharedEventHandler.cs",
@@ -708,13 +771,13 @@
           {
             "method": "GET",
             "methodName": "Get",
-            "path": "{GetUrl}",
+            "path": "<route from IGetApiRequest.GetUrl>",
             "sourceFile": "src/Shared/Recruit.Vacancies.Client/Infrastructure/OuterApi/OuterApiClient.cs"
           },
           {
             "method": "POST",
             "methodName": "Post",
-            "path": "{PostUrl}",
+            "path": "<route from IPostApiRequest.PostUrl>",
             "sourceFile": "src/Shared/Recruit.Vacancies.Client/Infrastructure/OuterApi/OuterApiClient.cs"
           }
         ],
@@ -733,11 +796,11 @@
       "kind": "message-broker",
       "classification": "third-party",
       "direction": "outbound",
-      "client": null,
-      "technology": "Azure.Messaging.ServiceBus",
+      "client": "ServiceBusClient",
+      "technology": "Azure Service Bus",
       "configurationKeys": [],
       "authentication": {
-        "type": null,
+        "type": "managedIdentity",
         "configurationKeys": []
       },
       "operations": [],
@@ -745,7 +808,7 @@
       "evidence": [
         {
           "sourceFile": "src/Provider/Provider.Web/Provider.Web.csproj",
-          "reason": "Detected usage of package Azure.Messaging.ServiceBus."
+          "reason": "Azure.Messaging.ServiceBus package reference detected."
         }
       ],
       "confidence": "high",
@@ -755,7 +818,7 @@
   ],
   "resolution": {
     "overlay": "dfe-overlay/apim-routing.json",
-    "apimCommit": "7c83d23270959bfc4da9e92d355f95e1f2f4d257",
+    "apimCommit": "8f86379a3c31e6e3898d77e476475c8b323f0cb0",
     "precision": "area"
   }
 }
