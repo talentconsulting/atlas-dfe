@@ -5,10 +5,10 @@
     "version": "1.0.0"
   },
   "paths": {
-    "/api/apprenticeships/{apprenticeshipId}/approvals/{approvalRequestId}": {
+    "/api/apprenticeships/{apprenticeshipId}/approvals": {
       "get": {
-        "operationId": "getApprenticeshipApproval",
-        "summary": "Get a specific apprenticeship approval",
+        "summary": "Get Apprenticeship Approval",
+        "operationId": "GetApprenticeshipApproval",
         "parameters": [
           {
             "name": "apprenticeshipId",
@@ -18,20 +18,11 @@
               "type": "integer",
               "format": "int64"
             }
-          },
-          {
-            "name": "approvalRequestId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "Successful response containing the apprenticeship approval details",
             "content": {
               "application/json": {
                 "schema": {
@@ -41,18 +32,18 @@
             }
           },
           "404": {
-            "description": "Approval not found"
+            "description": "Not Found. No apprenticeship approval details exist for the given ID"
           }
         },
         "security": [
           {
-            "bearerAuth": []
+            "Authorization": []
           }
         ]
       },
       "post": {
-        "operationId": "postApprenticeshipApproval",
-        "summary": "Process an apprenticeship approval",
+        "summary": "Process Apprenticeship Approval",
+        "operationId": "PostApprenticeshipApproval",
         "parameters": [
           {
             "name": "apprenticeshipId",
@@ -61,15 +52,6 @@
             "schema": {
               "type": "integer",
               "format": "int64"
-            }
-          },
-          {
-            "name": "approvalRequestId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
             }
           }
         ],
@@ -85,12 +67,12 @@
         },
         "responses": {
           "200": {
-            "description": "Approval processed successfully"
+            "description": "Successfully processed the apprenticeship approval"
           }
         },
         "security": [
           {
-            "bearerAuth": []
+            "Authorization": []
           }
         ]
       }
@@ -101,42 +83,40 @@
       "ProcessApprenticeshipApprovalRequest": {
         "type": "object",
         "properties": {
-          "applyChanges": {
-            "type": "boolean"
+          "ApplyChanges": {
+            "type": "boolean",
+            "description": "Indicates whether changes should be applied"
           },
-          "userInfo": {
+          "UserInfo": {
             "$ref": "#/components/schemas/UserInfo"
           }
         },
         "required": [
-          "applyChanges",
-          "userInfo"
+          "ApplyChanges",
+          "UserInfo"
         ]
       },
       "UserInfo": {
         "type": "object",
         "properties": {
-          "userId": {
-            "type": "string"
+          "UserId": {
+            "type": "string",
+            "description": "ID of the user performing the operation"
           },
-          "userDisplayName": {
-            "type": "string"
+          "UserDisplayName": {
+            "type": "string",
+            "description": "Display name of the user"
           },
-          "userEmail": {
-            "type": "string"
+          "UserEmail": {
+            "type": "string",
+            "description": "Email of the user"
           }
         },
         "required": [
-          "userId",
-          "userDisplayName",
-          "userEmail"
+          "UserId",
+          "UserDisplayName",
+          "UserEmail"
         ]
-      }
-    },
-    "securitySchemes": {
-      "bearerAuth": {
-        "type": "http",
-        "scheme": "bearer"
       }
     }
   }

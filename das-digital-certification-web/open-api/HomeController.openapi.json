@@ -1,23 +1,24 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Digital Certificates Web API",
+    "title": "Digital Certificates API",
     "version": "1.0.0"
   },
   "paths": {
     "/start-page": {
       "get": {
         "operationId": "StartPageRouteGet",
-        "summary": "Start page",
+        "summary": "Start Page",
+        "description": "Displays the start page or redirects to the external start page if configured.",
         "responses": {
+          "302": {
+            "description": "Redirects to an external start page URL if specified."
+          },
           "200": {
-            "description": "Successful response.",
+            "description": "Start page.",
             "content": {
               "text/html": {}
             }
-          },
-          "302": {
-            "description": "Redirects to an external start page when configured."
           }
         }
       }
@@ -25,7 +26,13 @@
     "/check": {
       "get": {
         "operationId": "CheckRouteGet",
-        "summary": "Check page",
+        "summary": "Check",
+        "description": "Displays a check view for authorized users.",
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
         "parameters": [
           {
             "name": "returnUrl",
@@ -37,14 +44,9 @@
             }
           }
         ],
-        "security": [
-          {
-            "IsActiveAccount": []
-          }
-        ],
         "responses": {
           "200": {
-            "description": "Successful response.",
+            "description": "Check page.",
             "content": {
               "text/html": {}
             }
@@ -53,31 +55,32 @@
       },
       "post": {
         "operationId": "CheckRoutePost",
-        "summary": "Continue from the check page",
-        "parameters": [
-          {
-            "name": "returnUrl",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
+        "summary": "Check Continue",
+        "description": "Handles form submissions and redirects users accordingly.",
         "security": [
           {
-            "IsActiveAccount": []
+            "Authorization": []
           }
         ],
         "requestBody": {
           "required": true,
           "content": {
-            "application/x-www-form-urlencoded": {}
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "returnUrl": {
+                    "type": "string",
+                    "nullable": true
+                  }
+                }
+              }
+            }
           }
         },
         "responses": {
           "302": {
-            "description": "Redirects to the verify identity service."
+            "description": "Redirects to verify identity service."
           }
         }
       }
@@ -85,15 +88,16 @@
     "/verified": {
       "get": {
         "operationId": "VerifiedRouteGet",
-        "summary": "Verified page",
+        "summary": "Verified",
+        "description": "Redirects verified users to a certificates list.",
         "security": [
           {
-            "IsVerified": []
+            "Authorization": []
           }
         ],
         "responses": {
           "302": {
-            "description": "Redirect to certificates list page."
+            "description": "Redirects to the certificates list route."
           }
         }
       }
@@ -101,22 +105,24 @@
     "/cookies": {
       "get": {
         "operationId": "CookiesRouteGet",
-        "summary": "Cookies information page",
+        "summary": "Cookies",
+        "description": "Displays cookie preferences and consent status.",
         "parameters": [
           {
             "name": "returnUrl",
             "in": "query",
             "required": false,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "nullable": true
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Successful response.",
+            "description": "Cookies view.",
             "content": {
-              "text/html": {}
+              "application/json": {}
             }
           }
         }
@@ -125,22 +131,24 @@
     "/help": {
       "get": {
         "operationId": "HelpRouteGet",
-        "summary": "Help page",
+        "summary": "Help",
+        "description": "Displays a help page with a back URL.",
         "parameters": [
           {
             "name": "returnUrl",
             "in": "query",
             "required": false,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "nullable": true
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Successful response.",
+            "description": "Help page.",
             "content": {
-              "text/html": {}
+              "application/json": {}
             }
           }
         }
@@ -149,10 +157,11 @@
     "/cookie-details": {
       "get": {
         "operationId": "CookieDetailsRouteGet",
-        "summary": "Cookie details page",
+        "summary": "Cookie Details",
+        "description": "Displays cookie details.",
         "responses": {
           "200": {
-            "description": "Successful response.",
+            "description": "Cookie details view.",
             "content": {
               "text/html": {}
             }
@@ -163,35 +172,24 @@
     "/accessibility-statement": {
       "get": {
         "operationId": "AccessibilityStatementRouteGet",
-        "summary": "Accessibility statement page",
+        "summary": "Accessibility Statement",
+        "description": "Displays an accessibility statement with a back URL.",
         "parameters": [
           {
             "name": "returnUrl",
             "in": "query",
             "required": false,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "nullable": true
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Successful response.",
+            "description": "Accessibility statement page.",
             "content": {
-              "text/html": {}
-            }
-          }
-        }
-      }
-    },
-    "/error/403": {
-      "get": {
-        "summary": "Access denied page",
-        "responses": {
-          "200": {
-            "description": "Successful response.",
-            "content": {
-              "text/html": {}
+              "application/json": {}
             }
           }
         }
@@ -200,10 +198,26 @@
     "/error": {
       "get": {
         "operationId": "ErrorRouteGet",
-        "summary": "Error page",
+        "summary": "Error",
+        "description": "Handles application errors and logs exceptions.",
         "responses": {
           "500": {
-            "description": "Internal Server Error",
+            "description": "Error page with a problem reference.",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/error/session-expired": {
+      "get": {
+        "operationId": "AntiforgeryRouteGet",
+        "summary": "Session Expired",
+        "description": "Displays an antiforgery error page.",
+        "responses": {
+          "200": {
+            "description": "Session expired page.",
             "content": {
               "text/html": {}
             }
@@ -238,16 +252,6 @@
           "FamilyName",
           "GivenNames"
         ]
-      }
-    },
-    "securitySchemes": {
-      "IsActiveAccount": {
-        "type": "http",
-        "scheme": "bearer"
-      },
-      "IsVerified": {
-        "type": "http",
-        "scheme": "bearer"
       }
     }
   }

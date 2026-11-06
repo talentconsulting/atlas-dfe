@@ -1,0 +1,149 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Employer Vacancy Archive API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/{EmployerAccountId}/vacancies/{VacancyId}/archive": {
+      "get": {
+        "operationId": "ArchiveVacancy_Get",
+        "summary": "Get archive vacancy confirmation view",
+        "parameters": [
+          {
+            "name": "EmployerAccountId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "VacancyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Archive vacancy confirmation view",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "ArchiveVacancy_Post",
+        "summary": "Archive vacancy",
+        "parameters": [
+          {
+            "name": "EmployerAccountId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "VacancyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ArchiveEditModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "302": {
+            "description": "Redirect to vacancies view with updated status or confirmation message",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid model state"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ArchiveEditModel": {
+        "type": "object",
+        "required": [
+          "EmployerAccountId",
+          "VacancyId",
+          "ConfirmArchive"
+        ],
+        "properties": {
+          "EmployerAccountId": {
+            "type": "string"
+          },
+          "VacancyId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "ConfirmArchive": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "Status": {
+            "type": "string",
+            "enum": [
+              "Draft",
+              "Review",
+              "Rejected",
+              "Submitted",
+              "Referred",
+              "Live",
+              "Closed",
+              "Approved",
+              "Archived"
+            ]
+          }
+        }
+      },
+      "VacancyRouteModel": {
+        "type": "object",
+        "required": [
+          "EmployerAccountId",
+          "VacancyId"
+        ],
+        "properties": {
+          "EmployerAccountId": {
+            "type": "string"
+          },
+          "VacancyId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      }
+    }
+  }
+}

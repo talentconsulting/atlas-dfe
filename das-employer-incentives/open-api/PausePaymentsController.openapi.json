@@ -1,0 +1,152 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Employer Incentives API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/pause-payments": {
+      "post": {
+        "summary": "Pause or resume payments for applications",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PausePaymentsRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Payment action requests successfully queued",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "Message": {
+                      "type": "string",
+                      "example": "Payment [Action] Request(s) have been successfully queued"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "Message": {
+                      "type": "string",
+                      "example": "Invalid request exception or PausePayments exception message"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "Message": {
+                      "type": "string",
+                      "example": "KeyNotFoundException message"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "PausePaymentsRequest": {
+        "type": "object",
+        "properties": {
+          "Action": {
+            "$ref": "#/components/schemas/PausePaymentsAction"
+          },
+          "Applications": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Application"
+            }
+          },
+          "ServiceRequest": {
+            "$ref": "#/components/schemas/ServiceRequest"
+          }
+        },
+        "required": [
+          "Action",
+          "Applications",
+          "ServiceRequest"
+        ]
+      },
+      "PausePaymentsAction": {
+        "type": "string",
+        "enum": [
+          "Pause",
+          "Resume"
+        ],
+        "description": "Action to be taken (Pause or Resume payments)"
+      },
+      "Application": {
+        "type": "object",
+        "properties": {
+          "AccountLegalEntityId": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Account legal entity identifier"
+          },
+          "ULN": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Unique Learner Number"
+          },
+          "ServiceRequest": {
+            "$ref": "#/components/schemas/ServiceRequest"
+          }
+        },
+        "required": [
+          "AccountLegalEntityId",
+          "ULN"
+        ]
+      },
+      "ServiceRequest": {
+        "type": "object",
+        "properties": {
+          "TaskId": {
+            "type": "string",
+            "description": "Identifier for the service task"
+          },
+          "DecisionReference": {
+            "type": "string",
+            "description": "Reference for decision"
+          },
+          "TaskCreatedDate": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Date the task was created"
+          }
+        },
+        "required": [
+          "TaskId",
+          "DecisionReference"
+        ]
+      }
+    }
+  }
+}

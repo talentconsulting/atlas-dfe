@@ -1,0 +1,401 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Employer Incentives API",
+    "version": "1.0.0",
+    "description": "API for employer incentives management."
+  },
+  "paths": {
+    "/accounts/{accountId}/legalEntities": {
+      "put": {
+        "summary": "Upsert a legal entity for a specified account.",
+        "operationId": "UpsertLegalEntity",
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "path",
+            "description": "The ID of the account.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddLegalEntityRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Legal entity created successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LegalEntity"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/accounts/{accountId}/legalEntities/{accountLegalEntityId}": {
+      "delete": {
+        "summary": "Remove a legal entity from a specified account.",
+        "operationId": "RemoveLegalEntity",
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "path",
+            "description": "The ID of the account.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "accountLegalEntityId",
+            "in": "path",
+            "description": "The ID of the legal entity associated with the account.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Legal entity removed successfully."
+          }
+        }
+      },
+      "patch": {
+        "summary": "Sign an agreement for a legal entity within a specified account.",
+        "operationId": "SignAgreement",
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "path",
+            "description": "The ID of the account.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "accountLegalEntityId",
+            "in": "path",
+            "description": "The ID of the legal entity associated with the account.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignAgreementRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Agreement signed successfully."
+          }
+        }
+      }
+    },
+    "/legalentities/{hashedLegalEntityId}/vendorregistrationform": {
+      "patch": {
+        "summary": "Update the vendor registration case status for a legal entity.",
+        "operationId": "UpdateVendorRegistrationCaseStatus",
+        "parameters": [
+          {
+            "name": "hashedLegalEntityId",
+            "in": "path",
+            "description": "The hashed ID of the legal entity.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateVendorRegistrationCaseStatusRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Vendor registration case status updated successfully."
+          }
+        }
+      }
+    },
+    "/legalentities/{hashedLegalEntityId}/employervendorid": {
+      "put": {
+        "summary": "Add an employer vendor ID to a legal entity.",
+        "operationId": "AddEmployerVendorId",
+        "parameters": [
+          {
+            "name": "hashedLegalEntityId",
+            "in": "path",
+            "description": "The hashed ID of the legal entity.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddEmployerVendorIdRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Employer vendor ID added successfully."
+          }
+        }
+      }
+    },
+    "/blockedpayments": {
+      "patch": {
+        "summary": "Block account legal entities for payments.",
+        "operationId": "BlockAccountLegalEntityForPayments",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/BlockAccountLegalEntityForPaymentsRequest"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Account legal entities blocked for payments successfully."
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AddLegalEntityRequest": {
+        "type": "object",
+        "properties": {
+          "AccountLegalEntityId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "LegalEntityId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "OrganisationName": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "AccountLegalEntityId",
+          "LegalEntityId",
+          "OrganisationName"
+        ]
+      },
+      "SignAgreementRequest": {
+        "type": "object",
+        "properties": {
+          "AccountId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "AccountLegalEntityId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "LegalEntityName": {
+            "type": "string"
+          },
+          "LegalEntityId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "AgreementVersion": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "AccountId",
+          "AccountLegalEntityId",
+          "LegalEntityName",
+          "LegalEntityId",
+          "AgreementVersion"
+        ]
+      },
+      "AddEmployerVendorIdRequest": {
+        "type": "object",
+        "properties": {
+          "EmployerVendorId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "EmployerVendorId"
+        ]
+      },
+      "UpdateVendorRegistrationCaseStatusRequest": {
+        "type": "object",
+        "properties": {
+          "HashedLegalEntityId": {
+            "type": "string"
+          },
+          "Status": {
+            "type": "string"
+          },
+          "CaseId": {
+            "type": "string"
+          },
+          "CaseStatusLastUpdatedDate": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "HashedLegalEntityId",
+          "Status",
+          "CaseId",
+          "CaseStatusLastUpdatedDate"
+        ]
+      },
+      "BlockAccountLegalEntityForPaymentsRequest": {
+        "type": "object",
+        "properties": {
+          "VendorBlocks": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VendorBlock"
+            }
+          },
+          "ServiceRequest": {
+            "$ref": "#/components/schemas/ServiceRequest"
+          }
+        },
+        "required": [
+          "VendorBlocks",
+          "ServiceRequest"
+        ]
+      },
+      "VendorBlock": {
+        "type": "object",
+        "properties": {
+          "VendorId": {
+            "type": "string"
+          },
+          "VendorBlockEndDate": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "VendorId",
+          "VendorBlockEndDate"
+        ]
+      },
+      "ServiceRequest": {
+        "type": "object",
+        "properties": {
+          "TaskId": {
+            "type": "string"
+          },
+          "DecisionReference": {
+            "type": "string"
+          },
+          "TaskCreatedDate": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "TaskId",
+          "DecisionReference",
+          "TaskCreatedDate"
+        ]
+      },
+      "LegalEntity": {
+        "type": "object",
+        "properties": {
+          "AccountId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "AccountLegalEntityId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "LegalEntityId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "LegalEntityName": {
+            "type": "string"
+          },
+          "VrfVendorId": {
+            "type": "string"
+          },
+          "VrfCaseStatus": {
+            "type": "string"
+          },
+          "HashedLegalEntityId": {
+            "type": "string"
+          },
+          "IsAgreementSigned": {
+            "type": "boolean"
+          },
+          "BankDetailsRequired": {
+            "type": "boolean"
+          },
+          "SignedAgreementVersion": {
+            "type": "integer",
+            "nullable": true
+          }
+        },
+        "required": [
+          "AccountId",
+          "AccountLegalEntityId",
+          "LegalEntityId",
+          "LegalEntityName"
+        ]
+      }
+    }
+  }
+}

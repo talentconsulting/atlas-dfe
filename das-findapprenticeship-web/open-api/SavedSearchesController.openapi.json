@@ -1,17 +1,14 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Saved Searches API",
+    "title": "Saved Searches",
     "version": "1.0.0"
   },
   "paths": {
     "/saved-searches/unsubscribe": {
       "get": {
-        "operationId": "GetSavedSearchesUnsubscribe",
-        "summary": "Get unsubscribe saved searches",
-        "tags": [
-          "Saved Searches"
-        ],
+        "summary": "Retrieve information to confirm unsubscription from saved searches.",
+        "operationId": "UnsubscribeSavedSearchesGet",
         "parameters": [
           {
             "name": "id",
@@ -19,12 +16,13 @@
             "required": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Encoded saved search identifier."
           }
         ],
         "responses": {
           "200": {
-            "description": "Successfully fetched unsubscribe saved searches",
+            "description": "Successful retrieval of unsubscription data.",
             "content": {
               "application/json": {
                 "schema": {
@@ -34,16 +32,13 @@
             }
           },
           "302": {
-            "description": "Redirect to default service start route"
+            "description": "Redirect to the default service start route due to invalid or not found."
           }
         }
       },
       "post": {
-        "operationId": "PostSavedSearchesUnsubscribe",
-        "summary": "Unsubscribe from saved searches",
-        "tags": [
-          "Saved Searches"
-        ],
+        "summary": "Unsubscribe from a saved search.",
+        "operationId": "UnsubscribeSavedSearchesPost",
         "requestBody": {
           "required": true,
           "content": {
@@ -56,18 +51,28 @@
         },
         "responses": {
           "302": {
-            "description": "Redirect to unsubscribe complete route"
+            "description": "Redirect to the unsubscription completion route.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "description": "Saved search identifier."
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
     },
     "/saved-searches/unsubscribe-complete": {
       "get": {
-        "operationId": "GetUnsubscribeComplete",
-        "summary": "Get unsubscribe complete",
-        "tags": [
-          "Saved Searches"
-        ],
+        "summary": "Show unsubscription completion page.",
+        "operationId": "UnsubscribeSavedSearchesCompleteGet",
         "parameters": [
           {
             "name": "id",
@@ -76,15 +81,16 @@
             "schema": {
               "type": "string",
               "format": "uuid"
-            }
+            },
+            "description": "Saved search identifier."
           }
         ],
         "responses": {
           "200": {
-            "description": "Successfully fetched unsubscribe completion details"
+            "description": "Successful display of the unsubscription completion page. Rendered with the search title."
           },
           "302": {
-            "description": "Redirect to default service start route"
+            "description": "Redirect to the default service start route if no data is found."
           }
         }
       }
@@ -95,26 +101,88 @@
       "UnsubscribeSavedSearchesModel": {
         "type": "object",
         "properties": {
-          "Id": {
+          "id": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
           },
-          "Title": {
+          "title": {
             "type": "string",
-            "maxLength": 250
+            "maxLength": 250,
+            "example": "My saved search title"
           }
         },
         "required": [
-          "Id",
-          "Title"
+          "id"
         ]
+      },
+      "SearchParametersDto": {
+        "type": "object",
+        "properties": {
+          "searchTerm": {
+            "type": "string"
+          },
+          "selectedRouteIds": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            }
+          },
+          "distance": {
+            "type": "integer"
+          },
+          "disabilityConfident": {
+            "type": "boolean"
+          },
+          "excludeNational": {
+            "type": "boolean"
+          },
+          "selectedLevelIds": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            }
+          },
+          "location": {
+            "type": "string"
+          },
+          "selectedApprenticeshipTypes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "SavedSearchDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "dateCreated": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "lastRunDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "emailLastSendDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "searchParameters": {
+            "$ref": "#/components/schemas/SearchParametersDto"
+          }
+        }
       },
       "UnsubscribeSavedSearchesViewModel": {
         "type": "object",
         "properties": {
-          "SavedSearch": {
-            "type": "object",
-            "additionalProperties": true
+          "savedSearch": {
+            "$ref": "#/components/schemas/SavedSearchDto"
           }
         }
       }

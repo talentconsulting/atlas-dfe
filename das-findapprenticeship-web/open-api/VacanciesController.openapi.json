@@ -3,15 +3,13 @@
   "info": {
     "title": "Vacancies API",
     "version": "1.0.0",
-    "description": "API for Find an Apprenticeship application vacancies."
+    "description": "API for managing apprenticeship vacancies and related user actions."
   },
   "paths": {
     "/apprenticeship/{vacancyReference}": {
       "get": {
-        "tags": [
-          "Vacancies"
-        ],
-        "summary": "Get apprenticeship vacancy details.",
+        "operationId": "GetVacancyDetails",
+        "summary": "Retrieve details of an apprenticeship vacancy",
         "parameters": [
           {
             "name": "vacancyReference",
@@ -19,7 +17,8 @@
             "required": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Reference ID of the vacancy"
           },
           {
             "name": "signedIn",
@@ -31,7 +30,8 @@
                 "true",
                 "false"
               ]
-            }
+            },
+            "description": "Indicates if the user is signed in"
           },
           {
             "name": "source",
@@ -43,7 +43,8 @@
                 "Applications",
                 "None"
               ]
-            }
+            },
+            "description": "Source of the request"
           },
           {
             "name": "tab",
@@ -52,53 +53,35 @@
             "schema": {
               "type": "string",
               "enum": [
-                "None",
                 "Started",
                 "Submitted",
                 "Successful",
-                "Unsuccessful"
+                "Unsuccessful",
+                "None"
               ]
-            }
+            },
+            "description": "Active Applications Tab"
           }
         ],
         "responses": {
           "200": {
-            "description": "Vacancy retrieved successfully.",
+            "description": "Successful retrieval of vacancy details",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetVacancyDetailsResponse"
+                  "$ref": "#/components/schemas/VacancyDetailsViewModel"
                 }
               }
             }
           },
           "404": {
-            "description": "Vacancy not found."
+            "description": "Vacancy not found"
           }
         }
       },
       "post": {
-        "tags": [
-          "Applications"
-        ],
-        "summary": "Apply for an apprenticeship vacancy.",
-        "security": [
-          {
-            "policyNames": [
-              "IsFaaUser"
-            ]
-          }
-        ],
-        "parameters": [
-          {
-            "name": "vacancyReference",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
+        "operationId": "ApplyToVacancy",
+        "summary": "Apply to a specific apprenticeship vacancy",
         "requestBody": {
           "required": true,
           "content": {
@@ -111,24 +94,25 @@
         },
         "responses": {
           "302": {
-            "description": "Redirect to apply page."
+            "description": "Redirect to Apply page after successful application"
+          },
+          "404": {
+            "description": "Vacancy not found"
           }
-        }
+        },
+        "security": [
+          {
+            "Policy": [
+              "IsFaaUser"
+            ]
+          }
+        ]
       }
     },
     "/vacancy/save/{vacancyId}": {
       "post": {
-        "tags": [
-          "Vacancies"
-        ],
-        "summary": "Save a vacancy from the details page.",
-        "security": [
-          {
-            "policyNames": [
-              "IsFaaUser"
-            ]
-          }
-        ],
+        "operationId": "SaveVacancy",
+        "summary": "Save an apprenticeship vacancy",
         "parameters": [
           {
             "name": "vacancyId",
@@ -136,48 +120,48 @@
             "required": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "ID of the vacancy"
           },
           {
             "name": "redirect",
             "in": "query",
             "required": false,
             "schema": {
-              "type": "boolean",
-              "default": true
-            }
+              "type": "boolean"
+            },
+            "description": "Enable redirect after the save action"
           }
         ],
         "responses": {
-          "302": {
-            "description": "Redirect to vacancy details page."
-          },
           "200": {
-            "description": "Vacancy saved successfully.",
+            "description": "Vacancy saved successfully",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "integer"
+                  "type": "string",
+                  "example": "OK"
                 }
               }
             }
+          },
+          "302": {
+            "description": "Redirect after saving vacancy"
           }
-        }
+        },
+        "security": [
+          {
+            "Policy": [
+              "IsFaaUser"
+            ]
+          }
+        ]
       }
     },
     "/vacancy/delete/{vacancyId}": {
       "post": {
-        "tags": [
-          "Vacancies"
-        ],
-        "summary": "Delete a saved vacancy from the details page.",
-        "security": [
-          {
-            "policyNames": [
-              "IsFaaUser"
-            ]
-          }
-        ],
+        "operationId": "DeleteSavedVacancy",
+        "summary": "Delete a saved apprenticeship vacancy",
         "parameters": [
           {
             "name": "vacancyId",
@@ -185,39 +169,59 @@
             "required": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "ID of the vacancy to delete"
           },
           {
             "name": "redirect",
             "in": "query",
             "required": false,
             "schema": {
-              "type": "boolean",
-              "default": true
-            }
+              "type": "boolean"
+            },
+            "description": "Enable redirect after the delete action"
           }
         ],
         "responses": {
-          "302": {
-            "description": "Redirect to vacancy details page."
-          },
           "200": {
-            "description": "Vacancy deleted successfully.",
+            "description": "Vacancy deleted successfully",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "integer"
+                  "type": "string",
+                  "example": "OK"
                 }
               }
             }
+          },
+          "302": {
+            "description": "Redirect after deleting vacancy"
           }
-        }
+        },
+        "security": [
+          {
+            "Policy": [
+              "IsFaaUser"
+            ]
+          }
+        ]
       }
     }
   },
   "components": {
     "schemas": {
-      "GetVacancyDetailsResponse": {
+      "PostApplyRequest": {
+        "type": "object",
+        "properties": {
+          "vacancyReference": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "vacancyReference"
+        ]
+      },
+      "VacancyDetailsViewModel": {
         "type": "object",
         "properties": {
           "id": {
@@ -226,25 +230,120 @@
           "title": {
             "type": "string"
           },
+          "vacancyReference": {
+            "type": "string"
+          },
+          "longDescription": {
+            "type": "string"
+          },
+          "outcomeDescription": {
+            "type": "string"
+          },
+          "trainingDescription": {
+            "type": "string"
+          },
+          "thingsToConsider": {
+            "type": "string"
+          },
+          "skills": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "closingDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "postedDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "withdrawnDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "wageAmount": {
+            "type": "string"
+          },
+          "wageType": {
+            "type": "integer"
+          },
+          "wageText": {
+            "type": "string"
+          },
+          "distance": {
+            "type": "number"
+          },
+          "courseTitle": {
+            "type": "string"
+          },
+          "courseLevel": {
+            "type": "string"
+          },
+          "courseId": {
+            "type": "integer"
+          },
+          "apprenticeshipLevel": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          },
+          "categoryCode": {
+            "type": "string"
+          },
+          "subCategory": {
+            "type": "string"
+          },
+          "subCategoryCode": {
+            "type": "string"
+          },
           "description": {
             "type": "string"
           },
-          "employer": {
+          "frameworkLarsCode": {
             "type": "string"
+          },
+          "hoursPerWeek": {
+            "type": "number"
+          },
+          "isDisabilityConfident": {
+            "type": "boolean"
           },
           "location": {
             "$ref": "#/components/schemas/Location"
           },
-          "wage": {
+          "numberOfPositions": {
+            "type": "integer"
+          },
+          "providerName": {
             "type": "string"
-          }
-        }
-      },
-      "PostApplyRequest": {
-        "type": "object",
-        "properties": {
-          "vacancyReference": {
+          },
+          "standardLarsCode": {
+            "type": "integer"
+          },
+          "workingWeek": {
             "type": "string"
+          },
+          "expectedDuration": {
+            "type": "string"
+          },
+          "score": {
+            "type": "number"
+          },
+          "ukprn": {
+            "type": "string"
+          },
+          "employerName": {
+            "type": "string"
+          },
+          "isSavedVacancy": {
+            "type": "boolean"
           }
         }
       },
@@ -261,21 +360,19 @@
             "type": "string"
           }
         }
-      },
-      "PolicyNames": {
-        "type": "object",
-        "properties": {
-          "IsFaaUser": {
-            "type": "string",
-            "enum": [
-              "IsFaaUser"
-            ]
-          },
-          "IsAuthenticated": {
-            "type": "string",
-            "enum": [
-              "IsAuthenticated"
-            ]
+      }
+    },
+    "securitySchemes": {
+      "Policy": {
+        "type": "oauth2",
+        "description": "Allows access based on specific policy conditions",
+        "flows": {
+          "authorizationCode": {
+            "authorizationUrl": "https://example.com/oauth/authorize",
+            "tokenUrl": "https://example.com/oauth/token",
+            "scopes": {
+              "IsFaaUser": "User must be part of FaaUser group"
+            }
           }
         }
       }

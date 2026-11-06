@@ -1,0 +1,159 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Delete Vacancy API",
+    "version": "1.0.0",
+    "description": "API for deleting vacancies in the employer recruitment system."
+  },
+  "paths": {
+    "/{EmployerAccountId}/{VacancyId}/delete": {
+      "get": {
+        "operationId": "GetDeleteVacancyConfirmationView",
+        "summary": "Get vacancy deletion confirmation view",
+        "parameters": [
+          {
+            "name": "EmployerAccountId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID of the employer's account"
+          },
+          {
+            "name": "VacancyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "ID of the vacancy to be deleted"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Delete vacancy confirmation page returned.",
+            "content": {
+              "text/html": {}
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "DeleteVacancy",
+        "summary": "Delete a vacancy",
+        "parameters": [
+          {
+            "name": "EmployerAccountId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID of the employer's account"
+          },
+          {
+            "name": "VacancyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "ID of the vacancy to be deleted"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeleteEditModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Vacancy deletion successful.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation failed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteEditModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "VacancyRouteModel": {
+        "type": "object",
+        "properties": {
+          "EmployerAccountId": {
+            "type": "string"
+          },
+          "VacancyId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "EmployerAccountId",
+          "VacancyId"
+        ]
+      },
+      "DeleteEditModel": {
+        "type": "object",
+        "properties": {
+          "EmployerAccountId": {
+            "type": "string"
+          },
+          "VacancyId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "ConfirmDeletion": {
+            "type": "boolean",
+            "nullable": true,
+            "description": "Confirmation flag for deletion"
+          },
+          "Status": {
+            "type": "string",
+            "enum": [
+              "Draft",
+              "Review",
+              "Rejected",
+              "Submitted",
+              "Referred",
+              "Live",
+              "Closed",
+              "Approved",
+              "Archived"
+            ],
+            "description": "Current status of the vacancy"
+          }
+        },
+        "required": [
+          "EmployerAccountId",
+          "VacancyId"
+        ]
+      }
+    }
+  }
+}

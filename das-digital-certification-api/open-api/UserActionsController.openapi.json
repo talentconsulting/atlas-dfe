@@ -7,14 +7,13 @@
   "paths": {
     "/api/user-actions/{userActionId}/admin-actions": {
       "post": {
-        "operationId": "CreateAdminAction",
         "summary": "Create an admin action for a user action",
+        "operationId": "createAdminAction",
         "parameters": [
           {
             "name": "userActionId",
             "in": "path",
             "required": true,
-            "description": "The ID of the user action",
             "schema": {
               "type": "integer",
               "format": "int64"
@@ -33,10 +32,10 @@
         },
         "responses": {
           "204": {
-            "description": "No content"
+            "description": "No Content"
           },
           "400": {
-            "description": "Bad request",
+            "description": "Bad Request",
             "content": {
               "application/json": {
                 "schema": {
@@ -54,21 +53,20 @@
             }
           },
           "500": {
-            "description": "Internal server error"
+            "description": "Internal Server Error"
           }
         }
       }
     },
     "/api/user-actions/{code}": {
       "get": {
-        "operationId": "GetUserActionByCode",
-        "summary": "Retrieve a user action by its unique code",
+        "summary": "Retrieve a user action by code",
+        "operationId": "getUserActionByCode",
         "parameters": [
           {
             "name": "code",
             "in": "path",
             "required": true,
-            "description": "The unique code of the user action",
             "schema": {
               "type": "string"
             }
@@ -76,7 +74,7 @@
         ],
         "responses": {
           "200": {
-            "description": "User action retrieved successfully",
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
@@ -86,10 +84,10 @@
             }
           },
           "404": {
-            "description": "Not found"
+            "description": "Not Found"
           },
           "400": {
-            "description": "Bad request",
+            "description": "Bad Request",
             "content": {
               "application/json": {
                 "schema": {
@@ -107,7 +105,7 @@
             }
           },
           "500": {
-            "description": "Internal server error"
+            "description": "Internal Server Error"
           }
         }
       }
@@ -117,34 +115,21 @@
     "schemas": {
       "CreateAdminActionRequest": {
         "type": "object",
-        "required": [
-          "Username",
-          "Action"
-        ],
         "properties": {
           "Username": {
             "type": "string"
           },
           "Action": {
-            "type": "string",
-            "enum": [
-              "Viewed",
-              "Unlocked"
-            ]
+            "$ref": "#/components/schemas/AdminActionType"
           }
-        }
+        },
+        "required": [
+          "Username",
+          "Action"
+        ]
       },
       "GetUserActionByCodeResponse": {
         "type": "object",
-        "required": [
-          "Id",
-          "UserId",
-          "ActionType",
-          "ActionTime",
-          "ActionStatus",
-          "FamilyName",
-          "GivenNames"
-        ],
         "properties": {
           "Id": {
             "type": "integer",
@@ -155,25 +140,14 @@
             "format": "uuid"
           },
           "ActionType": {
-            "type": "string",
-            "enum": [
-              "Reprint",
-              "Help",
-              "Contact",
-              "NotMatched",
-              "NotFound"
-            ]
+            "$ref": "#/components/schemas/ActionType"
           },
           "ActionTime": {
             "type": "string",
             "format": "date-time"
           },
           "ActionStatus": {
-            "type": "string",
-            "enum": [
-              "New",
-              "Viewed"
-            ]
+            "$ref": "#/components/schemas/UserActionStatus"
           },
           "FamilyName": {
             "type": "string"
@@ -187,21 +161,11 @@
             "nullable": true
           },
           "CertificateType": {
-            "type": "string",
-            "enum": [
-              "Unknown",
-              "Standard",
-              "Framework"
-            ],
+            "$ref": "#/components/schemas/CertificateType",
             "nullable": true
           },
           "CourseName": {
             "type": "string",
-            "nullable": true
-          },
-          "Uln": {
-            "type": "integer",
-            "format": "int64",
             "nullable": true
           },
           "AdminActions": {
@@ -210,16 +174,25 @@
               "$ref": "#/components/schemas/AdminActionResponse"
             },
             "nullable": true
+          },
+          "Uln": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
           }
-        }
+        },
+        "required": [
+          "Id",
+          "UserId",
+          "ActionType",
+          "ActionTime",
+          "ActionStatus",
+          "FamilyName",
+          "GivenNames"
+        ]
       },
       "AdminActionResponse": {
         "type": "object",
-        "required": [
-          "Username",
-          "ActionTime",
-          "Action"
-        ],
         "properties": {
           "Username": {
             "type": "string"
@@ -229,13 +202,46 @@
             "format": "date-time"
           },
           "Action": {
-            "type": "string",
-            "enum": [
-              "Viewed",
-              "Unlocked"
-            ]
+            "$ref": "#/components/schemas/AdminActionType"
           }
-        }
+        },
+        "required": [
+          "Username",
+          "ActionTime",
+          "Action"
+        ]
+      },
+      "ActionType": {
+        "type": "string",
+        "enum": [
+          "Reprint",
+          "Help",
+          "Contact",
+          "NotMatched",
+          "NotFound"
+        ]
+      },
+      "CertificateType": {
+        "type": "string",
+        "enum": [
+          "Unknown",
+          "Standard",
+          "Framework"
+        ]
+      },
+      "AdminActionType": {
+        "type": "string",
+        "enum": [
+          "Viewed",
+          "Unlocked"
+        ]
+      },
+      "UserActionStatus": {
+        "type": "string",
+        "enum": [
+          "New",
+          "Viewed"
+        ]
       }
     }
   }

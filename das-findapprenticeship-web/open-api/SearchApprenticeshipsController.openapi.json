@@ -1,56 +1,47 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Find Apprenticeships API",
-    "version": "1.0.0",
-    "description": "API for searching and managing apprenticeship data."
+    "title": "Search Apprenticeships API",
+    "description": "API for searching apprenticeship opportunities and managing saved searches/vacancies",
+    "version": "1.0.0"
   },
   "paths": {
     "/": {
       "get": {
-        "operationId": "SearchApprenticeshipsController_Index",
-        "summary": "Search apprenticeships index page.",
+        "operationId": "getIndex",
+        "tags": [
+          "Search Apprenticeships"
+        ],
         "parameters": [
           {
             "name": "search",
             "in": "query",
             "required": false,
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "nullable": true
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Search page rendered."
-          }
-        }
-      }
-    },
-    "/apprenticeshipsearch": {
-      "get": {
-        "operationId": "SearchApprenticeshipsController_Index_ApprenticeshipSearch",
-        "parameters": [
-          {
-            "name": "search",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "integer"
+            "description": "Success",
+            "content": {
+              "text/html": {}
             }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Search page rendered."
+          },
+          "400": {
+            "description": "Bad Request"
           }
         }
       }
     },
     "/browse-by-interests": {
       "get": {
-        "operationId": "SearchApprenticeshipsController_BrowseByInterests_Get",
-        "summary": "Browse apprenticeships by interests.",
+        "operationId": "browseByInterestsGet",
+        "tags": [
+          "Browse Apprenticeships"
+        ],
         "parameters": [
           {
             "name": "routeIds",
@@ -60,24 +51,29 @@
               "type": "array",
               "items": {
                 "type": "string"
-              }
-            },
-            "description": "A list of route IDs to filter interests."
+              },
+              "nullable": true
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Interests page rendered."
+            "description": "Success",
+            "content": {
+              "text/html": {}
+            }
           }
         }
       },
       "post": {
-        "operationId": "SearchApprenticeshipsController_BrowseByInterests_Post",
-        "summary": "Submit selected interests.",
+        "operationId": "browseByInterestsPost",
+        "tags": [
+          "Browse Apprenticeships"
+        ],
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": {
+            "application/x-www-form-urlencoded": {
               "schema": {
                 "$ref": "#/components/schemas/BrowseByInterestViewModel"
               }
@@ -85,16 +81,21 @@
           }
         },
         "responses": {
-          "200": {
-            "description": "Redirected after selecting interests."
+          "302": {
+            "description": "Redirect"
+          },
+          "400": {
+            "description": "Invalid request"
           }
         }
       }
     },
     "/location": {
       "get": {
-        "operationId": "SearchApprenticeshipsController_Location_Get",
-        "summary": "Set location search parameters.",
+        "operationId": "getLocation",
+        "tags": [
+          "Search Locations"
+        ],
         "parameters": [
           {
             "name": "routeIds",
@@ -104,23 +105,29 @@
               "type": "array",
               "items": {
                 "type": "string"
-              }
+              },
+              "nullable": true
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Rendered location search page."
+            "description": "Success",
+            "content": {
+              "text/html": {}
+            }
           }
         }
       },
       "post": {
-        "operationId": "SearchApprenticeshipsController_Location_Post",
-        "summary": "Submit location search parameters.",
+        "operationId": "postLocation",
+        "tags": [
+          "Search Locations"
+        ],
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": {
+            "application/x-www-form-urlencoded": {
               "schema": {
                 "$ref": "#/components/schemas/LocationViewModel"
               }
@@ -128,118 +135,232 @@
           }
         },
         "responses": {
-          "200": {
-            "description": "Redirect after submitting location."
+          "302": {
+            "description": "Redirect"
+          },
+          "400": {
+            "description": "Invalid request"
           }
         }
       }
     },
     "/apprenticeships": {
       "get": {
-        "operationId": "SearchApprenticeshipsController_SearchResults",
-        "summary": "Perform search and return results.",
+        "operationId": "getSearchResults",
+        "tags": [
+          "Search Results"
+        ],
         "parameters": [
           {
-            "name": "RouteIds",
+            "name": "routeIds",
             "in": "query",
             "required": false,
             "schema": {
               "type": "array",
               "items": {
                 "type": "string"
-              }
+              },
+              "nullable": true
             }
           },
           {
-            "name": "LevelIds",
+            "name": "levelIds",
             "in": "query",
             "required": false,
             "schema": {
               "type": "array",
               "items": {
                 "type": "string"
-              }
+              },
+              "nullable": true
             }
           },
           {
-            "name": "Location",
+            "name": "location",
             "in": "query",
             "required": false,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "nullable": true
             }
           },
           {
-            "name": "SearchTerm",
+            "name": "searchTerm",
             "in": "query",
             "required": false,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "nullable": true
             }
           },
           {
-            "name": "Distance",
+            "name": "distance",
             "in": "query",
             "required": false,
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "nullable": true
+            }
+          },
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "nullable": true
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          },
+          {
+            "name": "disabilityConfident",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "nullable": true
+            }
+          },
+          {
+            "name": "excludeNational",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "nullable": true
+            }
+          },
+          {
+            "name": "includeCompetitiveSalaryVacancies",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "nullable": true
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Search results rendered."
+            "description": "Success",
+            "content": {
+              "text/html": {}
+            }
+          },
+          "400": {
+            "description": "Bad Request"
           }
         }
       }
     },
     "/map-search-results": {
       "get": {
-        "operationId": "SearchApprenticeshipsController_MapSearchResults",
-        "summary": "Retrieve map-based search results.",
+        "operationId": "mapSearchResults",
+        "tags": [
+          "Map Search Results"
+        ],
         "parameters": [
           {
-            "name": "RouteIds",
+            "name": "routeIds",
             "in": "query",
             "required": false,
             "schema": {
               "type": "array",
               "items": {
                 "type": "string"
-              }
+              },
+              "nullable": true
             }
           },
           {
-            "name": "LevelIds",
+            "name": "levelIds",
             "in": "query",
             "required": false,
             "schema": {
               "type": "array",
               "items": {
                 "type": "string"
-              }
+              },
+              "nullable": true
             }
           },
           {
-            "name": "Distance",
+            "name": "location",
             "in": "query",
             "required": false,
             "schema": {
-              "type": "integer"
+              "type": "string",
+              "nullable": true
+            }
+          },
+          {
+            "name": "distance",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "nullable": true
+            }
+          },
+          {
+            "name": "searchTerm",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          },
+          {
+            "name": "excludeNational",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "nullable": true
+            }
+          },
+          {
+            "name": "includeCompetitiveSalaryVacancies",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "nullable": true
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Retrieved map search results."
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MapSearchResultsViewModel"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
           }
         }
       }
     },
     "/search-results/save/{vacancyId}": {
       "post": {
-        "operationId": "SearchApprenticeshipsController_SearchResults_SaveVacancy",
-        "summary": "Save a vacancy from search results.",
+        "operationId": "saveVacancy",
+        "tags": [
+          "Saved Vacancies"
+        ],
         "parameters": [
           {
             "name": "vacancyId",
@@ -254,21 +375,32 @@
             "in": "query",
             "required": false,
             "schema": {
-              "type": "boolean"
+              "type": "boolean",
+              "default": true
             }
           }
         ],
         "responses": {
+          "302": {
+            "description": "Redirect"
+          },
           "200": {
-            "description": "Vacancy saved."
+            "description": "Success"
           }
-        }
+        },
+        "security": [
+          {
+            "faaUser": []
+          }
+        ]
       }
     },
     "/search-results/delete/{vacancyId}": {
       "post": {
-        "operationId": "SearchApprenticeshipsController_SearchResults_DeleteSavedVacancy",
-        "summary": "Delete a saved vacancy from search results.",
+        "operationId": "deleteSavedVacancy",
+        "tags": [
+          "Saved Vacancies"
+        ],
         "parameters": [
           {
             "name": "vacancyId",
@@ -283,46 +415,55 @@
             "in": "query",
             "required": false,
             "schema": {
-              "type": "boolean"
+              "type": "boolean",
+              "default": true
             }
           }
         ],
         "responses": {
+          "302": {
+            "description": "Redirect"
+          },
           "200": {
-            "description": "Vacancy deleted."
+            "description": "Success"
           }
-        }
+        },
+        "security": [
+          {
+            "faaUser": []
+          }
+        ]
       }
     },
     "/apprenticeships/save-search": {
       "post": {
-        "operationId": "SearchApprenticeshipsController_SaveSearch",
-        "summary": "Save search for apprenticeships.",
+        "operationId": "saveSearchCriteria",
+        "tags": [
+          "Saved Searches"
+        ],
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": {
+            "application/x-www-form-urlencoded": {
               "schema": {
                 "$ref": "#/components/schemas/SaveSearchRequest"
               }
             }
           }
         },
-        "parameters": [
-          {
-            "name": "redirect",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "boolean"
-            }
-          }
-        ],
         "responses": {
+          "302": {
+            "description": "Redirect"
+          },
           "200": {
-            "description": "Search saved."
+            "description": "Success"
           }
-        }
+        },
+        "security": [
+          {
+            "faaUser": []
+          }
+        ]
       }
     }
   },
@@ -340,37 +481,8 @@
           "Routes": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/RouteViewModel"
+              "$ref": "#/components/schemas/RouteResponse"
             }
-          },
-          "BusinessFinanceAndPublicServicesDictionary": {
-            "type": "object"
-          },
-          "CreativeAndServiceIndustriesDictionary": {
-            "type": "object"
-          },
-          "EnvironmentAndAgricultureDictionary": {
-            "type": "object"
-          },
-          "PeopleAndCareDictionary": {
-            "type": "object"
-          },
-          "TechnicalAndEngineeringDictionary": {
-            "type": "object"
-          }
-        }
-      },
-      "RouteViewModel": {
-        "type": "object",
-        "properties": {
-          "Selected": {
-            "type": "boolean"
-          },
-          "Name": {
-            "type": "string"
-          },
-          "Id": {
-            "type": "integer"
           }
         }
       },
@@ -389,15 +501,109 @@
             "type": "integer",
             "nullable": true
           },
-          "SuggestedLocationSelected": {
-            "type": "boolean"
-          },
           "SelectedRouteIds": {
             "type": "array",
             "items": {
               "type": "string"
             },
             "nullable": true
+          },
+          "RouteData": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "MapSearchResultsViewModel": {
+        "type": "object",
+        "properties": {
+          "ApprenticeshipMapData": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ApprenticeshipMapData"
+            }
+          },
+          "SearchedLocation": {
+            "$ref": "#/components/schemas/LocationViewModel"
+          }
+        }
+      },
+      "ApprenticeshipMapData": {
+        "type": "object",
+        "properties": {
+          "Position": {
+            "type": "object",
+            "properties": {
+              "Lat": {
+                "type": "number",
+                "nullable": true
+              },
+              "Lng": {
+                "type": "number",
+                "nullable": true
+              }
+            }
+          },
+          "Job": {
+            "type": "object",
+            "properties": {
+              "Id": {
+                "type": "string"
+              },
+              "Title": {
+                "type": "string"
+              },
+              "Company": {
+                "type": "string"
+              },
+              "VacancyLocation": {
+                "type": "string"
+              },
+              "Distance": {
+                "type": "number",
+                "nullable": true
+              },
+              "Apprenticeship": {
+                "type": "string"
+              },
+              "Wage": {
+                "type": "string"
+              },
+              "ClosingDate": {
+                "type": "string"
+              },
+              "PostedDate": {
+                "type": "string"
+              },
+              "ApplicationStatus": {
+                "type": "string"
+              },
+              "ApplicationStatusCssClass": {
+                "type": "string"
+              },
+              "IsClosingSoon": {
+                "type": "boolean"
+              },
+              "IsNew": {
+                "type": "boolean"
+              },
+              "IsFoundation": {
+                "type": "boolean"
+              }
+            }
+          }
+        }
+      },
+      "RouteResponse": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "id": {
+            "type": "integer"
           }
         }
       },
@@ -409,6 +615,13 @@
             "nullable": true
           }
         }
+      }
+    },
+    "securitySchemes": {
+      "faaUser": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
       }
     }
   }

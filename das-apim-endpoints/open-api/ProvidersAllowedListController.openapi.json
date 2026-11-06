@@ -1,47 +1,55 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "SFA.DAS.AdminRoatp.Api",
+    "title": "Providers Allowed List API",
     "version": "1.0.0"
   },
   "paths": {
     "/providers/allowedlist": {
       "get": {
-        "summary": "Get Allowed Providers List",
-        "operationId": "getAllowedProvidersList",
+        "operationId": "getAllowedList",
+        "summary": "Get allowed list of providers",
         "parameters": [
           {
             "name": "sortColumn",
             "in": "query",
-            "description": "Column to sort by",
             "required": false,
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "The column to sort the allowed list by"
           },
           {
             "name": "sortOrder",
             "in": "query",
-            "description": "Order of sorting (e.g., Ascending or Descending)",
             "required": false,
             "schema": {
-              "type": "string"
-            }
+              "type": "string",
+              "enum": [
+                "Ascending",
+                "Descending"
+              ],
+              "default": "Ascending"
+            },
+            "description": "The sort order for the allowed list"
           }
         ],
         "responses": {
           "200": {
-            "description": "Successful Response",
+            "description": "Successful response with the list of allowed providers",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetProvidersAllowedListQueryResponse"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GetProvidersAllowedListQueryResponse"
+                  }
                 }
               }
             }
           },
           "400": {
-            "description": "Invalid Request",
+            "description": "Bad request due to invalid input",
             "content": {
               "application/json": {
                 "schema": {
@@ -68,37 +76,31 @@
               "$ref": "#/components/schemas/AllowedProvider"
             }
           }
-        },
-        "required": [
-          "providers"
-        ]
+        }
       },
       "AllowedProvider": {
         "type": "object",
         "properties": {
           "ukprn": {
             "type": "integer",
-            "format": "int32"
+            "description": "Unique Provider Reference Number"
           },
           "startDateTime": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "description": "Start date and time for the provider"
           },
           "endDateTime": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "description": "End date and time for the provider"
           },
           "addedDateTime": {
             "type": "string",
             "format": "date-time",
-            "nullable": true
+            "description": "The date and time the provider was added (optional)"
           }
-        },
-        "required": [
-          "ukprn",
-          "startDateTime",
-          "endDateTime"
-        ]
+        }
       }
     }
   }

@@ -3,15 +3,12 @@
   "info": {
     "title": "Reservations API",
     "version": "1.0.0",
-    "description": "API documentation for managing reservations in the DAS system."
+    "description": "API for managing reservations and funding rules."
   },
   "paths": {
     "/accounts/{employerAccountId}/reservations/{id}/select-course-rule-check": {
       "get": {
-        "operationId": "selectCourseRuleCheckEmployer",
-        "tags": [
-          "Reservations"
-        ],
+        "operationId": "EmployerSelectCourseRuleCheck",
         "parameters": [
           {
             "name": "employerAccountId",
@@ -33,17 +30,14 @@
         ],
         "responses": {
           "302": {
-            "description": "Redirect to a different route based on rule check."
+            "description": "Redirects based on rule checks."
           }
         }
       }
     },
     "/{ukPrn}/reservations/{id}/select-course-rule-check": {
       "get": {
-        "operationId": "selectCourseRuleCheckProvider",
-        "tags": [
-          "Reservations"
-        ],
+        "operationId": "ProviderApprenticeshipTrainingRuleCheck",
         "parameters": [
           {
             "name": "ukPrn",
@@ -66,17 +60,14 @@
         ],
         "responses": {
           "302": {
-            "description": "Redirect to a different route based on rule check."
+            "description": "Redirects based on rule checks."
           }
         }
       }
     },
     "/accounts/{employerAccountId}/reservations/saveRuleNotificationChoice": {
       "post": {
-        "operationId": "saveRuleNotificationChoiceEmployerNoReservation",
-        "tags": [
-          "Reservations"
-        ],
+        "operationId": "EmployerSaveRuleNotificationChoiceNoReservation",
         "parameters": [
           {
             "name": "employerAccountId",
@@ -99,17 +90,14 @@
         },
         "responses": {
           "302": {
-            "description": "Redirect to a different route after saving rule notification choice."
+            "description": "Redirects after saving rule notification choice."
           }
         }
       }
     },
     "/accounts/{employerAccountId}/reservations/{id}/saveRuleNotificationChoice": {
       "post": {
-        "operationId": "saveRuleNotificationChoiceEmployer",
-        "tags": [
-          "Reservations"
-        ],
+        "operationId": "EmployerSaveRuleNotificationChoice",
         "parameters": [
           {
             "name": "employerAccountId",
@@ -141,17 +129,14 @@
         },
         "responses": {
           "302": {
-            "description": "Redirect to a different route after saving rule notification choice."
+            "description": "Redirects after saving rule notification choice."
           }
         }
       }
     },
-    "/{ukPrn}/reservations/{id}/apprenticeship-training/{fromReview}": {
+    "/{ukPrn}/reservations/{id}/apprenticeship-training/{fromReview?}": {
       "get": {
-        "operationId": "apprenticeshipTrainingProvider",
-        "tags": [
-          "Reservations"
-        ],
+        "operationId": "ProviderApprenticeshipTraining",
         "parameters": [
           {
             "name": "ukPrn",
@@ -182,17 +167,14 @@
         ],
         "responses": {
           "200": {
-            "description": "Apprenticeship training information retrieved successfully."
+            "description": "Returns the Apprenticeship Training view."
           }
         }
       }
     },
     "/accounts/{employerAccountId}/reservations/{id}/apprenticeship-training": {
       "get": {
-        "operationId": "apprenticeshipTrainingEmployer",
-        "tags": [
-          "Reservations"
-        ],
+        "operationId": "EmployerApprenticeshipTraining",
         "parameters": [
           {
             "name": "employerAccountId",
@@ -214,92 +196,14 @@
         ],
         "responses": {
           "200": {
-            "description": "Apprenticeship training information retrieved successfully."
+            "description": "Returns the Apprenticeship Training view."
           }
         }
       }
     },
-    "/{ukPrn}/reservations/{id}/apprenticeship-training": {
-      "post": {
-        "operationId": "postApprenticeshipTrainingProvider",
-        "tags": [
-          "Reservations"
-        ],
-        "parameters": [
-          {
-            "name": "ukPrn",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ApprenticeshipTrainingFormModel"
-              }
-            }
-          }
-        },
-        "responses": {
-          "302": {
-            "description": "Redirect to a different route after posting apprenticeship training details."
-          }
-        }
-      }
-    },
-    "/accounts/{employerAccountId}/reservations/{id}/review": {
+    "/{ukPrn}/reservations/{id}/completed/{accountLegalEntityPublicHashedId}": {
       "get": {
-        "operationId": "reviewEmployer",
-        "tags": [
-          "Reservations"
-        ],
-        "parameters": [
-          {
-            "name": "employerAccountId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Review details retrieved successfully."
-          }
-        }
-      }
-    },
-    "/{ukPrn}/reservations/{id}/review": {
-      "post": {
-        "operationId": "postReviewProvider",
-        "tags": [
-          "Reservations"
-        ],
+        "operationId": "ProviderCompleted",
         "parameters": [
           {
             "name": "ukPrn",
@@ -318,6 +222,50 @@
               "type": "string",
               "format": "uuid"
             }
+          },
+          {
+            "name": "accountLegalEntityPublicHashedId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns the Completed view."
+          }
+        }
+      },
+      "post": {
+        "operationId": "ProviderPostCompleted",
+        "parameters": [
+          {
+            "name": "ukPrn",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "accountLegalEntityPublicHashedId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "requestBody": {
@@ -325,14 +273,96 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/PostReviewViewModel"
+                "$ref": "#/components/schemas/CompletedViewModel"
               }
             }
           }
         },
         "responses": {
           "302": {
-            "description": "Redirect to a different route after posting review details."
+            "description": "Redirects based on user selection."
+          }
+        }
+      }
+    },
+    "/accounts/{employerAccountId}/reservations/{id}/completed/{accountLegalEntityPublicHashedId}": {
+      "get": {
+        "operationId": "EmployerCompleted",
+        "parameters": [
+          {
+            "name": "employerAccountId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "accountLegalEntityPublicHashedId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns the Completed view."
+          }
+        }
+      },
+      "post": {
+        "operationId": "EmployerPostCompleted",
+        "parameters": [
+          {
+            "name": "employerAccountId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "accountLegalEntityPublicHashedId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CompletedViewModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "302": {
+            "description": "Redirects based on user selection."
           }
         }
       }
@@ -340,91 +370,123 @@
   },
   "components": {
     "schemas": {
-      "ApprenticeshipTrainingFormModel": {
-        "type": "object",
-        "properties": {
-          "StartDate": {
-            "type": "string",
-            "description": "The start date of the apprenticeship training."
-          },
-          "SelectedCourseId": {
-            "type": "string",
-            "description": "The ID of the selected course."
-          },
-          "AccountLegalEntityPublicHashedId": {
-            "type": "string",
-            "description": "The public hashed ID of the account legal entity."
-          },
-          "CohortRef": {
-            "type": "string",
-            "description": "The reference for the cohort."
-          },
-          "FromReview": {
-            "type": "boolean",
-            "description": "Flag indicating if the form was submitted from the review page."
-          }
-        }
-      },
       "FundingRestrictionNotificationViewModel": {
         "type": "object",
         "properties": {
           "RuleId": {
             "type": "integer",
-            "description": "The ID of the rule being notified."
+            "format": "int64"
           },
           "TypeOfRule": {
-            "type": "string",
-            "description": "The type of rule being notified."
+            "$ref": "#/components/schemas/RuleType"
           },
-          "MarkRuleAsRead": {
-            "type": "boolean",
-            "description": "Flag indicating if the rule notification should be marked as read."
+          "RestrictionStartDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "BackLink": {
+            "type": "string"
           },
           "RouteName": {
-            "type": "string",
-            "description": "The name of the route to redirect after the notification has been read."
+            "type": "string"
+          },
+          "IsProvider": {
+            "type": "boolean"
+          },
+          "PostRouteName": {
+            "type": "string"
+          },
+          "MarkRuleAsRead": {
+            "type": "boolean"
           }
-        }
+        },
+        "required": [
+          "RuleId",
+          "TypeOfRule",
+          "RouteName",
+          "MarkRuleAsRead"
+        ]
       },
-      "PostReviewViewModel": {
+      "CompletedViewModel": {
         "type": "object",
         "properties": {
-          "TrainingDate": {
-            "$ref": "#/components/schemas/TrainingDateModel",
-            "description": "The training date selected or reviewed."
+          "WhatsNext": {
+            "$ref": "#/components/schemas/CompletedReservationWhatsNext"
+          },
+          "TrainingDateDescription": {
+            "type": "string"
           },
           "CourseDescription": {
-            "type": "string",
-            "description": "The description of the selected course."
-          },
-          "AccountLegalEntityName": {
-            "type": "string",
-            "description": "The name of the associated account legal entity."
-          },
-          "AccountLegalEntityPublicHashedId": {
-            "type": "string",
-            "description": "The public hashed ID of the associated account legal entity."
+            "type": "string"
           },
           "LearningType": {
-            "type": "string",
-            "description": "The type of learning involved."
-          }
-        }
-      },
-      "TrainingDateModel": {
-        "type": "object",
-        "properties": {
+            "type": "string"
+          },
+          "AccountLegalEntityName": {
+            "type": "string"
+          },
           "StartDate": {
             "type": "string",
-            "format": "date-time",
-            "description": "Start date of the training."
+            "format": "date-time"
           },
-          "EndDate": {
+          "CourseId": {
+            "type": "string"
+          },
+          "UkPrn": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "CohortRef": {
+            "type": "string"
+          },
+          "JourneyData": {
+            "type": "string"
+          },
+          "UseLearnerData": {
+            "type": "boolean"
+          },
+          "Id": {
             "type": "string",
-            "format": "date-time",
-            "description": "End date of the training."
+            "format": "uuid"
+          },
+          "AccountLegalEntityPublicHashedId": {
+            "type": "string"
+          },
+          "FindApprenticeshipTrainingUrl": {
+            "type": "string"
+          },
+          "AddAnApprenticeUrl": {
+            "type": "string"
+          },
+          "HomepageUrl": {
+            "type": "string"
+          },
+          "RecruitUrl": {
+            "type": "string"
           }
-        }
+        },
+        "required": [
+          "WhatsNext",
+          "Id",
+          "AccountLegalEntityPublicHashedId"
+        ]
+      },
+      "RuleType": {
+        "type": "string",
+        "enum": [
+          "None",
+          "CourseRule",
+          "GlobalRule"
+        ]
+      },
+      "CompletedReservationWhatsNext": {
+        "type": "string",
+        "enum": [
+          "Homepage",
+          "RecruitAnApprentice",
+          "AddAnApprentice",
+          "FindApprenticeshipTraining"
+        ]
       }
     }
   }

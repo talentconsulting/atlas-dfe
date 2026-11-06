@@ -1,17 +1,17 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Service API",
+    "title": "Employer Feedback Service API",
     "version": "1.0.0"
   },
   "paths": {
     "/service/signout": {
       "get": {
-        "operationId": "SignOut",
-        "summary": "Signs out the user.",
+        "operationId": "SignoutGet",
+        "summary": "Signs out the user and clears session entries.",
         "responses": {
           "302": {
-            "description": "Redirect after sign out."
+            "description": "Redirect after successful sign-out."
           }
         }
       }
@@ -19,18 +19,18 @@
     "/service/signoutcleanup": {
       "get": {
         "operationId": "SignOutCleanup",
-        "summary": "Cleans up cookies related to sign out.",
+        "summary": "Deletes authentication cookies as part of sign-out cleanup.",
         "responses": {
           "204": {
-            "description": "No content."
+            "description": "No content, indicating the cleanup was successful."
           }
         }
       }
     },
     "/service/signin-stub": {
       "get": {
-        "operationId": "SigninStub",
-        "summary": "Displays a sign-in stub for debugging purposes.",
+        "operationId": "SignInStubGet",
+        "summary": "Displays the stub sign-in page.",
         "parameters": [
           {
             "name": "returnUrl",
@@ -43,16 +43,13 @@
         ],
         "responses": {
           "200": {
-            "description": "Sign-in stub page rendered.",
-            "content": {
-              "text/html": {}
-            }
+            "description": "HTML view displaying the sign-in stub form."
           }
         }
       },
       "post": {
-        "operationId": "SigninStubPost",
-        "summary": "Handles the sign-in stub form submission.",
+        "operationId": "SignInStubPost",
+        "summary": "Handles the stub sign-in process and redirects the user.",
         "requestBody": {
           "required": true,
           "content": {
@@ -65,15 +62,15 @@
         },
         "responses": {
           "302": {
-            "description": "Redirect to SignedInStub page."
+            "description": "Redirect to the signed-in stub page."
           }
         }
       }
     },
     "/service/signed-in-stub": {
       "get": {
-        "operationId": "SignedInStub",
-        "summary": "Displays the signed-in stub view.",
+        "operationId": "SignedInStubGet",
+        "summary": "Displays the signed-in stub page.",
         "parameters": [
           {
             "name": "returnUrl",
@@ -86,10 +83,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Signed-in stub page rendered.",
-            "content": {
-              "text/html": {}
-            }
+            "description": "HTML view displaying the signed-in stub page."
           }
         }
       }
@@ -115,6 +109,36 @@
           "StubId",
           "ReturnUrl"
         ]
+      },
+      "SignedInStubViewModel": {
+        "type": "object",
+        "properties": {
+          "StubEmail": {
+            "type": "string"
+          },
+          "StubId": {
+            "type": "string"
+          },
+          "ReturnUrl": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "StubEmail",
+          "StubId",
+          "ReturnUrl"
+        ]
+      },
+      "EmployerUserAccountItem": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
       }
     }
   }

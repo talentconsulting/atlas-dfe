@@ -1,15 +1,13 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Pages API",
-    "description": "API to manage form builder pages.",
+    "title": "Aodp API - Form Builder Pages",
     "version": "1.0.0"
   },
   "paths": {
     "/api/forms/{formVersionId}/sections/{sectionId}/pages": {
       "get": {
-        "operationId": "GetAllPages",
-        "summary": "Retrieve all pages for the specified section and form version.",
+        "summary": "Get all pages for a section in a form version",
         "parameters": [
           {
             "name": "formVersionId",
@@ -32,7 +30,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful response.",
+            "description": "Successfully retrieved the pages",
             "content": {
               "application/json": {
                 "schema": {
@@ -42,13 +40,12 @@
             }
           },
           "500": {
-            "description": "Internal server error."
+            "description": "Internal Server Error"
           }
         }
       },
       "post": {
-        "operationId": "CreatePage",
-        "summary": "Create a new page in the specified section and form version.",
+        "summary": "Create a new page in a section of a form version",
         "parameters": [
           {
             "name": "formVersionId",
@@ -81,7 +78,7 @@
         },
         "responses": {
           "200": {
-            "description": "Successful response.",
+            "description": "Successfully created the page",
             "content": {
               "application/json": {
                 "schema": {
@@ -91,15 +88,14 @@
             }
           },
           "500": {
-            "description": "Internal server error."
+            "description": "Internal Server Error"
           }
         }
       }
     },
     "/api/forms/{formVersionId}/sections/{sectionId}/pages/{pageId}": {
       "get": {
-        "operationId": "GetPageById",
-        "summary": "Retrieve details for a specific page.",
+        "summary": "Get a specific page by ID in a section of a form",
         "parameters": [
           {
             "name": "formVersionId",
@@ -131,7 +127,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful response.",
+            "description": "Successfully retrieved the page",
             "content": {
               "application/json": {
                 "schema": {
@@ -141,13 +137,12 @@
             }
           },
           "500": {
-            "description": "Internal server error."
+            "description": "Internal Server Error"
           }
         }
       },
       "put": {
-        "operationId": "UpdatePage",
-        "summary": "Update the details of a specific page.",
+        "summary": "Update a page by ID in a section of a form",
         "parameters": [
           {
             "name": "formVersionId",
@@ -189,7 +184,7 @@
         },
         "responses": {
           "200": {
-            "description": "Successful response.",
+            "description": "Successfully updated the page",
             "content": {
               "application/json": {
                 "schema": {
@@ -199,13 +194,12 @@
             }
           },
           "500": {
-            "description": "Internal server error."
+            "description": "Internal Server Error"
           }
         }
       },
       "delete": {
-        "operationId": "DeletePage",
-        "summary": "Delete a specific page.",
+        "summary": "Delete a page by ID in a section of a form",
         "parameters": [
           {
             "name": "formVersionId",
@@ -237,7 +231,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful response.",
+            "description": "Successfully deleted the page",
             "content": {
               "application/json": {
                 "schema": {
@@ -247,15 +241,14 @@
             }
           },
           "500": {
-            "description": "Internal server error."
+            "description": "Internal Server Error"
           }
         }
       }
     },
     "/api/forms/{formVersionId}/sections/{sectionId}/pages/{pageId}/preview": {
       "get": {
-        "operationId": "GetPagePreview",
-        "summary": "Retrieve a preview of a specific page.",
+        "summary": "Get a preview of a specific page",
         "parameters": [
           {
             "name": "formVersionId",
@@ -287,7 +280,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful response.",
+            "description": "Successfully retrieved the page preview",
             "content": {
               "application/json": {
                 "schema": {
@@ -297,15 +290,14 @@
             }
           },
           "500": {
-            "description": "Internal server error."
+            "description": "Internal Server Error"
           }
         }
       }
     },
     "/api/forms/{formVersionId}/sections/{sectionId}/pages/{pageId}/MoveUp": {
       "put": {
-        "operationId": "MovePageUp",
-        "summary": "Move the page up in the order within its section.",
+        "summary": "Move a page up in order",
         "parameters": [
           {
             "name": "formVersionId",
@@ -337,7 +329,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful response.",
+            "description": "Successfully moved the page up",
             "content": {
               "application/json": {
                 "schema": {
@@ -347,15 +339,14 @@
             }
           },
           "500": {
-            "description": "Internal server error."
+            "description": "Internal Server Error"
           }
         }
       }
     },
     "/api/forms/{formVersionId}/sections/{sectionId}/pages/{pageId}/MoveDown": {
       "put": {
-        "operationId": "MovePageDown",
-        "summary": "Move the page down in the order within its section.",
+        "summary": "Move a page down in order",
         "parameters": [
           {
             "name": "formVersionId",
@@ -387,7 +378,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful response.",
+            "description": "Successfully moved the page down",
             "content": {
               "application/json": {
                 "schema": {
@@ -397,7 +388,7 @@
             }
           },
           "500": {
-            "description": "Internal server error."
+            "description": "Internal Server Error"
           }
         }
       }
@@ -405,18 +396,109 @@
   },
   "components": {
     "schemas": {
+      "GetAllPagesQueryResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetAllPagesQueryResponse_Page"
+            }
+          }
+        }
+      },
+      "GetAllPagesQueryResponse_Page": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "sectionId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "title": {
+            "type": "string"
+          },
+          "key": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "description": {
+            "type": "string"
+          },
+          "order": {
+            "type": "integer"
+          }
+        }
+      },
+      "GetPageByIdQueryResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "sectionId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "title": {
+            "type": "string"
+          },
+          "key": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "order": {
+            "type": "integer"
+          },
+          "questions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetPageByIdQueryResponse_Question"
+            }
+          },
+          "editable": {
+            "type": "boolean"
+          },
+          "hasAssociatedRoutes": {
+            "type": "boolean"
+          }
+        }
+      },
+      "GetPageByIdQueryResponse_Question": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "key": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "order": {
+            "type": "integer"
+          },
+          "title": {
+            "type": "string"
+          }
+        }
+      },
       "CreatePageCommand": {
         "type": "object",
         "properties": {
-          "FormVersionId": {
+          "formVersionId": {
             "type": "string",
             "format": "uuid"
           },
-          "SectionId": {
+          "sectionId": {
             "type": "string",
             "format": "uuid"
           },
-          "Title": {
+          "title": {
             "type": "string"
           }
         }
@@ -424,7 +506,7 @@
       "CreatePageCommandResponse": {
         "type": "object",
         "properties": {
-          "Id": {
+          "id": {
             "type": "string",
             "format": "uuid"
           }
@@ -433,111 +515,25 @@
       "UpdatePageCommand": {
         "type": "object",
         "properties": {
-          "Id": {
+          "id": {
             "type": "string",
             "format": "uuid"
           },
-          "FormVersionId": {
+          "formVersionId": {
             "type": "string",
             "format": "uuid"
           },
-          "SectionId": {
+          "sectionId": {
             "type": "string",
             "format": "uuid"
           },
-          "Title": {
+          "title": {
             "type": "string"
-          }
-        }
-      },
-      "GetAllPagesQueryResponse": {
-        "type": "object",
-        "properties": {
-          "Data": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "Id": {
-                  "type": "string",
-                  "format": "uuid"
-                },
-                "SectionId": {
-                  "type": "string",
-                  "format": "uuid"
-                },
-                "Title": {
-                  "type": "string"
-                },
-                "Key": {
-                  "type": "string",
-                  "format": "uuid"
-                },
-                "Description": {
-                  "type": "string"
-                },
-                "Order": {
-                  "type": "integer"
-                }
-              }
-            }
-          }
-        }
-      },
-      "GetPageByIdQueryResponse": {
-        "type": "object",
-        "properties": {
-          "Id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "SectionId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "Title": {
-            "type": "string"
-          },
-          "Key": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "Order": {
-            "type": "integer"
-          },
-          "Questions": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "Id": {
-                  "type": "string",
-                  "format": "uuid"
-                },
-                "Key": {
-                  "type": "string",
-                  "format": "uuid"
-                },
-                "Order": {
-                  "type": "integer"
-                },
-                "Title": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "Editable": {
-            "type": "boolean"
-          },
-          "HasAssociatedRoutes": {
-            "type": "boolean"
           }
         }
       },
       "EmptyResponse": {
-        "type": "object",
-        "additionalProperties": false
+        "type": "object"
       }
     }
   }

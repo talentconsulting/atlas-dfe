@@ -1,0 +1,156 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Manage Restricted Provider - Remove Allowed Course Last Start Date",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/providers/{ukprn}/{routeLearningType}/allowed-courses/{larsCode}/remove-last-date-starts": {
+      "get": {
+        "tags": [
+          "ManageRestrictedProvider"
+        ],
+        "summary": "Get the remove allowed course last start date view",
+        "operationId": "GetRemoveAllowedCourseLastStartDate",
+        "parameters": [
+          {
+            "name": "ukprn",
+            "in": "path",
+            "required": true,
+            "description": "Unique identifier for the provider",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "routeLearningType",
+            "in": "path",
+            "required": true,
+            "description": "Route learning type",
+            "schema": {
+              "$ref": "#/components/schemas/RouteLearningType"
+            }
+          },
+          {
+            "name": "larsCode",
+            "in": "path",
+            "required": true,
+            "description": "LARS code for the course",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The remove allowed course last start date view",
+            "content": {
+              "text/html": {}
+            }
+          },
+          "404": {
+            "description": "Resource not found"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "ManageRestrictedProvider"
+        ],
+        "summary": "Remove allowed course last start date",
+        "operationId": "PostRemoveAllowedCourseLastStartDate",
+        "parameters": [
+          {
+            "name": "ukprn",
+            "in": "path",
+            "required": true,
+            "description": "Unique identifier for the provider",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "routeLearningType",
+            "in": "path",
+            "required": true,
+            "description": "Route learning type",
+            "schema": {
+              "$ref": "#/components/schemas/RouteLearningType"
+            }
+          },
+          {
+            "name": "larsCode",
+            "in": "path",
+            "required": true,
+            "description": "LARS code for the course",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "303": {
+            "description": "Redirects to the provider allowed courses route",
+            "headers": {
+              "Location": {
+                "description": "URI of the redirected resource",
+                "schema": {
+                  "type": "string",
+                  "format": "uri"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found"
+          }
+        },
+        "requestBody": {
+          "description": "Data to update the provider's allowed course last start date",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PutProviderAllowedCourseRequest"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "RouteLearningType": {
+        "type": "string",
+        "enum": [
+          "Apprenticeship",
+          "ApprenticeshipUnit"
+        ]
+      },
+      "PutProviderAllowedCourseRequest": {
+        "type": "object",
+        "properties": {
+          "lastDateStarts": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date",
+            "nullable": true
+          },
+          "updatedByUserId": {
+            "type": "string"
+          },
+          "updatedByUserDisplayName": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "updatedByUserId",
+          "updatedByUserDisplayName"
+        ]
+      }
+    }
+  }
+}

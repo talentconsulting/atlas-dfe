@@ -1,0 +1,115 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Employer Incentives Email Command API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/api/email-command/bank-details-required": {
+      "post": {
+        "summary": "Send Bank Detail Required Email",
+        "operationId": "sendBankDetailRequiredEmail",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendBankDetailsEmailRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "The email was successfully sent."
+          }
+        }
+      }
+    },
+    "/api/email-command/bank-details-reminder": {
+      "post": {
+        "summary": "Send Bank Detail Reminder Email",
+        "operationId": "sendBankDetailReminderEmail",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendBankDetailsEmailRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "The email was successfully sent."
+          }
+        }
+      }
+    },
+    "/api/email-command/bank-details-repeat-reminders": {
+      "post": {
+        "summary": "Send Bank Details Repeat Reminder Emails",
+        "operationId": "sendBankDetailsRepeatReminderEmails",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BankDetailsRepeatReminderEmailsRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "The reminders were successfully sent."
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "SendBankDetailsEmailRequest": {
+        "type": "object",
+        "properties": {
+          "AccountId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "AccountLegalEntityId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "EmailAddress": {
+            "type": "string",
+            "format": "email"
+          },
+          "AddBankDetailsUrl": {
+            "type": "string",
+            "format": "uri"
+          }
+        },
+        "required": [
+          "AccountId",
+          "AccountLegalEntityId",
+          "EmailAddress",
+          "AddBankDetailsUrl"
+        ]
+      },
+      "BankDetailsRepeatReminderEmailsRequest": {
+        "type": "object",
+        "properties": {
+          "ApplicationCutOffDate": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "ApplicationCutOffDate"
+        ]
+      }
+    }
+  }
+}

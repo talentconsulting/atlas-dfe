@@ -1,52 +1,31 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Provider API",
-    "version": "1.0.0",
-    "description": "API for managing provider and provider-related T Levels."
+    "title": "ProviderController API",
+    "version": "1.0.0"
   },
   "paths": {
-    "/your-providers": {
+    "/api/Provider/IsAnyProviderSetupCompleted/{ukprn}": {
       "get": {
-        "operationId": "getYourProviders",
-        "summary": "Get list of providers",
-        "description": "Retrieves the list of providers associated with the user.",
-        "responses": {
-          "200": {
-            "description": "A list of providers is returned",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProvidersViewModel"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/find-provider/{isback}": {
-      "get": {
-        "operationId": "getFindProvider",
-        "summary": "Find provider page",
+        "summary": "Check if any provider setup is completed",
         "parameters": [
           {
-            "name": "isback",
+            "name": "ukprn",
             "in": "path",
-            "required": false,
+            "required": true,
             "schema": {
-              "type": "boolean"
-            },
-            "description": "Indicate whether to prefill the search field."
+              "type": "integer",
+              "format": "int64"
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Find provider page information",
+            "description": "Provider setup status",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/FindProviderViewModel"
+                  "type": "boolean"
                 }
               }
             }
@@ -54,137 +33,37 @@
         }
       }
     },
-    "/find-provider": {
-      "post": {
-        "operationId": "postFindProvider",
-        "summary": "Submit search for provider",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/FindProviderViewModel"
-              }
-            }
-          }
-        },
-        "responses": {
-          "302": {
-            "description": "Redirects to appropriate page based on search results."
-          }
-        }
-      }
-    },
-    "/select-providers-tlevels/{providerId}": {
+    "/api/Provider/FindProvider/{name}/{isExactMatch}": {
       "get": {
-        "operationId": "getSelectProviderTlevels",
-        "summary": "Select provider's T Levels",
+        "summary": "Find a provider by name",
         "parameters": [
           {
-            "name": "providerId",
+            "name": "name",
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer"
-            },
-            "description": "The unique identifier of the provider."
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Retrieve T Level selection page",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProviderTlevelsViewModel"
-                }
-              }
+              "type": "string"
             }
-          }
-        }
-      }
-    },
-    "/add-additional-tlevels/{providerId}": {
-      "get": {
-        "operationId": "getAddProviderTlevels",
-        "summary": "Add additional T Levels for provider",
-        "parameters": [
-          {
-            "name": "providerId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer"
-            },
-            "description": "The unique identifier of the provider."
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Retrieve Add T Levels page.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProviderTlevelsViewModel"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/add-additional-tlevels": {
-      "post": {
-        "operationId": "postSubmitAddProviderTlevels",
-        "summary": "Submit additional T Levels for provider",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ProviderTlevelsViewModel"
-              }
-            }
-          }
-        },
-        "responses": {
-          "302": {
-            "description": "Redirects after adding additional T Levels for provider."
-          }
-        }
-      }
-    },
-    "/remove-tlevel/{id}/{navigation}": {
-      "get": {
-        "operationId": "getRemoveProviderTlevel",
-        "summary": "Remove provider's T Level",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer"
-            },
-            "description": "The unique identifier of the T Level to be removed."
           },
           {
-            "name": "navigation",
+            "name": "isExactMatch",
             "in": "path",
             "required": true,
             "schema": {
               "type": "boolean"
-            },
-            "description": "Indicator for navigation flow."
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Retrieve Remove T Level page",
+            "description": "Matching providers",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProviderTlevelDetailsViewModel"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProviderMetadata"
+                  }
                 }
               }
             }
@@ -192,58 +71,320 @@
         }
       }
     },
-    "/remove-tlevel": {
-      "post": {
-        "operationId": "postSubmitRemoveProviderTlevel",
-        "summary": "Submit request to remove T Level",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ProviderTlevelDetailsViewModel"
-              }
-            }
-          }
-        },
-        "responses": {
-          "302": {
-            "description": "Redirects after processing remove request."
-          }
-        }
-      }
-    },
-    "/provider-tlevels/{providerId}/{navigation}": {
+    "/api/Provider/GetSelectProviderTlevels/{aoUkprn}/{providerId}": {
       "get": {
-        "operationId": "getViewProviderTlevels",
-        "summary": "View T Levels for a provider",
+        "summary": "Get selected provider Tlevels",
         "parameters": [
+          {
+            "name": "aoUkprn",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
           {
             "name": "providerId",
             "in": "path",
             "required": true,
             "schema": {
               "type": "integer"
-            },
-            "description": "The unique identifier of the provider."
-          },
-          {
-            "name": "navigation",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "boolean"
-            },
-            "description": "Indicator for navigation flow."
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Retrieve provider's T Levels",
+            "description": "Selected provider Tlevels",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProviderTlevelsViewModel"
+                  "$ref": "#/components/schemas/ProviderTlevels"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Provider/AddProviderTlevels": {
+      "post": {
+        "summary": "Add provider Tlevels",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ProviderTlevel"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Provider Tlevels added successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Provider/GetAllProviderTlevels/{aoUkprn}/{providerId}": {
+      "get": {
+        "summary": "Get all provider Tlevels",
+        "parameters": [
+          {
+            "name": "aoUkprn",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "providerId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "All provider Tlevels",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProviderTlevels"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Provider/GetTqAoProviderDetails/{aoUkprn}": {
+      "get": {
+        "summary": "Get TQ Awarding Organisation provider details",
+        "parameters": [
+          {
+            "name": "aoUkprn",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Provider details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProviderDetails"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Provider/GetTqProviderTlevelDetails/{aoUkprn}/{tqProviderId}": {
+      "get": {
+        "summary": "Get TQ provider Tlevel details",
+        "parameters": [
+          {
+            "name": "aoUkprn",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "tqProviderId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Provider Tlevel details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProviderTlevelDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Provider/RemoveProviderTlevel/{aoUkprn}/{tqProviderId}": {
+      "delete": {
+        "summary": "Remove TQ provider Tlevel",
+        "parameters": [
+          {
+            "name": "aoUkprn",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "tqProviderId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Removal status",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Provider/HasAnyTlevelSetupForProvider/{aoUkprn}/{tlProviderId}": {
+      "get": {
+        "summary": "Check if any Tlevel setup exists for a provider",
+        "parameters": [
+          {
+            "name": "aoUkprn",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "tlProviderId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Check result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Provider/GetRegisteredProviderPathwayDetails/{aoUkprn}/{providerUkprn}": {
+      "get": {
+        "summary": "Get registered provider pathway details",
+        "parameters": [
+          {
+            "name": "aoUkprn",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "providerUkprn",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of pathway details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PathwayDetails"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Provider/GetChangeProviderPathwayDetails/{aoUkprn}/{providerUkprn}": {
+      "get": {
+        "summary": "Get change provider pathway details",
+        "parameters": [
+          {
+            "name": "aoUkprn",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "providerUkprn",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of change provider pathway details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PathwayDetails"
+                  }
                 }
               }
             }
@@ -254,102 +395,116 @@
   },
   "components": {
     "schemas": {
-      "ProvidersViewModel": {
+      "BaseModel": {
         "type": "object",
         "properties": {
-          "providers": {
+          "Id": {
+            "type": "integer"
+          }
+        }
+      },
+      "ProviderMetadata": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseModel"
+          }
+        ],
+        "properties": {
+          "DisplayName": {
+            "type": "string"
+          },
+          "UkPrn": {
+            "type": "string"
+          }
+        }
+      },
+      "ProviderDetails": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseModel"
+          }
+        ],
+        "properties": {
+          "DisplayName": {
+            "type": "string"
+          },
+          "Ukprn": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "ProviderTlevel": {
+        "type": "object",
+        "properties": {
+          "TqProviderId": {
+            "type": "integer",
+            "nullable": true
+          },
+          "TqAwardingOrganisationId": {
+            "type": "integer"
+          },
+          "TlProviderId": {
+            "type": "integer"
+          },
+          "TlevelTitle": {
+            "type": "string"
+          },
+          "TlevelCode": {
+            "type": "string"
+          },
+          "CreatedBy": {
+            "type": "string"
+          }
+        }
+      },
+      "ProviderTlevelDetails": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ProviderDetails"
+          }
+        ],
+        "properties": {
+          "ProviderTlevel": {
+            "$ref": "#/components/schemas/ProviderTlevel"
+          }
+        }
+      },
+      "ProviderTlevels": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ProviderDetails"
+          }
+        ],
+        "properties": {
+          "Tlevels": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/ProviderViewModel"
+              "$ref": "#/components/schemas/ProviderTlevel"
             }
           }
         }
       },
-      "ProviderViewModel": {
+      "PathwayDetails": {
         "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer"
-          },
-          "displayName": {
-            "type": "string"
-          },
-          "ukprn": {
-            "type": "integer"
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseModel"
           }
-        }
-      },
-      "FindProviderViewModel": {
-        "type": "object",
+        ],
         "properties": {
-          "search": {
+          "Code": {
             "type": "string"
           },
-          "showViewProvidersLink": {
-            "type": "boolean"
-          },
-          "selectedProviderId": {
-            "type": "integer"
-          }
-        }
-      },
-      "ProviderTlevelsViewModel": {
-        "type": "object",
-        "properties": {
-          "providerId": {
-            "type": "integer"
-          },
-          "displayName": {
+          "Name": {
             "type": "string"
           },
-          "tlevels": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ProviderTlevelViewModel"
-            }
-          }
-        }
-      },
-      "ProviderTlevelViewModel": {
-        "type": "object",
-        "properties": {
-          "tqProviderId": {
-            "type": "integer"
-          },
-          "tqAwardingOrganisationId": {
-            "type": "integer"
-          },
-          "tlProviderId": {
-            "type": "integer"
-          },
-          "tlevelTitle": {
+          "Title": {
             "type": "string"
-          },
-          "isSelected": {
-            "type": "boolean"
-          }
-        }
-      },
-      "ProviderTlevelDetailsViewModel": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer"
-          },
-          "displayName": {
-            "type": "string"
-          },
-          "ukprn": {
-            "type": "integer"
-          },
-          "tlevelTitle": {
-            "type": "string"
-          },
-          "tlProviderId": {
-            "type": "integer"
-          },
-          "canRemoveTlevel": {
-            "type": "boolean"
           }
         }
       }

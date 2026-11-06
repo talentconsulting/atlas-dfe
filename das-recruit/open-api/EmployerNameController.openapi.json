@@ -1,0 +1,191 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Employer Name Management API",
+    "version": "1.0.0",
+    "description": "API for managing employer names."
+  },
+  "paths": {
+    "/{EmployerAccountId}/{VacancyId}/employer-name": {
+      "get": {
+        "operationId": "getEmployerName",
+        "summary": "Retrieve employer name details",
+        "parameters": [
+          {
+            "name": "EmployerAccountId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "VacancyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "wizard",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "Indicates whether the task list wizard is being used."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Employer name details retrieved successfully",
+            "content": {
+              "text/html": {}
+            }
+          },
+          "302": {
+            "description": "Redirect to another route if employer info is unavailable.",
+            "content": {
+              "text/html": {}
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "postEmployerName",
+        "summary": "Submit employer name changes",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EmployerNameEditModel"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "EmployerAccountId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "VacancyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "302": {
+            "description": "Redirect to the next step after successful submission.",
+            "content": {
+              "text/html": {}
+            }
+          },
+          "400": {
+            "description": "Validation errors occurred. Returns the view model.",
+            "content": {
+              "text/html": {}
+            }
+          }
+        }
+      }
+    },
+    "/{EmployerAccountId}/{VacancyId}/employer-name-cancel": {
+      "get": {
+        "operationId": "cancelEmployerName",
+        "summary": "Cancel changes to employer name",
+        "parameters": [
+          {
+            "name": "EmployerAccountId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "VacancyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "wizard",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "Indicates whether the task list wizard is being used."
+          }
+        ],
+        "responses": {
+          "302": {
+            "description": "Redirects to another route upon cancellation.",
+            "content": {
+              "text/html": {}
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "EmployerNameEditModel": {
+        "type": "object",
+        "properties": {
+          "SelectedEmployerIdentityOption": {
+            "$ref": "#/components/schemas/EmployerIdentityOption"
+          },
+          "NewTradingName": {
+            "type": "string",
+            "nullable": true
+          },
+          "AnonymousName": {
+            "type": "string",
+            "nullable": true
+          },
+          "AnonymousReason": {
+            "type": "string",
+            "nullable": true
+          },
+          "EmployerAccountId": {
+            "type": "string"
+          },
+          "VacancyId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "wizard": {
+            "type": "boolean",
+            "nullable": true
+          }
+        }
+      },
+      "EmployerIdentityOption": {
+        "type": "string",
+        "enum": [
+          "RegisteredName",
+          "ExistingTradingName",
+          "NewTradingName",
+          "Anonymous"
+        ]
+      }
+    }
+  }
+}

@@ -1,17 +1,17 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "SelectProviderType API",
+    "title": "Provider Type Selection API",
     "version": "1.0.0"
   },
   "paths": {
     "/providers/new/provider-type": {
       "get": {
-        "operationId": "getProviderType",
-        "summary": "Displays the view for selecting a provider type.",
+        "operationId": "getProviderTypeSelection",
+        "summary": "Display provider type selection form",
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "Successful response with the provider type selection form",
             "content": {
               "application/json": {
                 "schema": {
@@ -23,8 +23,8 @@
         }
       },
       "post": {
-        "operationId": "postProviderType",
-        "summary": "Submits the selected provider type.",
+        "operationId": "submitProviderTypeSelection",
+        "summary": "Submit selected provider type",
         "requestBody": {
           "required": true,
           "content": {
@@ -37,14 +37,34 @@
         },
         "responses": {
           "302": {
-            "description": "Redirect response based on selected provider type."
+            "description": "Redirects based on the selected provider type",
+            "headers": {
+              "Location": {
+                "description": "The URL to redirect to",
+                "schema": {
+                  "type": "string",
+                  "format": "uri"
+                }
+              }
+            }
           },
           "400": {
-            "description": "Validation errors occurred",
+            "description": "Validation errors in submitted data",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/SelectProviderTypeViewModel"
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "required": [
+                    "errors"
+                  ]
                 }
               }
             }
@@ -58,17 +78,20 @@
       "SelectProviderTypeViewModel": {
         "type": "object",
         "properties": {
-          "SelectedProviderTypeId": {
-            "type": "integer",
-            "nullable": true
-          },
           "ProviderTypes": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/AddProviderTypeSelectionModel"
             }
+          },
+          "SelectedProviderTypeId": {
+            "type": "integer",
+            "nullable": true
           }
-        }
+        },
+        "required": [
+          "ProviderTypes"
+        ]
       },
       "SelectProviderTypeSubmitModel": {
         "type": "object",
@@ -94,7 +117,8 @@
         },
         "required": [
           "Id",
-          "Description"
+          "Description",
+          "IsSelected"
         ]
       }
     }

@@ -2,14 +2,12 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Equality Questions API",
-    "version": "1.0.0",
-    "description": "API for managing equality-related questions within the application process."
+    "version": "1.0.0"
   },
   "paths": {
     "/equality-questions/gender": {
       "get": {
-        "summary": "Get gender question",
-        "operationId": "getGenderQuestion",
+        "operationId": "GetGenderQuestions",
         "parameters": [
           {
             "name": "applicationId",
@@ -18,35 +16,29 @@
             "schema": {
               "type": "string",
               "format": "uuid"
-            },
-            "description": "Application ID for the gender question."
+            }
           },
           {
             "name": "isEdit",
             "in": "query",
             "required": false,
             "schema": {
-              "type": "boolean"
-            },
-            "description": "Indicates whether the question is being edited."
+              "type": "boolean",
+              "default": false
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Successful retrieval of gender question.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/EqualityQuestionsGenderViewModel"
-                }
-              }
-            }
+            "description": "Gender questions page rendered"
           }
-        }
+        },
+        "tags": [
+          "Equality Questions"
+        ]
       },
       "post": {
-        "summary": "Submit gender question answer",
-        "operationId": "postGenderQuestion",
+        "operationId": "PostGenderQuestions",
         "parameters": [
           {
             "name": "applicationId",
@@ -55,12 +47,10 @@
             "schema": {
               "type": "string",
               "format": "uuid"
-            },
-            "description": "Application ID for the gender question."
+            }
           }
         ],
         "requestBody": {
-          "description": "Gender question answer submission.",
           "required": true,
           "content": {
             "application/json": {
@@ -72,15 +62,17 @@
         },
         "responses": {
           "200": {
-            "description": "Successful submission of gender question answer."
+            "description": "Processed gender questions submission"
           }
-        }
+        },
+        "tags": [
+          "Equality Questions"
+        ]
       }
     },
     "/equality-questions/ethnic-group": {
       "get": {
-        "summary": "Get ethnic group",
-        "operationId": "getEthnicGroup",
+        "operationId": "GetEthnicGroupQuestions",
         "parameters": [
           {
             "name": "applicationId",
@@ -89,44 +81,38 @@
             "schema": {
               "type": "string",
               "format": "uuid"
-            },
-            "description": "Application ID for the ethnic group question."
+            }
           },
           {
             "name": "isEdit",
             "in": "query",
             "required": false,
             "schema": {
-              "type": "boolean"
-            },
-            "description": "Indicates whether the question is being edited."
+              "type": "boolean",
+              "default": false
+            }
           },
           {
             "name": "clear",
             "in": "query",
             "required": false,
             "schema": {
-              "type": "boolean"
-            },
-            "description": "Indicates whether to clear the selection."
+              "type": "boolean",
+              "default": false
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Successful retrieval of ethnic group.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/EqualityQuestionsEthnicGroupViewModel"
-                }
-              }
-            }
+            "description": "Ethnic group questions page rendered"
           }
-        }
+        },
+        "tags": [
+          "Equality Questions"
+        ]
       },
       "post": {
-        "summary": "Submit ethnic group answer",
-        "operationId": "postEthnicGroup",
+        "operationId": "PostEthnicGroupQuestions",
         "parameters": [
           {
             "name": "applicationId",
@@ -135,12 +121,10 @@
             "schema": {
               "type": "string",
               "format": "uuid"
-            },
-            "description": "Application ID for the ethnic group question."
+            }
           }
         ],
         "requestBody": {
-          "description": "Ethnic group answer submission.",
           "required": true,
           "content": {
             "application/json": {
@@ -152,27 +136,33 @@
         },
         "responses": {
           "200": {
-            "description": "Successful submission of ethnic group answer."
+            "description": "Processed ethnic group questions submission"
           }
-        }
+        },
+        "tags": [
+          "Equality Questions"
+        ]
       }
     },
-    "/equality-questions/edit": {
+    "/equality-questions/ethnic-group/{subgroup}": {
       "get": {
-        "summary": "Edit Equality Questions",
-        "operationId": "editEqualityQuestions",
-        "responses": {
-          "302": {
-            "description": "Redirects to the Equality Question summary."
-          }
-        }
-      }
-    },
-    "/equality-questions/summary": {
-      "get": {
-        "summary": "Get summary of equality questions",
-        "operationId": "getEqualityQuestionsSummary",
+        "operationId": "GetEthnicSubGroupQuestions",
         "parameters": [
+          {
+            "name": "subgroup",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "white",
+                "mixed",
+                "asian",
+                "black",
+                "other"
+              ]
+            }
+          },
           {
             "name": "applicationId",
             "in": "query",
@@ -180,26 +170,29 @@
             "schema": {
               "type": "string",
               "format": "uuid"
-            },
-            "description": "Application ID for the summary question."
+            }
+          },
+          {
+            "name": "isEdit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Successful retrieval of summary.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/EqualityQuestionsSummaryViewModel"
-                }
-              }
-            }
+            "description": "Ethnic subgroup questions page rendered"
           }
-        }
+        },
+        "tags": [
+          "Equality Questions"
+        ]
       },
       "post": {
-        "summary": "Submit equality questions summary",
-        "operationId": "postEqualityQuestionsSummary",
+        "operationId": "PostEthnicSubGroupQuestions",
         "parameters": [
           {
             "name": "applicationId",
@@ -208,12 +201,79 @@
             "schema": {
               "type": "string",
               "format": "uuid"
-            },
-            "description": "Application ID for the summary question."
+            }
           }
         ],
         "requestBody": {
-          "description": "Submit the summary of equality questions.",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EqualityQuestionEthnicSubGroupViewModelBase"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Processed ethnic subgroup questions submission"
+          }
+        },
+        "tags": [
+          "Equality Questions"
+        ]
+      }
+    },
+    "/equality-questions/edit": {
+      "get": {
+        "operationId": "EditEqualityQuestions",
+        "responses": {
+          "302": {
+            "description": "Redirect to summary page"
+          }
+        },
+        "tags": [
+          "Equality Questions"
+        ]
+      }
+    },
+    "/equality-questions/summary": {
+      "get": {
+        "operationId": "GetSummaryQuestions",
+        "parameters": [
+          {
+            "name": "applicationId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Summary questions page rendered"
+          }
+        },
+        "tags": [
+          "Equality Questions"
+        ]
+      },
+      "post": {
+        "operationId": "PostSummaryQuestions",
+        "parameters": [
+          {
+            "name": "applicationId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
           "required": true,
           "content": {
             "application/json": {
@@ -224,10 +284,13 @@
           }
         },
         "responses": {
-          "200": {
-            "description": "Successful submission of summary."
+          "302": {
+            "description": "Redirect based on application status"
           }
-        }
+        },
+        "tags": [
+          "Equality Questions"
+        ]
       }
     }
   },
@@ -268,6 +331,30 @@
           },
           "isEdit": {
             "type": "boolean"
+          }
+        }
+      },
+      "EqualityQuestionEthnicSubGroupViewModelBase": {
+        "type": "object",
+        "properties": {
+          "applicationId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "isEdit": {
+            "type": "boolean"
+          },
+          "ethnicGroup": {
+            "type": "string"
+          },
+          "ethnicSubGroup": {
+            "type": "string",
+            "nullable": true
+          },
+          "otherEthnicSubGroupAnswer": {
+            "type": "string",
+            "nullable": true
           }
         }
       },

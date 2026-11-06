@@ -1,0 +1,148 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Add Allowed Course API",
+    "version": "1.0.0",
+    "description": "API for managing allowed courses for restricted providers."
+  },
+  "paths": {
+    "/providers/{ukprn}/{routeLearningType}/allowed-courses/add": {
+      "get": {
+        "summary": "Retrieve the add allowed course page for a restricted provider.",
+        "operationId": "GetAddAllowedCoursePage",
+        "parameters": [
+          {
+            "name": "ukprn",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "description": "The UKPRN of the provider"
+            }
+          },
+          {
+            "name": "routeLearningType",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "Apprenticeship",
+                "ApprenticeshipUnit"
+              ],
+              "description": "The type of route learning qualification."
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/html": {
+                "example": "<html>...</html>"
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found - Route Learning Type or Organisation is not valid."
+          },
+          "302": {
+            "description": "Redirect - If the provider is not restricted, redirects to another route."
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      },
+      "post": {
+        "summary": "Add a course to the allowed list for a restricted provider.",
+        "operationId": "PostAddAllowedCourse",
+        "parameters": [
+          {
+            "name": "ukprn",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "description": "The UKPRN of the provider."
+            }
+          },
+          {
+            "name": "routeLearningType",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "Apprenticeship",
+                "ApprenticeshipUnit"
+              ],
+              "description": "The type of route learning qualification."
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddAllowedCourseSubmitModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Course successfully added to the allowed list."
+          },
+          "404": {
+            "description": "Not Found - Either the course or provider is not valid."
+          },
+          "302": {
+            "description": "Redirect - Successful addition triggers a redirect."
+          },
+          "400": {
+            "description": "Bad Request - Validation failed for the submitted data.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "errors": [
+                    "Validation error details."
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AddAllowedCourseSubmitModel": {
+        "type": "object",
+        "properties": {
+          "SelectedLarsCode": {
+            "type": "string",
+            "nullable": true,
+            "description": "The LARS code of the course."
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    }
+  }
+}

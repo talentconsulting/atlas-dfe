@@ -1,0 +1,279 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Funding Projection API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/employer-funding-projection/{accountId}/funding-projection": {
+      "post": {
+        "operationId": "PostEmployerFundingProjection",
+        "summary": "Get employer funding projection",
+        "tags": [
+          "Funding Projection"
+        ],
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PostEmployerFundingProjectionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Funding projection successfully retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EstimatesTimeline"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "PostEmployerFundingProjectionRequest": {
+        "type": "object",
+        "properties": {
+          "StartPeriod": {
+            "type": "string",
+            "format": "date"
+          },
+          "Months": {
+            "type": "integer",
+            "default": 6
+          },
+          "CurrentLevyFunds": {
+            "type": "number",
+            "format": "decimal",
+            "default": 0.0
+          },
+          "HistoricLevyIn": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LevyInMonthSummary"
+            },
+            "default": []
+          },
+          "LevyFundsInForExpiry": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CalendarPeriodAmount"
+            },
+            "default": []
+          },
+          "PaymentFundsOutForExpiry": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CalendarPeriodAmount"
+            },
+            "default": []
+          },
+          "LongTermExpiredFunds": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CalendarPeriodAmount"
+            },
+            "default": []
+          },
+          "ShortTermExpiredFunds": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CalendarPeriodAmount"
+            },
+            "default": []
+          },
+          "CurrentPayments": {
+            "$ref": "#/components/schemas/CollectionPeriodPayments"
+          }
+        }
+      },
+      "EstimatesTimeline": {
+        "type": "object",
+        "properties": {
+          "AccountId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "TotalEstimatedCommitedCost": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "TotalEstimatedCommitedTransferCost": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "Projections": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MonthlyFundingBreakdown"
+            }
+          }
+        }
+      },
+      "LevyInMonthSummary": {
+        "type": "object",
+        "properties": {
+          "Period": {
+            "type": "string",
+            "format": "date"
+          },
+          "Amount": {
+            "type": "number",
+            "format": "decimal"
+          }
+        }
+      },
+      "CalendarPeriodAmount": {
+        "type": "object",
+        "properties": {
+          "Year": {
+            "type": "integer"
+          },
+          "Month": {
+            "type": "integer"
+          },
+          "Amount": {
+            "type": "number",
+            "format": "decimal"
+          }
+        }
+      },
+      "CollectionPeriodPayments": {
+        "type": "object",
+        "properties": {
+          "PeriodEndCompleted": {
+            "type": "boolean"
+          },
+          "Payments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CollectionPeriodPaymentTotal"
+            }
+          }
+        }
+      },
+      "CollectionPeriodPaymentTotal": {
+        "type": "object",
+        "properties": {
+          "FundingSource": {
+            "$ref": "#/components/schemas/FundingSource"
+          },
+          "TransactionType": {
+            "$ref": "#/components/schemas/TransactionType"
+          },
+          "Amount": {
+            "type": "number",
+            "format": "decimal"
+          }
+        }
+      },
+      "FundingSource": {
+        "type": "string",
+        "enum": [
+          "Levy",
+          "CoInvestedSfa",
+          "CoInvestedEmployer",
+          "FullyFundedSfa",
+          "LevyTransfer"
+        ]
+      },
+      "TransactionType": {
+        "type": "string",
+        "enum": [
+          "Learning",
+          "Completion",
+          "Balancing",
+          "Milestone1"
+        ]
+      },
+      "MonthlyFundingBreakdown": {
+        "type": "object",
+        "properties": {
+          "EmployerAccountId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "Month": {
+            "type": "integer"
+          },
+          "Year": {
+            "type": "integer"
+          },
+          "ClosingBalance": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "CoInvestmentCosts": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "LevyInSummary": {
+            "$ref": "#/components/schemas/LevyInSummary"
+          },
+          "LevyOutSummary": {
+            "$ref": "#/components/schemas/LevyOutSummary"
+          }
+        }
+      },
+      "LevyOutSummary": {
+        "type": "object",
+        "properties": {
+          "CommittedLearnerCost": {
+            "type": "number",
+            "format": "decimal",
+            "default": 0.0
+          },
+          "CommittedLearnerFinalPaymentCost": {
+            "type": "number",
+            "format": "decimal",
+            "default": 0.0
+          },
+          "CommittedTransferOut": {
+            "type": "number",
+            "format": "decimal",
+            "default": 0.0
+          },
+          "CommittedTransferOutFinalPaymentCost": {
+            "type": "number",
+            "format": "decimal",
+            "default": 0.0
+          },
+          "ExpiredLevy": {
+            "type": "number",
+            "format": "decimal",
+            "default": 0.0
+          }
+        }
+      },
+      "LevyInSummary": {
+        "type": "object",
+        "properties": {
+          "LevyIn": {
+            "type": "number",
+            "format": "decimal",
+            "default": 0.0
+          }
+        }
+      }
+    }
+  }
+}

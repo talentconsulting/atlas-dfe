@@ -1,20 +1,22 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Set Last Date Starts API",
-    "version": "1.0.0",
-    "description": "API for managing last start dates for restricted courses."
+    "title": "Set Last Date of Starts API",
+    "version": "1.0.0"
   },
   "paths": {
     "/restricted-courses/{larsCode}/providers/{ukprn}/set-last-start-date": {
       "get": {
-        "summary": "Display the form to set last start date",
-        "operationId": "setLastStartDateFormDisplay",
+        "tags": [
+          "SetLastDateStarts"
+        ],
+        "summary": "Get the last date of starts for a course provider",
         "parameters": [
           {
             "name": "larsCode",
             "in": "path",
             "required": true,
+            "description": "The LARS code of the course",
             "schema": {
               "type": "string"
             }
@@ -23,35 +25,33 @@
             "name": "ukprn",
             "in": "path",
             "required": true,
+            "description": "UKPRN of the provider",
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "format": "int32"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Form displayed successfully."
+            "description": "The view of the last start date page is shown"
           },
           "404": {
-            "description": "Course details or provider not found."
+            "description": "The course or provider was not found"
           }
-        },
-        "security": [
-          {
-            "roles": [
-              "RoatpAdminTeam"
-            ]
-          }
-        ]
+        }
       },
       "post": {
-        "summary": "Update the last start date for a provider",
-        "operationId": "updateLastStartDate",
+        "tags": [
+          "SetLastDateStarts"
+        ],
+        "summary": "Set the last date of starts for a course provider",
         "parameters": [
           {
             "name": "larsCode",
             "in": "path",
             "required": true,
+            "description": "The LARS code of the course",
             "schema": {
               "type": "string"
             }
@@ -60,8 +60,10 @@
             "name": "ukprn",
             "in": "path",
             "required": true,
+            "description": "UKPRN of the provider",
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "format": "int32"
             }
           }
         ],
@@ -77,22 +79,15 @@
         },
         "responses": {
           "302": {
-            "description": "Redirect to restricted course details page."
+            "description": "Redirects to the restricted course details page upon successful update"
           },
           "400": {
-            "description": "Validation errors for the submitted data."
+            "description": "Validation errors or invalid input data"
           },
           "404": {
-            "description": "Session or course details not found."
+            "description": "The session, course, or provider was not found"
           }
-        },
-        "security": [
-          {
-            "roles": [
-              "RoatpAdminTeam"
-            ]
-          }
-        ]
+        }
       }
     }
   },
@@ -103,40 +98,32 @@
         "properties": {
           "Day": {
             "type": "string",
-            "nullable": true
+            "nullable": true,
+            "description": "Day component of the date"
           },
           "Month": {
             "type": "string",
-            "nullable": true
+            "nullable": true,
+            "description": "Month component of the date"
           },
           "Year": {
             "type": "string",
-            "nullable": true
+            "nullable": true,
+            "description": "Year component of the date"
           },
           "LarsCode": {
             "type": "string",
-            "nullable": true
+            "nullable": true,
+            "description": "The LARS code of the course"
           },
           "CourseLastDateStarts": {
             "type": "string",
-            "format": "date-time",
-            "nullable": true
+            "format": "date",
+            "nullable": true,
+            "description": "The last start date of the course"
           }
-        }
-      }
-    },
-    "securitySchemes": {
-      "roles": {
-        "type": "oauth2",
-        "description": "Role-based access control",
-        "flows": {
-          "implicit": {
-            "authorizationUrl": "https://example.com/oauth/authorize",
-            "scopes": {
-              "RoatpAdminTeam": "Access is restricted to Roatp Admin Team members."
-            }
-          }
-        }
+        },
+        "required": []
       }
     }
   }

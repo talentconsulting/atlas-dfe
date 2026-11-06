@@ -7,7 +7,7 @@
   "paths": {
     "/notifications/apprenticeship-progress/{apprenticeIdentifier}/": {
       "post": {
-        "operationId": "createApprenticeshipProgress",
+        "summary": "Create apprenticeship progress for an apprentice",
         "parameters": [
           {
             "name": "apprenticeIdentifier",
@@ -21,11 +21,11 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Progress created successfully",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/AddApprenticeshipProgressCommand"
                 }
               }
             }
@@ -35,7 +35,7 @@
     },
     "/notifications/apprenticeship-progress/{apprenticeIdentifier}": {
       "get": {
-        "operationId": "getApprenticeProgressByApprenticeId",
+        "summary": "Get apprentice progress by apprentice ID",
         "parameters": [
           {
             "name": "apprenticeIdentifier",
@@ -49,11 +49,11 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Apprentice progress data retrieved successfully",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/GetApprenticeshipProgressNotificationsByIdQuery"
                 }
               }
             }
@@ -63,7 +63,7 @@
     },
     "/notifications/progress-notification/{notificationId}": {
       "get": {
-        "operationId": "getProgressNotificationById",
+        "summary": "Get progress notification by ID",
         "parameters": [
           {
             "name": "notificationId",
@@ -77,11 +77,11 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Progress notification data retrieved successfully",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/GetProgressNotificationsByIdQuery"
                 }
               }
             }
@@ -91,14 +91,14 @@
     },
     "/notifications/progress-notification-to-check": {
       "get": {
-        "operationId": "getProgressNotificationsToCheck",
+        "summary": "Get progress notifications to check",
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Progress notifications retrieved successfully",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/GetProgressNotificationsToCheckQuery"
                 }
               }
             }
@@ -108,7 +108,7 @@
     },
     "/notifications/updateProgressNotificationStatus/{notificationId}/{apprenticeProgressId}": {
       "patch": {
-        "operationId": "updateProgressNotificationStatus",
+        "summary": "Update progress notification status",
         "parameters": [
           {
             "name": "notificationId",
@@ -124,21 +124,13 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "integer"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
+            "description": "Progress notification status updated successfully"
           }
         }
       }
@@ -146,162 +138,47 @@
   },
   "components": {
     "schemas": {
-      "Task": {
+      "AddApprenticeshipProgressCommand": {
         "type": "object",
         "properties": {
-          "TaskId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "ApprenticeshipId": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "ApprenticeAccountId": {
+          "ApprenticeIdentifier": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      },
+      "GetApprenticeshipProgressNotificationsByIdQuery": {
+        "type": "object",
+        "properties": {
+          "ApprenticeIdentifier": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      },
+      "GetProgressNotificationsByIdQuery": {
+        "type": "object",
+        "properties": {
+          "NotificationId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      },
+      "GetProgressNotificationsToCheckQuery": {
+        "type": "object",
+        "properties": {},
+        "description": "Properties not detailed in the source provided."
+      },
+      "UpdateProgressNotificationStatusCommand": {
+        "type": "object",
+        "properties": {
+          "NotificationId": {
             "type": "string",
             "format": "uuid"
           },
-          "DueDate": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "Title": {
-            "type": "string"
-          },
-          "ApprenticeshipCategoryId": {
-            "type": "integer",
-            "nullable": true
-          },
-          "Note": {
-            "type": "string"
-          },
-          "CompletionDateTime": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "CreatedDateTime": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "Status": {
-            "$ref": "#/components/schemas/TaskStatus"
-          },
-          "TaskFiles": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/TaskFile"
-            }
-          },
-          "TaskReminders": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/TaskReminder"
-            }
-          },
-          "TaskLinkedKsbs": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/TaskKSBs"
-            }
-          }
-        }
-      },
-      "TaskStatus": {
-        "type": "string",
-        "enum": [
-          "Todo",
-          "Done"
-        ]
-      },
-      "TaskFile": {
-        "type": "object",
-        "properties": {
-          "TaskId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "TaskFileId": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "FileType": {
-            "type": "string"
-          },
-          "FileName": {
-            "type": "string"
-          },
-          "FileContents": {
-            "type": "string",
-            "format": "binary"
-          }
-        }
-      },
-      "TaskReminder": {
-        "type": "object",
-        "properties": {
-          "TaskId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "ReminderId": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "ReminderValue": {
-            "type": "integer",
-            "nullable": true
-          },
-          "ReminderUnit": {
-            "$ref": "#/components/schemas/ReminderUnit"
-          },
-          "Status": {
-            "$ref": "#/components/schemas/ReminderStatus"
-          }
-        }
-      },
-      "ReminderUnit": {
-        "type": "string",
-        "enum": [
-          "Minutes",
-          "Hours",
-          "Days"
-        ]
-      },
-      "ReminderStatus": {
-        "type": "string",
-        "enum": [
-          "NotSent",
-          "Sent",
-          "Dismissed"
-        ]
-      },
-      "TaskKSBs": {
-        "type": "object",
-        "properties": {
-          "TaskId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "KSBProgressId": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          }
-        }
-      },
-      "ApprenticeshipCategory": {
-        "type": "object",
-        "properties": {
-          "CategoryId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "Title": {
-            "type": "string"
+          "ApprenticeProgressId": {
+            "type": "integer"
           }
         }
       }

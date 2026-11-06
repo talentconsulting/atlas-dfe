@@ -2,13 +2,14 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Qualifications API",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "description": "API for managing qualification-related operations in apprenticeship applications."
   },
   "paths": {
     "/apply/{applicationId}/qualifications": {
       "get": {
-        "operationId": "getQualifications",
-        "summary": "Retrieve qualifications list for an application.",
+        "summary": "Get qualifications for an application",
+        "description": "Fetch the list of qualifications for a given application and candidate.",
         "parameters": [
           {
             "name": "applicationId",
@@ -22,7 +23,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "A list of qualifications.",
             "content": {
               "application/json": {
                 "schema": {
@@ -34,8 +35,8 @@
         }
       },
       "post": {
-        "operationId": "updateQualifications",
-        "summary": "Update qualifications for an application.",
+        "summary": "Update or add qualifications for an application",
+        "description": "Update or add qualifications to an application based on the provided model.",
         "parameters": [
           {
             "name": "applicationId",
@@ -59,18 +60,18 @@
         },
         "responses": {
           "200": {
-            "description": "Qualifications updated successfully."
+            "description": "Operation was successful."
           },
           "400": {
-            "description": "Validation error."
+            "description": "Invalid request body."
           }
         }
       }
     },
     "/apply/{applicationId}/qualifications/add/select-type": {
       "get": {
-        "operationId": "getQualificationTypes",
-        "summary": "Retrieve qualification types for adding new qualifications.",
+        "summary": "Select qualification type to add",
+        "description": "Retrieve the list of qualification types to select one for addition.",
         "parameters": [
           {
             "name": "applicationId",
@@ -84,7 +85,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "A list of qualification types.",
             "content": {
               "application/json": {
                 "schema": {
@@ -96,8 +97,8 @@
         }
       },
       "post": {
-        "operationId": "selectQualificationType",
-        "summary": "Select qualification type for new qualifications.",
+        "summary": "Submit selected qualification type",
+        "description": "Submit the selected qualification type for an application.",
         "requestBody": {
           "required": true,
           "content": {
@@ -110,18 +111,18 @@
         },
         "responses": {
           "200": {
-            "description": "Qualification type selected successfully."
+            "description": "Qualification type was successfully submitted."
           },
           "400": {
-            "description": "Validation error."
+            "description": "Invalid request body."
           }
         }
       }
     },
     "/apply/{applicationId}/qualifications/{qualificationReferenceId}/modify": {
       "get": {
-        "operationId": "getQualificationToModify",
-        "summary": "Retrieve information for modifying a qualification.",
+        "summary": "Modify an existing qualification",
+        "description": "Retrieve details for modifying a qualification within an application.",
         "parameters": [
           {
             "name": "applicationId",
@@ -144,6 +145,7 @@
           {
             "name": "id",
             "in": "query",
+            "required": false,
             "schema": {
               "type": "string",
               "format": "uuid"
@@ -152,7 +154,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "Details of the qualification to modify.",
             "content": {
               "application/json": {
                 "schema": {
@@ -164,8 +166,8 @@
         }
       },
       "post": {
-        "operationId": "modifyQualification",
-        "summary": "Modify an existing qualification.",
+        "summary": "Submit qualification modifications",
+        "description": "Submit updates made to a specific qualification in an application.",
         "requestBody": {
           "required": true,
           "content": {
@@ -178,18 +180,18 @@
         },
         "responses": {
           "200": {
-            "description": "Qualification modified successfully."
+            "description": "Qualification update was successful."
           },
           "400": {
-            "description": "Validation error."
+            "description": "Invalid request body."
           }
         }
       }
     },
     "/apply/{applicationId}/qualifications/delete/{qualificationReferenceId}": {
       "get": {
-        "operationId": "getQualificationsForDeletion",
-        "summary": "Retrieve qualifications details for deletion.",
+        "summary": "Confirm deletion of a qualification",
+        "description": "Retrieve details for confirming the deletion of a qualification.",
         "parameters": [
           {
             "name": "applicationId",
@@ -212,6 +214,7 @@
           {
             "name": "id",
             "in": "query",
+            "required": false,
             "schema": {
               "type": "string",
               "format": "uuid"
@@ -220,7 +223,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "Details of the qualifications to be deleted.",
             "content": {
               "application/json": {
                 "schema": {
@@ -232,8 +235,8 @@
         }
       },
       "post": {
-        "operationId": "deleteQualifications",
-        "summary": "Delete qualifications.",
+        "summary": "Delete a qualification",
+        "description": "Delete a specific qualification from an application.",
         "requestBody": {
           "required": true,
           "content": {
@@ -246,10 +249,10 @@
         },
         "responses": {
           "200": {
-            "description": "Qualifications deleted successfully."
+            "description": "Qualification deletion was successful."
           },
           "400": {
-            "description": "Validation error."
+            "description": "Invalid request body."
           }
         }
       }
@@ -259,21 +262,29 @@
     "schemas": {
       "QualificationsViewModel": {
         "type": "object",
+        "required": [
+          "applicationId"
+        ],
         "properties": {
-          "ApplicationId": {
+          "applicationId": {
             "type": "string",
             "format": "uuid"
           },
-          "QualificationGroups": {
+          "doYouWantToAddAnyQualifications": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "isSectionCompleted": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "qualificationGroups": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/QualificationGroup"
             }
           },
-          "ShowQualifications": {
-            "type": "boolean"
-          },
-          "DoYouWantToAddAnyQualifications": {
+          "showQualifications": {
             "type": "boolean"
           }
         }
@@ -281,11 +292,24 @@
       "QualificationGroup": {
         "type": "object",
         "properties": {
-          "QualificationReferenceId": {
+          "qualificationReferenceId": {
             "type": "string",
             "format": "uuid"
           },
-          "Qualifications": {
+          "displayName": {
+            "type": "string"
+          },
+          "allowMultipleAdd": {
+            "type": "boolean"
+          },
+          "showAdditionalInformation": {
+            "type": "boolean"
+          },
+          "showLevel": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "qualifications": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/Qualification"
@@ -296,143 +320,224 @@
       "Qualification": {
         "type": "object",
         "properties": {
-          "Id": {
+          "id": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "nullable": true
           },
-          "Subject": {
+          "subject": {
             "type": "string"
           },
-          "Grade": {
+          "grade": {
             "type": "string"
           },
-          "AdditionalInformation": {
+          "additionalInformation": {
             "type": "string"
+          },
+          "isPredicted": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "qualificationOrder": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
           }
         }
       },
       "AddQualificationSelectTypeViewModel": {
         "type": "object",
+        "required": [
+          "applicationId"
+        ],
         "properties": {
-          "ApplicationId": {
+          "applicationId": {
             "type": "string",
             "format": "uuid"
           },
-          "Qualifications": {
+          "qualificationReferenceId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "qualifications": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/QualificationType"
             }
           },
-          "QualificationReferenceId": {
-            "type": "string",
-            "format": "uuid"
+          "hasAddedQualifications": {
+            "type": "boolean"
           }
         }
       },
       "QualificationType": {
         "type": "object",
         "properties": {
-          "Id": {
+          "id": {
             "type": "string",
             "format": "uuid"
           },
-          "Name": {
+          "name": {
             "type": "string"
           }
         }
       },
       "AddQualificationViewModel": {
         "type": "object",
+        "required": [
+          "applicationId",
+          "qualificationReferenceId"
+        ],
         "properties": {
-          "ApplicationId": {
+          "applicationId": {
             "type": "string",
             "format": "uuid"
           },
-          "QualificationReferenceId": {
+          "qualificationReferenceId": {
             "type": "string",
             "format": "uuid"
           },
-          "Subjects": {
+          "qualificationDisplayTypeViewModel": {
+            "type": "object",
+            "nullable": true
+          },
+          "subjects": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/SubjectViewModel"
             }
           },
-          "Courses": {
+          "courses": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/CourseDataListItem"
             }
+          },
+          "isApprenticeship": {
+            "type": "boolean"
+          },
+          "singleQualificationId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "qualificationType": {
+            "type": "string"
+          },
+          "backLinkUrl": {
+            "type": "string",
+            "nullable": true
           }
         }
       },
       "SubjectViewModel": {
         "type": "object",
         "properties": {
-          "Id": {
+          "id": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "nullable": true
           },
-          "Name": {
-            "type": "string"
+          "name": {
+            "type": "string",
+            "nullable": true
           },
-          "Grade": {
-            "type": "string"
+          "level": {
+            "type": "string",
+            "nullable": true
           },
-          "Level": {
-            "type": "string"
+          "additionalInformation": {
+            "type": "string",
+            "nullable": true
+          },
+          "grade": {
+            "type": "string",
+            "nullable": true
+          },
+          "isPredicted": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "qualificationOrder": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "isDeleted": {
+            "type": "boolean",
+            "nullable": true
           }
         }
       },
       "CourseDataListItem": {
         "type": "object",
         "properties": {
-          "Id": {
+          "id": {
             "type": "string"
           },
-          "Title": {
+          "title": {
             "type": "string"
           }
         }
       },
       "DeleteQualificationsViewModel": {
         "type": "object",
+        "required": [
+          "applicationId",
+          "qualificationReferenceId"
+        ],
         "properties": {
-          "ApplicationId": {
+          "applicationId": {
             "type": "string",
             "format": "uuid"
           },
-          "QualificationReferenceId": {
+          "qualificationReferenceId": {
             "type": "string",
             "format": "uuid"
           },
-          "DisplayName": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "displayName": {
             "type": "string"
           },
-          "Qualifications": {
+          "showAdditionalInformation": {
+            "type": "boolean"
+          },
+          "qualifications": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/DeleteQualification"
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "subject": {
+                  "type": "string"
+                },
+                "grade": {
+                  "type": "string"
+                },
+                "level": {
+                  "type": "string"
+                },
+                "additionalInformation": {
+                  "type": "string"
+                },
+                "isPredicted": {
+                  "type": "boolean",
+                  "nullable": true
+                },
+                "qualificationOrder": {
+                  "type": "integer",
+                  "format": "int32",
+                  "nullable": true
+                }
+              }
             }
-          }
-        }
-      },
-      "DeleteQualification": {
-        "type": "object",
-        "properties": {
-          "Id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "Subject": {
-            "type": "string"
-          },
-          "Grade": {
-            "type": "string"
-          },
-          "AdditionalInformation": {
-            "type": "string"
           }
         }
       }

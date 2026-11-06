@@ -1,14 +1,14 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "ShortCourses API",
+    "title": "Short Courses API",
     "version": "1.0.0"
   },
   "paths": {
     "/shortCourses": {
       "post": {
-        "summary": "Create Unapproved Short Course Learning",
-        "operationId": "createUnapprovedShortCourseLearning",
+        "operationId": "CreateUnapprovedShortCourseLearning",
+        "summary": "Create an unapproved short course learning entry.",
         "requestBody": {
           "required": true,
           "content": {
@@ -21,18 +21,18 @@
         },
         "responses": {
           "200": {
-            "description": "Successfully created unapproved short course learning"
+            "description": "Successfully created the unapproved short course learning."
           },
           "500": {
-            "description": "Error creating unapproved short course learning"
+            "description": "Internal server error."
           }
         }
       }
     },
     "/fm99/{learningKey}/shortCourses": {
       "get": {
-        "summary": "Get FM99 Short Course Earnings",
-        "operationId": "getFm99ShortCourseEarnings",
+        "operationId": "GetFm99ShortCourseEarnings",
+        "summary": "Retrieve FM99 short course earnings for a learning key.",
         "parameters": [
           {
             "name": "learningKey",
@@ -58,29 +58,31 @@
             "required": true,
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int16"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Successfully retrieved short course earnings",
+            "description": "Successfully retrieved short course earnings.",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "type": "object"
+                }
               }
             }
           },
           "500": {
-            "description": "Error retrieving short course earnings"
+            "description": "Internal server error."
           }
         }
       }
     },
     "/{learningKey}/shortCourses/{episodeKey}/on-programme": {
       "put": {
-        "summary": "Update Short Course On Programme",
-        "operationId": "updateShortCourseOnProgramme",
+        "operationId": "UpdateOnProgramme",
+        "summary": "Update short course on-programme information.",
         "parameters": [
           {
             "name": "learningKey",
@@ -113,23 +115,25 @@
         },
         "responses": {
           "200": {
-            "description": "Successfully updated short course on programme",
+            "description": "Successfully updated short course on-programme.",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "type": "object"
+                }
               }
             }
           },
           "500": {
-            "description": "Error updating short course on programme"
+            "description": "Internal server error."
           }
         }
       }
     },
     "/{learningKey}/shortCourses/{episodeKey}": {
       "get": {
-        "summary": "Get Short Course",
-        "operationId": "getShortCourse",
+        "operationId": "GetShortCourse",
+        "summary": "Retrieve a specific short course by learning and episode keys.",
         "parameters": [
           {
             "name": "learningKey",
@@ -152,21 +156,23 @@
         ],
         "responses": {
           "200": {
-            "description": "Successfully retrieved short course",
+            "description": "Successfully retrieved the short course.",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "type": "object"
+                }
               }
             }
           },
           "500": {
-            "description": "Error retrieving short course"
+            "description": "Internal server error."
           }
         }
       },
       "delete": {
-        "summary": "Remove Short Course Learning",
-        "operationId": "removeShortCourseLearning",
+        "operationId": "RemoveShortCourseLearning",
+        "summary": "Delete a short course learning entry.",
         "parameters": [
           {
             "name": "learningKey",
@@ -206,15 +212,17 @@
         ],
         "responses": {
           "200": {
-            "description": "Successfully removed short course learning",
+            "description": "Successfully removed short course learning.",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "type": "object"
+                }
               }
             }
           },
           "500": {
-            "description": "Error removing short course learning"
+            "description": "Internal server error."
           }
         }
       }
@@ -245,14 +253,7 @@
           "OnProgramme": {
             "$ref": "#/components/schemas/OnProgramme"
           }
-        },
-        "required": [
-          "LearningKey",
-          "EpisodeKey",
-          "Learner",
-          "LearningSupport",
-          "OnProgramme"
-        ]
+        }
       },
       "Learner": {
         "type": "object",
@@ -264,11 +265,7 @@
           "Uln": {
             "type": "string"
           }
-        },
-        "required": [
-          "DateOfBirth",
-          "Uln"
-        ]
+        }
       },
       "LearningSupportItem": {
         "type": "object",
@@ -281,11 +278,7 @@
             "type": "string",
             "format": "date-time"
           }
-        },
-        "required": [
-          "StartDate",
-          "EndDate"
-        ]
+        }
       },
       "OnProgramme": {
         "type": "object",
@@ -303,11 +296,13 @@
           },
           "WithdrawalDate": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "nullable": true
           },
           "CompletionDate": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "nullable": true
           },
           "ExpectedEndDate": {
             "type": "string",
@@ -316,20 +311,20 @@
           "Milestones": {
             "type": "array",
             "items": {
-              "type": "integer"
+              "$ref": "#/components/schemas/Milestone"
             }
           },
           "TotalPrice": {
-            "type": "number"
+            "type": "number",
+            "format": "decimal"
           }
-        },
-        "required": [
-          "CourseCode",
-          "Ukprn",
-          "StartDate",
-          "ExpectedEndDate",
-          "Milestones",
-          "TotalPrice"
+        }
+      },
+      "Milestone": {
+        "type": "integer",
+        "enum": [
+          1,
+          2
         ]
       },
       "UpdateShortCourseOnProgrammeRequest": {
@@ -337,17 +332,19 @@
         "properties": {
           "WithdrawalDate": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "nullable": true
           },
           "Milestones": {
             "type": "array",
             "items": {
-              "type": "integer"
+              "$ref": "#/components/schemas/Milestone"
             }
           },
           "CompletionDate": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "nullable": true
           },
           "StartDate": {
             "type": "string",
@@ -364,14 +361,7 @@
           "LearnerRef": {
             "type": "string"
           }
-        },
-        "required": [
-          "Milestones",
-          "StartDate",
-          "ExpectedEndDate",
-          "LearnerKey",
-          "LearnerRef"
-        ]
+        }
       }
     }
   }

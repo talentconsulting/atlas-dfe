@@ -8,7 +8,7 @@
     "/api/accounts/{hashedAccountId}/levy": {
       "get": {
         "operationId": "GetLevy",
-        "summary": "Retrieves all levy data for the provided account.",
+        "summary": "Retrieve levy details for an account",
         "parameters": [
           {
             "name": "hashedAccountId",
@@ -17,27 +17,29 @@
             "schema": {
               "type": "string"
             },
-            "description": "Hashed account identifier."
+            "description": "The hashed ID of the account"
           }
         ],
         "responses": {
           "200": {
-            "description": "Levy data retrieved successfully.",
+            "description": "Levy information retrieved successfully",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/LevyResponse"
+                  "$ref": "#/components/schemas/GetLevyResponse"
                 }
               }
             }
           },
           "404": {
-            "description": "Levy data not found for the given account."
+            "description": "Levy information not found"
           }
         },
         "security": [
           {
-            "ReadAllEmployerAccountBalances": []
+            "ApiRoles": [
+              "ReadAllEmployerAccountBalances"
+            ]
           }
         ]
       }
@@ -45,7 +47,7 @@
     "/api/accounts/{hashedAccountId}/levy/{payrollYear}/{payrollMonth}": {
       "get": {
         "operationId": "GetLevyForPeriod",
-        "summary": "Retrieves levy data for a specific payroll year and month.",
+        "summary": "Retrieve levy details for an account for a specific payroll year and month",
         "parameters": [
           {
             "name": "hashedAccountId",
@@ -54,7 +56,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Hashed account identifier."
+            "description": "The hashed ID of the account"
           },
           {
             "name": "payrollYear",
@@ -63,7 +65,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Payroll year to retrieve levy data for."
+            "description": "The payroll year"
           },
           {
             "name": "payrollMonth",
@@ -73,27 +75,29 @@
               "type": "integer",
               "format": "int16"
             },
-            "description": "Payroll month to retrieve levy data for."
+            "description": "The payroll month"
           }
         ],
         "responses": {
           "200": {
-            "description": "Levy data retrieved successfully for the specified period.",
+            "description": "Levy information for the specified period retrieved successfully",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/LevyResponse"
+                  "$ref": "#/components/schemas/GetLevyResponse"
                 }
               }
             }
           },
           "404": {
-            "description": "Levy data not found for the given account, year, and month."
+            "description": "Levy information not found for the specified period"
           }
         },
         "security": [
           {
-            "ReadAllEmployerAccountBalances": []
+            "ApiRoles": [
+              "ReadAllEmployerAccountBalances"
+            ]
           }
         ]
       }
@@ -101,7 +105,7 @@
     "/api/accounts/{hashedAccountId}/levy/english-fraction-history": {
       "get": {
         "operationId": "GetEnglishFractionHistory",
-        "summary": "Retrieves the English fraction history for the given account and employer reference.",
+        "summary": "Retrieve English fraction history for an account",
         "parameters": [
           {
             "name": "hashedAccountId",
@@ -110,7 +114,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Hashed account identifier."
+            "description": "The hashed ID of the account"
           },
           {
             "name": "empRef",
@@ -119,27 +123,29 @@
             "schema": {
               "type": "string"
             },
-            "description": "Employer reference to retrieve English fraction history for."
+            "description": "The employer reference"
           }
         ],
         "responses": {
           "200": {
-            "description": "English fraction history retrieved successfully.",
+            "description": "English fraction history retrieved successfully",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/EnglishFractionHistoryResponse"
+                  "$ref": "#/components/schemas/GetEnglishFractionHistoryResponse"
                 }
               }
             }
           },
           "404": {
-            "description": "English fraction history not found for the given account and employer reference."
+            "description": "English fraction history not found"
           }
         },
         "security": [
           {
-            "ReadAllEmployerAccountBalances": []
+            "ApiRoles": [
+              "ReadAllEmployerAccountBalances"
+            ]
           }
         ]
       }
@@ -147,7 +153,7 @@
     "/api/accounts/{hashedAccountId}/levy/english-fraction-current": {
       "get": {
         "operationId": "GetEnglishFractionCurrent",
-        "summary": "Retrieves the current English fraction for multiple employer references.",
+        "summary": "Retrieve English fraction current state for an account",
         "parameters": [
           {
             "name": "hashedAccountId",
@@ -156,7 +162,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Hashed account identifier."
+            "description": "The hashed ID of the account"
           },
           {
             "name": "empRefs",
@@ -168,27 +174,29 @@
                 "type": "string"
               }
             },
-            "description": "Employer references to retrieve current English fractions for."
+            "description": "Array of employer references"
           }
         ],
         "responses": {
           "200": {
-            "description": "Current English fraction data retrieved successfully.",
+            "description": "English fraction current state retrieved successfully",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/EnglishFractionCurrentResponse"
+                  "$ref": "#/components/schemas/GetEnglishFractionCurrentResponse"
                 }
               }
             }
           },
           "404": {
-            "description": "Current English fraction data not found for the given account and employer references."
+            "description": "English fraction current state not found"
           }
         },
         "security": [
           {
-            "ReadAllEmployerAccountBalances": []
+            "ApiRoles": [
+              "ReadAllEmployerAccountBalances"
+            ]
           }
         ]
       }
@@ -196,25 +204,27 @@
   },
   "components": {
     "schemas": {
-      "LevyResponse": {
+      "GetLevyResponse": {
         "type": "object",
-        "properties": {}
+        "description": "Response schema for levy details",
+        "additionalProperties": true
       },
-      "EnglishFractionHistoryResponse": {
+      "GetEnglishFractionHistoryResponse": {
         "type": "object",
-        "properties": {}
+        "description": "Response schema for English fraction history",
+        "additionalProperties": true
       },
-      "EnglishFractionCurrentResponse": {
+      "GetEnglishFractionCurrentResponse": {
         "type": "object",
-        "properties": {}
+        "description": "Response schema for English fraction current state",
+        "additionalProperties": true
       }
     },
     "securitySchemes": {
-      "ReadAllEmployerAccountBalances": {
-        "type": "apiKey",
-        "name": "Authorization",
-        "in": "header",
-        "description": "Requires the ReadAllEmployerAccountBalances policy."
+      "ApiRoles": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "Authorization using API roles"
       }
     }
   }

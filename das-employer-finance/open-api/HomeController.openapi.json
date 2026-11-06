@@ -2,22 +2,25 @@
   "openapi": "3.1.0",
   "info": {
     "title": "HomeController API",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "description": "API for managing service-related actions in the HomeController."
   },
   "paths": {
     "/service": {
       "get": {
-        "operationId": "HomeController_Index",
+        "operationId": "Index",
+        "summary": "Redirect to LegacyEAS Action",
         "responses": {
           "302": {
-            "description": "Redirect to the legacy EAS action."
+            "description": "Redirect to LegacyEAS."
           }
         }
       }
     },
     "/service/{HashedAccountId}/privacy": {
       "get": {
-        "operationId": "HomeController_Privacy",
+        "operationId": "PrivacyWithAccountId",
+        "summary": "Display Privacy policy for a specific account",
         "parameters": [
           {
             "name": "HashedAccountId",
@@ -30,24 +33,26 @@
         ],
         "responses": {
           "200": {
-            "description": "Returns the privacy view."
+            "description": "Display Privacy policy."
           }
         }
       }
     },
     "/service/privacy": {
       "get": {
-        "operationId": "HomeController_Privacy_Alternative",
+        "operationId": "Privacy",
+        "summary": "Display Privacy policy",
         "responses": {
           "200": {
-            "description": "Returns the privacy view."
+            "description": "Display Privacy policy."
           }
         }
       }
     },
     "/service/{HashedAccountId}/cookieConsent": {
       "get": {
-        "operationId": "HomeController_CookieConsent",
+        "operationId": "CookieConsentWithAccountId",
+        "summary": "Redirect to cookie consent for a specific account",
         "parameters": [
           {
             "name": "HashedAccountId",
@@ -60,112 +65,99 @@
         ],
         "responses": {
           "302": {
-            "description": "Redirect to the cookie consent page."
+            "description": "Redirect to cookie consent."
           }
         }
       }
     },
     "/service/cookieConsent": {
       "get": {
-        "operationId": "HomeController_CookieConsent_Alternative",
+        "operationId": "CookieConsent",
+        "summary": "Redirect to cookie consent",
         "responses": {
           "302": {
-            "description": "Redirect to the cookie consent page."
+            "description": "Redirect to cookie consent."
           }
         }
       }
     },
     "/service/signOut": {
-      "get": {
-        "operationId": "HomeController_SignOutUser",
+      "post": {
+        "operationId": "SignOutUser",
+        "summary": "Sign out the user",
         "responses": {
           "302": {
-            "description": "Signs out the user and performs required authentication cleanup."
+            "description": "User signed out."
           }
         }
       }
     },
     "/service/SignOutCleanup": {
-      "get": {
-        "operationId": "HomeController_SignOutCleanup",
+      "post": {
+        "operationId": "SignOutCleanup",
+        "summary": "Sign out cleanup",
         "responses": {
           "200": {
-            "description": "Performs cleanup for sign-out by removing session cookies."
+            "description": "User sign-out cleanup completed."
           }
         }
       }
     },
     "/service/help": {
       "get": {
-        "operationId": "HomeController_Help",
+        "operationId": "Help",
+        "summary": "Redirect to Help Centre",
         "responses": {
           "301": {
-            "description": "Permanently redirects to the Zendesk help center URL."
+            "description": "Redirect to Help Centre."
           }
         }
       }
     },
     "/service/signIn": {
       "get": {
-        "operationId": "HomeController_SignIn",
-        "security": [
-          {
-            "HasEmployerViewerTransactorOwnerAccount": []
-          }
-        ],
+        "operationId": "SignIn",
+        "summary": "Redirect to sign-in action",
         "responses": {
           "302": {
-            "description": "Redirects to the index action for signing in."
+            "description": "Redirect to sign-in."
           }
         }
       }
     },
     "/service/SignIn-Stub": {
       "get": {
-        "operationId": "HomeController_SigninStub",
+        "operationId": "SigninStubView",
+        "summary": "Display Sign-In Stub View",
         "responses": {
           "200": {
-            "description": "Displays the sign-in stub view for development."
+            "description": "Stub sign-in view rendered."
           }
         }
       },
       "post": {
-        "operationId": "HomeController_SigninStubPost",
+        "operationId": "SigninStubPost",
+        "summary": "Submit stub sign-in",
         "responses": {
           "302": {
-            "description": "Signs in using the stub authentication service and redirects."
+            "description": "Redirect to signed-in stub."
           }
         }
       }
     },
     "/service/signed-in-stub": {
       "get": {
-        "operationId": "HomeController_SignedInStub",
-        "security": [
-          {
-            "BearerAuth": []
-          }
-        ],
+        "operationId": "SignedInStub",
+        "summary": "Display stub signed-in view",
         "responses": {
           "200": {
-            "description": "Displays the signed-in stub view for development."
+            "description": "Stub signed-in view rendered."
           }
         }
       }
     }
   },
   "components": {
-    "securitySchemes": {
-      "HasEmployerViewerTransactorOwnerAccount": {
-        "type": "apiKey",
-        "name": "Authorization",
-        "in": "header",
-        "description": "This policy is used to authorize access to routes that require employer viewer, transactor, or owner account privileges."
-      },
-      "BearerAuth": {
-        "type": "http",
-        "scheme": "bearer"
-      }
-    }
+    "schemas": {}
   }
 }

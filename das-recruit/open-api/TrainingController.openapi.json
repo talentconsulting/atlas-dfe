@@ -1,0 +1,385 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Training API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/{EmployerAccountId}/{VacancyId}/training": {
+      "get": {
+        "operationId": "Training_Get",
+        "summary": "View training course selection",
+        "parameters": [
+          {
+            "name": "EmployerAccountId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "VacancyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "wizard",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "true"
+            }
+          },
+          {
+            "name": "clear",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "hasTraining",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "programmeId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "Training_Post",
+        "summary": "Set training course",
+        "parameters": [
+          {
+            "name": "wizard",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TrainingEditModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Redirect to confirmation or error view",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/{EmployerAccountId}/{VacancyId}/training-first-vacancy": {
+      "get": {
+        "operationId": "Training_First_Time_Get",
+        "summary": "View training course selection for first vacancy",
+        "parameters": [
+          {
+            "name": "EmployerAccountId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "VacancyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "Training_First_Time_Post",
+        "summary": "Confirm training course selection process for first vacancy",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TrainingFirstVacancyEditModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Redirect based on training selection outcome",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/{EmployerAccountId}/{VacancyId}/training-confirm": {
+      "get": {
+        "operationId": "Training_Confirm_Get",
+        "summary": "View confirm training course selection",
+        "parameters": [
+          {
+            "name": "EmployerAccountId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "VacancyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "programmeId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "wizard",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "Training_Confirm_Post",
+        "summary": "Confirm and finalize training course selection",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConfirmTrainingEditModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Redirect based on confirmation outcome",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/{EmployerAccountId}/{VacancyId}/training-help": {
+      "get": {
+        "operationId": "Training_Help_Get",
+        "summary": "View help for training course selection",
+        "parameters": [
+          {
+            "name": "EmployerAccountId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "VacancyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "VacancyRouteModel": {
+        "type": "object",
+        "properties": {
+          "EmployerAccountId": {
+            "type": "string",
+            "description": "ID of the employer account"
+          },
+          "VacancyId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "ID of the vacancy"
+          }
+        },
+        "required": [
+          "EmployerAccountId",
+          "VacancyId"
+        ]
+      },
+      "TrainingEditModel": {
+        "type": "object",
+        "properties": {
+          "EmployerAccountId": {
+            "type": "string",
+            "description": "ID of the employer account"
+          },
+          "VacancyId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "ID of the vacancy"
+          },
+          "SelectedProgrammeId": {
+            "type": "string",
+            "description": "ID of the selected training programme"
+          }
+        },
+        "required": [
+          "EmployerAccountId",
+          "VacancyId",
+          "SelectedProgrammeId"
+        ]
+      },
+      "TrainingFirstVacancyEditModel": {
+        "type": "object",
+        "properties": {
+          "EmployerAccountId": {
+            "type": "string",
+            "description": "ID of the employer account"
+          },
+          "VacancyId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "ID of the vacancy"
+          },
+          "HasFoundTraining": {
+            "type": "boolean",
+            "description": "Indicates if training has been found"
+          }
+        },
+        "required": [
+          "EmployerAccountId",
+          "VacancyId",
+          "HasFoundTraining"
+        ]
+      },
+      "ConfirmTrainingEditModel": {
+        "type": "object",
+        "properties": {
+          "EmployerAccountId": {
+            "type": "string",
+            "description": "ID of the employer account"
+          },
+          "VacancyId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "ID of the vacancy"
+          },
+          "ProgrammeId": {
+            "type": "string",
+            "description": "ID of the confirmed training programme"
+          }
+        },
+        "required": [
+          "EmployerAccountId",
+          "VacancyId",
+          "ProgrammeId"
+        ]
+      }
+    }
+  }
+}

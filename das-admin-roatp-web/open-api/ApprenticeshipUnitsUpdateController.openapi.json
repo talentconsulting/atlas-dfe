@@ -7,8 +7,8 @@
   "paths": {
     "/providers/{ukprn}/apprenticeship-units": {
       "get": {
-        "operationId": "GetApprenticeshipUnits",
-        "summary": "Retrieve the Apprenticeship Units information for a provider.",
+        "operationId": "getApprenticeshipUnitsUpdate",
+        "summary": "Retrieve apprenticeship units update information for a provider.",
         "parameters": [
           {
             "name": "ukprn",
@@ -17,23 +17,18 @@
             "schema": {
               "type": "integer",
               "format": "int32"
-            },
-            "description": "The UKPRN (UK Provider Reference Number) of the provider."
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Successful response with the Apprenticeship Units information.",
+            "description": "Success",
             "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApprenticeshipUnitsUpdateViewModel"
-                }
-              }
+              "text/html": {}
             }
           },
           "302": {
-            "description": "Redirects to the home route if the organization is not found."
+            "description": "Redirect to home if organisation cannot be found."
           }
         },
         "security": [
@@ -43,8 +38,8 @@
         ]
       },
       "post": {
-        "operationId": "UpdateApprenticeshipUnits",
-        "summary": "Update the Apprenticeship Units information for a provider.",
+        "operationId": "updateApprenticeshipUnits",
+        "summary": "Update apprenticeship units for a provider.",
         "parameters": [
           {
             "name": "ukprn",
@@ -53,8 +48,7 @@
             "schema": {
               "type": "integer",
               "format": "int32"
-            },
-            "description": "The UKPRN (UK Provider Reference Number) of the provider."
+            }
           }
         ],
         "requestBody": {
@@ -64,17 +58,31 @@
               "schema": {
                 "$ref": "#/components/schemas/ApprenticeshipUnitsUpdateViewModel"
               }
-            },
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ApprenticeshipUnitsUpdateViewModel"
-              }
             }
           }
         },
         "responses": {
           "302": {
-            "description": "Redirects to the home or provider summary route based on the operation result."
+            "description": "Redirect to appropriate route based on outcome.",
+            "headers": {
+              "Location": {
+                "description": "Redirection URL.",
+                "schema": {
+                  "type": "string",
+                  "format": "uri"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrors"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -94,17 +102,14 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/ApprenticeshipUnitsSelectionModel"
-            },
-            "description": "A list of options for apprenticeship units selection."
+            }
           },
           "offersApprenticeships": {
-            "type": "boolean",
-            "description": "Indicates whether the provider offers apprenticeships."
+            "type": "boolean"
           },
           "apprenticeshipUnitsSelectionId": {
             "type": "boolean",
-            "nullable": true,
-            "description": "The selected apprenticeship units choice."
+            "nullable": true
           }
         },
         "required": [
@@ -115,22 +120,30 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "boolean",
-            "description": "The ID of the selection option."
+            "type": "boolean"
           },
           "description": {
-            "type": "string",
-            "description": "Description of the selection option."
+            "type": "string"
           },
           "isSelected": {
-            "type": "boolean",
-            "description": "Indicates whether the option is selected."
+            "type": "boolean"
           }
         },
         "required": [
           "id",
           "description"
         ]
+      },
+      "ValidationErrors": {
+        "type": "object",
+        "properties": {
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
       }
     },
     "securitySchemes": {

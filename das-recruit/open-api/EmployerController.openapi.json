@@ -1,0 +1,165 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Employer API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/{EmployerAccountId}/vacancies/{VacancyId}/employer": {
+      "get": {
+        "operationId": "getEmployer",
+        "summary": "Get Employer",
+        "parameters": [
+          {
+            "name": "EmployerAccountId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "VacancyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "searchTerm",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "wizard",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "true",
+                "false"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Employer page rendered."
+          }
+        }
+      },
+      "post": {
+        "operationId": "postEmployer",
+        "summary": "Submit Employer data",
+        "parameters": [
+          {
+            "name": "wizard",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EmployerEditModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Redirected on successful POST."
+          },
+          "400": {
+            "description": "Validation error when Employer selection data is invalid."
+          }
+        }
+      }
+    },
+    "/{EmployerAccountId}/vacancies/{VacancyId}/employer-cancel": {
+      "get": {
+        "operationId": "cancelEmployer",
+        "summary": "Cancel Employer operation",
+        "parameters": [
+          {
+            "name": "EmployerAccountId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "VacancyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "wizard",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Employer operation canceled successfully and redirected."
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "EmployerEditModel": {
+        "type": "object",
+        "required": [
+          "SelectedOrganisationId"
+        ],
+        "properties": {
+          "EmployerAccountId": {
+            "type": "string"
+          },
+          "VacancyId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "SelectedOrganisationId": {
+            "type": "string"
+          },
+          "SearchTerm": {
+            "type": "string"
+          },
+          "Page": {
+            "type": "integer"
+          }
+        }
+      }
+    }
+  }
+}

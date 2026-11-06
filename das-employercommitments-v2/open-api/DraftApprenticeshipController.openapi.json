@@ -1,9 +1,9 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Draft Apprenticeship Management API",
+    "title": "Draft Apprenticeship API",
     "version": "1.0.0",
-    "description": "API for managing draft apprenticeships within employer commitments."
+    "description": "API for managing draft apprenticeships in DAS Employer Commitments V2."
   },
   "paths": {
     "/{AccountHashedId}/unapproved/{cohortReference}/apprentices/add": {
@@ -11,16 +11,16 @@
         "operationId": "AddNewDraftApprenticeship",
         "parameters": [
           {
-            "name": "AccountHashedId",
             "in": "path",
+            "name": "AccountHashedId",
             "required": true,
             "schema": {
               "type": "string"
             }
           },
           {
-            "name": "cohortReference",
             "in": "path",
+            "name": "cohortReference",
             "required": true,
             "schema": {
               "type": "string"
@@ -29,26 +29,26 @@
         ],
         "responses": {
           "302": {
-            "description": "Redirect to SelectCourse"
+            "description": "Redirect to SelectCourse."
           }
         }
       }
     },
     "/{AccountHashedId}/unapproved/{cohortReference}/apprentices/add/select-course": {
       "get": {
-        "operationId": "SelectCourse",
+        "operationId": "GetSelectCourse",
         "parameters": [
           {
-            "name": "AccountHashedId",
             "in": "path",
+            "name": "AccountHashedId",
             "required": true,
             "schema": {
               "type": "string"
             }
           },
           {
-            "name": "cohortReference",
             "in": "path",
+            "name": "cohortReference",
             "required": true,
             "schema": {
               "type": "string"
@@ -57,12 +57,30 @@
         ],
         "responses": {
           "200": {
-            "description": "Select course view"
+            "description": "View SelectCourse page."
           }
         }
       },
       "post": {
-        "operationId": "SetCourse",
+        "operationId": "PostSelectCourse",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "AccountHashedId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "cohortReference",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -75,26 +93,26 @@
         },
         "responses": {
           "302": {
-            "description": "Redirect to SelectDeliveryModel"
+            "description": "Redirect to SelectDeliveryModel."
           }
         }
       }
     },
     "/{AccountHashedId}/unapproved/{cohortReference}/apprentices/add/select-delivery-model": {
       "get": {
-        "operationId": "SelectDeliveryModel",
+        "operationId": "GetSelectDeliveryModel",
         "parameters": [
           {
-            "name": "AccountHashedId",
             "in": "path",
+            "name": "AccountHashedId",
             "required": true,
             "schema": {
               "type": "string"
             }
           },
           {
-            "name": "cohortReference",
             "in": "path",
+            "name": "cohortReference",
             "required": true,
             "schema": {
               "type": "string"
@@ -103,12 +121,33 @@
         ],
         "responses": {
           "200": {
-            "description": "Select delivery model view"
+            "description": "View SelectDeliveryModel page."
+          },
+          "302": {
+            "description": "Redirect to AddDraftApprenticeshipDetails if delivery model selected."
           }
         }
       },
       "post": {
-        "operationId": "SetDeliveryModel",
+        "operationId": "PostSetDeliveryModel",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "AccountHashedId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "cohortReference",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -121,26 +160,26 @@
         },
         "responses": {
           "302": {
-            "description": "Redirect to AddDraftApprenticeshipDetails"
+            "description": "Redirect to AddDraftApprenticeshipDetails."
           }
         }
       }
     },
     "/{AccountHashedId}/unapproved/{cohortReference}/apprentices/add-another": {
       "get": {
-        "operationId": "AddDraftApprenticeshipDetailsGet",
+        "operationId": "GetAddDraftApprenticeshipDetails",
         "parameters": [
           {
-            "name": "AccountHashedId",
             "in": "path",
+            "name": "AccountHashedId",
             "required": true,
             "schema": {
               "type": "string"
             }
           },
           {
-            "name": "cohortReference",
             "in": "path",
+            "name": "cohortReference",
             "required": true,
             "schema": {
               "type": "string"
@@ -149,12 +188,33 @@
         ],
         "responses": {
           "200": {
-            "description": "Add draft apprenticeship details view"
+            "description": "View AddDraftApprenticeshipDetails page."
+          },
+          "302": {
+            "description": "Redirect to cohort details page in case of error."
           }
         }
       },
       "post": {
-        "operationId": "AddDraftApprenticeshipDetailsPost",
+        "operationId": "PostAddDraftApprenticeshipDetails",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "AccountHashedId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "cohortReference",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -167,34 +227,34 @@
         },
         "responses": {
           "302": {
-            "description": "Redirect based on changes/confirmation"
+            "description": "Redirect to next step or cohort details."
           }
         }
       }
     },
-    "/{AccountHashedId}/unapproved/{cohortReference}/apprentices/{DraftApprenticeshipHashedId}/edit": {
+    "/{AccountHashedId}/unapproved/{cohortReference}/apprentices/{DraftApprenticeshipHashedId}": {
       "get": {
-        "operationId": "EditDraftApprenticeship",
+        "operationId": "GetDraftApprenticeshipDetails",
         "parameters": [
           {
+            "in": "path",
             "name": "AccountHashedId",
-            "in": "path",
             "required": true,
             "schema": {
               "type": "string"
             }
           },
           {
+            "in": "path",
             "name": "cohortReference",
-            "in": "path",
             "required": true,
             "schema": {
               "type": "string"
             }
           },
           {
-            "name": "DraftApprenticeshipHashedId",
             "in": "path",
+            "name": "DraftApprenticeshipHashedId",
             "required": true,
             "schema": {
               "type": "string"
@@ -203,34 +263,34 @@
         ],
         "responses": {
           "200": {
-            "description": "Edit draft apprenticeship view"
+            "description": "View draft apprenticeship details."
           }
         }
       }
     },
-    "/{AccountHashedId}/unapproved/{cohortReference}/apprentices/{DraftApprenticeshipHashedId}/delete": {
+    "/{AccountHashedId}/unapproved/{cohortReference}/apprentices/{DraftApprenticeshipHashedId}/Delete": {
       "get": {
-        "operationId": "DeleteDraftApprenticeshipGet",
+        "operationId": "GetDeleteDraftApprenticeship",
         "parameters": [
           {
+            "in": "path",
             "name": "AccountHashedId",
-            "in": "path",
             "required": true,
             "schema": {
               "type": "string"
             }
           },
           {
+            "in": "path",
             "name": "cohortReference",
-            "in": "path",
             "required": true,
             "schema": {
               "type": "string"
             }
           },
           {
-            "name": "DraftApprenticeshipHashedId",
             "in": "path",
+            "name": "DraftApprenticeshipHashedId",
             "required": true,
             "schema": {
               "type": "string"
@@ -239,12 +299,38 @@
         ],
         "responses": {
           "200": {
-            "description": "Delete draft apprenticeship confirmation view"
+            "description": "View DeleteDraftApprenticeship page."
           }
         }
       },
       "post": {
-        "operationId": "DeleteDraftApprenticeshipPost",
+        "operationId": "PostDeleteDraftApprenticeship",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "AccountHashedId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "cohortReference",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "DraftApprenticeshipHashedId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -257,7 +343,7 @@
         },
         "responses": {
           "302": {
-            "description": "Redirect based on delete confirmation"
+            "description": "Redirect to cohort details or origin page after deletion."
           }
         }
       }
@@ -273,44 +359,35 @@
           },
           "AccountLegalEntityId": {
             "type": "integer"
-          }
-        }
-      },
-      "AddDraftApprenticeshipViewModel": {
-        "type": "object",
-        "properties": {
-          "AccountId": {
-            "type": "integer"
-          },
-          "AccountHashedId": {
-            "type": "string"
-          },
-          "LegalEntityName": {
-            "type": "string"
-          },
-          "TransferSenderHashedId": {
-            "type": "string"
           },
           "CacheKey": {
             "type": "string",
             "format": "uuid"
-          }
-        }
-      },
-      "DeleteDraftApprenticeshipViewModel": {
-        "type": "object",
-        "properties": {
+          },
           "AccountHashedId": {
             "type": "string"
           },
-          "DraftApprenticeshipHashedId": {
+          "CohortReference": {
             "type": "string"
           },
-          "DraftApprenticeshipId": {
+          "AccountLegalEntityHashedId": {
+            "type": "string"
+          },
+          "ReservationId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "CourseCode": {
+            "type": "string"
+          },
+          "DeliveryModel": {
+            "$ref": "#/components/schemas/DeliveryModel"
+          },
+          "Cost": {
             "type": "integer"
           },
-          "ConfirmDelete": {
-            "type": "boolean"
+          "EmploymentPrice": {
+            "type": "integer"
           }
         }
       },
@@ -320,11 +397,11 @@
           "AccountHashedId": {
             "type": "string"
           },
-          "Courses": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
+          "CohortReference": {
+            "type": "string"
+          },
+          "ProviderId": {
+            "type": "integer"
           },
           "CourseCode": {
             "type": "string"
@@ -337,11 +414,36 @@
           "AccountHashedId": {
             "type": "string"
           },
-          "DeliveryModels": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/DeliveryModel"
-            }
+          "CohortReference": {
+            "type": "string"
+          },
+          "ProviderId": {
+            "type": "integer"
+          }
+        }
+      },
+      "AddDraftApprenticeshipViewModel": {
+        "type": "object",
+        "properties": {
+          "AccountHashedId": {
+            "type": "string"
+          },
+          "CohortReference": {
+            "type": "string"
+          },
+          "LegalEntityName": {
+            "type": "string"
+          }
+        }
+      },
+      "DeleteDraftApprenticeshipViewModel": {
+        "type": "object",
+        "properties": {
+          "AccountHashedId": {
+            "type": "string"
+          },
+          "DraftApprenticeshipHashedId": {
+            "type": "string"
           }
         }
       },
@@ -351,8 +453,7 @@
           "Regular",
           "PortableFlexiJob",
           "FlexiJobAgency"
-        ],
-        "description": "Enumeration of delivery models available for apprenticeships."
+        ]
       }
     }
   }

@@ -1,0 +1,199 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "SFA DAS Request Apprentice Training API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/api/accounts/{accountId}/standard/{standardReference}/employer-request/active": {
+      "get": {
+        "summary": "Retrieve Active Employer Request",
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "standardReference",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "EmployerRequest": {
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation or other error"
+          }
+        }
+      }
+    },
+    "/api/accounts/{accountId}/employer-requests": {
+      "post": {
+        "summary": "Submit Employer Request",
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SubmitEmployerRequestRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation or other error"
+          }
+        }
+      }
+    },
+    "/api/accounts/{accountId}/employer-requests/aggregated": {
+      "get": {
+        "summary": "Retrieve Employer Aggregated Requests",
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "EmployerAggregatedEmployerRequests": {
+                      "type": "array",
+                      "items": {
+                        "type": "object"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error while retrieving data"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "SubmitEmployerRequestRequest": {
+        "type": "object",
+        "properties": {
+          "OriginalLocation": {
+            "type": "string"
+          },
+          "RequestType": {
+            "$ref": "#/components/schemas/RequestTypeEnum"
+          },
+          "StandardReference": {
+            "type": "string"
+          },
+          "NumberOfApprentices": {
+            "type": "integer"
+          },
+          "SameLocation": {
+            "type": "string"
+          },
+          "SingleLocation": {
+            "type": "string"
+          },
+          "SingleLocationLatitude": {
+            "type": "number",
+            "format": "double"
+          },
+          "SingleLocationLongitude": {
+            "type": "number",
+            "format": "double"
+          },
+          "MultipleLocations": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "AtApprenticesWorkplace": {
+            "type": "boolean"
+          },
+          "DayRelease": {
+            "type": "boolean"
+          },
+          "BlockRelease": {
+            "type": "boolean"
+          },
+          "RequestedBy": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "ModifiedBy": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      },
+      "RequestTypeEnum": {
+        "type": "string",
+        "enum": [
+          "Shortlist",
+          "CourseDetail",
+          "Providers"
+        ]
+      }
+    }
+  }
+}

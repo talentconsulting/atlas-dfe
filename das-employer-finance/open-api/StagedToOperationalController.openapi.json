@@ -2,19 +2,17 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Employer Finance API",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "description": "API for managing employer finance operations."
   },
   "paths": {
     "/api/staging/staged-to-operational": {
       "post": {
-        "summary": "Transfer staged to operational",
-        "description": "Transfers staged data to operational for a given account and period end.",
-        "operationId": "stagedToOperational",
+        "summary": "Transfers staged data to operational state.",
+        "operationId": "transferStagedToOperational",
         "security": [
           {
-            "ApiRoles": [
-              "ReadAllEmployerAccountBalances"
-            ]
+            "ApiRoles.ReadAllEmployerAccountBalances": []
           }
         ],
         "requestBody": {
@@ -25,83 +23,57 @@
                 "$ref": "#/components/schemas/TransferStagedToOperationalRequest"
               }
             }
-          }
+          },
+          "description": "The payload for transferring staged data to operational state."
         },
         "responses": {
-          "201": {
-            "description": "Successfully transferred staged data to operational.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "isSuccess": {
-                      "type": "boolean"
-                    },
-                    "message": {
-                      "type": "string"
-                    },
-                    "processedCount": {
-                      "type": "integer",
-                      "format": "int32"
-                    }
-                  },
-                  "required": [
-                    "isSuccess",
-                    "message",
-                    "processedCount"
-                  ]
-                }
-              }
-            }
-          },
           "400": {
-            "description": "Bad Request. The payload is missing or contains validation errors.",
+            "description": "Bad request - validation errors or missing payload.",
             "content": {
               "application/json": {
-                "schema": {
-                  "oneOf": [
-                    {
-                      "type": "string",
-                      "description": "Validation error message."
-                    },
-                    {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      }
+                "examples": {
+                  "missingPayload": {
+                    "value": "Transfer staged-to-operational payload is required."
+                  },
+                  "validationErrors": {
+                    "value": {
+                      "errors": [
+                        "Example validation error."
+                      ]
                     }
-                  ]
+                  }
                 }
               }
             }
           },
           "500": {
-            "description": "Internal Server Error. An error occurred during the operation.",
+            "description": "Internal server error when the operation fails.",
             "content": {
               "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "isSuccess": {
-                      "type": "boolean",
-                      "enum": [
-                        false
-                      ]
-                    },
-                    "message": {
-                      "type": "string"
-                    },
-                    "processedCount": {
-                      "type": "integer",
-                      "format": "int32"
+                "examples": {
+                  "operationFailure": {
+                    "value": {
+                      "isSuccess": false,
+                      "message": "Failure message example.",
+                      "processedCount": 0
                     }
-                  },
-                  "required": [
-                    "isSuccess",
-                    "message",
-                    "processedCount"
-                  ]
+                  }
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Successful transfer to operational state.",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "success": {
+                    "value": {
+                      "isSuccess": true,
+                      "message": "Success message example.",
+                      "processedCount": 1
+                    }
+                  }
                 }
               }
             }
@@ -117,13 +89,16 @@
         "properties": {
           "AccountId": {
             "type": "integer",
-            "format": "int64"
+            "format": "int64",
+            "description": "The ID of the employer account to transfer."
           },
           "PeriodEnd": {
-            "type": "string"
+            "type": "string",
+            "description": "The period end identifier for the staged data."
           },
           "CorrelationId": {
-            "type": "string"
+            "type": "string",
+            "description": "A unique identifier for correlating requests."
           }
         },
         "required": [
@@ -134,10 +109,11 @@
       }
     },
     "securitySchemes": {
-      "ApiRoles": {
+      "ApiRoles.ReadAllEmployerAccountBalances": {
         "type": "apiKey",
         "name": "Authorization",
-        "in": "header"
+        "in": "header",
+        "description": "Role-based authorization scheme requiring 'ReadAllEmployerAccountBalances' API role."
       }
     }
   }

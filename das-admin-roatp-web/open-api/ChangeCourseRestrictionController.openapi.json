@@ -1,14 +1,14 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Change Course Restriction API",
+    "title": "Course Restrictions API",
     "version": "1.0.0"
   },
   "paths": {
     "/restricted-courses/{larsCode}/providers/{ukprn}/change-restriction": {
       "get": {
-        "operationId": "getChangeCourseRestriction",
-        "summary": "Get the course restriction change view",
+        "summary": "Get the Change Course Restriction view",
+        "operationId": "getChangeCourseRestrictionView",
         "parameters": [
           {
             "name": "larsCode",
@@ -29,14 +29,7 @@
         ],
         "responses": {
           "200": {
-            "description": "View rendered successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ChangeCourseRestrictionViewModel"
-                }
-              }
-            }
+            "description": "The view was successfully retrieved"
           },
           "404": {
             "description": "Not found"
@@ -44,8 +37,8 @@
         }
       },
       "post": {
-        "operationId": "postChangeCourseRestriction",
-        "summary": "Submit a decision on course restriction change",
+        "summary": "Submit changes for Course Restriction",
+        "operationId": "submitCourseRestrictionChanges",
         "parameters": [
           {
             "name": "larsCode",
@@ -76,10 +69,13 @@
         },
         "responses": {
           "302": {
-            "description": "Redirected based on the selected action"
+            "description": "Redirection to the appropriate route"
           },
           "404": {
-            "description": "Resource not found"
+            "description": "Not found"
+          },
+          "400": {
+            "description": "Invalid input data"
           }
         }
       }
@@ -93,34 +89,6 @@
           "SelectedOption": {
             "type": "string",
             "nullable": true
-          }
-        }
-      },
-      "ChangeCourseRestrictionViewModel": {
-        "type": "object",
-        "properties": {
-          "LarsCode": {
-            "type": "string"
-          },
-          "Ukprn": {
-            "type": "integer"
-          },
-          "ProviderName": {
-            "type": "string"
-          },
-          "CourseDisplayTitle": {
-            "type": "string"
-          },
-          "LastDateStarts": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "SelectedOption": {
-            "type": "string",
-            "nullable": true
-          },
-          "CancelUrl": {
-            "type": "string"
           }
         }
       }

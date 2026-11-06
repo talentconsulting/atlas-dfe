@@ -1,15 +1,14 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Apprentice AAN API",
-    "description": "API for managing apprentice profiles in AAN.",
+    "title": "Admin AAN Profiles API",
     "version": "1.0.0"
   },
   "paths": {
     "/Profiles/{userType}": {
       "get": {
-        "operationId": "GetProfilesByUserType",
-        "summary": "Get list of profiles by user type",
+        "summary": "Get user profiles by type",
+        "operationId": "GetProfiles",
         "parameters": [
           {
             "name": "userType",
@@ -17,17 +16,16 @@
             "required": true,
             "schema": {
               "type": "string"
-            },
-            "description": "Specifies the user type to filter profiles."
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Successful response containing profiles for the given user type.",
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetProfilesByUserTypeQueryResult"
+                  "$ref": "#/components/schemas/GetProfilesResponse"
                 }
               }
             }
@@ -38,7 +36,7 @@
   },
   "components": {
     "schemas": {
-      "GetProfilesByUserTypeQueryResult": {
+      "GetProfilesResponse": {
         "type": "object",
         "properties": {
           "Profiles": {
@@ -47,36 +45,25 @@
               "$ref": "#/components/schemas/Profile"
             }
           }
-        },
-        "description": "Result containing a list of profiles."
+        }
       },
       "Profile": {
         "type": "object",
         "properties": {
           "Id": {
             "type": "integer",
-            "description": "Unique identifier of the profile."
+            "format": "int64"
           },
           "Description": {
-            "type": "string",
-            "description": "Description of the profile."
+            "type": "string"
           },
           "Category": {
-            "type": "string",
-            "description": "Category of the profile."
+            "type": "string"
           },
           "Ordering": {
-            "type": "integer",
-            "description": "Ordering of the profiles."
+            "type": "integer"
           }
-        },
-        "required": [
-          "Id",
-          "Description",
-          "Category",
-          "Ordering"
-        ],
-        "description": "Represents a user profile."
+        }
       }
     }
   }

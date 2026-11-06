@@ -2,12 +2,13 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Common API",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "description": "Provides endpoints for common operations such as lookup data, user type info, and academic years."
   },
   "paths": {
     "/api/Common/GetLookupData/{lookupCategory}": {
       "get": {
-        "summary": "Retrieve lookup data by category",
+        "summary": "Retrieve lookup data for the specified category.",
         "parameters": [
           {
             "name": "lookupCategory",
@@ -20,7 +21,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful operation",
+            "description": "Successful lookup data retrieval.",
             "content": {
               "application/json": {
                 "schema": {
@@ -37,7 +38,7 @@
     },
     "/api/Common/GetLoggedInUserTypeInfo/{ukprn}": {
       "get": {
-        "summary": "Get logged-in user's type info based on UKPRN",
+        "summary": "Retrieve logged-in user type information based on UKPRN.",
         "parameters": [
           {
             "name": "ukprn",
@@ -51,7 +52,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful operation",
+            "description": "Logged-in user type information retrieval successful.",
             "content": {
               "application/json": {
                 "schema": {
@@ -65,10 +66,10 @@
     },
     "/api/Common/CurrentAcademicYears": {
       "get": {
-        "summary": "Get current academic years",
+        "summary": "Retrieve current academic years.",
         "responses": {
           "200": {
-            "description": "Successful operation",
+            "description": "Current academic years retrieval successful.",
             "content": {
               "application/json": {
                 "schema": {
@@ -85,10 +86,10 @@
     },
     "/api/Common/AcademicYears": {
       "get": {
-        "summary": "Get all academic years",
+        "summary": "Retrieve all academic years.",
         "responses": {
           "200": {
-            "description": "Successful operation",
+            "description": "All academic years retrieval successful.",
             "content": {
               "application/json": {
                 "schema": {
@@ -113,66 +114,74 @@
           "QualificationSubject",
           "SpecialismComponentGrade",
           "OverallResult"
-        ],
-        "description": "The category of the lookup."
+        ]
       },
       "LookupData": {
         "type": "object",
         "properties": {
-          "Id": {
-            "type": "integer",
-            "description": "The unique identifier of the lookup data."
+          "id": {
+            "type": "integer"
           },
-          "Code": {
-            "type": "string",
-            "description": "The code of the lookup data."
+          "code": {
+            "type": "string"
           },
-          "Value": {
-            "type": "string",
-            "description": "The value of the lookup data."
+          "value": {
+            "type": "string"
           }
-        }
+        },
+        "required": [
+          "id",
+          "code",
+          "value"
+        ]
       },
       "LoggedInUserTypeInfo": {
         "type": "object",
         "properties": {
-          "Ukprn": {
+          "ukprn": {
             "type": "integer",
-            "format": "int64",
-            "description": "The UKPRN of the current user."
+            "format": "int64"
           },
-          "Name": {
-            "type": "string",
-            "description": "The name of the user."
+          "name": {
+            "type": "string"
           },
-          "UserType": {
-            "type": "string",
-            "enum": [
-              "NotSpecified",
-              "AwardingOrganisation",
-              "TrainingProvider",
-              "Admin"
-            ],
-            "description": "The type of the logged-in user."
+          "userType": {
+            "$ref": "#/components/schemas/LoginUserType"
           }
-        }
+        },
+        "required": [
+          "ukprn",
+          "name",
+          "userType"
+        ]
+      },
+      "LoginUserType": {
+        "type": "string",
+        "enum": [
+          "NotSpecified",
+          "AwardingOrganisation",
+          "TrainingProvider",
+          "Admin"
+        ]
       },
       "AcademicYear": {
         "type": "object",
         "properties": {
-          "Id": {
-            "type": "integer",
-            "description": "The identifier of the academic year."
+          "id": {
+            "type": "integer"
           },
-          "Name": {
-            "type": "string",
-            "description": "The name of the academic year."
+          "name": {
+            "type": "string"
           },
-          "Year": {
-            "type": "integer",
-            "description": "The year of the academic period."
+          "year": {
+            "type": "integer"
           }
-        }
+        },
+        "required": [
+          "id",
+          "name",
+          "year"
+        ]
       }
     }
   }

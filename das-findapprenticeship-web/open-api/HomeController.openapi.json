@@ -1,62 +1,102 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "FAA Web Application API",
+    "title": "SFA DAS FAA Web API",
     "version": "1.0.0"
   },
   "paths": {
-    "/home/cookies": {
+    "/Home/Cookies": {
       "get": {
-        "operationId": "getCookies",
-        "summary": "Retrieve cookie consent preferences",
+        "summary": "Retrieve the Cookies page view.",
+        "operationId": "GetCookiesPage",
         "tags": [
           "Home"
         ],
         "responses": {
           "200": {
-            "description": "HTML View of Cookie Consent Preferences"
+            "description": "HTML view for the cookies page.",
+            "content": {
+              "text/html": {
+                "examples": {
+                  "example": {
+                    "summary": "Cookies page HTML response",
+                    "value": "<html>...</html>"
+                  }
+                }
+              }
+            }
           }
         }
       }
     },
-    "/home/accessibility-statement": {
+    "/Home/accessibility-statement": {
       "get": {
-        "operationId": "getAccessibilityStatement",
-        "summary": "Retrieve accessibility statement",
+        "summary": "Retrieve the Accessibility Statement page view.",
+        "operationId": "GetAccessibilityStatementPage",
         "tags": [
           "Home"
         ],
         "responses": {
           "200": {
-            "description": "HTML View of Accessibility Statement"
+            "description": "HTML view for the accessibility statement page.",
+            "content": {
+              "text/html": {
+                "examples": {
+                  "example": {
+                    "summary": "Accessibility Statement page HTML response",
+                    "value": "<html>...</html>"
+                  }
+                }
+              }
+            }
           }
         }
       }
     },
-    "/home/terms-and-conditions": {
+    "/Home/terms-and-conditions": {
       "get": {
-        "operationId": "getTermsAndConditions",
-        "summary": "Retrieve terms and conditions",
+        "summary": "Retrieve the Terms and Conditions page view.",
+        "operationId": "GetTermsAndConditionsPage",
         "tags": [
           "Home"
         ],
         "responses": {
           "200": {
-            "description": "HTML View of Terms and Conditions"
+            "description": "HTML view for the terms and conditions page.",
+            "content": {
+              "text/html": {
+                "examples": {
+                  "example": {
+                    "summary": "Terms and Conditions page HTML response",
+                    "value": "<html>...</html>"
+                  }
+                }
+              }
+            }
           }
         }
       }
     },
-    "/home/get-help": {
+    "/Home/get-help": {
       "get": {
-        "operationId": "getHelp",
-        "summary": "Retrieve help information",
+        "summary": "Retrieve the Get Help page view.",
+        "operationId": "GetHelpPage",
         "tags": [
           "Home"
         ],
         "responses": {
           "200": {
-            "description": "HTML View of Help Information"
+            "description": "HTML view for the get help page.",
+            "content": {
+              "text/html": {
+                "examples": {
+                  "example": {
+                    "summary": "Get Help page HTML response",
+                    "value": "<html>...</html>"
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -64,108 +104,73 @@
   },
   "components": {
     "schemas": {
-      "CookiesViewModel": {
+      "Location": {
         "type": "object",
         "properties": {
-          "PreviousPageUrl": {
+          "lat": {
+            "type": "number",
+            "format": "double"
+          },
+          "lon": {
+            "type": "number",
+            "format": "double"
+          },
+          "locationName": {
             "type": "string"
-          },
-          "ShowBannerMessage": {
-            "type": "boolean"
-          },
-          "ConsentAnalyticsCookie": {
-            "type": "boolean"
-          },
-          "ConsentFunctionalCookie": {
-            "type": "boolean"
           }
         },
-        "additionalProperties": false
+        "required": [
+          "lat",
+          "lon",
+          "locationName"
+        ]
       },
       "Address": {
         "type": "object",
         "properties": {
-          "AddressLine1": {
-            "type": "string",
-            "nullable": true
-          },
-          "AddressLine2": {
-            "type": "string",
-            "nullable": true
-          },
-          "AddressLine3": {
-            "type": "string",
-            "nullable": true
-          },
-          "AddressLine4": {
-            "type": "string",
-            "nullable": true
-          },
-          "Postcode": {
-            "type": "string",
-            "nullable": true
-          },
-          "Latitude": {
-            "type": "number",
-            "nullable": true
-          },
-          "Longitude": {
-            "type": "number",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "LocationDto": {
-        "type": "object",
-        "properties": {
-          "Id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "Addresses": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/AddressDto"
-            }
-          },
-          "EmployerLocationOption": {
-            "$ref": "#/components/schemas/AvailableWhere"
-          },
-          "EmploymentLocationInformation": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "AddressDto": {
-        "type": "object",
-        "properties": {
-          "Id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "FullAddress": {
+          "addressLine1": {
             "type": "string"
           },
-          "IsSelected": {
+          "addressLine2": {
+            "type": "string"
+          },
+          "addressLine3": {
+            "type": "string"
+          },
+          "addressLine4": {
+            "type": "string"
+          },
+          "postcode": {
+            "type": "string"
+          },
+          "latitude": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "longitude": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          }
+        }
+      },
+      "CookiesViewModel": {
+        "type": "object",
+        "properties": {
+          "previousPageUrl": {
+            "type": "string"
+          },
+          "showBannerMessage": {
             "type": "boolean"
           },
-          "AddressOrder": {
-            "type": "integer",
-            "format": "int16"
+          "consentAnalyticsCookie": {
+            "type": "boolean"
+          },
+          "consentFunctionalCookie": {
+            "type": "boolean"
           }
-        },
-        "additionalProperties": false
-      },
-      "AvailableWhere": {
-        "type": "string",
-        "enum": [
-          "OneLocation",
-          "MultipleLocations",
-          "AcrossEngland"
-        ]
+        }
       }
     }
   }

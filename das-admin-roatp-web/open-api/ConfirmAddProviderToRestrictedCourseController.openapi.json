@@ -1,64 +1,153 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Restricted Courses API",
+    "title": "Course Restrictions API",
     "version": "1.0.0"
   },
   "paths": {
     "/restricted-courses/{larsCode}/providers/confirm-add": {
       "get": {
-        "operationId": "GetConfirmAddProviderToRestrictedCourse",
-        "summary": "Displays the confirmation page to add a provider to a restricted course",
+        "summary": "Display confirmation view for adding a provider to a restricted course",
         "parameters": [
           {
             "name": "larsCode",
             "in": "path",
             "required": true,
+            "description": "The LARS code of the course",
             "schema": {
               "type": "string"
-            },
-            "description": "The LARS code of the course."
+            }
           }
         ],
         "responses": {
+          "302": {
+            "description": "Redirects to restricted course details if session data is not present",
+            "content": {}
+          },
           "200": {
-            "description": "The confirmation page was successfully displayed."
-          },
-          "302": {
-            "description": "Redirected to the restricted course details page if the session model is not found."
-          }
-        }
-      },
-      "post": {
-        "operationId": "PostConfirmAddProviderToRestrictedCourse",
-        "summary": "Confirms and adds a provider to a restricted course",
-        "parameters": [
-          {
-            "name": "larsCode",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "The LARS code of the course."
-          }
-        ],
-        "responses": {
-          "302": {
-            "description": "Redirected to the restricted course details page after successful submission, or redirected back if the session model is not found."
-          },
-          "400": {
-            "description": "Bad request if there were issues with the submission or other validation errors."
+            "description": "Display the confirmation page",
+            "content": {
+              "text/html": {}
+            }
           }
         },
+        "security": [
+          {
+            "oauth2": []
+          }
+        ]
+      },
+      "post": {
+        "summary": "Confirm the addition of a provider to a restricted course",
+        "parameters": [
+          {
+            "name": "larsCode",
+            "in": "path",
+            "required": true,
+            "description": "The LARS code of the course",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "requestBody": {
-          "description": "This operation does not explicitly consume a body payload, but relies on route parameters and internal logic.",
-          "required": false
-        }
+          "required": false,
+          "description": "No body parameters are required in this request"
+        },
+        "responses": {
+          "302": {
+            "description": "Redirects to restricted course details after confirming the addition of the provider",
+            "content": {}
+          }
+        },
+        "security": [
+          {
+            "oauth2": []
+          }
+        ]
       }
     }
   },
   "components": {
-    "schemas": {}
+    "schemas": {
+      "UpsertProviderAllowedCourseRequest": {
+        "type": "object",
+        "properties": {
+          "UserId": {
+            "type": "string",
+            "description": "ID of the user confirming the addition"
+          },
+          "UserDisplayName": {
+            "type": "string",
+            "description": "Display name of the user"
+          },
+          "LastDateStarts": {
+            "type": "string",
+            "format": "date",
+            "description": "Date from when the addition is effective (nullable)"
+          }
+        }
+      },
+      "AddProviderToRestrictedCourseSessionModel": {
+        "type": "object",
+        "properties": {
+          "LarsCode": {
+            "type": "string",
+            "description": "The LARS code of the course"
+          },
+          "LegalName": {
+            "type": "string",
+            "description": "Legal name of the provider"
+          },
+          "Ukprn": {
+            "type": "string",
+            "description": "UKPRN of the provider"
+          },
+          "CourseDisplayTitle": {
+            "type": "string",
+            "description": "Display title of the course"
+          }
+        },
+        "required": [
+          "LarsCode",
+          "LegalName",
+          "Ukprn",
+          "CourseDisplayTitle"
+        ]
+      },
+      "ConfirmAddProviderToRestrictedCourseViewModel": {
+        "type": "object",
+        "properties": {
+          "LarsCode": {
+            "type": "string",
+            "description": "The LARS code of the course"
+          },
+          "ProviderName": {
+            "type": "string",
+            "description": "Name of the provider displayed in uppercase"
+          },
+          "Ukprn": {
+            "type": "string",
+            "description": "UKPRN of the provider"
+          },
+          "CourseDisplayTitle": {
+            "type": "string",
+            "description": "Display title of the course"
+          },
+          "CancelUrl": {
+            "type": "string",
+            "format": "uri",
+            "description": "URL to cancel the operation"
+          }
+        },
+        "required": [
+          "LarsCode",
+          "ProviderName",
+          "Ukprn",
+          "CourseDisplayTitle",
+          "CancelUrl"
+        ]
+      }
+    }
   }
 }

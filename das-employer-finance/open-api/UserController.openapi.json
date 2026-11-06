@@ -1,15 +1,17 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Employer Finance API",
+    "title": "User API",
     "version": "1.0.0"
   },
   "paths": {
     "/api/user/upsert": {
       "put": {
-        "summary": "Upsert Registered User",
-        "description": "Upserts a registered user into the system.",
-        "operationId": "upsertUser",
+        "summary": "Upsert a registered user",
+        "operationId": "UpsertRegisteredUser",
+        "tags": [
+          "User"
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -22,22 +24,15 @@
         },
         "responses": {
           "200": {
-            "description": "The user was successfully upserted."
+            "description": "User record successfully upserted"
           },
           "500": {
-            "description": "An internal server error occurred.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
+            "description": "Internal server error"
           }
         },
         "security": [
           {
-            "ApiRoles.ReadUserAccounts": []
+            "ApiRoles_ReadUserAccounts": []
           }
         ]
       }
@@ -49,24 +44,20 @@
         "type": "object",
         "properties": {
           "UserRef": {
-            "type": "string",
-            "description": "Reference for the user."
+            "type": "string"
           },
           "FirstName": {
-            "type": "string",
-            "description": "First name of the user."
+            "type": "string"
           },
           "LastName": {
-            "type": "string",
-            "description": "Last name of the user."
+            "type": "string"
           },
           "EmailAddress": {
             "type": "string",
-            "description": "Email address of the user."
+            "format": "email"
           },
           "CorrelationId": {
-            "type": "string",
-            "description": "Correlation ID for the operation."
+            "type": "string"
           }
         },
         "required": [
@@ -79,10 +70,10 @@
       }
     },
     "securitySchemes": {
-      "ApiRoles.ReadUserAccounts": {
-        "type": "http",
-        "scheme": "bearer",
-        "description": "Authorization policy required to access this endpoint."
+      "ApiRoles_ReadUserAccounts": {
+        "type": "apiKey",
+        "name": "Authorization",
+        "in": "header"
       }
     }
   }

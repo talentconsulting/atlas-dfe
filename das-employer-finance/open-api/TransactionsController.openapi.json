@@ -2,15 +2,13 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Employer Finance API",
-    "version": "1.0.0",
-    "description": "API for managing employer finance transactions"
+    "version": "1.0.0"
   },
   "paths": {
     "/api/transaction-lines/staging": {
       "post": {
         "operationId": "bulkTransactionLineStagingIngest",
-        "summary": "Ingest bulk transaction lines into staging",
-        "description": "Accepts a payload of transaction lines and stages them for processing.",
+        "summary": "Bulk ingest transaction line staging data.",
         "requestBody": {
           "required": true,
           "content": {
@@ -29,10 +27,10 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "IsSuccess": {
+                    "isSuccess": {
                       "type": "boolean"
                     },
-                    "Message": {
+                    "message": {
                       "type": "string"
                     },
                     "validationErrors": {
@@ -46,6 +44,27 @@
               }
             }
           },
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "isSuccess": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "insertedCount": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          },
           "500": {
             "description": "Internal Server Error",
             "content": {
@@ -53,32 +72,11 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "IsSuccess": {
+                    "isSuccess": {
                       "type": "boolean"
                     },
-                    "Message": {
+                    "message": {
                       "type": "string"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "201": {
-            "description": "Transaction lines successfully staged",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "IsSuccess": {
-                      "type": "boolean"
-                    },
-                    "Message": {
-                      "type": "string"
-                    },
-                    "insertedCount": {
-                      "type": "integer"
                     }
                   }
                 }

@@ -1,0 +1,280 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "SelectMultipleLearners API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/api/{providerId}/selectmultiplelearners/validate": {
+      "post": {
+        "summary": "Validate Select Multiple Learners",
+        "description": "Validates the request for selecting multiple learners.",
+        "operationId": "validateSelectMultipleLearners",
+        "parameters": [
+          {
+            "name": "providerId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "example": 12345
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ValidateSelectMultipleLearnersRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Validation Result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {}
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error"
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ValidateSelectMultipleLearnersRequest": {
+        "type": "object",
+        "properties": {
+          "ProviderId": {
+            "type": "integer",
+            "format": "int64",
+            "example": 12345
+          },
+          "CsvRecords": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BulkUploadAddDraftApprenticeshipRequest"
+            }
+          },
+          "BulkReservationValidationResults": {
+            "$ref": "#/components/schemas/BulkReservationValidationResults"
+          },
+          "ProviderStandardsData": {
+            "$ref": "#/components/schemas/ProviderStandardResults"
+          },
+          "OtjTrainingHours": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "integer",
+              "nullable": true
+            }
+          }
+        }
+      },
+      "BulkUploadAddDraftApprenticeshipRequest": {
+        "type": "object",
+        "properties": {
+          "LegalEntityId": {
+            "type": "integer",
+            "nullable": true
+          },
+          "AgreementId": {
+            "type": "string"
+          },
+          "CohortId": {
+            "type": "integer",
+            "nullable": true
+          },
+          "CohortRef": {
+            "type": "string"
+          },
+          "UserId": {
+            "type": "string"
+          },
+          "ProviderId": {
+            "type": "integer"
+          },
+          "CourseCode": {
+            "type": "string"
+          },
+          "StartDateAsString": {
+            "type": "string",
+            "format": "date"
+          },
+          "EndDateAsString": {
+            "type": "string",
+            "format": "date"
+          },
+          "OriginatorReference": {
+            "type": "string"
+          },
+          "ReservationId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "FirstName": {
+            "type": "string"
+          },
+          "LastName": {
+            "type": "string"
+          },
+          "Email": {
+            "type": "string",
+            "format": "email"
+          },
+          "DateOfBirthAsString": {
+            "type": "string",
+            "format": "date"
+          },
+          "Uln": {
+            "type": "string"
+          },
+          "ProviderRef": {
+            "type": "string"
+          },
+          "RowNumber": {
+            "type": "integer"
+          },
+          "CostAsString": {
+            "type": "string"
+          },
+          "EPAOrgId": {
+            "type": "string"
+          },
+          "RecognisePriorLearningAsString": {
+            "type": "string"
+          },
+          "DurationReducedByAsString": {
+            "type": "string"
+          },
+          "PriceReducedByAsString": {
+            "type": "string"
+          },
+          "TrainingTotalHoursAsString": {
+            "type": "string"
+          },
+          "TrainingHoursReductionAsString": {
+            "type": "string"
+          },
+          "IsDurationReducedByRPLAsString": {
+            "type": "string"
+          },
+          "MinimumAgeAtApprenticeshipStart": {
+            "type": "integer",
+            "nullable": true
+          },
+          "MaximumAgeAtApprenticeshipStart": {
+            "type": "integer"
+          },
+          "TrainingPrice": {
+            "type": "integer",
+            "nullable": true
+          },
+          "EndPointAssessmentPrice": {
+            "type": "integer",
+            "nullable": true
+          },
+          "ActualStartDate": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "LearnerDataId": {
+            "type": "integer",
+            "nullable": true
+          }
+        }
+      },
+      "BulkReservationValidationResults": {
+        "type": "object",
+        "properties": {
+          "ValidationErrors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BulkReservationValidation"
+            }
+          }
+        }
+      },
+      "BulkReservationValidation": {
+        "type": "object",
+        "properties": {
+          "Reason": {
+            "type": "string"
+          },
+          "RowNumber": {
+            "type": "integer"
+          }
+        }
+      },
+      "ProviderStandardResults": {
+        "type": "object",
+        "properties": {
+          "IsMainProvider": {
+            "type": "boolean"
+          },
+          "Standards": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProviderStandard"
+            }
+          }
+        }
+      },
+      "ProviderStandard": {
+        "type": "object",
+        "properties": {
+          "CourseCode": {
+            "type": "string"
+          },
+          "Name": {
+            "type": "string"
+          },
+          "Level": {
+            "type": "integer",
+            "nullable": true
+          }
+        }
+      },
+      "UserInfo": {
+        "type": "object",
+        "properties": {
+          "UserId": {
+            "type": "string"
+          },
+          "UserDisplayName": {
+            "type": "string"
+          },
+          "UserEmail": {
+            "type": "string",
+            "format": "email"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}

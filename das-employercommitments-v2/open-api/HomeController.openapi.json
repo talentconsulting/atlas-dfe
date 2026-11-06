@@ -1,14 +1,16 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Employer Commitments API",
+    "title": "Employer Commitments V2 API",
     "version": "1.0.0"
   },
   "paths": {
     "/{accountHashedId}": {
       "get": {
-        "summary": "Gets the home index view",
-        "operationId": "GetHomeIndex",
+        "summary": "Fetch Home Index View",
+        "tags": [
+          "Home"
+        ],
         "parameters": [
           {
             "name": "accountHashedId",
@@ -17,90 +19,11 @@
             "schema": {
               "type": "string"
             }
-          },
-          {
-            "name": "PageNumber",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "default": 1
-            }
-          },
-          {
-            "name": "SortField",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "ReverseSort",
-            "in": "query",
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "name": "SearchTerm",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "SelectedProvider",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "SelectedCourse",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "SelectedEndDate",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            }
-          },
-          {
-            "name": "SelectedStatus",
-            "in": "query",
-            "schema": {
-              "$ref": "#/components/schemas/ApprenticeshipStatus"
-            }
-          },
-          {
-            "name": "FromSearch",
-            "in": "query",
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "name": "SelectedAlert",
-            "in": "query",
-            "schema": {
-              "$ref": "#/components/schemas/Alerts"
-            }
-          },
-          {
-            "name": "SelectedApprenticeConfirmation",
-            "in": "query",
-            "schema": {
-              "$ref": "#/components/schemas/ConfirmationStatus"
-            }
           }
         ],
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Successful response",
             "content": {
               "application/json": {
                 "schema": {
@@ -109,46 +32,43 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "PolicyNames.HasEmployerTransactorOwnerAccount": []
+          }
+        ]
       }
     }
   },
   "components": {
     "schemas": {
-      "IndexViewModel": {
+      "IndexRequest": {
         "type": "object",
-        "additionalProperties": true
-      },
-      "ApprenticeshipStatus": {
-        "type": "string",
-        "enum": [
-          "Approved",
-          "InProgress",
-          "Paused",
-          "Stopped",
-          "Completed"
+        "properties": {
+          "AccountHashedId": {
+            "type": "string"
+          },
+          "AccountId": {
+            "type": "integer",
+            "format": "int64"
+          }
+        },
+        "required": [
+          "AccountHashedId",
+          "AccountId"
         ]
       },
-      "Alerts": {
-        "type": "string",
-        "enum": [
-          "IlrDataMismatch",
-          "ChangesPending",
-          "ChangesRequested",
-          "ChangesForReview",
-          "ConfirmDates",
-          "IlrChangeInvalid",
-          "ChangesDeclined",
-          "IlrChangesPending"
-        ]
-      },
-      "ConfirmationStatus": {
-        "type": "string",
-        "enum": [
-          "Pending",
-          "Confirmed",
-          "Declined"
-        ]
+      "IndexViewModel": {
+        "type": "object"
+      }
+    },
+    "securitySchemes": {
+      "PolicyNames.HasEmployerTransactorOwnerAccount": {
+        "type": "apiKey",
+        "description": "Policy enforcing Employer Transactor Owner Account access",
+        "name": "Authorization",
+        "in": "header"
       }
     }
   }

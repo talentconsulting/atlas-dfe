@@ -1,29 +1,29 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Price Episode API",
+    "title": "Commitments V2 API",
     "version": "1.0.0"
   },
   "paths": {
     "/api/apprenticeships/{apprenticeshipId}/price-episodes": {
       "get": {
-        "summary": "Get price episodes for an apprenticeship",
-        "operationId": "getPriceEpisodes",
+        "operationId": "GetPriceEpisodes",
+        "summary": "Retrieve price episodes for an apprenticeship",
         "parameters": [
           {
             "name": "apprenticeshipId",
             "in": "path",
             "required": true,
-            "description": "The ID of the apprenticeship",
             "schema": {
               "type": "integer",
               "format": "int64"
-            }
+            },
+            "description": "The ID of the apprenticeship"
           }
         ],
         "responses": {
           "200": {
-            "description": "Price episodes retrieved successfully",
+            "description": "A list of price episodes",
             "content": {
               "application/json": {
                 "schema": {
@@ -32,7 +32,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
       }
     }
   },
@@ -40,8 +45,14 @@
     "schemas": {
       "GetPriceEpisodesResponse": {
         "type": "object",
-        "description": "Response containing price episodes for an apprenticeship",
-        "properties": {}
+        "description": "Response schema for price episodes",
+        "additionalProperties": true
+      }
+    },
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
       }
     }
   }

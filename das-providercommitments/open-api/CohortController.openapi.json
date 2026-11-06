@@ -1,15 +1,14 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Provider Commitments Cohort API",
+    "title": "Provider Commitments API",
     "version": "1.0.0",
-    "description": "API documentation for the CohortController in the DAS Provider Commitments project."
+    "description": "API for managing provider commitments, cohorts, and apprenticeships."
   },
   "paths": {
     "/{providerId}/unapproved/review": {
       "get": {
-        "operationId": "GetCohortReview",
-        "summary": "Retrieve cohort review details.",
+        "operationId": "ReviewCohortsByProvider",
         "parameters": [
           {
             "name": "providerId",
@@ -18,19 +17,32 @@
             "schema": {
               "type": "integer"
             }
+          },
+          {
+            "name": "SortField",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ReverseSort",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Review data retrieved successfully."
+            "description": "Successful response."
           }
         }
       }
     },
     "/{providerId}/unapproved/draft": {
       "get": {
-        "operationId": "GetCohortDraft",
-        "summary": "Retrieve cohort draft details.",
+        "operationId": "FetchDraftCohorts",
         "parameters": [
           {
             "name": "providerId",
@@ -39,19 +51,32 @@
             "schema": {
               "type": "integer"
             }
+          },
+          {
+            "name": "SortField",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ReverseSort",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Draft data retrieved successfully."
+            "description": "Successful response."
           }
         }
       }
     },
     "/{providerId}/unapproved/with-employer": {
       "get": {
-        "operationId": "GetCohortWithEmployer",
-        "summary": "Retrieve cohort details with employer involvement.",
+        "operationId": "FetchCohortsWithEmployer",
         "parameters": [
           {
             "name": "providerId",
@@ -60,19 +85,32 @@
             "schema": {
               "type": "integer"
             }
+          },
+          {
+            "name": "SortField",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ReverseSort",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Data with employer retrieved successfully."
+            "description": "Successful response."
           }
         }
       }
     },
     "/{providerId}/unapproved/with-transfer-sender": {
       "get": {
-        "operationId": "GetCohortWithTransferSender",
-        "summary": "Retrieve cohort details with transfer sender involvement.",
+        "operationId": "FetchCohortsWithTransferSender",
         "parameters": [
           {
             "name": "providerId",
@@ -81,19 +119,32 @@
             "schema": {
               "type": "integer"
             }
+          },
+          {
+            "name": "SortField",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ReverseSort",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Data with transfer sender retrieved successfully."
+            "description": "Successful response."
           }
         }
       }
     },
     "/{providerId}/unapproved/add-apprentice": {
       "get": {
-        "operationId": "GetAddApprenticeToDraft",
-        "summary": "Initiate addition of a new apprentice to a draft cohort.",
+        "operationId": "AddNewDraftApprenticeship",
         "parameters": [
           {
             "name": "providerId",
@@ -102,19 +153,48 @@
             "schema": {
               "type": "integer"
             }
+          },
+          {
+            "name": "CacheKey",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "EmployerAccountLegalEntityPublicHashedId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "UseLearnerData",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Apprenticeship addition initiated successfully."
+            "description": "Successfully prepared for adding a draft apprenticeship."
           }
-        }
+        },
+        "security": [
+          {
+            "policyAuth": [
+              "CreateCohort",
+              "HasContributorOrAbovePermission"
+            ]
+          }
+        ]
       }
     },
-    "/{providerId}/unapproved/add/select-course": {
+    "/{providerId}/unapproved/add/select-how": {
       "get": {
-        "operationId": "GetSelectCourseForCohort",
-        "summary": "Select a course for adding apprentices to a cohort.",
+        "operationId": "SelectHowToAddApprentice",
         "parameters": [
           {
             "name": "providerId",
@@ -123,90 +203,65 @@
             "schema": {
               "type": "integer"
             }
+          },
+          {
+            "name": "CacheKey",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Course selection data retrieved successfully."
+            "description": "Successfully provided selection options for how to add an apprentice."
           }
         }
       },
       "post": {
-        "operationId": "PostSelectCourseForCohort",
-        "summary": "Confirm course selection for cohort.",
+        "operationId": "SetHowToAddApprentice",
         "requestBody": {
-          "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/SelectCourseViewModel"
+                "$ref": "#/components/schemas/SelectHowToAddFirstApprenticeshipJourneyViewModel"
               }
             }
           }
         },
-        "parameters": [
-          {
-            "name": "providerId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer"
-            }
-          }
-        ],
         "responses": {
-          "200": {
-            "description": "Course selection confirmed successfully."
+          "204": {
+            "description": "Successfully selected a method to add apprentice."
           }
-        }
+        },
+        "security": [
+          {
+            "policyAuth": [
+              "HasContributorOrAbovePermission"
+            ]
+          }
+        ]
       }
     }
   },
   "components": {
     "schemas": {
-      "SelectCourseViewModel": {
+      "SelectHowToAddFirstApprenticeshipJourneyViewModel": {
         "type": "object",
         "properties": {
           "ProviderId": {
-            "type": "integer"
+            "type": "integer",
+            "description": "Unique ID for provider."
           },
-          "CohortReference": {
-            "type": "string"
-          },
-          "DraftApprenticeshipHashedId": {
-            "type": "string"
-          },
-          "ApprenticeshipHashedId": {
-            "type": "string"
-          },
-          "CohortId": {
-            "type": "integer"
-          },
-          "ReservationId": {
+          "CacheKey": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "description": "CacheKey."
           },
           "EmployerAccountLegalEntityPublicHashedId": {
-            "type": "string"
-          },
-          "AccountLegalEntityId": {
-            "type": "integer"
-          },
-          "Courses": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {}
-            }
-          },
-          "CourseCode": {
-            "type": "string"
-          },
-          "StartMonthYear": {
-            "type": "string"
-          },
-          "DeliveryModel": {
-            "type": "string"
+            "type": "string",
+            "description": "EmployerAccountLegal ID given/hash Key id for retriavable dat interface."
           }
         }
       }

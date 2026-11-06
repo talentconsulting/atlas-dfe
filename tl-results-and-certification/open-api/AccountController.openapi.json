@@ -2,106 +2,101 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Account API",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "description": "API for managing user accounts and session activities."
   },
   "paths": {
     "/signin": {
       "get": {
-        "summary": "Initiates the sign-in process.",
-        "operationId": "SignIn",
         "tags": [
           "Account"
         ],
-        "parameters": [],
+        "summary": "Initiates the sign-in process.",
+        "operationId": "Account_SignIn",
+        "description": "Allows a user to initiate the sign-in process using OpenId Connect.",
         "responses": {
           "302": {
-            "description": "Redirected to sign-in endpoint."
+            "description": "Redirects to an external sign-in provider."
           }
-        },
-        "security": []
+        }
       }
     },
-    "/postsignin": {
+    "/post-signin": {
       "get": {
-        "summary": "Handles post sign-in redirection logic.",
-        "operationId": "PostSignIn",
         "tags": [
           "Account"
         ],
-        "parameters": [],
+        "summary": "Handles post-sign-in behavior.",
+        "operationId": "Account_PostSignIn",
+        "description": "Redirects the user based on their authentication state and role within the system.",
         "responses": {
           "302": {
-            "description": "Redirected based on user authentication and access conditions."
+            "description": "Redirects based on user authentication state."
           }
-        },
-        "security": []
+        }
       }
     },
     "/signout": {
       "get": {
-        "summary": "Signs out the user from both cookie and OpenID authentication.",
-        "operationId": "SignOut",
         "tags": [
           "Account"
         ],
-        "parameters": [],
+        "summary": "Signs the user out.",
+        "operationId": "Account_SignOut",
+        "description": "Removes the user session from the server cache and clears OpenId Connect and cookie-based authentication.",
         "responses": {
-          "200": {
-            "description": "User successfully signed out."
+          "204": {
+            "description": "User signed out successfully."
           }
-        },
-        "security": []
+        }
       }
     },
     "/sign-out": {
       "get": {
-        "summary": "Signs out a user from DfE authentication.",
-        "operationId": "SignOutDsi",
         "tags": [
           "Account"
         ],
-        "parameters": [],
+        "summary": "Signs out and redirects to DfE's sign-out URL.",
+        "operationId": "Account_SignOutDsi",
+        "description": "Signs the user out of the system and redirects them to the configured DfE sign-out URL.",
         "responses": {
           "302": {
-            "description": "Redirected to configured DfE sign-out URL."
+            "description": "Redirects to the DfE sign-out page."
           }
-        },
-        "security": []
+        }
       }
     },
     "/signout-complete": {
       "get": {
-        "summary": "Completes the sign-out process with a redirect.",
-        "operationId": "SignoutComplete",
         "tags": [
           "Account"
         ],
-        "parameters": [],
+        "summary": "Confirms the user's sign-out.",
+        "operationId": "Account_SignOutComplete",
+        "description": "Redirects the user to the configured endpoint after sign-out completion.",
         "responses": {
           "302": {
-            "description": "Redirected to either the configured sign-out URI or the home page."
+            "description": "Redirects based on post sign-out configuration."
           }
-        },
-        "security": []
+        }
       }
     },
     "/account-profile": {
       "get": {
-        "summary": "Redirects to account profile URL.",
-        "operationId": "Profile",
         "tags": [
           "Account"
         ],
-        "parameters": [],
+        "summary": "Redirects to user profile.",
+        "operationId": "Account_Profile",
+        "description": "Redirects the user to their profile page based on the configured URL settings.",
         "responses": {
           "302": {
-            "description": "Redirected to the account profile URL."
+            "description": "Redirects to the profile settings page."
           },
           "404": {
-            "description": "Page not found if profile URL configuration is missing."
+            "description": "Configuration for profile URL not set or invalid."
           }
-        },
-        "security": []
+        }
       }
     }
   },

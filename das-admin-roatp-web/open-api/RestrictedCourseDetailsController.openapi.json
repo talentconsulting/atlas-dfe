@@ -7,53 +7,52 @@
   "paths": {
     "/restricted-courses/{larsCode}": {
       "get": {
+        "summary": "Retrieve details of a restricted course",
         "operationId": "GetRestrictedCourseDetails",
-        "summary": "Retrieve details for restricted courses.",
         "parameters": [
           {
             "name": "larsCode",
             "in": "path",
             "required": true,
-            "description": "The LARS code of the course.",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Unique identifier for the course (LARS Code)"
           },
           {
             "name": "SearchTerm",
             "in": "query",
             "required": false,
-            "description": "Optional search term to filter providers.",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Search term for filtering"
           },
           {
             "name": "DeliveryStatus",
             "in": "query",
             "required": false,
-            "description": "Delivery statuses to filter providers.",
             "schema": {
               "type": "array",
               "items": {
                 "$ref": "#/components/schemas/DeliveryStatus"
               }
-            }
+            },
+            "description": "Filter by delivery statuses"
           },
           {
             "name": "PageNumber",
             "in": "query",
             "required": false,
-            "description": "The page number for pagination.",
             "schema": {
-              "type": "integer",
-              "default": 1
-            }
+              "type": "integer"
+            },
+            "description": "Page number for pagination"
           }
         ],
         "responses": {
           "200": {
-            "description": "Successfully retrieved course details.",
+            "description": "Details of the restricted course",
             "content": {
               "application/json": {
                 "schema": {
@@ -63,93 +62,135 @@
             }
           },
           "404": {
-            "description": "Course not found or not restricted."
+            "description": "Course not found"
           }
-        }
+        },
+        "security": [
+          {
+            "RoatpAdminTeamAuth": []
+          }
+        ]
       }
     }
   },
   "components": {
     "schemas": {
+      "GetRestrictedCourseDetailsRequestModel": {
+        "type": "object",
+        "properties": {
+          "SearchTerm": {
+            "type": "string"
+          },
+          "DeliveryStatus": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DeliveryStatus"
+            }
+          },
+          "PageNumber": {
+            "type": "integer"
+          },
+          "HasSearchTermFilter": {
+            "type": "boolean"
+          },
+          "HasDeliveryStatusFilter": {
+            "type": "boolean"
+          },
+          "HasFilters": {
+            "type": "boolean"
+          }
+        }
+      },
       "DeliveryStatus": {
         "type": "string",
         "enum": [
           "OpenToNewStarts",
           "LastStartDateAdded",
           "ClosedToNewStarts"
-        ]
+        ],
+        "description": "Status of course delivery"
       },
       "RestrictedCourseDetailsViewModel": {
         "type": "object",
         "properties": {
           "LarsCode": {
-            "type": "string",
-            "description": "The LARS code of the course."
+            "type": "string"
           },
           "CourseName": {
-            "type": "string",
-            "description": "The name of the course."
+            "type": "string"
           },
           "Level": {
-            "type": "integer",
-            "description": "The level of the course."
+            "type": "string"
           },
           "Title": {
-            "type": "string",
-            "description": "The title of the course."
+            "type": "string"
           },
           "Sector": {
-            "type": "string",
-            "description": "The sector or route of the course."
+            "type": "string"
           },
           "LearningType": {
-            "type": "string",
-            "description": "The type of learning for the course."
+            "type": "string"
           },
           "IsCourseRestricted": {
-            "type": "boolean",
-            "description": "Indicates if the course is restricted."
+            "type": "boolean"
           },
           "RestrictedCourseDetailsPageUrl": {
-            "type": "string",
-            "description": "The URL for the restricted course details page."
+            "type": "string"
           },
           "AddProviderUrl": {
-            "type": "string",
-            "description": "The URL to add a provider to the restricted course."
+            "type": "string"
           },
           "HasActiveFilters": {
-            "type": "boolean",
-            "description": "Indicates if filters are active."
+            "type": "boolean"
           },
           "Filters": {
             "type": "array",
             "items": {
-              "type": "object"
-            },
-            "description": "Details about active filters applied."
+              "type": "object",
+              "additionalProperties": true
+            }
           },
           "SuccessBannerMessage": {
-            "type": "string",
-            "nullable": true,
-            "description": "A success banner message."
+            "type": "string"
           },
           "TotalProviderCount": {
-            "type": "integer",
-            "description": "The total count of filtered providers."
+            "type": "integer"
           },
           "AllowedProviders": {
             "type": "array",
             "items": {
-              "type": "object"
-            },
-            "description": "List of providers allowed for the course."
+              "$ref": "#/components/schemas/AllowedProviderViewModel"
+            }
           },
           "Pagination": {
             "type": "object",
-            "description": "Pagination details for the filtered results."
+            "additionalProperties": true
           }
         }
+      },
+      "AllowedProviderViewModel": {
+        "type": "object",
+        "properties": {
+          "Ukprn": {
+            "type": "string"
+          },
+          "ProviderName": {
+            "type": "string"
+          },
+          "HasLastDateStarts": {
+            "type": "boolean"
+          },
+          "ChangeUrl": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "RoatpAdminTeamAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
       }
     }
   }

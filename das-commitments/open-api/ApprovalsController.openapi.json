@@ -7,8 +7,10 @@
   "paths": {
     "/approvals/{learningKey}": {
       "put": {
-        "summary": "Approves or creates a change-of-circumstance (Coc) request.",
-        "operationId": "PutApprovals",
+        "tags": [
+          "Approvals"
+        ],
+        "summary": "Update approvals for a specific learning key.",
         "parameters": [
           {
             "name": "learningKey",
@@ -18,7 +20,7 @@
               "type": "string",
               "format": "uuid"
             },
-            "description": "The unique identifier for the learning to be approved."
+            "description": "The unique identifier for the learning key."
           }
         ],
         "requestBody": {
@@ -33,40 +35,56 @@
         },
         "responses": {
           "200": {
-            "description": "The approval was completed successfully.",
+            "description": "Approvals updated successfully.",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ApprovalFieldChange"
+                  "$ref": "#/components/schemas/PutApprovalsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid LearningKey or request body.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
                   }
                 }
               }
             }
           },
           "201": {
-            "description": "The approval request was created successfully.",
+            "description": "Approvals created successfully.",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ApprovalFieldChange"
-                  }
+                  "$ref": "#/components/schemas/PutApprovalsResponse"
                 }
               }
             }
           },
-          "400": {
-            "description": "Bad request. For example, learningKey in the route does not match learningKey in the body."
+          "500": {
+            "description": "Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
           }
-        },
-        "security": [
-          {
-            "OAuth2": []
-          }
-        ]
+        }
       }
     }
   },
@@ -78,41 +96,45 @@
           "LearningKey": {
             "type": "string",
             "format": "uuid",
-            "description": "The unique identifier for the learning entity."
+            "description": "The unique identifier for the learning key."
           },
           "ApprenticeshipId": {
             "type": "integer",
             "format": "int64",
-            "description": "The ID of the apprenticeship."
+            "description": "Identifier for the apprenticeship."
           },
           "LearningType": {
             "type": "string",
-            "description": "The type of learning associated with the request."
+            "description": "Type of learning associated with the approval."
           },
           "UKPRN": {
             "type": "string",
-            "description": "The UK Provider Reference Number."
+            "description": "UK Provider Reference Number."
           },
           "ULN": {
             "type": "string",
-            "description": "The Unique Learner Number."
+            "description": "Unique Learner Number."
           },
           "ApprovedUri": {
             "type": "string",
-            "description": "The URI pointing to the approval documentation."
+            "description": "URI used for the approval process."
           },
           "Changes": {
             "type": "array",
-            "description": "The list of field changes for the approval.",
             "items": {
               "$ref": "#/components/schemas/CocApprovalFieldChange"
+            }
+          },
+          "NewPrices": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PriceRecord"
             }
           }
         },
         "required": [
           "LearningKey",
-          "ApprenticeshipId",
-          "LearningType"
+          "Changes"
         ]
       },
       "CocApprovalFieldChange": {
@@ -120,7 +142,7 @@
         "properties": {
           "ChangeType": {
             "type": "string",
-            "description": "The type of the change being requested (e.g., title, duration)."
+            "description": "Type of change in the field."
           },
           "Data": {
             "$ref": "#/components/schemas/CocData"
@@ -132,16 +154,48 @@
         "properties": {
           "Old": {
             "type": "string",
-            "description": "The old value before the change."
+            "description": "Previous value."
           },
           "New": {
             "type": "string",
-            "description": "The new value to apply."
+            "description": "Updated value."
+          }
+        }
+      },
+      "PriceRecord": {
+        "type": "object",
+        "properties": {
+          "TrainingPrice": {
+            "type": "number",
+            "format": "decimal",
+            "description": "Price for training."
           },
-          "EffectiveFromDate": {
+          "AssessmentPrice": {
+            "type": "number",
+            "format": "decimal",
+            "description": "Price for assessment."
+          },
+          "EffectiveFrom": {
             "type": "string",
-            "format": "date",
-            "description": "The date from which the change is effective."
+            "format": "date-time",
+            "description": "Start date for the price record."
+          }
+        }
+      },
+      "PutApprovalsResponse": {
+        "type": "object",
+        "properties": {
+          "Changes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ApprovalFieldChange"
+            }
+          },
+          "NewPrices": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PriceRecord"
+            }
           }
         }
       },
@@ -150,28 +204,18 @@
         "properties": {
           "ChangeType": {
             "type": "string",
-            "description": "The type of the change being approved."
+            "description": "Type of change."
           },
           "ApprovalStatus": {
             "type": "string",
-            "description": "The approval status for the field change."
+            "description": "Approval status of the change."
           },
           "Reason": {
             "type": "string",
-            "description": "An optional reason for the approval decision."
-          }
-        }
-      }
-    },
-    "securitySchemes": {
-      "OAuth2": {
-        "type": "oauth2",
-        "flows": {
-          "implicit": {
-            "authorizationUrl": "https://example.com/oauth/authorize",
-            "scopes": {
-              "approvals:write": "Allows writing approvals."
-            }
+            "description": "Reason for approval or denial."
+          },
+          "Data": {
+            "$ref": "#/components/schemas/CocData"
           }
         }
       }

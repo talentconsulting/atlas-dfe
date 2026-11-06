@@ -1,0 +1,272 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Funding Projection API",
+    "version": "1.0.0",
+    "description": "API for managing apprenticeship payment summaries in the funding projection system."
+  },
+  "paths": {
+    "/apprenticeship-payment-summary/{accountId}/apprenticeship-payment-summary/{apprenticeshipId}": {
+      "put": {
+        "summary": "Upsert apprenticeship payment summary",
+        "description": "Creates or updates an apprenticeship payment summary for the specified account and apprenticeship.",
+        "tags": [
+          "Apprenticeship Payment Summary"
+        ],
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "description": "Account ID associated with the apprenticeship."
+          },
+          {
+            "name": "apprenticeshipId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "description": "Unique ID for the apprenticeship."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PostApprenticeshipPaymentSummaryRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK. The apprenticeship payment summary was updated successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApprenticeshipPaymentSummaryResponse"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Created. A new apprenticeship payment summary was created successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApprenticeshipPaymentSummaryResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "PostApprenticeshipPaymentSummaryRequest": {
+        "type": "object",
+        "properties": {
+          "isTransfer": {
+            "type": "boolean"
+          },
+          "uln": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "dob": {
+            "type": "string",
+            "format": "date"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ApprenticeshipStatus"
+          },
+          "totalCost": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "totalPaid": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "providerId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "providerOrder": {
+            "type": "integer",
+            "nullable": true
+          },
+          "approvalDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "firstApprovalDate": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "learningType": {
+            "$ref": "#/components/schemas/LearningType"
+          },
+          "lastPaymentDate": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "lastPaymentAmount": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "lastUpdatedDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "isTransfer",
+          "uln",
+          "dob",
+          "status",
+          "totalCost",
+          "totalPaid",
+          "startDate",
+          "endDate",
+          "providerId",
+          "approvalDate",
+          "learningType"
+        ]
+      },
+      "ApprenticeshipPaymentSummaryResponse": {
+        "type": "object",
+        "properties": {
+          "apprenticeshipId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "accountId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "isTransfer": {
+            "type": "boolean"
+          },
+          "uln": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "dob": {
+            "type": "string",
+            "format": "date"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ApprenticeshipStatus"
+          },
+          "totalCost": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "totalPaid": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "providerId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "providerOrder": {
+            "type": "integer",
+            "nullable": true
+          },
+          "approvalDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "firstApprovalDate": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "learningType": {
+            "$ref": "#/components/schemas/LearningType"
+          },
+          "lastPaymentDate": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "lastPaymentAmount": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "lastUpdatedDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "apprenticeshipId",
+          "accountId",
+          "isTransfer",
+          "uln",
+          "dob",
+          "status",
+          "totalCost",
+          "totalPaid",
+          "startDate",
+          "endDate",
+          "providerId",
+          "approvalDate",
+          "learningType"
+        ]
+      },
+      "ApprenticeshipStatus": {
+        "type": "string",
+        "enum": [
+          "WaitingToStart",
+          "Live",
+          "Paused",
+          "Stopped",
+          "Completed",
+          "Unknown"
+        ]
+      },
+      "LearningType": {
+        "type": "string",
+        "enum": [
+          "Apprenticeship",
+          "FoundationApprenticeship",
+          "ApprenticeshipUnit"
+        ]
+      }
+    }
+  }
+}

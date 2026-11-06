@@ -1,0 +1,120 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Messages API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/": {
+      "get": {
+        "operationId": "getMessages",
+        "parameters": [
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response containing paginated queue messages.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "Total": {
+                      "type": "integer",
+                      "format": "int32"
+                    },
+                    "TotalNotFiltered": {
+                      "type": "integer",
+                      "format": "int32"
+                    },
+                    "Rows": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "Id": {
+                            "type": "string"
+                          },
+                          "OriginatingEndpoint": {
+                            "type": "string"
+                          },
+                          "ProcessingEndpoint": {
+                            "type": "string"
+                          },
+                          "Body": {
+                            "type": "string"
+                          },
+                          "Exception": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "ExceptionType": {
+                            "type": "string",
+                            "nullable": true
+                          }
+                        },
+                        "required": [
+                          "Id",
+                          "OriginatingEndpoint",
+                          "ProcessingEndpoint",
+                          "Body"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "Total",
+                    "TotalNotFiltered",
+                    "Rows"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {}
+}

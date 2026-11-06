@@ -1,0 +1,105 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Employer Incentives API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/revert-payments": {
+      "post": {
+        "summary": "Revert payments",
+        "description": "Reverts specified payments based on the provided request.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RevertPaymentsRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Payments successfully reverted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "Message": {
+                      "type": "string",
+                      "example": "Payments have been successfully reverted"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "Message": {
+                      "type": "string",
+                      "example": "Invalid input"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "RevertPaymentsRequest": {
+        "type": "object",
+        "properties": {
+          "Payments": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "List of payment IDs to revert"
+          },
+          "ServiceRequest": {
+            "$ref": "#/components/schemas/ServiceRequest"
+          }
+        },
+        "required": [
+          "Payments",
+          "ServiceRequest"
+        ]
+      },
+      "ServiceRequest": {
+        "type": "object",
+        "properties": {
+          "TaskId": {
+            "type": "string",
+            "description": "Task identifier"
+          },
+          "DecisionReference": {
+            "type": "string",
+            "description": "Reference for the decision"
+          },
+          "TaskCreatedDate": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Date the task was created"
+          }
+        },
+        "required": [
+          "TaskId",
+          "DecisionReference"
+        ]
+      }
+    }
+  }
+}

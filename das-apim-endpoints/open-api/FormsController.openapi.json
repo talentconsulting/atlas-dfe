@@ -1,17 +1,17 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Forms API",
-    "version": "1.0.0"
+    "title": "FormBuilder API",
+    "version": "1.0.0",
+    "description": "API for managing forms in the FormBuilder application."
   },
   "paths": {
     "/api/forms": {
       "get": {
-        "operationId": "GetAllForms",
         "summary": "Retrieve all form versions",
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "Successfully retrieved form versions",
             "content": {
               "application/json": {
                 "schema": {
@@ -26,7 +26,6 @@
         }
       },
       "post": {
-        "operationId": "CreateFormVersion",
         "summary": "Create a new form version",
         "requestBody": {
           "required": true,
@@ -40,7 +39,7 @@
         },
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "Form version created successfully",
             "content": {
               "application/json": {
                 "schema": {
@@ -57,7 +56,6 @@
     },
     "/api/forms/{formVersionId}": {
       "get": {
-        "operationId": "GetFormVersionById",
         "summary": "Retrieve a form version by ID",
         "parameters": [
           {
@@ -72,7 +70,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "Successfully retrieved form version",
             "content": {
               "application/json": {
                 "schema": {
@@ -87,8 +85,7 @@
         }
       },
       "put": {
-        "operationId": "UpdateFormVersion",
-        "summary": "Update an existing form version",
+        "summary": "Update a form version",
         "parameters": [
           {
             "name": "formVersionId",
@@ -112,7 +109,36 @@
         },
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "Form version updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmptyResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Remove a form",
+        "parameters": [
+          {
+            "name": "formVersionId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Form removed successfully",
             "content": {
               "application/json": {
                 "schema": {
@@ -129,7 +155,6 @@
     },
     "/api/forms/{formVersionId}/publish": {
       "put": {
-        "operationId": "PublishFormVersion",
         "summary": "Publish a form version",
         "parameters": [
           {
@@ -144,7 +169,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "Form version published successfully",
             "content": {
               "application/json": {
                 "schema": {
@@ -161,7 +186,6 @@
     },
     "/api/forms/{formVersionId}/unpublish": {
       "put": {
-        "operationId": "UnpublishFormVersion",
         "summary": "Unpublish a form version",
         "parameters": [
           {
@@ -176,7 +200,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "Form version unpublished successfully",
             "content": {
               "application/json": {
                 "schema": {
@@ -193,8 +217,7 @@
     },
     "/api/forms/{formId}/MoveUp": {
       "put": {
-        "operationId": "MoveUpForm",
-        "summary": "Move a form up",
+        "summary": "Move a form up in the ordering",
         "parameters": [
           {
             "name": "formId",
@@ -208,7 +231,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "Form moved up successfully",
             "content": {
               "application/json": {
                 "schema": {
@@ -225,8 +248,7 @@
     },
     "/api/forms/{formId}/MoveDown": {
       "put": {
-        "operationId": "MoveDownForm",
-        "summary": "Move a form down",
+        "summary": "Move a form down in the ordering",
         "parameters": [
           {
             "name": "formId",
@@ -240,7 +262,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "Form moved down successfully",
             "content": {
               "application/json": {
                 "schema": {
@@ -257,8 +279,7 @@
     },
     "/api/forms/{formId}/new-version": {
       "put": {
-        "operationId": "CreateDraftFormVersion",
-        "summary": "Create a draft for a new version of the form",
+        "summary": "Create a draft version of a form",
         "parameters": [
           {
             "name": "formId",
@@ -272,39 +293,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/EmptyResponse"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal server error"
-          }
-        }
-      }
-    },
-    "/api/forms/{formId}": {
-      "delete": {
-        "operationId": "DeleteForm",
-        "summary": "Delete a form",
-        "parameters": [
-          {
-            "name": "formId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful response",
+            "description": "Draft version created successfully",
             "content": {
               "application/json": {
                 "schema": {
@@ -328,7 +317,7 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/FormVersion"
+              "$ref": "#/definitions/FormVersion"
             }
           }
         }
@@ -366,6 +355,29 @@
           }
         }
       },
+      "CreateFormVersionCommand": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "order": {
+            "type": "integer"
+          }
+        }
+      },
+      "CreateFormVersionCommandResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      },
       "GetFormVersionByIdQueryResponse": {
         "type": "object",
         "properties": {
@@ -399,7 +411,7 @@
           "sections": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/Section"
+              "$ref": "#/definitions/Section"
             }
           }
         }
@@ -423,36 +435,9 @@
           }
         }
       },
-      "CreateFormVersionCommand": {
-        "type": "object",
-        "properties": {
-          "title": {
-            "type": "string"
-          },
-          "description": {
-            "type": "string"
-          },
-          "order": {
-            "type": "integer"
-          }
-        }
-      },
-      "CreateFormVersionCommandResponse": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          }
-        }
-      },
       "UpdateFormVersionCommand": {
         "type": "object",
         "properties": {
-          "formVersionId": {
-            "type": "string",
-            "format": "uuid"
-          },
           "name": {
             "type": "string"
           },
@@ -465,8 +450,7 @@
         }
       },
       "EmptyResponse": {
-        "type": "object",
-        "description": "An empty response payload"
+        "type": "object"
       }
     }
   }

@@ -7,11 +7,8 @@
   "paths": {
     "/restricted-courses/{larsCode}/providers/add": {
       "get": {
-        "tags": [
-          "CourseRestrictions"
-        ],
-        "summary": "Get Add Provider to Restricted Course View",
-        "operationId": "GetAddProviderToRestrictedCourseView",
+        "operationId": "GetAddProviderToRestrictedCourseIndex",
+        "summary": "Displays the form for adding a provider to a restricted course.",
         "parameters": [
           {
             "name": "larsCode",
@@ -20,24 +17,28 @@
             "schema": {
               "type": "string"
             },
-            "description": "The LARS code of the restricted course."
+            "description": "The course identifier."
           }
         ],
         "responses": {
           "200": {
-            "description": "HTML view of the Add Provider to Restricted Course page."
+            "description": "The form to add a provider is displayed.",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
           },
           "404": {
-            "description": "The requested restricted course was not found."
+            "description": "Course not found or not restricted."
           }
         }
       },
       "post": {
-        "tags": [
-          "CourseRestrictions"
-        ],
-        "summary": "Submit Provider to Restricted Course",
-        "operationId": "SubmitProviderToRestrictedCourse",
+        "operationId": "PostAddProviderToRestrictedCourseIndex",
+        "summary": "Processes the submission to add a provider to a restricted course.",
         "parameters": [
           {
             "name": "larsCode",
@@ -46,13 +47,13 @@
             "schema": {
               "type": "string"
             },
-            "description": "The LARS code of the restricted course."
+            "description": "The course identifier."
           }
         ],
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": {
+            "application/x-www-form-urlencoded": {
               "schema": {
                 "$ref": "#/components/schemas/AddProviderToRestrictedCourseSubmitModel"
               }
@@ -61,20 +62,17 @@
         },
         "responses": {
           "302": {
-            "description": "Redirect to confirm adding provider to restricted course."
+            "description": "Redirect to a confirmation page for adding the provider to the restricted course."
           },
           "404": {
-            "description": "Either the restricted course or the provider was not found."
+            "description": "Course or provider not found."
           },
           "400": {
             "description": "Validation errors occurred.",
             "content": {
-              "application/json": {
+              "text/html": {
                 "schema": {
-                  "type": "object",
-                  "additionalProperties": {
-                    "type": "string"
-                  }
+                  "type": "string"
                 }
               }
             }
@@ -91,9 +89,10 @@
           "SelectedUkprn": {
             "type": "string",
             "nullable": true,
-            "description": "The UKPRN of the selected provider."
+            "description": "The UKPRN (UK Provider Reference Number) of the provider to be added."
           }
-        }
+        },
+        "required": []
       }
     }
   }

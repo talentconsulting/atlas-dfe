@@ -1,291 +1,205 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Training Provider API",
-    "version": "1.0.0",
-    "description": "API for managing training provider operations including learner records, replacement documents, withdrawal processes, and provider guidance."
+    "title": "TrainingProvider API",
+    "version": "1.0.0"
   },
   "paths": {
-    "/manage-learners/{academicYear}/{pageNumber}": {
+    "/api/TrainingProvider/FindLearnerRecord/{providerUkprn}/{uln}": {
       "get": {
-        "summary": "Search Learner Details",
+        "summary": "Find Learner Record",
+        "operationId": "FindLearnerRecord",
         "parameters": [
           {
-            "name": "academicYear",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer"
-            }
-          },
-          {
-            "name": "pageNumber",
+            "name": "providerUkprn",
             "in": "path",
             "required": true,
             "schema": {
               "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "uln",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Learner record found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FindLearnerRecord"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/TrainingProvider/GetLearnerRecordDetails/{providerUkprn}/{profileId}/{pathwayId}": {
+      "get": {
+        "summary": "Get Learner Record Details",
+        "operationId": "GetLearnerRecordDetails",
+        "parameters": [
+          {
+            "name": "providerUkprn",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "profileId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "pathwayId",
+            "in": "path",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
               "nullable": true
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Learner details fetched successfully"
-          },
-          "404": {
-            "description": "Page not found"
+            "description": "Learner record details found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LearnerRecordDetails"
+                }
+              }
+            }
           }
         }
-      },
-      "post": {
-        "summary": "Submit Search Learner Details",
+      }
+    },
+    "/api/TrainingProvider/UpdateLearnerSubject": {
+      "put": {
+        "summary": "Update Learner Subject",
+        "operationId": "UpdateLearnerSubject",
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/SearchCriteriaViewModel"
+                "$ref": "#/components/schemas/UpdateLearnerSubjectRequest"
               }
             }
           }
         },
         "responses": {
-          "302": {
-            "description": "Redirect to search learner details"
-          }
-        }
-      }
-    },
-    "/manage-learners-clearsearchkey/{academicYear}": {
-      "get": {
-        "summary": "Clear Search Key",
-        "parameters": [
-          {
-            "name": "academicYear",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer"
+          "200": {
+            "description": "Learner subject updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
             }
           }
-        ],
-        "responses": {
-          "302": {
-            "description": "Redirect to search learner details"
-          }
         }
       }
     },
-    "/manage-learners-applyfilters": {
+    "/api/TrainingProvider/SearchLearnerDetails": {
       "post": {
-        "summary": "Apply Filters for Learner Search",
+        "summary": "Search Learner Details",
+        "operationId": "SearchLearnerDetails",
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/SearchCriteriaViewModel"
+                "$ref": "#/components/schemas/SearchLearnerRequest"
               }
             }
           }
         },
         "responses": {
-          "302": {
-            "description": "Redirect to search learner details"
-          }
-        }
-      }
-    },
-    "/manage-learners-clearfilters/{academicYear}": {
-      "get": {
-        "summary": "Clear Learner Filters",
-        "parameters": [
-          {
-            "name": "academicYear",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer"
+          "200": {
+            "description": "Learner details found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedResponse_SearchLearnerDetail"
+                }
+              }
             }
           }
-        ],
-        "responses": {
-          "302": {
-            "description": "Redirect to search learner details"
-          }
         }
       }
     },
-    "/request-replacement-document/{profileId}": {
+    "/api/TrainingProvider/GetSearchLearnerFilters/{providerukprn}": {
       "get": {
-        "summary": "Request Replacement Document",
+        "summary": "Get Search Learner Filters",
+        "operationId": "GetSearchLearnerFilters",
         "parameters": [
           {
-            "name": "profileId",
+            "name": "providerukprn",
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "format": "int64"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Replacement document request details fetched successfully"
-          },
-          "404": {
-            "description": "Page not found"
+            "description": "Search learner filters retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchLearnerFilters"
+                }
+              }
+            }
           }
         }
-      },
+      }
+    },
+    "/api/TrainingProvider/CreateReplacementDocumentPrintingRequest": {
       "post": {
-        "summary": "Submit Replacement Document Request",
+        "summary": "Create Replacement Document Printing Request",
+        "operationId": "CreateReplacementDocumentPrintingRequest",
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/RequestReplacementDocumentViewModel"
+                "$ref": "#/components/schemas/ReplacementPrintRequest"
               }
             }
           }
         },
         "responses": {
-          "302": {
-            "description": "Redirect to learner record details"
-          },
-          "500": {
-            "description": "Problem with service"
-          }
-        }
-      }
-    },
-    "/manage-learners-add-withdrawn-status/{profileId}": {
-      "get": {
-        "summary": "Add Withdrawn Status to Learner",
-        "parameters": [
-          {
-            "name": "profileId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer"
-            }
-          }
-        ],
-        "responses": {
           "200": {
-            "description": "Withdrawn status details fetched successfully"
-          },
-          "404": {
-            "description": "Page not found"
-          }
-        }
-      },
-      "post": {
-        "summary": "Submit Withdrawn Status",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AddWithdrawnStatusViewModel"
+            "description": "Replacement document printing request created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
               }
             }
-          }
-        },
-        "responses": {
-          "302": {
-            "description": "Redirect to appropriate action based on response"
-          }
-        }
-      }
-    },
-    "/restore-learner-ao/{profileId}": {
-      "get": {
-        "summary": "Reinstate Learner From Withdrawn Status",
-        "parameters": [
-          {
-            "name": "profileId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Learner reinstatement details fetched successfully"
-          },
-          "404": {
-            "description": "Page not found"
-          }
-        }
-      },
-      "post": {
-        "summary": "Submit Change Back to Active Status",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ChangeBackToActiveStatusViewModel"
-              }
-            }
-          }
-        },
-        "responses": {
-          "302": {
-            "description": "Redirect to appropriate action based on response"
-          }
-        }
-      }
-    },
-    "/search-learner-records": {
-      "get": {
-        "summary": "Search Learner Records",
-        "responses": {
-          "200": {
-            "description": "Search learner records initialized successfully"
-          }
-        }
-      },
-      "post": {
-        "summary": "Submit Search Learner Records",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/SearchLearnerRecordViewModel"
-              }
-            }
-          }
-        },
-        "responses": {
-          "302": {
-            "description": "Redirect to learner record details or not found"
-          }
-        }
-      }
-    },
-    "/provider-guidance": {
-      "get": {
-        "summary": "Provider Guidance",
-        "responses": {
-          "200": {
-            "description": "Provider guidance page rendered successfully"
-          }
-        }
-      }
-    },
-    "/provider-timeline": {
-      "get": {
-        "summary": "Provider Timeline",
-        "responses": {
-          "200": {
-            "description": "Provider timeline page rendered successfully"
           }
         }
       }
@@ -293,79 +207,395 @@
   },
   "components": {
     "schemas": {
-      "SearchCriteriaViewModel": {
+      "FindLearnerRecord": {
         "type": "object",
         "properties": {
-          "SearchLearnerFilters": {
-            "type": "object"
+          "ProfileId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Uln": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "Name": {
+            "type": "string"
+          },
+          "DateofBirth": {
+            "type": "string",
+            "format": "date"
+          },
+          "ProviderName": {
+            "type": "string"
+          },
+          "PathwayName": {
+            "type": "string"
+          },
+          "IsLearnerRegistered": {
+            "type": "boolean"
+          }
+        }
+      },
+      "LearnerRecordDetails": {
+        "type": "object",
+        "properties": {
+          "ProfileId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "RegistrationPathwayId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "TlPathwayId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Uln": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "Name": {
+            "type": "string"
+          },
+          "DateofBirth": {
+            "type": "string",
+            "format": "date"
+          },
+          "ProviderName": {
+            "type": "string"
+          },
+          "ProviderUkprn": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "TlevelTitle": {
+            "type": "string"
+          },
+          "TlevelCode": {
+            "type": "string"
+          },
+          "Specialisms": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "AcademicYear": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "AwardingOrganisationName": {
+            "type": "string"
+          },
+          "MathsStatus": {
+            "$ref": "#/components/schemas/SubjectStatus"
+          },
+          "EnglishStatus": {
+            "$ref": "#/components/schemas/SubjectStatus"
+          },
+          "IsLearnerRegistered": {
+            "type": "boolean"
+          },
+          "RegistrationPathwayStatus": {
+            "$ref": "#/components/schemas/RegistrationPathwayStatus"
+          },
+          "IndustryPlacementId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "IndustryPlacementStatus": {
+            "$ref": "#/components/schemas/IndustryPlacementStatus"
+          },
+          "IndustryPlacementDetails": {
+            "type": "string"
+          },
+          "ProviderAddress": {
+            "$ref": "#/components/schemas/Address"
+          }
+        }
+      },
+      "UpdateLearnerSubjectRequest": {
+        "type": "object",
+        "properties": {
+          "ProfileId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "SubjectStatus": {
+            "$ref": "#/components/schemas/SubjectStatus"
+          },
+          "SubjectType": {
+            "$ref": "#/components/schemas/SubjectType"
+          },
+          "ProviderUkprn": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "PerformedBy": {
+            "type": "string"
+          }
+        }
+      },
+      "SearchLearnerRequest": {
+        "type": "object",
+        "properties": {
+          "AcademicYear": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          "Tlevels": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          "IndustryPlacementStatus": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
           },
           "SearchKey": {
             "type": "string"
           },
-          "AcademicYear": {
-            "type": "integer"
+          "Ukprn": {
+            "type": "integer",
+            "format": "int64"
           },
           "PageNumber": {
             "type": "integer",
+            "format": "int32",
             "nullable": true
-          },
-          "IsSearchKeyApplied": {
-            "type": "boolean"
           }
         }
       },
-      "RequestReplacementDocumentViewModel": {
+      "PagedResponse_SearchLearnerDetail": {
+        "type": "object",
+        "properties": {
+          "TotalRecords": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Records": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SearchLearnerDetail"
+            }
+          },
+          "PagerInfo": {
+            "$ref": "#/components/schemas/Pager"
+          }
+        }
+      },
+      "SearchLearnerDetail": {
         "type": "object",
         "properties": {
           "ProfileId": {
-            "type": "integer"
+            "type": "integer",
+            "format": "int32"
           },
           "Uln": {
-            "type": "integer"
+            "type": "integer",
+            "format": "int64"
           },
-          "LearnerName": {
+          "Firstname": {
+            "type": "string"
+          },
+          "Lastname": {
+            "type": "string"
+          },
+          "TlevelName": {
+            "type": "string"
+          },
+          "AcademicYear": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "EnglishStatus": {
+            "$ref": "#/components/schemas/SubjectStatus"
+          },
+          "MathsStatus": {
+            "$ref": "#/components/schemas/SubjectStatus"
+          },
+          "IndustryPlacementStatus": {
+            "$ref": "#/components/schemas/IndustryPlacementStatus"
+          }
+        }
+      },
+      "SearchLearnerFilters": {
+        "type": "object",
+        "properties": {
+          "AcademicYears": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FilterLookupData"
+            }
+          },
+          "Tlevels": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FilterLookupData"
+            }
+          },
+          "Status": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FilterLookupData"
+            }
+          },
+          "IndustryPlacementStatus": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FilterLookupData"
+            }
+          }
+        }
+      },
+      "ReplacementPrintRequest": {
+        "type": "object",
+        "properties": {
+          "Uln": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "ProviderUkprn": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "ProviderAddressId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "PrintCertificateId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "PerformedBy": {
             "type": "string"
           }
         }
       },
-      "AddWithdrawnStatusViewModel": {
+      "FilterLookupData": {
         "type": "object",
         "properties": {
-          "IsPendingWithdrawl": {
-            "type": "boolean",
+          "Id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Name": {
+            "type": "string"
+          },
+          "CoreCode": {
+            "type": "string",
             "nullable": true
           },
-          "ProfileId": {
-            "type": "integer"
-          },
-          "LearnerName": {
-            "type": "string"
-          }
-        }
-      },
-      "ChangeBackToActiveStatusViewModel": {
-        "type": "object",
-        "properties": {
-          "ChangeBackToActive": {
-            "type": "boolean",
-            "nullable": true
-          },
-          "ProfileId": {
-            "type": "integer"
-          },
-          "LearnerName": {
-            "type": "string"
-          }
-        }
-      },
-      "SearchLearnerRecordViewModel": {
-        "type": "object",
-        "properties": {
-          "SearchUln": {
-            "type": "integer"
-          },
-          "IsLearnerRegistered": {
+          "IsSelected": {
             "type": "boolean"
+          }
+        }
+      },
+      "IndustryPlacementStatus": {
+        "type": "string",
+        "enum": [
+          "NotSpecified",
+          "Completed",
+          "CompletedWithSpecialConsideration",
+          "NotCompleted",
+          "WillNotComplete"
+        ]
+      },
+      "SubjectStatus": {
+        "type": "string",
+        "enum": [
+          "NotSpecified",
+          "Achieved",
+          "NotAchieved",
+          "AchievedByLrs",
+          "NotAchievedByLrs"
+        ]
+      },
+      "SubjectType": {
+        "type": "string",
+        "enum": [
+          "NotSpecified",
+          "Maths",
+          "English"
+        ]
+      },
+      "RegistrationPathwayStatus": {
+        "type": "string",
+        "enum": [
+          "NotSpecified",
+          "Active",
+          "InActive",
+          "Transferred",
+          "Withdrawn"
+        ]
+      },
+      "Address": {
+        "type": "object",
+        "properties": {
+          "AddressId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "DepartmentName": {
+            "type": "string"
+          },
+          "OrganisationName": {
+            "type": "string"
+          },
+          "AddressLine1": {
+            "type": "string"
+          },
+          "AddressLine2": {
+            "type": "string",
+            "nullable": true
+          },
+          "Town": {
+            "type": "string"
+          },
+          "Postcode": {
+            "type": "string"
+          }
+        }
+      },
+      "Pager": {
+        "type": "object",
+        "properties": {
+          "TotalItems": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "CurrentPage": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "PageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "TotalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "StartPage": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "RecordFrom": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "RecordTo": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       }

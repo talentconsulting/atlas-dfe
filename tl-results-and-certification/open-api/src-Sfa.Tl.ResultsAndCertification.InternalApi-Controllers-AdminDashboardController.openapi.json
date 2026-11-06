@@ -2,16 +2,17 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Admin Dashboard API",
+    "description": "API for managing administrative tasks and learner records within the dashboard.",
     "version": "1.0.0"
   },
   "paths": {
     "/api/AdminDashboard/GetAdminSearchLearnerFilters": {
       "get": {
         "operationId": "GetAdminSearchLearnerFilters",
-        "summary": "Gets the search filters for admin learners.",
+        "summary": "Retrieve filters for searching learners.",
         "responses": {
           "200": {
-            "description": "Successful response with admin search learner filters.",
+            "description": "Successful response.",
             "content": {
               "application/json": {
                 "schema": {
@@ -26,7 +27,7 @@
     "/api/AdminDashboard/GetAdminSearchLearnerDetails": {
       "post": {
         "operationId": "GetAdminSearchLearnerDetails",
-        "summary": "Gets search details for learners.",
+        "summary": "Retrieve paginated learner detail based on search criteria.",
         "requestBody": {
           "required": true,
           "content": {
@@ -39,11 +40,11 @@
         },
         "responses": {
           "200": {
-            "description": "Successful response with learner details.",
+            "description": "Successful response.",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PagedResponseAdminSearchLearnerDetail"
+                  "$ref": "#/components/schemas/PagedAdminSearchLearnerDetailResponse"
                 }
               }
             }
@@ -54,7 +55,7 @@
     "/api/AdminDashboard/GetAdminLearnerRecord/{registrationPathwayId}": {
       "get": {
         "operationId": "GetAdminLearnerRecord",
-        "summary": "Gets the learner record for a given registration pathway ID.",
+        "summary": "Retrieve learner record by registration pathway ID.",
         "parameters": [
           {
             "name": "registrationPathwayId",
@@ -67,7 +68,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful response with learner record.",
+            "description": "Successful response.",
             "content": {
               "application/json": {
                 "schema": {
@@ -82,7 +83,7 @@
     "/api/AdminDashboard/GetAllowedChangeAcademicYears/{learnerAcademicYear}/{pathwayStartYear}": {
       "get": {
         "operationId": "GetAllowedChangeAcademicYears",
-        "summary": "Gets the allowed academic years for change.",
+        "summary": "Retrieve allowed academic years for a given pathway.",
         "parameters": [
           {
             "name": "learnerAcademicYear",
@@ -103,7 +104,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful response with allowed academic years.",
+            "description": "Successful response.",
             "content": {
               "application/json": {
                 "schema": {
@@ -118,10 +119,67 @@
         }
       }
     },
+    "/api/AdminDashboard/IsLearnerUlnAvailable/{uln}": {
+      "get": {
+        "operationId": "IsLearnerUlnAvailable",
+        "summary": "Check if a learner's ULN is available.",
+        "parameters": [
+          {
+            "name": "uln",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/AdminDashboard/ProcessChangeUln": {
+      "post": {
+        "operationId": "ProcessChangeUln",
+        "summary": "Process a request to change a learner's ULN.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReviewChangeUlnRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/AdminDashboard/ProcessChangeStartYear": {
       "post": {
         "operationId": "ProcessChangeStartYear",
-        "summary": "Processes a request to change start year.",
+        "summary": "Process a change to the start year for a learner.",
         "requestBody": {
           "required": true,
           "content": {
@@ -134,7 +192,7 @@
         },
         "responses": {
           "200": {
-            "description": "Response with status of the operation.",
+            "description": "Successful response.",
             "content": {
               "application/json": {
                 "schema": {
@@ -149,7 +207,7 @@
     "/api/AdminDashboard/ProcessChangeIndustryPlacement": {
       "post": {
         "operationId": "ProcessChangeIndustryPlacement",
-        "summary": "Processes a request to change the industry placement.",
+        "summary": "Process changes to a learner's industry placement.",
         "requestBody": {
           "required": true,
           "content": {
@@ -162,7 +220,7 @@
         },
         "responses": {
           "200": {
-            "description": "Response with status of the operation.",
+            "description": "Successful response.",
             "content": {
               "application/json": {
                 "schema": {
@@ -177,7 +235,7 @@
     "/api/AdminDashboard/ProcessAddCoreAssessmentRequest": {
       "post": {
         "operationId": "ProcessAddCoreAssessmentRequest",
-        "summary": "Processes a request to add a core assessment.",
+        "summary": "Process addition of a core assessment request.",
         "requestBody": {
           "required": true,
           "content": {
@@ -190,7 +248,7 @@
         },
         "responses": {
           "200": {
-            "description": "Response with status of the operation.",
+            "description": "Successful response.",
             "content": {
               "application/json": {
                 "schema": {
@@ -205,7 +263,7 @@
     "/api/AdminDashboard/ProcessAddSpecialismAssessmentRequest": {
       "post": {
         "operationId": "ProcessAddSpecialismAssessmentRequest",
-        "summary": "Processes a request to add a specialism assessment.",
+        "summary": "Process addition of a specialism assessment request.",
         "requestBody": {
           "required": true,
           "content": {
@@ -218,7 +276,203 @@
         },
         "responses": {
           "200": {
-            "description": "Response with status of the operation.",
+            "description": "Successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/AdminDashboard/ReviewRemoveCoreAssessmentEntry": {
+      "post": {
+        "operationId": "ReviewRemoveCoreAssessmentEntry",
+        "summary": "Review and remove a core assessment entry.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReviewRemoveCoreAssessmentEntryRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/AdminDashboard/ReviewRemoveSpecialismAssessmentEntry": {
+      "post": {
+        "operationId": "ReviewRemoveSpecialismAssessmentEntry",
+        "summary": "Review and remove a specialism assessment entry.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReviewRemoveSpecialismAssessmentEntryRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/AdminDashboard/ProcessAdminAddPathwayResult": {
+      "post": {
+        "operationId": "ProcessAdminAddPathwayResult",
+        "summary": "Process addition of a pathway result.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddPathwayResultRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/AdminDashboard/ProcessAdminAddSpecialismResult": {
+      "post": {
+        "operationId": "ProcessAdminAddSpecialismResult",
+        "summary": "Process addition of a specialism result.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddSpecialismResultRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/AdminDashboard/ProcessAdminChangePathwayResult": {
+      "post": {
+        "operationId": "ProcessAdminChangePathwayResult",
+        "summary": "Process changes to a pathway result.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangePathwayResultRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/AdminDashboard/ProcessAdminChangeSpecialismResult": {
+      "post": {
+        "operationId": "ProcessAdminChangeSpecialismResult",
+        "summary": "Process changes to a specialism result.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeSpecialismResultRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/AdminDashboard/ProcessAdminCreateReplacementDocumentPrintingRequest": {
+      "post": {
+        "operationId": "ProcessAdminCreateReplacementDocumentPrintingRequest",
+        "summary": "Create a replacement document printing request.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReplacementPrintRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response.",
             "content": {
               "application/json": {
                 "schema": {
@@ -250,23 +504,6 @@
           }
         }
       },
-      "FilterLookupData": {
-        "type": "object",
-        "properties": {
-          "Id": {
-            "type": "integer"
-          },
-          "Name": {
-            "type": "string"
-          },
-          "CoreCode": {
-            "type": "string"
-          },
-          "IsSelected": {
-            "type": "boolean"
-          }
-        }
-      },
       "AdminSearchLearnerRequest": {
         "type": "object",
         "properties": {
@@ -295,240 +532,7 @@
           }
         }
       },
-      "AdminLearnerRecord": {
-        "type": "object",
-        "properties": {
-          "RegistrationPathwayId": {
-            "type": "integer"
-          },
-          "Uln": {
-            "type": "integer"
-          },
-          "Firstname": {
-            "type": "string"
-          },
-          "Lastname": {
-            "type": "string"
-          },
-          "DateofBirth": {
-            "type": "string",
-            "format": "date"
-          },
-          "IsRegistered": {
-            "type": "boolean"
-          },
-          "IsPendingWithdrawal": {
-            "type": "boolean"
-          },
-          "MathsStatus": {
-            "$ref": "#/components/schemas/SubjectStatus"
-          },
-          "EnglishStatus": {
-            "$ref": "#/components/schemas/SubjectStatus"
-          },
-          "OverallCalculationStatus": {
-            "$ref": "#/components/schemas/CalculationStatus"
-          },
-          "Pathway": {
-            "$ref": "#/components/schemas/LearnerPathway"
-          }
-        }
-      },
-      "SubjectStatus": {
-        "type": "string",
-        "enum": [
-          "Achieved",
-          "NotAchieved",
-          "AchievedByLrs",
-          "NotAchievedByLrs",
-          "NotSpecified"
-        ]
-      },
-      "CalculationStatus": {
-        "type": "string",
-        "enum": [
-          "Completed",
-          "CompletedRommRaised",
-          "CompletedAppealRaised",
-          "PartiallyCompleted",
-          "PartiallyCompletedRommRaised",
-          "PartiallyCompletedAppealRaised",
-          "Unclassified",
-          "NoResult",
-          "Qpending"
-        ]
-      },
-      "LearnerPathway": {
-        "type": "object",
-        "properties": {
-          "Id": {
-            "type": "integer"
-          },
-          "LarId": {
-            "type": "string"
-          },
-          "Title": {
-            "type": "string"
-          },
-          "Name": {
-            "type": "string"
-          },
-          "StartYear": {
-            "type": "integer"
-          },
-          "AcademicYear": {
-            "type": "integer"
-          },
-          "Status": {
-            "$ref": "#/components/schemas/RegistrationPathwayStatus"
-          }
-        }
-      },
-      "RegistrationPathwayStatus": {
-        "type": "string",
-        "enum": [
-          "NotSpecified",
-          "Active",
-          "InActive",
-          "Transferred",
-          "Withdrawn"
-        ]
-      },
-      "ReviewChangeStartYearRequest": {
-        "type": "object",
-        "properties": {
-          "ChangeStartYearDetails": {
-            "$ref": "#/components/schemas/ChangeStartYearDetails"
-          },
-          "Reason": {
-            "type": "string"
-          }
-        }
-      },
-      "ChangeStartYearDetails": {
-        "type": "object",
-        "properties": {
-          "StartYearFrom": {
-            "type": "integer"
-          },
-          "StartYearTo": {
-            "type": "integer"
-          }
-        }
-      },
-      "ReviewChangeIndustryPlacementRequest": {
-        "type": "object",
-        "properties": {
-          "IndustryPlacementStatus": {
-            "$ref": "#/components/schemas/IndustryPlacementStatus"
-          },
-          "HoursSpentOnPlacement": {
-            "type": "integer",
-            "nullable": true
-          },
-          "SpecialConsiderationReasons": {
-            "type": "array",
-            "items": {
-              "type": "integer"
-            }
-          },
-          "PerformedBy": {
-            "type": "string"
-          }
-        }
-      },
-      "IndustryPlacementStatus": {
-        "type": "string",
-        "enum": [
-          "Completed",
-          "CompletedWithSpecialConsideration",
-          "NotCompleted",
-          "WillNotComplete"
-        ]
-      },
-      "ReviewAddCoreAssessmentRequest": {
-        "type": "object",
-        "properties": {
-          "AddCoreAssessmentDetails": {
-            "$ref": "#/components/schemas/AddCoreAssessmentDetails"
-          },
-          "PerformedBy": {
-            "type": "string"
-          }
-        }
-      },
-      "AddCoreAssessmentDetails": {
-        "type": "object",
-        "properties": {
-          "CoreAssessmentFrom": {
-            "type": "string"
-          },
-          "CoreAssessmentTo": {
-            "type": "string"
-          },
-          "AssessmentSeriesId": {
-            "type": "integer"
-          }
-        }
-      },
-      "ReviewAddSpecialismAssessmentRequest": {
-        "type": "object",
-        "properties": {
-          "AddSpecialismDetails": {
-            "$ref": "#/components/schemas/AddSpecialismDetails"
-          },
-          "SpecialismId": {
-            "type": "integer"
-          },
-          "PerformedBy": {
-            "type": "string"
-          }
-        }
-      },
-      "AddSpecialismDetails": {
-        "type": "object",
-        "properties": {
-          "SpecialismAssessmentFrom": {
-            "type": "string"
-          },
-          "SpecialismAssessmentTo": {
-            "type": "string"
-          },
-          "AssessmentSeriesId": {
-            "type": "integer"
-          }
-        }
-      },
-      "AdminSearchLearnerDetail": {
-        "type": "object",
-        "properties": {
-          "RegistrationPathwayId": {
-            "type": "integer"
-          },
-          "Uln": {
-            "type": "integer"
-          },
-          "Firstname": {
-            "type": "string"
-          },
-          "Lastname": {
-            "type": "string"
-          },
-          "Provider": {
-            "type": "string"
-          },
-          "ProviderUkprn": {
-            "type": "integer"
-          },
-          "AwardingOrganisation": {
-            "type": "string"
-          },
-          "AcademicYear": {
-            "type": "integer"
-          }
-        }
-      },
-      "PagedResponseAdminSearchLearnerDetail": {
+      "PagedAdminSearchLearnerDetailResponse": {
         "type": "object",
         "properties": {
           "TotalRecords": {
@@ -542,6 +546,123 @@
           },
           "PagerInfo": {
             "$ref": "#/components/schemas/Pager"
+          }
+        }
+      },
+      "AdminSearchLearnerDetail": {
+        "type": "object",
+        "properties": {
+          "RegistrationPathwayId": {
+            "type": "integer"
+          },
+          "Uln": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "Firstname": {
+            "type": "string"
+          },
+          "Lastname": {
+            "type": "string"
+          },
+          "Provider": {
+            "type": "string"
+          },
+          "ProviderUkprn": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "AwardingOrganisation": {
+            "type": "string"
+          },
+          "AcademicYear": {
+            "type": "integer"
+          }
+        }
+      },
+      "AdminLearnerRecord": {
+        "type": "object",
+        "properties": {
+          "RegistrationPathwayId": {
+            "type": "integer"
+          },
+          "Uln": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "Firstname": {
+            "type": "string"
+          },
+          "Lastname": {
+            "type": "string"
+          },
+          "DateofBirth": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "IsRegistered": {
+            "type": "boolean"
+          },
+          "IsPendingWithdrawl": {
+            "type": "boolean"
+          },
+          "MathsStatus": {
+            "type": "string",
+            "nullable": true
+          },
+          "EnglishStatus": {
+            "type": "string",
+            "nullable": true
+          },
+          "OverallCalculationStatus": {
+            "type": "string",
+            "nullable": true
+          },
+          "Pathway": {
+            "type": "object"
+          },
+          "AwardingOrganisation": {
+            "$ref": "#/components/schemas/AwardingOrganisation"
+          },
+          "OverallResult": {
+            "type": "string"
+          },
+          "PrintCertificateId": {
+            "type": "integer",
+            "nullable": true
+          },
+          "PrintCertificateType": {
+            "type": "string",
+            "nullable": true
+          },
+          "LastPrintCertificateRequestedDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "ProviderAddress": {
+            "$ref": "#/components/schemas/Address"
+          },
+          "PrintRequestSubmittedOn": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "BatchId": {
+            "type": "integer",
+            "nullable": true
+          },
+          "TrackingId": {
+            "type": "string"
+          },
+          "PrintingBatchItemStatus": {
+            "type": "string",
+            "nullable": true
+          },
+          "PrintingBatchItemStatusChangedOn": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
           }
         }
       },
@@ -560,11 +681,144 @@
           "TotalPages": {
             "type": "integer"
           },
+          "StartPage": {
+            "type": "integer"
+          },
           "RecordFrom": {
             "type": "integer"
           },
           "RecordTo": {
             "type": "integer"
+          }
+        }
+      },
+      "ReviewChangeUlnRequest": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "ReviewChangeStartYearRequest": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "ReviewChangeIndustryPlacementRequest": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "ReviewAddCoreAssessmentRequest": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "ReviewAddSpecialismAssessmentRequest": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "ReviewRemoveCoreAssessmentEntryRequest": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "ReviewRemoveSpecialismAssessmentEntryRequest": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "AddPathwayResultRequest": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "AddSpecialismResultRequest": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "ChangePathwayResultRequest": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "ChangeSpecialismResultRequest": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "ReplacementPrintRequest": {
+        "type": "object",
+        "properties": {
+          "Uln": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "ProviderUkprn": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "ProviderAddressId": {
+            "type": "integer"
+          },
+          "PrintCertificateId": {
+            "type": "integer"
+          },
+          "PerformedBy": {
+            "type": "string"
+          }
+        }
+      },
+      "FilterLookupData": {
+        "type": "object",
+        "properties": {
+          "Id": {
+            "type": "integer"
+          },
+          "Name": {
+            "type": "string"
+          },
+          "CoreCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "IsSelected": {
+            "type": "boolean"
+          }
+        }
+      },
+      "AwardingOrganisation": {
+        "type": "object",
+        "properties": {
+          "Id": {
+            "type": "integer"
+          },
+          "Ukprn": {
+            "type": "integer"
+          },
+          "Name": {
+            "type": "string"
+          },
+          "DisplayName": {
+            "type": "string"
+          }
+        }
+      },
+      "Address": {
+        "type": "object",
+        "properties": {
+          "AddressId": {
+            "type": "integer"
+          },
+          "DepartmentName": {
+            "type": "string",
+            "nullable": true
+          },
+          "OrganisationName": {
+            "type": "string",
+            "nullable": true
+          },
+          "AddressLine1": {
+            "type": "string"
+          },
+          "AddressLine2": {
+            "type": "string",
+            "nullable": true
+          },
+          "Town": {
+            "type": "string"
+          },
+          "Postcode": {
+            "type": "string"
           }
         }
       }

@@ -1,14 +1,14 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "EmployerFinance API",
+    "title": "Employer Finance API - Account Transactions",
     "version": "1.0.0"
   },
   "paths": {
     "/api/accounts/{hashedAccountId}/transactions": {
       "get": {
-        "operationId": "GetTransactionSummary",
-        "summary": "Retrieve transaction summary for an account",
+        "operationId": "getTransactionSummary",
+        "summary": "Get account transaction summary or existing transaction lines",
         "parameters": [
           {
             "name": "hashedAccountId",
@@ -37,32 +37,40 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful response with transaction summary or existing transactions",
+            "description": "Success",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TransactionSummary"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TransactionSummary"
+                  }
                 }
               }
             }
           },
           "400": {
-            "description": "Bad request due to missing or invalid query parameters"
+            "description": "Invalid input parameter(s)"
           },
           "404": {
-            "description": "Account not found"
+            "description": "Transaction summary not found"
           }
         },
         "security": [
           {
-            "ApiRoles.ReadAllEmployerAccountBalances": []
+            "oauth2": [
+              "ReadAllEmployerAccountBalances"
+            ]
           }
+        ],
+        "tags": [
+          "Account Transactions"
         ]
       }
     },
     "/api/accounts/{hashedAccountId}/transactions/{year}/{month}": {
       "get": {
-        "operationId": "GetTransactions",
+        "operationId": "getTransactions",
         "summary": "Get transactions for a specific year and month",
         "parameters": [
           {
@@ -92,7 +100,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful response with transactions data for the specified period",
+            "description": "Success",
             "content": {
               "application/json": {
                 "schema": {
@@ -102,20 +110,25 @@
             }
           },
           "404": {
-            "description": "Transactions not found for the specified period"
+            "description": "Transactions not found"
           }
         },
         "security": [
           {
-            "ApiRoles.ReadAllEmployerAccountBalances": []
+            "oauth2": [
+              "ReadAllEmployerAccountBalances"
+            ]
           }
+        ],
+        "tags": [
+          "Account Transactions"
         ]
       }
     },
     "/api/accounts/{hashedAccountId}/transactions/query": {
       "get": {
-        "operationId": "QueryAccountTransactions",
-        "summary": "Query account transactions based on date range",
+        "operationId": "queryAccountTransactions",
+        "summary": "Query account transactions within a date range",
         "parameters": [
           {
             "name": "hashedAccountId",
@@ -128,7 +141,7 @@
           {
             "name": "fromDate",
             "in": "query",
-            "required": true,
+            "required": false,
             "schema": {
               "type": "string",
               "format": "date-time"
@@ -137,7 +150,7 @@
           {
             "name": "toDate",
             "in": "query",
-            "required": true,
+            "required": false,
             "schema": {
               "type": "string",
               "format": "date-time"
@@ -146,7 +159,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful response with queried transaction data",
+            "description": "Fetched account transactions successfully",
             "content": {
               "application/json": {
                 "schema": {
@@ -156,16 +169,21 @@
             }
           },
           "400": {
-            "description": "Bad request due to missing or invalid query parameters"
+            "description": "Invalid date range"
           },
           "404": {
-            "description": "No transactions found for the specified date range"
+            "description": "Transactions not found"
           }
         },
         "security": [
           {
-            "ApiRoles.ReadAllEmployerAccountBalances": []
+            "oauth2": [
+              "ReadAllEmployerAccountBalances"
+            ]
           }
+        ],
+        "tags": [
+          "Account Transactions"
         ]
       }
     }
@@ -173,47 +191,64 @@
   "components": {
     "schemas": {
       "TransactionSummary": {
-        "type": "array",
-        "items": {
-          "type": "object",
-          "properties": {
-            "Year": {
-              "type": "integer"
-            },
-            "Month": {
-              "type": "integer"
-            },
-            "Href": {
-              "type": "string"
-            }
+        "type": "object",
+        "properties": {
+          "year": {
+            "type": "integer"
+          },
+          "month": {
+            "type": "integer"
+          },
+          "href": {
+            "type": "string"
           }
         }
       },
       "Transactions": {
         "type": "object",
         "properties": {
-          "Year": {
+          "year": {
             "type": "integer"
           },
-          "Month": {
+          "month": {
             "type": "integer"
           },
-          "HasPreviousTransactions": {
+          "hasPreviousTransactions": {
             "type": "boolean"
           },
-          "PreviousMonthUri": {
+          "previousMonthUri": {
             "type": "string"
+          },
+          "transactionLines": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TransactionLine"
+            }
+          }
+        }
+      },
+      "TransactionLine": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "number",
+            "format": "double"
           }
         }
       }
     },
     "securitySchemes": {
-      "ApiRoles.ReadAllEmployerAccountBalances": {
+      "oauth2": {
         "type": "oauth2",
         "flows": {
-          "clientCredentials": {
+          "authorizationCode": {
+            "authorizationUrl": "https://example.com/auth",
+            "tokenUrl": "https://example.com/token",
             "scopes": {
-              "ReadAllEmployerAccountBalances": "Access employer account balances"
+              "ReadAllEmployerAccountBalances": "Permission to read all employer account balances"
             }
           }
         }

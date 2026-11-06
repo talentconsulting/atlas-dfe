@@ -1,14 +1,15 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "TrainingProgramme API",
-    "version": "1.0.0"
+    "title": "Training Programme API",
+    "version": "1.0.0",
+    "description": "API to manage training programmes."
   },
   "paths": {
     "/api/TrainingProgramme/all": {
       "get": {
-        "summary": "Get all training programmes",
         "operationId": "getAllTrainingProgrammes",
+        "summary": "Get all training programmes",
         "responses": {
           "200": {
             "description": "OK",
@@ -26,15 +27,15 @@
         },
         "security": [
           {
-            "authorization": []
+            "OAuth2": []
           }
         ]
       }
     },
     "/api/TrainingProgramme/standards": {
       "get": {
-        "summary": "Get all training programme standards",
         "operationId": "getAllTrainingProgrammeStandards",
+        "summary": "Get all training programme standards",
         "responses": {
           "200": {
             "description": "OK",
@@ -52,15 +53,15 @@
         },
         "security": [
           {
-            "authorization": []
+            "OAuth2": []
           }
         ]
       }
     },
     "/api/TrainingProgramme/{id}": {
       "get": {
-        "summary": "Get a specific training programme by ID",
-        "operationId": "getTrainingProgramme",
+        "operationId": "getTrainingProgrammeById",
+        "summary": "Get a training programme by ID",
         "parameters": [
           {
             "name": "id",
@@ -91,15 +92,15 @@
         },
         "security": [
           {
-            "authorization": []
+            "OAuth2": []
           }
         ]
       }
     },
     "/api/TrainingProgramme/{standardUId}/version": {
       "get": {
-        "summary": "Get version details for a training programme by Standard UID",
-        "operationId": "getTrainingProgrammeVersionByUid",
+        "operationId": "getTrainingProgrammeVersion",
+        "summary": "Get training programme version by Standard UID",
         "parameters": [
           {
             "name": "standardUId",
@@ -130,15 +131,15 @@
         },
         "security": [
           {
-            "authorization": []
+            "OAuth2": []
           }
         ]
       }
     },
     "/api/TrainingProgramme/{courseCode}/version/{version}": {
       "get": {
-        "summary": "Get version details for a training programme by Course Code and Version",
         "operationId": "getTrainingProgrammeVersionByCourseCodeAndVersion",
+        "summary": "Get training programme version by course code and version",
         "parameters": [
           {
             "name": "courseCode",
@@ -177,15 +178,15 @@
         },
         "security": [
           {
-            "authorization": []
+            "OAuth2": []
           }
         ]
       }
     },
     "/api/TrainingProgramme/{id}/versions": {
       "get": {
-        "summary": "Get all versions of a training programme by ID",
-        "operationId": "getTrainingProgrammeVersionsById",
+        "operationId": "getTrainingProgrammeVersions",
+        "summary": "Get all versions for a training programme by ID",
         "parameters": [
           {
             "name": "id",
@@ -216,15 +217,15 @@
         },
         "security": [
           {
-            "authorization": []
+            "OAuth2": []
           }
         ]
       }
     },
     "/api/TrainingProgramme/{standardUId}/newer-versions": {
       "get": {
-        "summary": "Get newer versions of a training programme by Standard UID",
         "operationId": "getNewerTrainingProgrammeVersions",
+        "summary": "Get newer versions for a training programme by Standard UID",
         "parameters": [
           {
             "name": "standardUId",
@@ -252,15 +253,15 @@
         },
         "security": [
           {
-            "authorization": []
+            "OAuth2": []
           }
         ]
       }
     },
     "/api/TrainingProgramme/calculate-version/{courseCode}": {
       "get": {
-        "summary": "Calculate version for a courseCode with given parameters",
         "operationId": "getCalculatedTrainingProgrammeVersion",
+        "summary": "Get calculated training programme version by course code and optional parameters",
         "parameters": [
           {
             "name": "courseCode",
@@ -271,9 +272,9 @@
             }
           },
           {
-            "name": "StartDate",
+            "name": "startDate",
             "in": "query",
-            "required": true,
+            "required": false,
             "schema": {
               "type": "string",
               "format": "date-time"
@@ -300,7 +301,7 @@
         },
         "security": [
           {
-            "authorization": []
+            "OAuth2": []
           }
         ]
       }
@@ -308,10 +309,71 @@
   },
   "components": {
     "schemas": {
+      "TrainingProgramme": {
+        "type": "object",
+        "properties": {
+          "courseCode": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "standardUId": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "level": {
+            "type": "integer",
+            "nullable": true
+          },
+          "effectiveFrom": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "effectiveTo": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "fundingPeriods": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TrainingProgrammeFundingPeriod"
+            }
+          },
+          "options": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "TrainingProgrammeFundingPeriod": {
+        "type": "object",
+        "properties": {
+          "fundingCap": {
+            "type": "integer"
+          },
+          "effectiveFrom": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "effectiveTo": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        }
+      },
       "GetAllTrainingProgrammesResponse": {
         "type": "object",
         "properties": {
-          "TrainingProgrammes": {
+          "trainingProgrammes": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/TrainingProgramme"
@@ -322,7 +384,7 @@
       "GetAllTrainingProgrammeStandardsResponse": {
         "type": "object",
         "properties": {
-          "TrainingProgrammes": {
+          "trainingProgrammes": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/TrainingProgramme"
@@ -333,7 +395,7 @@
       "GetTrainingProgrammeResponse": {
         "type": "object",
         "properties": {
-          "TrainingProgramme": {
+          "trainingProgramme": {
             "$ref": "#/components/schemas/TrainingProgramme"
           }
         }
@@ -341,7 +403,7 @@
       "GetTrainingProgrammeVersionsResponse": {
         "type": "object",
         "properties": {
-          "TrainingProgrammeVersions": {
+          "trainingProgrammeVersions": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/TrainingProgramme"
@@ -352,88 +414,23 @@
       "GetNewerTrainingProgrammeVersionsResponse": {
         "type": "object",
         "properties": {
-          "NewerVersions": {
+          "newerVersions": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/TrainingProgramme"
             }
           }
         }
-      },
-      "TrainingProgramme": {
-        "type": "object",
-        "properties": {
-          "CourseCode": {
-            "type": "string"
-          },
-          "Name": {
-            "type": "string"
-          },
-          "StandardUId": {
-            "type": "string"
-          },
-          "Version": {
-            "type": "string"
-          },
-          "Level": {
-            "type": "integer",
-            "nullable": true
-          },
-          "ProgrammeType": {
-            "type": "string"
-          },
-          "EffectiveFrom": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "EffectiveTo": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "StandardPageUrl": {
-            "type": "string"
-          },
-          "Options": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "FundingPeriods": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/TrainingProgrammeFundingPeriod"
-            }
-          },
-          "VersionEarliestStartDate": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "VersionLatestStartDate": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          }
-        }
-      },
-      "TrainingProgrammeFundingPeriod": {
-        "type": "object",
-        "properties": {
-          "FundingCap": {
-            "type": "integer"
-          },
-          "EffectiveTo": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "EffectiveFrom": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
+      }
+    },
+    "securitySchemes": {
+      "OAuth2": {
+        "type": "oauth2",
+        "flows": {
+          "authorizationCode": {
+            "authorizationUrl": "https://auth.example.com/oauth/authorize",
+            "tokenUrl": "https://auth.example.com/oauth/token",
+            "scopes": {}
           }
         }
       }

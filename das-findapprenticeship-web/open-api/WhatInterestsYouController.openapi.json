@@ -1,17 +1,15 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Apprenticeship Application API",
+    "title": "What Interests You API",
     "version": "1.0.0",
-    "description": "API for managing apprenticeship applications."
+    "description": "API for managing the 'What Interests You' section of an application process."
   },
   "paths": {
     "/apply/{applicationId}/what-interests-you": {
       "get": {
-        "tags": [
-          "Apply"
-        ],
-        "summary": "Retrieve 'What Interests You' section details",
+        "summary": "Retrieve details for the 'What Interests You' section",
+        "operationId": "GetWhatInterestsYou",
         "parameters": [
           {
             "name": "applicationId",
@@ -20,12 +18,13 @@
             "schema": {
               "type": "string",
               "format": "uuid"
-            }
+            },
+            "description": "The ID of the application"
           }
         ],
         "responses": {
           "200": {
-            "description": "Successful retrieval",
+            "description": "A view model with details of the 'What Interests You' section",
             "content": {
               "application/json": {
                 "schema": {
@@ -33,14 +32,20 @@
                 }
               }
             }
+          },
+          "404": {
+            "description": "Application not found"
           }
-        }
+        },
+        "security": [
+          {
+            "FaaUserAuth": []
+          }
+        ]
       },
       "post": {
-        "tags": [
-          "Apply"
-        ],
-        "summary": "Update 'What Interests You' section details",
+        "summary": "Update details for the 'What Interests You' section",
+        "operationId": "PostWhatInterestsYou",
         "parameters": [
           {
             "name": "applicationId",
@@ -49,7 +54,8 @@
             "schema": {
               "type": "string",
               "format": "uuid"
-            }
+            },
+            "description": "The ID of the application"
           }
         ],
         "requestBody": {
@@ -64,28 +70,17 @@
         },
         "responses": {
           "200": {
-            "description": "Successful update",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string",
-                  "example": "200 OK"
-                }
-              }
-            }
+            "description": "Successfully updated the 'What Interests You' section"
           },
           "400": {
-            "description": "Validation errors in request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {}
-                }
-              }
-            }
+            "description": "Validation errors in the request body"
           }
-        }
+        },
+        "security": [
+          {
+            "FaaUserAuth": []
+          }
+        ]
       }
     }
   },
@@ -93,35 +88,47 @@
     "schemas": {
       "WhatInterestsYouViewModel": {
         "type": "object",
+        "required": [
+          "ApplicationId"
+        ],
         "properties": {
           "ApplicationId": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "description": "The ID of the application"
           },
           "StandardName": {
             "type": "string",
-            "nullable": true
+            "nullable": true,
+            "description": "The name of the apprenticeship standard"
           },
           "EmployerName": {
             "type": "string",
-            "nullable": true
+            "nullable": true,
+            "description": "The name of the employer"
           },
           "AnswerText": {
             "type": "string",
-            "nullable": true
+            "nullable": true,
+            "description": "The text describing what interests the candidate"
           },
           "IsSectionCompleted": {
             "type": "boolean",
-            "nullable": true
+            "nullable": true,
+            "description": "Indicates whether this section is completed"
           },
           "AutoSave": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Indicates whether the model was auto-saved"
           }
-        },
-        "required": [
-          "ApplicationId",
-          "AutoSave"
-        ]
+        }
+      }
+    },
+    "securitySchemes": {
+      "FaaUserAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "Authorization required for FAA users"
       }
     }
   }

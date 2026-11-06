@@ -1,15 +1,15 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Restrict Course Confirm API",
-    "description": "API for managing course restrictions.",
+    "title": "RestrictCourseConfirm API",
+    "description": "API handling course restriction operations, specifically confirming course restriction status.",
     "version": "1.0.0"
   },
   "paths": {
     "/restricted-courses/add/{larsCode}/confirm": {
       "get": {
+        "summary": "Display course restriction confirmation form.",
         "operationId": "GetRestrictCourseConfirm",
-        "summary": "Display confirmation view for restricting a course",
         "parameters": [
           {
             "name": "larsCode",
@@ -17,30 +17,28 @@
             "required": true,
             "schema": {
               "type": "string"
-            },
-            "description": "The LARS code of the course."
+            }
           }
         ],
         "responses": {
           "302": {
-            "description": "Redirects to the unrestricted course details route if the session model is invalid."
+            "description": "Redirect to unrestricted course details if no session exists."
           },
           "200": {
-            "description": "Returns the confirmation view for restricting the course."
+            "description": "Returns the HTML view for the course restriction confirmation form."
           }
         },
         "security": [
           {
-            "roles": {
-              "type": "string",
-              "example": "RoatpAdminTeam"
-            }
+            "Role": [
+              "RoatpAdminTeam"
+            ]
           }
         ]
       },
       "post": {
+        "summary": "Confirm course restriction and finalize the process.",
         "operationId": "PostRestrictCourseConfirm",
-        "summary": "Restrict a course",
         "parameters": [
           {
             "name": "larsCode",
@@ -48,34 +46,26 @@
             "required": true,
             "schema": {
               "type": "string"
-            },
-            "description": "The LARS code of the course."
+            }
           }
         ],
         "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AddRestrictedCourseRequest"
-              }
-            }
-          }
+          "description": "No body content is required, action derives context from session service.",
+          "required": false
         },
         "responses": {
           "302": {
-            "description": "Redirects to the unrestricted course details route if the session model is invalid."
+            "description": "Redirect to unrestricted course if session is invalid or restricted course details upon successful operation."
           },
-          "201": {
-            "description": "Redirects to the restricted course details route after successfully restricting the course."
+          "204": {
+            "description": "No content. Indicates operation has been successfully completed."
           }
         },
         "security": [
           {
-            "roles": {
-              "type": "string",
-              "example": "RoatpAdminTeam"
-            }
+            "Role": [
+              "RoatpAdminTeam"
+            ]
           }
         ]
       }
@@ -87,23 +77,48 @@
         "type": "object",
         "properties": {
           "UserId": {
-            "type": "string",
-            "description": "The ID of the user performing the operation."
+            "type": "string"
           },
           "UserDisplayName": {
-            "type": "string",
-            "description": "The display name of the user performing the operation."
+            "type": "string"
           },
           "LarsCode": {
-            "type": "string",
-            "description": "The LARS code of the course being restricted."
+            "type": "string"
           }
-        },
-        "required": [
-          "UserId",
-          "UserDisplayName",
-          "LarsCode"
-        ]
+        }
+      },
+      "AddRestrictedCourseSessionModel": {
+        "type": "object",
+        "properties": {
+          "LarsCode": {
+            "type": "string"
+          },
+          "DisplayName": {
+            "type": "string"
+          }
+        }
+      },
+      "RestrictCourseConfirmViewModel": {
+        "type": "object",
+        "properties": {
+          "LarsCode": {
+            "type": "string"
+          },
+          "DisplayName": {
+            "type": "string"
+          },
+          "CancelUrl": {
+            "type": "string",
+            "format": "uri"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "Role": {
+        "type": "apiKey",
+        "name": "Role",
+        "in": "header"
       }
     }
   }

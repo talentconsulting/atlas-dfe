@@ -7,21 +7,22 @@
   "paths": {
     "/healthcheck": {
       "get": {
-        "summary": "Get Health Check Status",
+        "summary": "Get Health Check Info",
+        "description": "Retrieves health check information.",
         "operationId": "getHealthCheck",
+        "parameters": [],
         "security": [
           {
-            "HasEmployerViewerTransactorOwnerAccount": []
+            "PolicyNames.HasEmployerViewerTransactorOwnerAccount": []
           }
         ],
-        "parameters": [],
         "responses": {
           "200": {
-            "description": "Health check status retrieved successfully.",
+            "description": "Health check data retrieved successfully.",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/HealthCheckViewModel"
+                  "$ref": "#/components/schemas/GetHealthCheckQueryResponse"
                 }
               }
             }
@@ -30,12 +31,8 @@
       },
       "post": {
         "summary": "Run Health Check",
+        "description": "Runs a health check command.",
         "operationId": "runHealthCheck",
-        "security": [
-          {
-            "HasEmployerViewerTransactorOwnerAccount": []
-          }
-        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -46,20 +43,34 @@
             }
           }
         },
+        "security": [
+          {
+            "PolicyNames.HasEmployerViewerTransactorOwnerAccount": []
+          }
+        ],
         "responses": {
           "302": {
-            "description": "Redirected to health check status view."
+            "description": "Redirects to the health check results after execution."
           }
         }
       }
     },
     "/Content/lib/govuk-frontend/dist/assets/images/favicon.ico": {
       "get": {
-        "summary": "Health Check Static File",
+        "summary": "Favicon File Check",
+        "description": "Checks for the availability of the favicon file.",
         "operationId": "fileCheck",
         "responses": {
           "200": {
-            "description": "The static file check passed."
+            "description": "File exists and is accessible.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "example": "OK"
+                }
+              }
+            }
           }
         }
       }
@@ -67,10 +78,10 @@
   },
   "components": {
     "schemas": {
-      "HealthCheckViewModel": {
+      "GetHealthCheckQueryResponse": {
         "type": "object",
         "properties": {
-          "healthCheck": {
+          "HealthCheck": {
             "$ref": "#/components/schemas/HealthCheckDto"
           }
         }
@@ -78,54 +89,42 @@
       "RunHealthCheckCommand": {
         "type": "object",
         "properties": {
-          "userRef": {
+          "UserRef": {
             "type": "string",
             "format": "uuid",
             "nullable": false
           }
         },
         "required": [
-          "userRef"
+          "UserRef"
         ]
       },
       "HealthCheckDto": {
         "type": "object",
         "properties": {
-          "id": {
+          "Id": {
             "type": "integer",
-            "format": "int32"
+            "example": 123
           },
-          "sentRequest": {
+          "SentRequest": {
             "type": "string",
             "format": "date-time"
           },
-          "receivedResponse": {
+          "ReceivedResponse": {
             "type": "string",
             "format": "date-time",
             "nullable": true
           },
-          "publishedEvent": {
+          "PublishedEvent": {
             "type": "string",
             "format": "date-time"
           },
-          "receivedEvent": {
+          "ReceivedEvent": {
             "type": "string",
             "format": "date-time",
             "nullable": true
           }
-        },
-        "required": [
-          "id",
-          "sentRequest",
-          "publishedEvent"
-        ]
-      }
-    },
-    "securitySchemes": {
-      "HasEmployerViewerTransactorOwnerAccount": {
-        "type": "apiKey",
-        "name": "Authorization",
-        "in": "header"
+        }
       }
     }
   }

@@ -1,17 +1,14 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Employer Finance API",
+    "title": "Employer Finance Payments API",
     "version": "1.0.0"
   },
   "paths": {
     "/api/payments/staging": {
       "post": {
         "operationId": "BulkPaymentsIngest",
-        "summary": "Ingest bulk payment records into the staging area.",
-        "tags": [
-          "Payments"
-        ],
+        "summary": "Ingest bulk payments into staging.",
         "requestBody": {
           "required": true,
           "content": {
@@ -24,7 +21,7 @@
         },
         "responses": {
           "201": {
-            "description": "Bulk payment records successfully ingested.",
+            "description": "Payments staged successfully.",
             "content": {
               "application/json": {
                 "schema": {
@@ -32,14 +29,15 @@
                   "properties": {
                     "insertedCount": {
                       "type": "integer",
-                      "description": "The number of records inserted."
+                      "format": "int32",
+                      "description": "Number of payments inserted."
                     },
                     "paymentIds": {
                       "type": "array",
                       "items": {
                         "type": "string",
                         "format": "uuid",
-                        "description": "Unique identifiers of the staged payment records."
+                        "description": "IDs of inserted payments."
                       }
                     }
                   }
@@ -48,24 +46,21 @@
             }
           },
           "400": {
-            "description": "Validation errors occurred.",
+            "description": "Bad request - validation errors.",
             "content": {
               "application/json": {
                 "schema": {
                   "oneOf": [
                     {
                       "type": "string",
-                      "example": "Payments payload is required."
+                      "description": "Error message for missing payments payload."
                     },
                     {
                       "type": "array",
                       "items": {
-                        "type": "string"
-                      },
-                      "example": [
-                        "Validation error 1",
-                        "Validation error 2"
-                      ]
+                        "type": "string",
+                        "description": "Validation error messages."
+                      }
                     }
                   ]
                 }
@@ -73,7 +68,7 @@
             }
           },
           "409": {
-            "description": "Conflicting payment records detected.",
+            "description": "Conflict - conflicting payment IDs.",
             "content": {
               "application/json": {
                 "schema": {
@@ -84,7 +79,7 @@
                       "items": {
                         "type": "string",
                         "format": "uuid",
-                        "description": "Identifiers of payment records causing conflicts."
+                        "description": "IDs of conflicting payments."
                       }
                     }
                   }
@@ -93,12 +88,12 @@
             }
           },
           "500": {
-            "description": "Unexpected server error during payment staging.",
+            "description": "Unexpected error staging payments.",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "string",
-                  "example": "Unexpected error staging payments."
+                  "description": "Error message."
                 }
               }
             }
@@ -116,7 +111,8 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/PaymentStagingModel"
-            }
+            },
+            "description": "List of payment staging models."
           }
         },
         "required": [
@@ -129,69 +125,77 @@
           "PaymentId": {
             "type": "string",
             "format": "uuid",
-            "description": "Unique identifier for the payment record."
+            "description": "Unique identifier for the payment."
           },
           "AccountId": {
             "type": "integer",
-            "description": "The account identifier associated with the payment."
+            "format": "int64",
+            "description": "Identifier for the employer account."
           },
           "Ukprn": {
             "type": "integer",
-            "description": "The unique provider reference number."
+            "format": "int64",
+            "description": "UK Provider Reference Number."
           },
           "Uln": {
             "type": "integer",
-            "description": "The unique learner number."
+            "format": "int64",
+            "description": "Unique Learner Number."
           },
           "ApprenticeshipId": {
             "type": "integer",
-            "description": "The apprenticeship identifier associated with the payment."
+            "format": "int64",
+            "description": "Identifier for the apprenticeship."
           },
           "CollectionPeriodId": {
             "type": "string",
-            "description": "The identifier for the collection period."
+            "description": "Identifier for the collection period."
           },
           "DeliveryPeriodMonth": {
             "type": "integer",
-            "description": "The month of the delivery period."
+            "format": "int32",
+            "description": "Delivery period month."
           },
           "DeliveryPeriodYear": {
             "type": "integer",
-            "description": "The year of the delivery period."
+            "format": "int32",
+            "description": "Delivery period year."
           },
           "CollectionPeriodMonth": {
             "type": "integer",
-            "description": "The month of the collection period."
+            "format": "int32",
+            "description": "Collection period month."
           },
           "CollectionPeriodYear": {
             "type": "integer",
-            "description": "The year of the collection period."
+            "format": "int32",
+            "description": "Collection period year."
           },
           "FundingSource": {
             "type": "string",
-            "description": "The funding source for the payment."
+            "description": "Source of funding."
           },
           "TransactionType": {
             "type": "string",
-            "description": "The type of transaction being staged."
+            "description": "Type of transaction."
           },
           "Amount": {
             "type": "number",
             "format": "decimal",
-            "description": "The amount of the payment."
+            "description": "Amount of the payment."
           },
           "EvidenceSubmittedOn": {
             "type": "string",
             "format": "date-time",
-            "description": "The date and time evidence for the payment was submitted."
+            "description": "Date when evidence was submitted."
           },
           "EmployerAccountVersion": {
             "type": "string",
-            "description": "The version of the employer account."
+            "description": "Version of the employer account."
           },
           "ApprenticeshipVersion": {
             "type": "string",
-            "description": "The version of the apprenticeship record."
+            "description": "Version of the apprenticeship."
           }
         },
         "required": [

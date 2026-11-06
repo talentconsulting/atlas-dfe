@@ -1,0 +1,145 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Number Of Positions API",
+    "version": "1.0.0",
+    "description": "API for managing the number of positions as part of a recruitment process."
+  },
+  "paths": {
+    "/{EmployerAccountId}/{VacancyId}/number-of-positions": {
+      "get": {
+        "summary": "Retrieve number of positions form",
+        "operationId": "getNumberOfPositions",
+        "parameters": [
+          {
+            "name": "EmployerAccountId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "VacancyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "wizard",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "true"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful retrieval of the number of positions view model.",
+            "content": {
+              "text/html": {}
+            }
+          },
+          "400": {
+            "description": "Invalid request input."
+          }
+        }
+      },
+      "post": {
+        "summary": "Submit number of positions form",
+        "operationId": "postNumberOfPositions",
+        "parameters": [
+          {
+            "name": "EmployerAccountId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "VacancyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "wizard",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NumberOfPositionsEditModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "303": {
+            "description": "Redirect to next step or review page based on wizard mode."
+          },
+          "400": {
+            "description": "Validation errors or invalid input."
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "VacancyRouteModel": {
+        "type": "object",
+        "properties": {
+          "EmployerAccountId": {
+            "type": "string"
+          },
+          "VacancyId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "EmployerAccountId",
+          "VacancyId"
+        ]
+      },
+      "NumberOfPositionsEditModel": {
+        "type": "object",
+        "properties": {
+          "NumberOfPositions": {
+            "type": "string",
+            "description": "Enter the number of positions."
+          },
+          "EmployerAccountId": {
+            "type": "string"
+          },
+          "VacancyId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "NumberOfPositions",
+          "EmployerAccountId",
+          "VacancyId"
+        ]
+      }
+    }
+  }
+}

@@ -1,14 +1,13 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Apprenticeship Update Management API",
+    "title": "Apprenticeship Updates API",
     "version": "1.0.0"
   },
   "paths": {
     "/api/apprenticeships/{apprenticeshipId}/updates": {
       "get": {
         "summary": "Get Apprenticeship Updates",
-        "operationId": "GetApprenticeshipUpdates",
         "parameters": [
           {
             "name": "apprenticeshipId",
@@ -30,7 +29,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Successfully retrieved apprenticeship updates",
+            "description": "Successful response",
             "content": {
               "application/json": {
                 "schema": {
@@ -39,13 +38,17 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
       }
     },
     "/api/apprenticeships/{apprenticeshipId}/updates/accept-apprenticeship-update": {
       "post": {
         "summary": "Accept Apprenticeship Updates",
-        "operationId": "AcceptApprenticeshipUpdates",
         "parameters": [
           {
             "name": "apprenticeshipId",
@@ -69,15 +72,19 @@
         },
         "responses": {
           "200": {
-            "description": "Successfully accepted apprenticeship updates"
+            "description": "Successful response"
           }
-        }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
       }
     },
     "/api/apprenticeships/{apprenticeshipId}/updates/reject-apprenticeship-update": {
       "post": {
         "summary": "Reject Apprenticeship Updates",
-        "operationId": "RejectApprenticeshipUpdates",
         "parameters": [
           {
             "name": "apprenticeshipId",
@@ -101,15 +108,19 @@
         },
         "responses": {
           "200": {
-            "description": "Successfully rejected apprenticeship updates"
+            "description": "Successful response"
           }
-        }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
       }
     },
     "/api/apprenticeships/{apprenticeshipId}/updates/undo-apprenticeship-update": {
       "post": {
         "summary": "Undo Apprenticeship Updates",
-        "operationId": "UndoApprenticeshipUpdates",
         "parameters": [
           {
             "name": "apprenticeshipId",
@@ -133,19 +144,41 @@
         },
         "responses": {
           "200": {
-            "description": "Successfully undid apprenticeship updates"
+            "description": "Successful response"
           }
-        }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
       }
     }
   },
   "components": {
     "schemas": {
-      "GetApprenticeshipUpdatesRequest": {
+      "ApprenticeshipUpdateStatus": {
+        "type": "string",
+        "enum": [
+          "Pending",
+          "Approved",
+          "Rejected",
+          "Deleted",
+          "Superceded",
+          "Expired"
+        ]
+      },
+      "UserInfo": {
         "type": "object",
         "properties": {
-          "status": {
-            "$ref": "#/components/schemas/ApprenticeshipUpdateStatus"
+          "userId": {
+            "type": "string"
+          },
+          "userDisplayName": {
+            "type": "string"
+          },
+          "userEmail": {
+            "type": "string"
           }
         }
       },
@@ -167,11 +200,7 @@
           "userInfo": {
             "$ref": "#/components/schemas/UserInfo"
           }
-        },
-        "required": [
-          "accountId",
-          "userInfo"
-        ]
+        }
       },
       "RejectApprenticeshipUpdatesRequest": {
         "type": "object",
@@ -191,11 +220,7 @@
           "userInfo": {
             "$ref": "#/components/schemas/UserInfo"
           }
-        },
-        "required": [
-          "accountId",
-          "userInfo"
-        ]
+        }
       },
       "UndoApprenticeshipUpdatesRequest": {
         "type": "object",
@@ -215,49 +240,104 @@
           "userInfo": {
             "$ref": "#/components/schemas/UserInfo"
           }
-        },
-        "required": [
-          "accountId",
-          "userInfo"
-        ]
-      },
-      "UserInfo": {
-        "type": "object",
-        "properties": {
-          "userId": {
-            "type": "string"
-          },
-          "userDisplayName": {
-            "type": "string"
-          },
-          "userEmail": {
-            "type": "string",
-            "format": "email"
-          }
         }
-      },
-      "ApprenticeshipUpdateStatus": {
-        "type": "string",
-        "enum": [
-          "Pending",
-          "Approved",
-          "Rejected",
-          "Deleted",
-          "Superceded",
-          "Expired"
-        ]
       },
       "GetApprenticeshipUpdatesResponse": {
         "type": "object",
         "properties": {
-          "updates": {
+          "apprenticeshipUpdates": {
             "type": "array",
             "items": {
               "type": "object",
-              "additionalProperties": true
+              "properties": {
+                "id": {
+                  "type": "integer",
+                  "format": "int64"
+                },
+                "apprenticeshipId": {
+                  "type": "integer",
+                  "format": "int64"
+                },
+                "originatingParty": {
+                  "type": "string"
+                },
+                "firstName": {
+                  "type": "string"
+                },
+                "lastName": {
+                  "type": "string"
+                },
+                "email": {
+                  "type": "string"
+                },
+                "deliveryModel": {
+                  "$ref": "#/components/schemas/DeliveryModel"
+                },
+                "employmentEndDate": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "employmentPrice": {
+                  "type": "integer",
+                  "format": "int32"
+                },
+                "trainingType": {
+                  "$ref": "#/components/schemas/ProgrammeType"
+                },
+                "trainingCode": {
+                  "type": "string"
+                },
+                "version": {
+                  "type": "string"
+                },
+                "option": {
+                  "type": "string"
+                },
+                "trainingName": {
+                  "type": "string"
+                },
+                "cost": {
+                  "type": "number",
+                  "format": "decimal"
+                },
+                "startDate": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "endDate": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "dateOfBirth": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              }
             }
           }
         }
+      },
+      "DeliveryModel": {
+        "type": "string",
+        "enum": [
+          "Regular",
+          "PortableFlexiJob",
+          "FlexiJobAgency"
+        ]
+      },
+      "ProgrammeType": {
+        "type": "string",
+        "enum": [
+          "Standard",
+          "Framework"
+        ]
+      }
+    },
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
       }
     }
   }

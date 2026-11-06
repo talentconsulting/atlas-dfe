@@ -2,37 +2,34 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Provider Course Types API",
-    "version": "1.0.0",
-    "description": "API for managing provider course types."
+    "version": "1.0.0"
   },
   "paths": {
     "/providers/{ukprn}/course-types/{courseType}/restrict": {
       "post": {
-        "summary": "Restrict Provider",
-        "description": "Restricts a provider for a specific course type.",
         "operationId": "RestrictProvider",
+        "summary": "Restrict a provider for a specific course type.",
         "parameters": [
           {
             "name": "ukprn",
             "in": "path",
             "required": true,
-            "description": "The unique provider reference number.",
             "schema": {
               "type": "integer"
-            }
+            },
+            "description": "UK Provider Reference Number"
           },
           {
             "name": "courseType",
             "in": "path",
             "required": true,
-            "description": "The type of course to restrict.",
             "schema": {
               "$ref": "#/components/schemas/CourseType"
-            }
+            },
+            "description": "Type of the course"
           }
         ],
         "requestBody": {
-          "description": "Restrict provider request payload.",
           "required": true,
           "content": {
             "application/json": {
@@ -40,11 +37,12 @@
                 "$ref": "#/components/schemas/RestrictProviderModel"
               }
             }
-          }
+          },
+          "description": "Request payload to restrict the provider for the course type."
         },
         "responses": {
           "204": {
-            "description": "No Content - The provider restriction was successful."
+            "description": "No content. The provider was successfully restricted."
           }
         }
       }
@@ -57,26 +55,24 @@
         "enum": [
           "Apprenticeship",
           "ShortCourse"
-        ],
-        "description": "Enumeration of course types."
+        ]
       },
       "RestrictProviderModel": {
         "type": "object",
         "properties": {
           "UserId": {
             "type": "string",
-            "description": "The ID of the user performing the restriction."
+            "description": "ID of the user restricting the provider"
           },
           "UserDisplayName": {
             "type": "string",
-            "description": "The display name of the user performing the restriction."
+            "description": "Display name of the user restricting the provider"
           }
         },
         "required": [
           "UserId",
           "UserDisplayName"
-        ],
-        "description": "Model for restricting a provider."
+        ]
       }
     }
   }

@@ -1,18 +1,20 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Find an Apprenticeship User Controller API",
-    "version": "1.0.0"
+    "title": "User Controller API",
+    "version": "1.0.0",
+    "description": "API endpoints for user management, including account creation, editing personal details, and account deletion."
   },
   "paths": {
     "/create-account": {
       "get": {
         "operationId": "CreateAccount",
-        "summary": "Displays the account creation page.",
+        "summary": "Start the account creation process.",
         "parameters": [
           {
             "name": "returnUrl",
             "in": "query",
+            "required": false,
             "schema": {
               "type": "string"
             }
@@ -20,10 +22,10 @@
         ],
         "responses": {
           "200": {
-            "description": "HTML View returned for creating an account."
+            "description": "Account creation page rendered."
           },
           "302": {
-            "description": "Redirects to a different route if the user already has an account."
+            "description": "Redirect to another route if the account already exists."
           }
         }
       }
@@ -31,11 +33,12 @@
     "/user-name": {
       "get": {
         "operationId": "GetUserName",
-        "summary": "Displays the user's name.",
+        "summary": "Retrieve and view the user's name details.",
         "parameters": [
           {
             "name": "journeyPath",
             "in": "query",
+            "required": false,
             "schema": {
               "type": "string",
               "enum": [
@@ -43,23 +46,22 @@
                 "ConfirmAccountDetails",
                 "Settings"
               ]
-            },
-            "required": false
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "HTML View rendered with the user's name."
+            "description": "User name details page rendered."
           }
         }
       },
       "post": {
         "operationId": "UpdateUserName",
-        "summary": "Saves the user's name.",
+        "summary": "Update the user's name.",
         "requestBody": {
           "required": true,
           "content": {
-            "application/x-www-form-urlencoded": {
+            "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/NameViewModel"
               }
@@ -67,11 +69,11 @@
           }
         },
         "responses": {
-          "302": {
-            "description": "Redirect upon successful update."
+          "200": {
+            "description": "Name updated successfully."
           },
           "400": {
-            "description": "Bad Request when validation fails."
+            "description": "Validation errors occurred."
           }
         }
       }
@@ -79,11 +81,12 @@
     "/date-of-birth": {
       "get": {
         "operationId": "GetDateOfBirth",
-        "summary": "Displays the date of birth form.",
+        "summary": "Retrieve and view the user's date of birth.",
         "parameters": [
           {
             "name": "journeyPath",
             "in": "query",
+            "required": false,
             "schema": {
               "type": "string",
               "enum": [
@@ -91,23 +94,22 @@
                 "ConfirmAccountDetails",
                 "Settings"
               ]
-            },
-            "required": false
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "HTML View rendered with the user's date of birth."
+            "description": "Date of birth page rendered."
           }
         }
       },
       "post": {
         "operationId": "UpdateDateOfBirth",
-        "summary": "Saves the user's date of birth.",
+        "summary": "Update the user's date of birth.",
         "requestBody": {
           "required": true,
           "content": {
-            "application/x-www-form-urlencoded": {
+            "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/DateOfBirthViewModel"
               }
@@ -115,11 +117,11 @@
           }
         },
         "responses": {
-          "302": {
-            "description": "Redirect upon successful update."
+          "200": {
+            "description": "Date of birth updated successfully."
           },
           "400": {
-            "description": "Bad Request when validation fails."
+            "description": "Validation errors occurred."
           }
         }
       }
@@ -127,41 +129,43 @@
     "/postcode-address": {
       "get": {
         "operationId": "GetPostcodeAddress",
-        "summary": "Displays the postcode address form.",
+        "summary": "Retrieve and view the user's postcode and address.",
         "parameters": [
           {
             "name": "postcode",
             "in": "query",
+            "required": false,
             "schema": {
               "type": "string"
-            },
-            "required": false
+            }
           },
           {
             "name": "journeyPath",
             "in": "query",
+            "required": false,
             "schema": {
               "type": "string",
               "enum": [
-                "CreateAccount"
+                "CreateAccount",
+                "ConfirmAccountDetails",
+                "Settings"
               ]
-            },
-            "required": false
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "HTML View rendered with postcode and address options."
+            "description": "Address retrieval page rendered."
           }
         }
       },
       "post": {
         "operationId": "UpdatePostcodeAddress",
-        "summary": "Processes the postcode address form submission.",
+        "summary": "Validate and redirect based on a postcode.",
         "requestBody": {
           "required": true,
           "content": {
-            "application/x-www-form-urlencoded": {
+            "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/PostcodeAddressViewModel"
               }
@@ -169,208 +173,11 @@
           }
         },
         "responses": {
-          "302": {
-            "description": "Redirect to the address selection route upon successful lookup."
+          "200": {
+            "description": "Validation passed and redirection initiated."
           },
           "400": {
-            "description": "Bad Request when validation fails."
-          }
-        }
-      }
-    },
-    "/select-address": {
-      "get": {
-        "operationId": "SelectAddress",
-        "summary": "Displays list of addresses for a given postcode.",
-        "parameters": [
-          {
-            "name": "postcode",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            },
-            "required": true
-          },
-          {
-            "name": "journeyPath",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "enum": [
-                "CreateAccount"
-              ]
-            },
-            "required": false
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "HTML View rendered with a list of address options."
-          }
-        }
-      },
-      "post": {
-        "operationId": "PersistSelectedAddress",
-        "summary": "Validates and processes address selection.",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/x-www-form-urlencoded": {
-              "schema": {
-                "$ref": "#/components/schemas/SelectAddressViewModel"
-              }
-            }
-          }
-        },
-        "responses": {
-          "302": {
-            "description": "Redirect after processing the selected address."
-          },
-          "400": {
-            "description": "Bad Request when validation fails."
-          }
-        }
-      }
-    },
-    "/enter-address": {
-      "get": {
-        "operationId": "EnterAddressManually",
-        "summary": "Allows the user to manually enter their address.",
-        "parameters": [
-          {
-            "name": "selectAddressPostcode",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            },
-            "required": false
-          },
-          {
-            "name": "journeyPath",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "enum": [
-                "CreateAccount"
-              ]
-            },
-            "required": false
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "HTML View rendered with a form to enter an address manually."
-          }
-        }
-      },
-      "post": {
-        "operationId": "SaveManualAddress",
-        "summary": "Saves the manually entered address form data.",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/x-www-form-urlencoded": {
-              "schema": {
-                "$ref": "#/components/schemas/EnterAddressManuallyViewModel"
-              }
-            }
-          }
-        },
-        "responses": {
-          "302": {
-            "description": "Redirect upon successful update."
-          },
-          "400": {
-            "description": "Bad Request when validation fails."
-          }
-        }
-      }
-    },
-    "/phone-number": {
-      "get": {
-        "operationId": "GetPhoneNumber",
-        "summary": "Displays the user's phone number form.",
-        "parameters": [
-          {
-            "name": "journeyPath",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "enum": [
-                "CreateAccount"
-              ]
-            },
-            "required": false
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "HTML View rendered with form to input or change the user's phone number."
-          }
-        }
-      },
-      "post": {
-        "operationId": "SavePhoneNumber",
-        "summary": "Saves phone number.",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/x-www-form-urlencoded": {
-              "schema": {
-                "$ref": "#/components/schemas/PhoneNumberViewModel"
-              }
-            }
-          }
-        },
-        "responses": {
-          "302": {
-            "description": "Redirect upon successful update."
-          },
-          "400": {
-            "description": "Bad Request when validation fails."
-          }
-        }
-      }
-    },
-    "/notification-preferences": {
-      "get": {
-        "operationId": "GetNotificationPreferences",
-        "summary": "View notification preferences.",
-        "parameters": [
-          {
-            "name": "journeyPath",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "enum": [
-                "CreateAccount"
-              ]
-            },
-            "required": false
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "HTML View rendered containing the user's notification preferences."
-          }
-        }
-      },
-      "post": {
-        "operationId": "UpdateNotificationPreferences",
-        "summary": "Update user notification preferences",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/x-www-form-urlencoded": {
-              "schema": {
-                "$ref": "#/components/schemas/NotificationPreferencesViewModel"
-              }
-            }
-          }
-        },
-        "responses": {
-          "302": {
-            "description": "Redirect on completion of submission."
+            "description": "Validation errors occurred."
           }
         }
       }
@@ -384,13 +191,62 @@
           "firstName": {
             "type": "string"
           },
-          "lastname": {
+          "lastName": {
+            "type": "string"
+          },
+          "journeyPath": {
             "type": "string",
-            "nullable": true
+            "enum": [
+              "CreateAccount",
+              "ConfirmAccountDetails",
+              "Settings"
+            ]
           }
-        }
+        },
+        "required": [
+          "firstName",
+          "lastName"
+        ]
       },
-      "DateOfBirthManualView.Show": "VALIDministratorEditorialInterpretationComplete"
+      "DateOfBirthViewModel": {
+        "type": "object",
+        "properties": {
+          "dateOfBirth": {
+            "type": "string",
+            "format": "date"
+          },
+          "journeyPath": {
+            "type": "string",
+            "enum": [
+              "CreateAccount",
+              "ConfirmAccountDetails",
+              "Settings"
+            ]
+          }
+        },
+        "required": [
+          "dateOfBirth"
+        ]
+      },
+      "PostcodeAddressViewModel": {
+        "type": "object",
+        "properties": {
+          "postcode": {
+            "type": "string"
+          },
+          "journeyPath": {
+            "type": "string",
+            "enum": [
+              "CreateAccount",
+              "ConfirmAccountDetails",
+              "Settings"
+            ]
+          }
+        },
+        "required": [
+          "postcode"
+        ]
+      }
     }
   }
 }

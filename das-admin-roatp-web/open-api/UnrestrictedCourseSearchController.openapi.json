@@ -2,22 +2,32 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Unrestricted Course Search API",
+    "description": "API for handling unrestricted course searches in the Admin RoATP system.",
     "version": "1.0.0"
   },
   "paths": {
     "/unrestricted-courses/search": {
       "get": {
-        "summary": "Get unrestricted courses for search.",
-        "operationId": "UnrestrictedCourseSearch_Index_Get",
+        "operationId": "getUnrestrictedCourses",
+        "summary": "Retrieve unrestricted courses",
+        "description": "Fetches a list of unrestricted courses and displays them.",
         "responses": {
           "200": {
-            "description": "HTML view of unrestricted courses search results."
+            "description": "Success response with a list of courses rendered in the view.",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
           }
         }
       },
       "post": {
-        "summary": "Submit unrestricted course search.",
-        "operationId": "UnrestrictedCourseSearch_Index_Post",
+        "operationId": "postUnrestrictedCourses",
+        "summary": "Search for a specific unrestricted course",
+        "description": "Validates the input and redirects to the details of a selected unrestricted course.",
         "requestBody": {
           "required": true,
           "content": {
@@ -30,10 +40,26 @@
         },
         "responses": {
           "302": {
-            "description": "Redirects to unrestricted course details based on selected course."
+            "description": "Redirection to the unrestricted course details.",
+            "headers": {
+              "Location": {
+                "description": "URL to the unrestricted course details.",
+                "schema": {
+                  "type": "string",
+                  "format": "uri"
+                }
+              }
+            }
           },
           "400": {
-            "description": "Validation errors encountered."
+            "description": "Bad Request - Validation errors in the input model.",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
           }
         }
       }

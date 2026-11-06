@@ -1,0 +1,99 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Employer Incentives API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/reinstate-payments": {
+      "post": {
+        "summary": "Reinstate Payments",
+        "operationId": "ReinstatePayments",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReinstatePaymentsRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Payments successfully reinstated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "Message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input. Error details will be returned.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ReinstatePaymentsRequest": {
+        "type": "object",
+        "properties": {
+          "Payments": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "ServiceRequest": {
+            "$ref": "#/components/schemas/ReinstatePaymentsServiceRequest"
+          }
+        },
+        "required": [
+          "Payments",
+          "ServiceRequest"
+        ]
+      },
+      "ReinstatePaymentsServiceRequest": {
+        "type": "object",
+        "properties": {
+          "TaskId": {
+            "type": "string"
+          },
+          "DecisionReference": {
+            "type": "string"
+          },
+          "TaskCreatedDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "Process": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "TaskId",
+          "DecisionReference",
+          "TaskCreatedDate",
+          "Process"
+        ]
+      }
+    }
+  }
+}

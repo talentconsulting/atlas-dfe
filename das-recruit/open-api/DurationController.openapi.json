@@ -1,0 +1,141 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Duration API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/{EmployerAccountId}/vacancies/{VacancyId}/duration": {
+      "get": {
+        "operationId": "GetDuration",
+        "summary": "Get duration view",
+        "parameters": [
+          {
+            "name": "EmployerAccountId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "VacancyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "wizard",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "default": "true"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Duration view retrieved"
+          }
+        }
+      },
+      "post": {
+        "operationId": "PostDuration",
+        "summary": "Submit duration",
+        "parameters": [
+          {
+            "name": "EmployerAccountId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "VacancyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "wizard",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DurationEditModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Duration submitted successfully"
+          },
+          "400": {
+            "description": "Validation errors occurred"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "DurationEditModel": {
+        "type": "object",
+        "properties": {
+          "EmployerAccountId": {
+            "type": "string"
+          },
+          "VacancyId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "Duration": {
+            "type": "string",
+            "description": "The duration of the vacancy",
+            "example": "12"
+          },
+          "DurationUnit": {
+            "type": "string",
+            "enum": [
+              "Week",
+              "Month",
+              "Year"
+            ],
+            "description": "The unit of the duration"
+          },
+          "WorkingWeekDescription": {
+            "type": "string",
+            "description": "Description of the working week",
+            "example": "Monday to Friday, 9am to 5pm"
+          },
+          "WeeklyHours": {
+            "type": "string",
+            "description": "Hours worked per week",
+            "example": "37.5"
+          }
+        },
+        "required": [
+          "EmployerAccountId",
+          "VacancyId",
+          "Duration"
+        ]
+      }
+    }
+  }
+}

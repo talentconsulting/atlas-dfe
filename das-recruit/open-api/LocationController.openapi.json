@@ -1,0 +1,265 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Employer Location API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/{EmployerAccountId}/{VacancyId}/add-one-location": {
+      "get": {
+        "operationId": "AddOneLocation_Get",
+        "summary": "Retrieve the form for adding one location.",
+        "parameters": [
+          {
+            "name": "EmployerAccountId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "VacancyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "wizard",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Form retrieved successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AddOneLocationViewModel"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Binding errors occurred."
+          }
+        }
+      },
+      "post": {
+        "operationId": "AddOneLocation_Post",
+        "summary": "Submit the form for adding one location.",
+        "parameters": [
+          {
+            "name": "EmployerAccountId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "VacancyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "wizard",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddOneLocationEditModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Form submission succeeded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AddOneLocationViewModel"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation errors occurred.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "VacancyRouteModel": {
+        "type": "object",
+        "properties": {
+          "EmployerAccountId": {
+            "type": "string"
+          },
+          "VacancyId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      },
+      "AddOneLocationEditModel": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/VacancyRouteModel"
+          }
+        ],
+        "properties": {
+          "SelectedLocation": {
+            "type": "string"
+          },
+          "Review": {
+            "$ref": "#/components/schemas/ReviewSummaryViewModel"
+          }
+        },
+        "required": [
+          "EmployerAccountId",
+          "VacancyId",
+          "SelectedLocation"
+        ]
+      },
+      "AddOneLocationViewModel": {
+        "type": "object",
+        "properties": {
+          "ApprenticeshipTitle": {
+            "type": "string"
+          },
+          "AvailableLocations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Address"
+            }
+          },
+          "VacancyId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "EmployerAccountId": {
+            "type": "string"
+          },
+          "PageInfo": {
+            "$ref": "#/components/schemas/PartOnePageInfoViewModel"
+          },
+          "SelectedLocation": {
+            "type": "string"
+          },
+          "BannerAddress": {
+            "type": "string"
+          },
+          "Review": {
+            "$ref": "#/components/schemas/ReviewSummaryViewModel"
+          }
+        }
+      },
+      "Address": {
+        "type": "object",
+        "properties": {
+          "AddressLine1": {
+            "type": "string"
+          },
+          "AddressLine2": {
+            "type": "string"
+          },
+          "Postcode": {
+            "type": "string"
+          },
+          "Country": {
+            "type": "string"
+          }
+        }
+      },
+      "ReviewSummaryViewModel": {
+        "type": "object",
+        "properties": {
+          "HasBeenReviewed": {
+            "type": "boolean"
+          },
+          "ReviewerComments": {
+            "type": "string"
+          },
+          "FieldIndicators": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "FieldName": {
+                  "type": "string"
+                },
+                "HasValueChanged": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      },
+      "ValidationErrorResponse": {
+        "type": "object",
+        "properties": {
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "fieldName": {
+                  "type": "string"
+                },
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "PartOnePageInfoViewModel": {
+        "type": "object",
+        "properties": {
+          "HasCompletedPartOne": {
+            "type": "boolean"
+          },
+          "HasStartedPartTwo": {
+            "type": "boolean"
+          },
+          "IsWizard": {
+            "type": "boolean"
+          }
+        }
+      }
+    }
+  }
+}

@@ -31,7 +31,7 @@
         },
         "responses": {
           "200": {
-            "description": "Successfully created overlapping training date request",
+            "description": "A successful response",
             "content": {
               "application/json": {
                 "schema": {
@@ -69,7 +69,7 @@
         },
         "responses": {
           "200": {
-            "description": "Successfully validated draft apprenticeship"
+            "description": "Validation succeeded"
           }
         }
       }
@@ -100,7 +100,7 @@
         },
         "responses": {
           "200": {
-            "description": "Successfully validated change of employer overlap"
+            "description": "Validation succeeded"
           }
         }
       }
@@ -147,7 +147,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Successfully validated ULN overlap",
+            "description": "Successful validation",
             "content": {
               "application/json": {
                 "schema": {
@@ -175,7 +175,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Successfully retrieved pending overlapping training date request",
+            "description": "A response containing overlapping requests",
             "content": {
               "application/json": {
                 "schema": {
@@ -203,21 +203,14 @@
         ],
         "responses": {
           "200": {
-            "description": "Successfully retrieved overlapping training date request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
+            "description": "A response containing overlapping training date requests"
           }
         }
       }
     },
     "/api/overlapping-training-date-request/resolve": {
       "post": {
-        "summary": "Resolve Apprenticeship Overlapping Training Date",
+        "summary": "Resolve Overlapping Training Date Request",
         "requestBody": {
           "required": true,
           "content": {
@@ -230,7 +223,7 @@
         },
         "responses": {
           "200": {
-            "description": "Successfully resolved overlapping training date request"
+            "description": "Request resolved successfully"
           }
         }
       }
@@ -288,7 +281,8 @@
             "type": "string"
           },
           "Email": {
-            "type": "string"
+            "type": "string",
+            "format": "email"
           },
           "DateOfBirth": {
             "type": "string",
@@ -304,7 +298,8 @@
             "$ref": "#/components/schemas/DeliveryModel"
           },
           "Cost": {
-            "type": "integer"
+            "type": "integer",
+            "format": "int32"
           },
           "StartDate": {
             "type": "string",
@@ -322,6 +317,10 @@
       "ValidateChangeOfEmployerOverlapRequest": {
         "type": "object",
         "properties": {
+          "ProviderId": {
+            "type": "integer",
+            "format": "int64"
+          },
           "Uln": {
             "type": "string"
           },
@@ -332,10 +331,6 @@
           "EndDate": {
             "type": "string",
             "format": "date"
-          },
-          "ProviderId": {
-            "type": "integer",
-            "format": "int64"
           }
         }
       },
@@ -359,18 +354,15 @@
         "properties": {
           "DraftApprenticeshipId": {
             "type": "integer",
-            "format": "int64",
-            "nullable": true
+            "format": "int64"
           },
           "PreviousApprenticeshipId": {
             "type": "integer",
-            "format": "int64",
-            "nullable": true
+            "format": "int64"
           },
           "CreatedOn": {
             "type": "string",
-            "format": "date-time",
-            "nullable": true
+            "format": "date-time"
           }
         }
       },
@@ -396,17 +388,10 @@
             "type": "string"
           },
           "UserEmail": {
-            "type": "string"
+            "type": "string",
+            "format": "email"
           }
         }
-      },
-      "DeliveryModel": {
-        "type": "string",
-        "enum": [
-          "Regular",
-          "PortableFlexiJob",
-          "FlexiJobAgency"
-        ]
       },
       "OverlappingTrainingDateRequestResolutionType": {
         "type": "string",
@@ -422,6 +407,14 @@
           "ApprenticeshipStopDateIsCorrect",
           "ApprenticeshipEndDateIsCorrect",
           "CohortDeleted"
+        ]
+      },
+      "DeliveryModel": {
+        "type": "string",
+        "enum": [
+          "Regular",
+          "PortableFlexiJob",
+          "FlexiJobAgency"
         ]
       }
     }

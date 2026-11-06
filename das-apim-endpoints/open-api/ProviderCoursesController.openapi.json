@@ -2,32 +2,33 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Provider Courses API",
-    "description": "API for managing provider courses",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "description": "API for managing provider courses in the RoATP system."
   },
   "paths": {
     "/providers/{ukprn}/courses/{larsCode}": {
       "get": {
-        "operationId": "GetProviderCourse",
+        "summary": "Get Provider Course",
+        "description": "Retrieve details of a specific provider course using UKPRN and LARS Code.",
         "tags": [
           "Provider Courses"
         ],
-        "summary": "Get a specific provider course",
         "parameters": [
           {
             "name": "ukprn",
             "in": "path",
             "required": true,
-            "description": "UK provider reference number",
+            "description": "UK Provider Reference Number",
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "format": "int32"
             }
           },
           {
             "name": "larsCode",
             "in": "path",
             "required": true,
-            "description": "LARS (Learning Aim Reference System) code of the course",
+            "description": "LARS Code of the course",
             "schema": {
               "type": "string"
             }
@@ -35,7 +36,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Provider course found",
+            "description": "Provider Course details found successfully.",
             "content": {
               "application/json": {
                 "schema": {
@@ -45,7 +46,7 @@
             }
           },
           "404": {
-            "description": "Provider course not found"
+            "description": "Provider Course not found."
           }
         }
       }
@@ -58,81 +59,68 @@
         "properties": {
           "ProviderCourseId": {
             "type": "integer",
-            "description": "Unique identifier for the provider course"
+            "example": 12345
           },
           "StandardUId": {
             "type": "string",
-            "description": "Standard unique identifier"
+            "example": "STD123"
           },
           "IfateReferenceNumber": {
             "type": "string",
-            "description": "Institute for Apprenticeships reference number"
+            "example": "REF456"
           },
           "LarsCode": {
             "type": "string",
-            "description": "Learning Aim Reference System code for the course"
+            "example": "LARS123"
           },
           "Title": {
             "type": "string",
-            "description": "Title of the course"
+            "example": "Example Course Title"
           },
           "Level": {
             "type": "integer",
-            "description": "Level of the course"
+            "example": 3
           },
           "ApprovalBody": {
             "type": "string",
-            "description": "Approval body for the course"
+            "example": "Approval Body Name"
           },
           "Route": {
             "type": "string",
-            "description": "Delivery route for the course"
+            "example": "Health and Science"
           },
           "StandardInfoUrl": {
             "type": "string",
-            "description": "URL for additional information about the standard"
+            "format": "uri",
+            "example": "https://example.com/info"
           },
           "ContactUsPhoneNumber": {
             "type": "string",
-            "description": "Phone number for contacting about the course"
+            "example": "08001234567"
           },
           "ContactUsEmail": {
             "type": "string",
-            "description": "Email for contacting about the course"
+            "format": "email",
+            "example": "contact@example.com"
           },
           "IsApprovedByRegulator": {
             "type": "boolean",
-            "description": "Indicates whether the course is approved by a regulator"
+            "nullable": true,
+            "example": true
           },
           "IsRegulatedForProvider": {
             "type": "boolean",
-            "description": "Indicates whether the course is regulated for the provider"
+            "example": false
           },
           "HasLocations": {
             "type": "boolean",
-            "description": "Indicates whether the course has multiple locations"
+            "example": true
           },
           "HasOnlineDeliveryOption": {
             "type": "boolean",
-            "description": "Indicates whether the course has an online delivery option"
+            "example": false
           }
-        },
-        "required": [
-          "ProviderCourseId",
-          "StandardUId",
-          "IfateReferenceNumber",
-          "LarsCode",
-          "Title",
-          "Level",
-          "ApprovalBody",
-          "Route",
-          "StandardInfoUrl",
-          "ContactUsPhoneNumber",
-          "ContactUsEmail",
-          "IsRegulatedForProvider",
-          "HasLocations",
-          "HasOnlineDeliveryOption"
-        ]
+        }
       }
     }
   }

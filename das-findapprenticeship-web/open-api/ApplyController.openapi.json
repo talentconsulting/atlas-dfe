@@ -1,13 +1,14 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Apply Controller",
+    "title": "ApplyController API",
     "version": "1.0.0"
   },
   "paths": {
     "/applications/{applicationId}": {
       "get": {
-        "operationId": "GetIndex",
+        "operationId": "getApplicationIndex",
+        "summary": "Get application index",
         "parameters": [
           {
             "name": "applicationId",
@@ -21,12 +22,20 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful response"
+            "description": "Application index details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetIndexQuery"
+                }
+              }
+            }
           }
         }
       },
       "post": {
-        "operationId": "PostIndex",
+        "operationId": "redirectApplicationSubmission",
+        "summary": "Redirect to application submission",
         "parameters": [
           {
             "name": "applicationId",
@@ -40,14 +49,15 @@
         ],
         "responses": {
           "302": {
-            "description": "Redirects to application submitted route"
+            "description": "Redirects to application submission"
           }
         }
       }
     },
     "/applications/{applicationId}/preview": {
       "get": {
-        "operationId": "GetPreview",
+        "operationId": "getApplicationPreview",
+        "summary": "Get application preview",
         "parameters": [
           {
             "name": "applicationId",
@@ -61,15 +71,20 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful response"
-          },
-          "302": {
-            "description": "Redirection to Apply route"
+            "description": "Application preview details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetApplicationSummaryQuery"
+                }
+              }
+            }
           }
         }
       },
       "post": {
-        "operationId": "PostPreview",
+        "operationId": "submitApplicationPreview",
+        "summary": "Submit application preview",
         "parameters": [
           {
             "name": "applicationId",
@@ -93,14 +108,15 @@
         },
         "responses": {
           "302": {
-            "description": "Redirects to application submission or application summary based on data"
+            "description": "Redirects after application submission"
           }
         }
       }
     },
     "/applications/{applicationId}/application-submitted": {
       "get": {
-        "operationId": "GetApplicationSubmitted",
+        "operationId": "getApplicationSubmitted",
+        "summary": "Get application submitted details",
         "parameters": [
           {
             "name": "applicationId",
@@ -114,12 +130,20 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful response"
+            "description": "Application submitted details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetApplicationSubmittedQueryResponse"
+                }
+              }
+            }
           }
         }
       },
       "post": {
-        "operationId": "PostApplicationSubmitted",
+        "operationId": "handleApplicationSubmittedPost",
+        "summary": "Handle actions after application is submitted",
         "requestBody": {
           "required": true,
           "content": {
@@ -132,7 +156,7 @@
         },
         "responses": {
           "302": {
-            "description": "Redirects to equality questions flow or applications view"
+            "description": "Redirects to appropriate flow after submission handling"
           }
         }
       }
@@ -140,56 +164,124 @@
   },
   "components": {
     "schemas": {
-      "ApplicationSubmittedViewModel": {
+      "GetIndexQuery": {
         "type": "object",
         "properties": {
-          "ApplicationId": {
+          "applicationId": {
             "type": "string",
             "format": "uuid"
           },
-          "VacancyInfo": {
-            "$ref": "#/components/schemas/ApplicationSubmittedVacancyInfo"
+          "vacancyReference": {
+            "type": "string"
           },
-          "AnswerEqualityQuestions": {
-            "type": "boolean"
+          "vacancyTitle": {
+            "type": "string"
           },
-          "IsVacancyClosedEarly": {
-            "type": "boolean"
+          "employerName": {
+            "type": "string"
           },
-          "ClosedDate": {
+          "closingDate": {
             "type": "string",
-            "format": "date-time"
-          }
-        }
-      },
-      "ApplicationSubmittedVacancyInfo": {
-        "type": "object",
-        "properties": {
-          "VacancyTitle": {
-            "type": "string"
+            "format": "date"
           },
-          "EmployerName": {
-            "type": "string"
-          },
-          "HasAnsweredEqualityQuestions": {
-            "type": "boolean"
+          "closedDate": {
+            "type": "string",
+            "format": "date"
           }
         }
       },
       "ApplicationSummaryViewModel": {
         "type": "object",
         "properties": {
-          "ApplicationId": {
+          "applicationId": {
             "type": "string",
             "format": "uuid"
           },
-          "IsConsentProvided": {
+          "isConsentProvided": {
             "type": "boolean"
           },
-          "IsDisabilityConfident": {
+          "employerName": {
+            "type": "string"
+          },
+          "vacancyTitle": {
+            "type": "string"
+          },
+          "closedDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "disabilityConfidence": {
+            "type": "boolean"
+          }
+        }
+      },
+      "GetApplicationSummaryQuery": {
+        "type": "object",
+        "properties": {
+          "applicationId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "candidateId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "employerName": {
+            "type": "string"
+          },
+          "vacancyTitle": {
+            "type": "string"
+          }
+        }
+      },
+      "GetApplicationSubmittedQueryResponse": {
+        "type": "object",
+        "properties": {
+          "vacancyTitle": {
+            "type": "string"
+          },
+          "employerName": {
+            "type": "string"
+          },
+          "hasAnsweredEqualityQuestions": {
             "type": "boolean"
           },
-          "IsApplicationComplete": {
+          "closingDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "closedDate": {
+            "type": "string",
+            "format": "date"
+          }
+        }
+      },
+      "ApplicationSubmittedViewModel": {
+        "type": "object",
+        "properties": {
+          "applicationId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "vacancyInfo": {
+            "type": "object",
+            "properties": {
+              "vacancyTitle": {
+                "type": "string"
+              },
+              "employerName": {
+                "type": "string"
+              }
+            }
+          },
+          "answerEqualityQuestions": {
+            "type": "boolean"
+          },
+          "closedDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "isVacancyClosedEarly": {
             "type": "boolean"
           }
         }

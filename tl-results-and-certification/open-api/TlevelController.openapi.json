@@ -1,208 +1,177 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "TlevelController API",
+    "title": "Tlevel API",
     "version": "1.0.0"
   },
   "paths": {
-    "/tlevels": {
+    "/api/Tlevel/GetAllTlevels/{ukprn}": {
       "get": {
-        "operationId": "getTlevelsDashboard",
-        "description": "T Levels dashboard page.",
-        "responses": {
-          "200": {
-            "description": "Successful response showing the T Levels dashboard."
-          }
-        }
-      }
-    },
-    "/review-tlevels": {
-      "get": {
-        "operationId": "reviewTlevels",
-        "description": "Redirects based on the number of T Levels pending review.",
-        "responses": {
-          "302": {
-            "description": "Redirect response."
-          }
-        }
-      }
-    },
-    "/all-tlevels-reviewed": {
-      "get": {
-        "operationId": "getAllTlevelsReviewed",
-        "description": "Displays page indicating all T Levels are reviewed or redirects if there are pending ones.",
-        "responses": {
-          "200": {
-            "description": "Successful response showing the 'all T Levels reviewed' page."
-          },
-          "302": {
-            "description": "Redirect response."
-          }
-        }
-      }
-    },
-    "/select-tlevel/{id}": {
-      "get": {
-        "operationId": "selectTlevelToReview",
-        "description": "Selects a T Level for review based on its ID.",
+        "summary": "Get all T Levels by UKPRN",
         "parameters": [
           {
-            "name": "id",
-            "in": "path",
-            "required": false,
-            "schema": {
-              "type": "integer"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful response showing the select T Level to review page."
-          },
-          "302": {
-            "description": "Redirect response."
-          }
-        }
-      }
-    },
-    "/select-tlevel": {
-      "post": {
-        "operationId": "submitSelectTlevelToReview",
-        "description": "Submits the selected T Level to review and redirects to its details.",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/SelectToReviewPageViewModel"
-              }
-            }
-          }
-        },
-        "responses": {
-          "302": {
-            "description": "Redirect response to review T Level details."
-          },
-          "400": {
-            "description": "Invalid request body."
-          }
-        }
-      }
-    },
-    "/review-t-level-details/{id}/{isback}": {
-      "get": {
-        "operationId": "verifyTLevel",
-        "description": "Displays the verification page for a T Level.",
-        "parameters": [
-          {
-            "name": "id",
+            "name": "ukprn",
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer"
-            }
-          },
-          {
-            "name": "isback",
-            "in": "path",
-            "required": false,
-            "schema": {
-              "type": "boolean"
+              "type": "integer",
+              "format": "int64"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Successful response shows T Level verification page."
-          },
-          "404": {
-            "description": "T Level not found or invalid status."
+            "description": "A list of T Level pathways and statuses",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AwardingOrganisationPathwayStatus"
+                  }
+                }
+              }
+            }
           }
         }
       }
     },
-    "/tlevel-details-queried-confirmation/{id}": {
+    "/api/Tlevel/{ukprn}/GetTlevelsByStatus/{statusId}": {
       "get": {
-        "operationId": "getTLevelQueriedConfirmation",
-        "description": "Displays the confirmation page for a queried T Level.",
+        "summary": "Get T Levels by status ID",
         "parameters": [
           {
-            "name": "id",
+            "name": "ukprn",
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "statusId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Successful response shows confirmation page for queried T Level."
-          },
-          "404": {
-            "description": "Invalid confirmation request or T Level not found."
-          }
-        }
-      }
-    },
-    "/confirm-tlevel": {
-      "post": {
-        "operationId": "confirmTLevel",
-        "description": "Confirms the review of a T Level.",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ConfirmTlevelViewModel"
+            "description": "A list of T Level pathways with the specified status",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AwardingOrganisationPathwayStatus"
+                  }
+                }
               }
             }
           }
-        },
-        "responses": {
-          "302": {
-            "description": "Redirects based on the confirmation outcome."
-          },
-          "404": {
-            "description": "Invalid T Level confirmation request."
-          }
         }
       }
     },
-    "/query-t-level/{id}/{isBackToConfirmed}": {
-      "post": {
-        "operationId": "submitTLevelIssue",
-        "description": "Submits a query about a T Level's details.",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/TlevelQueryViewModel"
-              }
-            }
-          }
-        },
-        "responses": {
-          "302": {
-            "description": "Redirect response after submitting T Level issue."
-          },
-          "400": {
-            "description": "Invalid request body."
-          }
-        }
-      }
-    },
-    "/tlevel-query-sent": {
+    "/api/Tlevel/{ukprn}/TlevelDetails/{pathwayId}": {
       "get": {
-        "operationId": "getTLevelQuerySent",
-        "description": "Displays a confirmation page after a T Level query is submitted.",
+        "summary": "Get T Level pathway details by pathway ID",
+        "parameters": [
+          {
+            "name": "ukprn",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "pathwayId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
         "responses": {
           "200": {
-            "description": "Successful response shows T Level query sent confirmation page."
+            "description": "Details of a specific T Level pathway",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TlevelPathwayDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Tlevel/VerifyTlevel": {
+      "put": {
+        "summary": "Verify a T Level",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VerifyTlevelDetails"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "T Level verification result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Tlevel/{aoUkprn}/GetPathwaySpecialisms/{pathwayLarId}": {
+      "get": {
+        "summary": "Get pathway specialisms by pathway LAR ID",
+        "parameters": [
+          {
+            "name": "aoUkprn",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
           },
-          "404": {
-            "description": "Confirmation data not found."
+          {
+            "name": "pathwayLarId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Pathway specialisms and combinations",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PathwaySpecialisms"
+                }
+              }
+            }
           }
         }
       }
@@ -210,75 +179,128 @@
   },
   "components": {
     "schemas": {
-      "SelectToReviewPageViewModel": {
+      "AwardingOrganisationPathwayStatus": {
         "type": "object",
         "properties": {
-          "TlevelsToReview": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {}
-            }
-          },
-          "SelectedPathwayId": {
-            "type": "integer"
-          }
-        }
-      },
-      "ConfirmTlevelViewModel": {
-        "type": "object",
-        "properties": {
-          "TqAwardingOrganisationId": {
-            "type": "integer"
-          },
-          "RouteId": {
-            "type": "integer"
-          },
           "PathwayId": {
-            "type": "integer"
-          },
-          "PathwayStatusId": {
-            "type": "integer"
+            "type": "integer",
+            "format": "int32"
           },
           "TlevelTitle": {
             "type": "string"
           },
-          "PathwayDisplayName": {
+          "StatusId": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "TlevelPathwayDetails": {
+        "type": "object",
+        "properties": {
+          "TqAwardingOrganisationId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "RouteId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "PathwayId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "TlevelTitle": {
             "type": "string"
           },
-          "IsEverythingCorrect": {
-            "type": "boolean"
+          "RouteName": {
+            "type": "string"
+          },
+          "PathwayName": {
+            "type": "string"
+          },
+          "PathwayCode": {
+            "type": "string"
+          },
+          "PathwayStatusId": {
+            "type": "integer",
+            "format": "int32"
           },
           "Specialisms": {
             "type": "array",
             "items": {
-              "type": "string"
+              "$ref": "#/components/schemas/SpecialismDetails"
             }
           },
-          "HasMoreToReview": {
-            "type": "boolean"
+          "VerifiedBy": {
+            "type": "string"
+          },
+          "VerifiedOn": {
+            "type": "string",
+            "format": "date-time"
           }
         }
       },
-      "TlevelQueryViewModel": {
+      "VerifyTlevelDetails": {
         "type": "object",
         "properties": {
           "TqAwardingOrganisationId": {
-            "type": "integer"
-          },
-          "RouteId": {
-            "type": "integer"
-          },
-          "PathwayId": {
-            "type": "integer"
+            "type": "integer",
+            "format": "int32"
           },
           "PathwayStatusId": {
-            "type": "integer"
-          },
-          "IsBackToConfirmed": {
-            "type": "boolean"
+            "type": "integer",
+            "format": "int32"
           },
           "Query": {
+            "type": "string"
+          },
+          "QueriedUserEmail": {
+            "type": "string"
+          },
+          "ModifiedBy": {
+            "type": "string"
+          }
+        }
+      },
+      "PathwaySpecialisms": {
+        "type": "object",
+        "properties": {
+          "PathwayName": {
+            "type": "string"
+          },
+          "PathwayCode": {
+            "type": "string"
+          },
+          "Specialisms": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PathwaySpecialismCombination"
+            }
+          }
+        }
+      },
+      "PathwaySpecialismCombination": {
+        "type": "object",
+        "properties": {
+          "Code": {
+            "type": "string"
+          },
+          "SpecialismDetails": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SpecialismDetails"
+            }
+          }
+        }
+      },
+      "SpecialismDetails": {
+        "type": "object",
+        "properties": {
+          "Code": {
+            "type": "string"
+          },
+          "Name": {
             "type": "string"
           }
         }

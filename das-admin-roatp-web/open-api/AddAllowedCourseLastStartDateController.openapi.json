@@ -1,0 +1,160 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Add Allowed Course Last Start Date API",
+    "version": "1.0.0",
+    "description": "Endpoints for managing the allowed course's last start date for providers."
+  },
+  "paths": {
+    "/providers/{ukprn}/{routeLearningType}/allowed-courses/{larsCode}/set-last-date-start": {
+      "get": {
+        "summary": "Display the form for setting the last start date of an allowed course.",
+        "operationId": "getAllowedCourseLastStartDateForm",
+        "parameters": [
+          {
+            "name": "ukprn",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Unique identifier for the provider."
+          },
+          {
+            "name": "routeLearningType",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "Apprenticeship",
+                "ApprenticeshipUnit"
+              ]
+            },
+            "description": "Type of learning route."
+          },
+          {
+            "name": "larsCode",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "LARS code representing the course."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns the form for the last start date of an allowed course.",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string",
+                  "format": "html"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found if the route learning type, provider, or course is invalid or does not exist."
+          }
+        }
+      },
+      "post": {
+        "summary": "Submit the last start date for an allowed course.",
+        "operationId": "submitAllowedCourseLastStartDate",
+        "parameters": [
+          {
+            "name": "ukprn",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Unique identifier for the provider."
+          },
+          {
+            "name": "routeLearningType",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "Apprenticeship",
+                "ApprenticeshipUnit"
+              ]
+            },
+            "description": "Type of learning route."
+          },
+          {
+            "name": "larsCode",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "LARS code representing the course."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetLastDateStartsSubmitModel"
+              }
+            }
+          },
+          "description": "The model containing the last start date and related data."
+        },
+        "responses": {
+          "302": {
+            "description": "Redirects to the view of allowed courses for the provider."
+          },
+          "400": {
+            "description": "Validation errors occurred with the input data."
+          },
+          "404": {
+            "description": "Not found if the course or provider does not exist."
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "SetLastDateStartsSubmitModel": {
+        "type": "object",
+        "properties": {
+          "Day": {
+            "type": "string",
+            "nullable": true,
+            "description": "Day of the last start date."
+          },
+          "Month": {
+            "type": "string",
+            "nullable": true,
+            "description": "Month of the last start date."
+          },
+          "Year": {
+            "type": "string",
+            "nullable": true,
+            "description": "Year of the last start date."
+          },
+          "LarsCode": {
+            "type": "string",
+            "nullable": true,
+            "description": "LARS code representing the course."
+          },
+          "CourseLastDateStarts": {
+            "type": "string",
+            "format": "date",
+            "nullable": true,
+            "description": "Existing last start date for the course."
+          }
+        },
+        "description": "Model for submitting the last start date for a course."
+      }
+    }
+  }
+}

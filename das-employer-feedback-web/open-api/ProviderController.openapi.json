@@ -1,43 +1,47 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Employer Feedback API - Provider Operations",
+    "title": "Provider Feedback API",
     "version": "1.0.0"
   },
   "paths": {
     "/providers": {
       "get": {
         "operationId": "ProviderSearchGet",
-        "summary": "Search providers",
         "parameters": [
           {
             "name": "source",
             "in": "query",
+            "required": false,
             "schema": {
-              "type": "string",
-              "enum": [
-                "Email",
-                "AdHoc"
-              ]
+              "$ref": "#/components/schemas/FeedbackSource"
             }
           },
           {
             "name": "PageIndex",
             "in": "query",
+            "required": false,
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "default": 1
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Successful operation"
+            "description": "Provider search results",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProviderSearchViewModel"
+                }
+              }
+            }
           }
         }
       },
       "post": {
         "operationId": "ProviderSearchPost",
-        "summary": "Apply search filters to providers",
         "requestBody": {
           "required": true,
           "content": {
@@ -50,7 +54,7 @@
         },
         "responses": {
           "302": {
-            "description": "Redirects the user to the search results page"
+            "description": "Redirects to provider search."
           }
         }
       }
@@ -58,19 +62,13 @@
     "/providers/sort": {
       "get": {
         "operationId": "SortProvidersGet",
-        "summary": "Sort provider search results",
         "parameters": [
           {
             "name": "SortColumn",
             "in": "query",
             "required": true,
             "schema": {
-              "type": "string",
-              "enum": [
-                "Default",
-                "FeedbackStatus",
-                "DateSubmitted"
-              ]
+              "$ref": "#/components/schemas/SortColumn"
             }
           },
           {
@@ -78,11 +76,7 @@
             "in": "query",
             "required": true,
             "schema": {
-              "type": "string",
-              "enum": [
-                "Ascending",
-                "Descending"
-              ]
+              "$ref": "#/components/schemas/SortOrder"
             }
           },
           {
@@ -96,7 +90,7 @@
         ],
         "responses": {
           "302": {
-            "description": "Redirects the user to sorted search results"
+            "description": "Redirects to sorted provider search."
           }
         }
       }
@@ -104,7 +98,6 @@
     "/providers/clearfilters": {
       "get": {
         "operationId": "ClearFiltersGet",
-        "summary": "Clear any applied filters",
         "parameters": [
           {
             "name": "EncodedAccountId",
@@ -117,7 +110,7 @@
         ],
         "responses": {
           "302": {
-            "description": "Redirects the user to unfiltered search results"
+            "description": "Redirects to provider search with filters cleared."
           }
         }
       }
@@ -125,7 +118,6 @@
     "/providers/{providerId}": {
       "get": {
         "operationId": "ProviderConfirmGet",
-        "summary": "Confirm provider details",
         "parameters": [
           {
             "name": "providerId",
@@ -146,16 +138,19 @@
         ],
         "responses": {
           "200": {
-            "description": "Displays confirmation of provider details"
-          },
-          "302": {
-            "description": "Redirects the user back to search results if provider is not found"
+            "description": "Provider confirmation details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProviderConfirmViewModel"
+                }
+              }
+            }
           }
         }
       },
       "post": {
         "operationId": "ProviderConfirmPost",
-        "summary": "Submit provider confirmation",
         "requestBody": {
           "required": true,
           "content": {
@@ -168,7 +163,7 @@
         },
         "responses": {
           "302": {
-            "description": "Redirects the user to the next step or back to search results"
+            "description": "Redirects based on confirmation outcome."
           }
         }
       }
@@ -176,110 +171,34 @@
   },
   "components": {
     "schemas": {
-      "AccountModel": {
+      "ProviderSearchRequestModel": {
+        "type": "object",
+        "properties": {
+          "FeedbackSource": {
+            "$ref": "#/components/schemas/FeedbackSource"
+          },
+          "PageIndex": {
+            "type": "integer",
+            "default": 1
+          }
+        }
+      },
+      "ProviderSearchSortRequestModel": {
         "type": "object",
         "properties": {
           "EncodedAccountId": {
             "type": "string"
           },
-          "AccountId": {
-            "type": "integer"
-          }
-        },
-        "required": [
-          "EncodedAccountId"
-        ]
-      },
-      "ProviderConfirmRequestModel": {
-        "type": "object",
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/AccountModel"
-          }
-        ],
-        "properties": {
-          "ProviderId": {
-            "type": "integer"
-          }
-        },
-        "required": [
-          "ProviderId"
-        ]
-      },
-      "ProviderConfirmViewModel": {
-        "type": "object",
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/AccountModel"
-          }
-        ],
-        "properties": {
-          "ProviderId": {
-            "type": "integer"
-          },
-          "ProviderName": {
-            "type": "string"
-          },
-          "Confirmed": {
-            "type": "boolean"
-          }
-        },
-        "required": [
-          "ProviderId"
-        ]
-      },
-      "ProviderSearchRequestModel": {
-        "type": "object",
-        "properties": {
-          "FeedbackSource": {
-            "type": "string",
-            "enum": [
-              "Email",
-              "AdHoc"
-            ]
-          },
-          "PageIndex": {
-            "type": "integer"
-          }
-        },
-        "required": []
-      },
-      "ProviderSearchSortRequestModel": {
-        "type": "object",
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/AccountModel"
-          }
-        ],
-        "properties": {
           "SortColumn": {
-            "type": "string",
-            "enum": [
-              "Default",
-              "FeedbackStatus",
-              "DateSubmitted"
-            ]
+            "$ref": "#/components/schemas/SortColumn"
           },
           "SortOrder": {
-            "type": "string",
-            "enum": [
-              "Ascending",
-              "Descending"
-            ]
+            "$ref": "#/components/schemas/SortOrder"
           }
-        },
-        "required": [
-          "SortColumn",
-          "SortOrder"
-        ]
+        }
       },
       "ProviderSearchViewModel": {
         "type": "object",
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/AccountModel"
-          }
-        ],
         "properties": {
           "SelectedProviderName": {
             "type": "string"
@@ -290,48 +209,102 @@
               "type": "string"
             }
           },
-          "SelectedFeedbackStatus": {
-            "type": "string"
-          },
-          "FeedbackStatusFilter": {
+          "Providers": {
             "type": "array",
             "items": {
-              "type": "string"
+              "$ref": "#/components/schemas/EmployerTrainingProvider"
             }
           },
-          "Providers": {
-            "type": "object",
-            "properties": {
-              "Items": {
-                "type": "array",
-                "items": {
-                  "type": "object",
-                  "properties": {
-                    "ProviderId": {
-                      "type": "integer"
-                    },
-                    "ProviderName": {
-                      "type": "string"
-                    },
-                    "FeedbackStatus": {
-                      "type": "string"
-                    },
-                    "DateSubmitted": {
-                      "type": "string",
-                      "format": "date-time"
-                    },
-                    "CanSubmitFeedback": {
-                      "type": "boolean"
-                    }
-                  },
-                  "required": [
-                    "ProviderId",
-                    "ProviderName",
-                    "CanSubmitFeedback"
-                  ]
-                }
-              }
-            }
+          "SortColumn": {
+            "$ref": "#/components/schemas/SortColumn"
+          },
+          "SortOrder": {
+            "$ref": "#/components/schemas/SortOrder"
+          },
+          "EncodedAccountId": {
+            "type": "string"
+          }
+        }
+      },
+      "EmployerTrainingProvider": {
+        "type": "object",
+        "properties": {
+          "ProviderId": {
+            "type": "integer"
+          },
+          "ProviderName": {
+            "type": "string"
+          },
+          "FeedbackStatus": {
+            "type": "string"
+          },
+          "DateSubmitted": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "CanSubmitFeedback": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ProviderConfirmRequestModel": {
+        "type": "object",
+        "properties": {
+          "EncodedAccountId": {
+            "type": "string"
+          },
+          "ProviderId": {
+            "type": "integer"
+          }
+        }
+      },
+      "ProviderConfirmViewModel": {
+        "type": "object",
+        "properties": {
+          "ProviderId": {
+            "type": "integer"
+          },
+          "ProviderName": {
+            "type": "string"
+          },
+          "Confirmed": {
+            "type": "boolean"
+          },
+          "EncodedAccountId": {
+            "type": "string"
+          }
+        }
+      },
+      "FeedbackSource": {
+        "type": "string",
+        "enum": [
+          "Email",
+          "AdHoc"
+        ]
+      },
+      "SortColumn": {
+        "type": "string",
+        "enum": [
+          "Default",
+          "FeedbackStatus",
+          "DateSubmitted"
+        ]
+      },
+      "SortOrder": {
+        "type": "string",
+        "enum": [
+          "Ascending",
+          "Descending"
+        ]
+      },
+      "AccountModel": {
+        "type": "object",
+        "properties": {
+          "EncodedAccountId": {
+            "type": "string"
+          },
+          "AccountId": {
+            "type": "integer"
           }
         }
       }
