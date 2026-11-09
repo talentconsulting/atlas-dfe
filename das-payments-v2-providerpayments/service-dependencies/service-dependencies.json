@@ -2,89 +2,61 @@
   "repository": "SkillsFundingAgency/das-payments-v2-providerpayments",
   "ref": "main",
   "path": "src",
-  "systemName": "SFA.DAS.Payments.ProviderPayments",
+  "systemName": "ProviderPayments",
   "containers": [
     {
-      "id": "provider-payments-application",
-      "name": "Provider Payments Application",
-      "type": "other",
-      "evidence": [
-        {
-          "sourceFile": "src/SFA.DAS.Payments.ProviderPayments.Application/SFA.DAS.Payments.ProviderPayments.Application.csproj",
-          "reason": "Project file indicates a library or non-deployable project used within the system."
-        }
-      ]
-    },
-    {
-      "id": "provider-payments-legacy-export-service",
-      "name": "Provider Payments Legacy Export Service",
-      "type": "job",
-      "evidence": [
-        {
-          "sourceFile": "src/SFA.DAS.Payments.ProviderPayments.LegacyExportService/Program.cs",
-          "reason": "File contains the entry point for a background service implementing a stateful Service Fabric service."
-        }
-      ]
-    },
-    {
-      "id": "provider-payments-provider-payments-service",
-      "name": "Provider Payments Provider Payments Service",
+      "id": "payments-provider-payments-service",
+      "name": "Payments Provider Payments Service",
       "type": "job",
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.Payments.ProviderPayments.ProviderPaymentsService/Program.cs",
-          "reason": "File contains the entry point for a background service implementing a stateful Service Fabric service."
+          "reason": "Main method and Service Fabric container for stateful service."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.Payments.ProviderPayments.ProviderPaymentsService/SFA.DAS.Payments.ProviderPayments.ProviderPaymentsService.csproj",
+          "reason": "Service Fabric project with OutputType set to Exe."
         }
       ]
     },
     {
-      "id": "sfa-das-payments-providerpayments-specs",
-      "name": "SFA.DAS.Payments.ProviderPayments Specs",
+      "id": "payments-provider-payments-specs",
+      "name": "Payments Provider Payments Specs",
       "type": "other",
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.Payments.ProviderPayments.Specs/SFA.DAS.Payments.ProviderPayments.Specs.csproj",
-          "reason": "Project file with SDK: Microsoft.NET.Sdk and test-related references, indicating a test project."
+          "reason": "Test project with Test SDK dependency and bindings for NServiceBus."
+        }
+      ]
+    },
+    {
+      "id": "providerpayments-application",
+      "name": "ProviderPayments",
+      "type": "other",
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Payments.ProviderPayments.Application/SFA.DAS.Payments.ProviderPayments.Application.csproj",
+          "reason": "This project is designed for a general application and lacks the specific traits of an API, web, or job container."
+        }
+      ]
+    },
+    {
+      "id": "providerpayments-legacyexportservice",
+      "name": "ProviderPayments LegacyExportService",
+      "type": "job",
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Payments.ProviderPayments.LegacyExportService/Program.cs",
+          "reason": "This project defines a worker service entry point for the legacy export functionality."
         }
       ]
     }
   ],
   "dependencies": [
     {
-      "sourceId": "sfa-das-payments-providerpayments-specs",
-      "name": "SQL Server",
-      "kind": "database",
-      "classification": "unknown",
-      "direction": "outbound",
-      "client": null,
-      "technology": "EF Core",
-      "configurationKeys": [],
-      "authentication": {
-        "type": null,
-        "configurationKeys": []
-      },
-      "operations": [],
-      "resources": [
-        {
-          "type": "database",
-          "name": "Payments2",
-          "direction": "outbound",
-          "sourceFile": "src/SFA.DAS.Payments.ProviderPayments.Specs/Data/TestSessionDataContext.cs"
-        }
-      ],
-      "evidence": [
-        {
-          "sourceFile": "src/SFA.DAS.Payments.ProviderPayments.Specs/Data/TestSessionDataContext.cs",
-          "reason": "DbContext subclass with a SQL Server connection using 'Payments2' schema."
-        }
-      ],
-      "confidence": "high",
-      "targetId": "database-sql-server",
-      "description": "Reads from and writes to"
-    },
-    {
-      "sourceId": "provider-payments-application",
-      "name": "SQL Server",
+      "sourceId": "providerpayments-application",
+      "name": "DasPeriodEndConnectionString",
       "kind": "database",
       "classification": "internal",
       "direction": "outbound",
@@ -99,37 +71,104 @@
         "configurationKeys": []
       },
       "operations": [],
-      "resources": [
-        {
-          "type": "connection-string",
-          "name": "DasPeriodEndConnectionString",
-          "direction": "outbound",
-          "sourceFile": "src/SFA.DAS.Payments.ProviderPayments.Application/Repositories/LegacyPaymentsRepository.cs"
-        },
-        {
-          "type": "connection-string",
-          "name": "PaymentsConnectionString",
-          "direction": "outbound",
-          "sourceFile": "src/SFA.DAS.Payments.ProviderPayments.Application/Infrastructure/ioc/ProviderPaymentsModule.cs"
-        }
-      ],
+      "resources": [],
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.Payments.ProviderPayments.Application/Infrastructure/ioc/ProviderPaymentsModule.cs",
-          "reason": "Database context constructed explicitly using a connection string configuration key."
-        },
-        {
-          "sourceFile": "src/SFA.DAS.Payments.ProviderPayments.Application/Data/ProviderPaymentsDataContext.cs",
-          "reason": "DbContext for Provider Payments application uses SQL Server."
+          "reason": "The IoC container registers the ProviderPaymentsDataContext with the PaymentsConnectionString."
         },
         {
           "sourceFile": "src/SFA.DAS.Payments.ProviderPayments.Application/Repositories/LegacyPaymentsRepository.cs",
-          "reason": "SqlConnection used with a connection string configuration key."
+          "reason": "The LegacyPaymentsRepository uses SqlConnection to interact with the database using the DasPeriodEndConnectionString configuration key."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.Payments.ProviderPayments.Application/Data/ProviderPaymentsDataContext.cs",
+          "reason": "The ProviderPaymentsDataContext class constructs a SQL Server DbContext using a connection string named PaymentsConnectionString."
         }
       ],
       "confidence": "high",
-      "targetId": "database-sql-server",
+      "targetId": "database-dasperiodendconnectionstring",
       "description": "Reads from and writes to"
+    },
+    {
+      "sourceId": "payments-provider-payments-specs",
+      "name": "DasPeriodEndConnectionString",
+      "kind": "database",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "DbContext",
+      "technology": "SQL Server",
+      "configurationKeys": [],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Payments.ProviderPayments.Specs/Data/TestSessionDataContext.cs",
+          "reason": "DbContext subclass using a SQL Server database with schema 'Payments2'."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "database-dasperiodendconnectionstring",
+      "description": "Reads from and writes to"
+    },
+    {
+      "sourceId": "providerpayments-application",
+      "name": "DASServiceBusConnectionString",
+      "kind": "message-broker",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "AzureServiceBusTransport",
+      "technology": "Azure Service Bus",
+      "configurationKeys": [
+        "DASServiceBusConnectionString"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Payments.ProviderPayments.ProviderPaymentsService/Infrastructure/DasEndpointFactory.cs",
+          "reason": "The DasEndpointFactory configures an Azure Service Bus transport using the DASServiceBusConnectionString."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "message-broker-dasservicebusconnectionstring",
+      "description": "Publishes messages to and consumes messages from"
+    },
+    {
+      "sourceId": "payments-provider-payments-service",
+      "name": "Service Bus",
+      "kind": "message-broker",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": "AzureServiceBusTransport",
+      "technology": "Azure Service Bus",
+      "configurationKeys": [
+        "DASServiceBusConnectionString",
+        "ServiceBusConnectionString"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Payments.ProviderPayments.Specs/StepDefinitions/TestRunBindings.cs",
+          "reason": "Uses AzureServiceBusTransport for messaging via NServiceBus."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "message-broker-service-bus",
+      "description": "Publishes messages to and consumes messages from"
     }
   ]
 }

@@ -2,22 +2,33 @@
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
 LAYOUT_WITH_LEGEND()
 
-System_Boundary(sys_SkillsFundingAgency_das_provide_feedback_employer, "Provide Feedback Employer") {
+System_Boundary(sys_SkillsFundingAgency_das_provide_feedback_employer, "Employer Provide Feedback") {
+  Container(c_employer_provide_feedback, "Employer Provide Feedback", "Web Application")
+  Container(c_employer_provide_feedback_functions_emailer, "Employer Provide Feedback Functions Emailer", "Background Job")
   Container(c_provide_feedback_employer_api, "Provide Feedback Employer", "API")
-  Container(c_provide_feedback_employer_functions_emailer, "Provide Feedback Employer Functions Emailer", "Background Job")
   Container(c_provide_feedback_employer_web, "Provide Feedback Employer Web", "Web Application")
 }
 
 SystemDb_Ext(d_cache_redis_cache, "Redis Cache", "Redis")
-System_Ext(d_cloud_service_azure_monitor, "Azure Monitor", "Azure Monitor")
+SystemDb_Ext(d_configuration_store_azure_app_configuration, "Azure App Configuration")
+SystemDb_Ext(d_configuration_store_azure_table_storage_configuration, "Azure Table Storage configuration")
 SystemDb_Ext(d_database_employer_email_store, "Employer Email Store", "SQL Server")
 System_Ext(d_http_api_outer_api, "Outer API", "HttpClient")
+System_Ext(d_identity_provider_microsoft_entra_id, "Microsoft Entra ID")
+System_Ext(d_telemetry_application_insights, "Application Insights")
 
 Rel(c_provide_feedback_employer_web, d_cache_redis_cache, "Caches data in", "Redis")
-Rel(c_provide_feedback_employer_web, d_cloud_service_azure_monitor, "Uses", "Azure Monitor")
-Rel(c_provide_feedback_employer_functions_emailer, d_database_employer_email_store, "Reads from and writes to", "SQL Server")
+Rel(c_employer_provide_feedback_functions_emailer, d_configuration_store_azure_app_configuration, "Reads configuration from")
+Rel(c_provide_feedback_employer_web, d_configuration_store_azure_table_storage_configuration, "Reads configuration from")
+Rel(c_employer_provide_feedback_functions_emailer, d_database_employer_email_store, "Reads from and writes to", "SQL Server")
 Rel(c_provide_feedback_employer_api, d_database_employer_email_store, "Reads from and writes to", "SQL Server")
 Rel(c_provide_feedback_employer_web, d_database_employer_email_store, "Reads from and writes to", "SQL Server")
-Rel(c_provide_feedback_employer_functions_emailer, d_http_api_outer_api, "Calls the API of", "HttpClient")
+Rel(c_employer_provide_feedback, d_http_api_outer_api, "Calls the API of", "HttpClient")
+Rel(c_employer_provide_feedback, d_identity_provider_microsoft_entra_id, "Authenticates with")
+Rel(c_provide_feedback_employer_api, d_identity_provider_microsoft_entra_id, "Authenticates with")
+Rel(c_provide_feedback_employer_web, d_identity_provider_microsoft_entra_id, "Authenticates with")
+Rel(c_employer_provide_feedback_functions_emailer, d_telemetry_application_insights, "Sends telemetry to")
+Rel(c_provide_feedback_employer_web, d_telemetry_application_insights, "Sends telemetry to")
+Rel(c_provide_feedback_employer_api, d_telemetry_application_insights, "Sends telemetry to")
 
 @enduml

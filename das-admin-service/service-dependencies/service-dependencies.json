@@ -10,34 +10,38 @@
       "type": "web",
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.AdminService.Web/Startup.cs",
-          "reason": "The file configures ASP.NET services and middleware, indicating a web application."
-        },
-        {
-          "sourceFile": "src/SFA.DAS.AdminService.Web/SFA.DAS.AdminService.Web.csproj",
-          "reason": "The project file specifies the SDK as Microsoft.NET.Sdk.Web, indicating a web application."
+          "sourceFile": "src/SFA.DAS.AdminService.Web/Validators/RegisterEditOrganisationStandardVersionViewModelValidator.cs",
+          "reason": "Web validators referencing HTTP API client evidence a web application."
         },
         {
           "sourceFile": "src/SFA.DAS.AdminService.Web/Program.cs",
-          "reason": "This file contains the entry point for the application, indicating that it is a web application."
+          "reason": "WebApplication initialization with Program.cs as entry point."
         }
       ]
     },
     {
-      "id": "admin-service-2",
-      "name": "Admin Service",
+      "id": "adminservice",
+      "name": "AdminService",
       "type": "api",
       "evidence": [
         {
+          "sourceFile": "src/SFA.DAS.AdminService.Web/Controllers/AccountController.cs",
+          "reason": "ASP.NET Core controller found indicating this project exposes API endpoints."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.AdminService.Web/Controllers/HomeController.cs",
+          "reason": "ASP.NET Core controller found supporting API functionality."
+        },
+        {
           "sourceFile": "src/SFA.DAS.AdminService.Application/SFA.DAS.AdminService.Application.csproj",
-          "reason": "The project is identified as the primary entry-point project with references to application-level dependencies and definitions."
+          "reason": "Project file indicating the main application is likely the system's primary container."
         }
       ]
     }
   ],
   "dependencies": [
     {
-      "sourceId": "admin-service",
+      "sourceId": "adminservice",
       "name": "Redis",
       "kind": "cache",
       "classification": "third-party",
@@ -45,27 +49,18 @@
       "client": null,
       "technology": "Redis",
       "configurationKeys": [
-        "DataProtectionKeysDatabase",
-        "RedisConnectionString",
-        "SessionCachingDatabase"
+        "ConnectionStrings:Redis"
       ],
       "authentication": {
         "type": null,
         "configurationKeys": []
       },
       "operations": [],
-      "resources": [
-        {
-          "type": "cache",
-          "name": "DataProtection-Keys",
-          "direction": "outbound",
-          "sourceFile": "src/SFA.DAS.AdminService.Web/Extensions/DataProtectionStartupExtensions.cs"
-        }
-      ],
+      "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.AdminService.Web/Extensions/DataProtectionStartupExtensions.cs",
-          "reason": "ConnectionMultiplexer.Connect is used to set up Redis-based distributed cache and data protection storage."
+          "sourceFile": "src/SFA.DAS.AdminService.Settings/WebConfiguration.cs",
+          "reason": "RedisCacheSettings evidenced in IWebConfiguration."
         }
       ],
       "confidence": "high",
@@ -74,14 +69,44 @@
     },
     {
       "sourceId": "admin-service",
-      "name": "Redis Cache",
+      "name": "Redis",
       "kind": "cache",
       "classification": "third-party",
       "direction": "outbound",
-      "client": null,
+      "client": "StackExchange.Redis",
       "technology": "Redis",
       "configurationKeys": [
-        "RedisCacheSettings"
+        "RedisCacheSettings.DataProtectionKeysDatabase",
+        "RedisCacheSettings.RedisConnectionString",
+        "RedisCacheSettings.SessionCachingDatabase"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.AdminService.Web/Extensions/DataProtectionStartupExtensions.cs",
+          "reason": "StackExchange.Redis is used for distributed caching and data protection."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "cache-redis",
+      "description": "Caches data in"
+    },
+    {
+      "sourceId": "admin-service",
+      "name": "Azure App Configuration",
+      "kind": "configuration-store",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "ConfigNames",
+        "ConfigurationStorageConnectionString"
       ],
       "authentication": {
         "type": null,
@@ -92,12 +117,39 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.AdminService.Web/Startup.cs",
-          "reason": "AddDistributedCache method is called with RedisCacheSettings."
+          "reason": "AddAzureTableStorage is used to configure settings from a remote Azure Table Storage store."
         }
       ],
       "confidence": "high",
-      "targetId": "cache-redis-cache",
-      "description": "Caches data in"
+      "targetId": "configuration-store-azure-app-configuration",
+      "description": "Reads configuration from"
+    },
+    {
+      "sourceId": "adminservice",
+      "name": "Configuration Store",
+      "kind": "configuration-store",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "ConfigurationStorageConnectionString"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.AdminService.Web/appsettings.json",
+          "reason": "Load configuration from a remote configuration store."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "configuration-store-configuration-store",
+      "description": "Reads configuration from"
     },
     {
       "sourceId": "admin-service",
@@ -106,39 +158,72 @@
       "classification": "internal",
       "direction": "outbound",
       "client": "IApplicationApiClient",
-      "technology": null,
+      "technology": "REST",
       "configurationKeys": [],
       "authentication": {
         "type": null,
         "configurationKeys": []
       },
-      "operations": [
-        {
-          "method": null,
-          "methodName": "GetApplicationOversightDetailsForDownload",
-          "path": null,
-          "sourceFile": "src/SFA.DAS.AdminService.Web/Controllers/Roatp/DownloadRoatpController.cs"
-        },
-        {
-          "method": null,
-          "methodName": "UpdateFinancials",
-          "path": null,
-          "sourceFile": "src/SFA.DAS.AdminService.Web/Services/AnswerInjectionService.cs"
-        }
-      ],
+      "operations": [],
       "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.AdminService.Web/Controllers/Roatp/DownloadRoatpController.cs",
-          "reason": "Usage of IApplicationApiClient to call API methods for downloading application oversight details."
-        },
-        {
-          "sourceFile": "src/SFA.DAS.AdminService.Web/Services/AnswerInjectionService.cs",
-          "reason": "Usage of IApplicationApiClient to call API methods including UpdateFinancials."
+          "sourceFile": "src/SFA.DAS.AdminService.Web/Startup.cs",
+          "reason": "IApplicationApiClient is registered for dependency injection."
         }
       ],
       "confidence": "high",
       "targetId": "http-api-application",
+      "description": "Calls the API of"
+    },
+    {
+      "sourceId": "admin-service",
+      "name": "Azure",
+      "kind": "http-api",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "IAzureApiClient",
+      "technology": "REST",
+      "configurationKeys": [],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.AdminService.Web/Startup.cs",
+          "reason": "IAzureApiClient is registered for dependency injection."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "http-api-azure",
+      "description": "Calls the API of"
+    },
+    {
+      "sourceId": "admin-service",
+      "name": "Certificate",
+      "kind": "http-api",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "ICertificateApiClient",
+      "technology": "REST",
+      "configurationKeys": [],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.AdminService.Web/Startup.cs",
+          "reason": "ICertificateApiClient is registered for dependency injection."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "http-api-certificate",
       "description": "Calls the API of"
     },
     {
@@ -148,41 +233,18 @@
       "classification": "internal",
       "direction": "outbound",
       "client": "IContactsApiClient",
-      "technology": null,
+      "technology": "REST",
       "configurationKeys": [],
       "authentication": {
         "type": null,
         "configurationKeys": []
       },
-      "operations": [
-        {
-          "method": null,
-          "methodName": "ApproveContact",
-          "path": null,
-          "sourceFile": "src/SFA.DAS.AdminService.Web/Controllers/RegisterController.cs"
-        },
-        {
-          "method": null,
-          "methodName": "GetById",
-          "path": null,
-          "sourceFile": "src/SFA.DAS.AdminService.Web/Controllers/RegisterUserController.cs"
-        },
-        {
-          "method": null,
-          "methodName": "RemoveContactFromOrganisation",
-          "path": null,
-          "sourceFile": "src/SFA.DAS.AdminService.Web/Controllers/RegisterUserController.cs"
-        }
-      ],
+      "operations": [],
       "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.AdminService.Web/Controllers/RegisterController.cs",
-          "reason": "Usage of IContactsApiClient in API calls related to contact approvals."
-        },
-        {
-          "sourceFile": "src/SFA.DAS.AdminService.Web/Controllers/RegisterUserController.cs",
-          "reason": "Usage of IContactsApiClient in API calls to manage contact details and permissions."
+          "sourceFile": "src/SFA.DAS.AdminService.Web/Startup.cs",
+          "reason": "IContactsApiClient is registered for dependency injection."
         }
       ],
       "confidence": "high",
@@ -191,12 +253,62 @@
     },
     {
       "sourceId": "admin-service",
+      "name": "Learner Details",
+      "kind": "http-api",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "ILearnerDetailsApiClient",
+      "technology": "REST",
+      "configurationKeys": [],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.AdminService.Web/Startup.cs",
+          "reason": "ILearnerDetailsApiClient is registered for dependency injection."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "http-api-learner-details",
+      "description": "Calls the API of"
+    },
+    {
+      "sourceId": "admin-service",
+      "name": "Merge Organisations",
+      "kind": "http-api",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "IMergeOrganisationsApiClient",
+      "technology": "REST",
+      "configurationKeys": [],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.AdminService.Web/Startup.cs",
+          "reason": "IMergeOrganisationsApiClient is registered for dependency injection."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "http-api-merge-organisations",
+      "description": "Calls the API of"
+    },
+    {
+      "sourceId": "admin-service",
       "name": "Organisations",
       "kind": "http-api",
-      "classification": "third-party",
+      "classification": "internal",
       "direction": "outbound",
       "client": "IOrganisationsApiClient",
-      "technology": "Rest API",
+      "technology": "unknown",
       "configurationKeys": [],
       "authentication": {
         "type": null,
@@ -204,65 +316,51 @@
       },
       "operations": [
         {
-          "method": null,
-          "methodName": "Get",
-          "path": null,
-          "sourceFile": "src/SFA.DAS.AdminService.Web/Controllers/RegisterUserController.cs"
-        },
-        {
-          "method": null,
-          "methodName": "GetOrganisationTypes",
-          "path": null,
-          "sourceFile": "src/SFA.DAS.AdminService.Web/Controllers/RegisterController.cs"
-        },
-        {
-          "method": null,
-          "methodName": "ValidateCreateContact",
-          "path": null,
-          "sourceFile": "src/SFA.DAS.AdminService.Web/Validators/RegisterAddContactViewModelValidator.cs"
-        },
-        {
-          "method": null,
-          "methodName": "ValidateCreateOrganisation",
-          "path": null,
-          "sourceFile": "src/SFA.DAS.AdminService.Web/Validators/RegisterAddOrganisationViewModelValidator.cs"
-        },
-        {
-          "method": null,
+          "method": "SEND",
           "methodName": "ValidateUpdateContact",
           "path": null,
           "sourceFile": "src/SFA.DAS.AdminService.Web/Validators/RegisterUpdateContactViewModelValidator.cs"
         },
         {
-          "method": null,
+          "method": "SEND",
           "methodName": "ValidateUpdateOrganisation",
           "path": null,
           "sourceFile": "src/SFA.DAS.AdminService.Web/Validators/RegisterUpdateOrganisationViewModelValidator.cs"
         },
         {
-          "method": null,
+          "method": "SEND",
           "methodName": "ValidateUpdateOrganisationStandard",
           "path": null,
           "sourceFile": "src/SFA.DAS.AdminService.Web/Validators/RegisterEditOrganisationStandardViewModelValidator.cs"
+        },
+        {
+          "method": "SEND",
+          "methodName": "ValidateUpdateOrganisationStandardVersion",
+          "path": null,
+          "sourceFile": "src/SFA.DAS.AdminService.Web/Validators/RegisterEditOrganisationStandardVersionViewModelValidator.cs"
         }
       ],
       "resources": [],
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.AdminService.Web/Startup.cs",
-          "reason": "IOrganisationsApiClient is registered as a dependency."
+          "reason": "IOrganisationsApiClient is registered for dependency injection."
         },
         {
-          "sourceFile": "src/SFA.DAS.AdminService.Web/Validators/RegisterAddContactViewModelValidator.cs",
-          "reason": "IOrganisationsApiClient is used to perform HTTP API calls for contact validation."
+          "sourceFile": "src/SFA.DAS.AdminService.Web/Validators/RegisterEditOrganisationStandardViewModelValidator.cs",
+          "reason": "Uses IOrganisationsApiClient to validate organisation standard details."
         },
         {
-          "sourceFile": "src/SFA.DAS.AdminService.Web/Controllers/RegisterController.cs",
-          "reason": "Usage of IOrganisationsApiClient API client to fetch organisation types and data."
+          "sourceFile": "src/SFA.DAS.AdminService.Web/Validators/RegisterEditOrganisationStandardVersionViewModelValidator.cs",
+          "reason": "Uses IOrganisationsApiClient to validate organisation standard version."
         },
         {
-          "sourceFile": "src/SFA.DAS.AdminService.Web/Controllers/RegisterUserController.cs",
-          "reason": "Usage of IOrganisationsApiClient in API calls related to organisations."
+          "sourceFile": "src/SFA.DAS.AdminService.Web/Validators/RegisterUpdateContactViewModelValidator.cs",
+          "reason": "Uses IOrganisationsApiClient to validate update of contact."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.AdminService.Web/Validators/RegisterUpdateOrganisationViewModelValidator.cs",
+          "reason": "Uses IOrganisationsApiClient to validate update of organisation."
         }
       ],
       "confidence": "high",
@@ -270,31 +368,33 @@
       "description": "Calls the API of"
     },
     {
-      "sourceId": "admin-service-2",
+      "sourceId": "adminservice",
       "name": "QnA",
       "kind": "http-api",
-      "classification": "internal",
+      "classification": "unknown",
       "direction": "outbound",
       "client": "QnaApiClient",
-      "technology": "HttpClient",
+      "technology": "HTTP",
       "configurationKeys": [
         "QnaApiClientConfiguration"
       ],
       "authentication": {
-        "type": "managed-identity",
-        "configurationKeys": []
+        "type": "Managed Identity",
+        "configurationKeys": [
+          "QnaApiClientConfiguration"
+        ]
       },
       "operations": [
-        {
-          "method": "DELETE",
-          "methodName": "RemovePageAnswer",
-          "path": "/applications/{applicationId}/sections/{sectionId}/pages/{pageId}/multiple/{answerId}",
-          "sourceFile": "src/SFA.DAS.AdminService.Infrastructure/ApiClients/QnA/QnaApiClient.cs"
-        },
         {
           "method": "GET",
           "methodName": "GetApplicationData",
           "path": "/applications/{applicationId}/applicationData",
+          "sourceFile": "src/SFA.DAS.AdminService.Infrastructure/ApiClients/QnA/QnaApiClient.cs"
+        },
+        {
+          "method": "POST",
+          "methodName": "DeleteFile",
+          "path": "/applications/{applicationId}/sections/{sectionId}/pages/{pageId}/questions/{questionId}/download/{fileName}",
           "sourceFile": "src/SFA.DAS.AdminService.Infrastructure/ApiClients/QnA/QnaApiClient.cs"
         },
         {
@@ -308,24 +408,48 @@
           "methodName": "StartApplications",
           "path": "/applications/start",
           "sourceFile": "src/SFA.DAS.AdminService.Infrastructure/ApiClients/QnA/QnaApiClient.cs"
-        }
-      ],
-      "resources": [
+        },
         {
-          "type": "http-endpoint",
-          "name": "/applications",
-          "direction": "outbound",
+          "method": "POST",
+          "methodName": "UpdateApplicationData",
+          "path": "/applications/{applicationId}/applicationData",
           "sourceFile": "src/SFA.DAS.AdminService.Infrastructure/ApiClients/QnA/QnaApiClient.cs"
         }
       ],
+      "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.AdminService.Infrastructure/ApiClients/QnA/QnaApiClientFactory.cs",
-          "reason": "Custom factory for QnA HttpClient creation"
+          "sourceFile": "src/SFA.DAS.AdminService.Infrastructure/ApiClients/QnA/QnaApiClient.cs",
+          "reason": "Construction and usage of HttpClient indicating an outbound HTTP-based API."
         },
         {
-          "sourceFile": "src/SFA.DAS.AdminService.Infrastructure/ApiClients/QnA/QnaApiClient.cs",
-          "reason": "HttpClient usage in the QnaApiClient implementation"
+          "sourceFile": "src/SFA.DAS.AdminService.Infrastructure/ApiClients/QnA/QnaApiClientFactory.cs",
+          "reason": "Factory implementation creates HttpClient using a configuration object specifically named QnaApiClientConfiguration."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "http-api-qna",
+      "description": "Calls the API of"
+    },
+    {
+      "sourceId": "admin-service",
+      "name": "QnA",
+      "kind": "http-api",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "IQnaApiClient",
+      "technology": "REST",
+      "configurationKeys": [],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.AdminService.Web/Startup.cs",
+          "reason": "IQnaApiClient is registered for dependency injection."
         }
       ],
       "confidence": "high",
@@ -339,41 +463,18 @@
       "classification": "internal",
       "direction": "outbound",
       "client": "IRegisterApiClient",
-      "technology": null,
+      "technology": "REST",
       "configurationKeys": [],
       "authentication": {
         "type": null,
         "configurationKeys": []
       },
-      "operations": [
-        {
-          "method": "GET",
-          "methodName": "GetEpaOrganisationStandards",
-          "path": null,
-          "sourceFile": "src/SFA.DAS.AdminService.Web/Controllers/RegisterController.cs"
-        },
-        {
-          "method": "GET",
-          "methodName": "SearchOrganisations",
-          "path": null,
-          "sourceFile": "src/SFA.DAS.AdminService.Web/Controllers/RegisterController.cs"
-        },
-        {
-          "method": "POST",
-          "methodName": "UpdateEpaOrganisation",
-          "path": null,
-          "sourceFile": "src/SFA.DAS.AdminService.Web/Services/AnswerInjectionService.cs"
-        }
-      ],
+      "operations": [],
       "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.AdminService.Web/Services/AnswerInjectionService.cs",
-          "reason": "Usage of IRegisterApiClient to call HTTP API methods such as UpdateEpaOrganisation."
-        },
-        {
-          "sourceFile": "src/SFA.DAS.AdminService.Web/Controllers/RegisterController.cs",
-          "reason": "Usage of IRegisterApiClient to call HTTP API methods."
+          "sourceFile": "src/SFA.DAS.AdminService.Web/Startup.cs",
+          "reason": "IRegisterApiClient is registered for dependency injection."
         }
       ],
       "confidence": "high",
@@ -384,50 +485,21 @@
       "sourceId": "admin-service",
       "name": "Register Validation",
       "kind": "http-api",
-      "classification": "third-party",
+      "classification": "internal",
       "direction": "outbound",
       "client": "IRegisterValidationApiClient",
-      "technology": "Rest API",
+      "technology": "REST",
       "configurationKeys": [],
       "authentication": {
         "type": null,
         "configurationKeys": []
       },
-      "operations": [
-        {
-          "method": null,
-          "methodName": "CreateEpaContactValidate",
-          "path": null,
-          "sourceFile": "src/SFA.DAS.AdminService.Web/Services/AssessorValidationService.cs"
-        },
-        {
-          "method": null,
-          "methodName": "CreateOrganisationStandardValidate",
-          "path": null,
-          "sourceFile": "src/SFA.DAS.AdminService.Web/Services/AssessorValidationService.cs"
-        },
-        {
-          "method": null,
-          "methodName": "CreateOrganisationValidate",
-          "path": null,
-          "sourceFile": "src/SFA.DAS.AdminService.Web/Services/AssessorValidationService.cs"
-        },
-        {
-          "method": null,
-          "methodName": "UpdateOrganisationValidate",
-          "path": null,
-          "sourceFile": "src/SFA.DAS.AdminService.Web/Services/AssessorValidationService.cs"
-        }
-      ],
+      "operations": [],
       "resources": [],
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.AdminService.Web/Startup.cs",
-          "reason": "IRegisterValidationApiClient is registered as a dependency."
-        },
-        {
-          "sourceFile": "src/SFA.DAS.AdminService.Web/Services/AssessorValidationService.cs",
-          "reason": "IRegisterValidationApiClient is used to perform HTTP API calls for validation operations."
+          "reason": "IRegisterValidationApiClient is registered for dependency injection."
         }
       ],
       "confidence": "high",
@@ -435,19 +507,21 @@
       "description": "Calls the API of"
     },
     {
-      "sourceId": "admin-service-2",
+      "sourceId": "adminservice",
       "name": "RoATP",
       "kind": "http-api",
       "classification": "internal",
       "direction": "outbound",
       "client": "RoatpApiClient",
-      "technology": "HttpClient",
+      "technology": "HTTP",
       "configurationKeys": [
         "RoatpApiClientConfiguration"
       ],
       "authentication": {
-        "type": "managed-identity",
-        "configurationKeys": []
+        "type": "Managed Identity",
+        "configurationKeys": [
+          "RoatpApiClientConfiguration"
+        ]
       },
       "operations": [
         {
@@ -458,27 +532,36 @@
         },
         {
           "method": "GET",
+          "methodName": "GetAuditHistory",
+          "path": null,
+          "sourceFile": "src/SFA.DAS.AdminService.Web/Controllers/Roatp/DownloadRoatpController.cs"
+        },
+        {
+          "method": "GET",
           "methodName": "GetCompleteRegister",
           "path": "/organisations",
           "sourceFile": "src/SFA.DAS.AdminService.Infrastructure/ApiClients/Roatp/RoatpApiClient.cs"
-        }
-      ],
-      "resources": [
+        },
         {
-          "type": "http-endpoint",
-          "name": "/organisations",
-          "direction": "outbound",
-          "sourceFile": "src/SFA.DAS.AdminService.Infrastructure/ApiClients/Roatp/RoatpApiClient.cs"
+          "method": "GET",
+          "methodName": "GetCompleteRegister",
+          "path": null,
+          "sourceFile": "src/SFA.DAS.AdminService.Web/Controllers/Roatp/DownloadRoatpController.cs"
         }
       ],
+      "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.AdminService.Infrastructure/ApiClients/Roatp/RoatpApiClientFactory.cs",
-          "reason": "Custom factory for RoATP HttpClient creation"
+          "sourceFile": "src/SFA.DAS.AdminService.Infrastructure/ApiClients/Roatp/IRoatpApiClientFactory.cs",
+          "reason": "Factory interface indicating dependency creation."
         },
         {
           "sourceFile": "src/SFA.DAS.AdminService.Infrastructure/ApiClients/Roatp/RoatpApiClient.cs",
-          "reason": "HttpClient usage in the RoatpApiClient implementation"
+          "reason": "RoatpApiClient uses HttpClient for outbound HTTP API calls."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.AdminService.Web/Controllers/Roatp/DownloadRoatpController.cs",
+          "reason": "Uses IRoatpApiClient to perform HTTP operations."
         }
       ],
       "confidence": "high",
@@ -486,19 +569,46 @@
       "description": "Calls the API of"
     },
     {
-      "sourceId": "admin-service-2",
+      "sourceId": "admin-service",
+      "name": "Roatp",
+      "kind": "http-api",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "IRoatpApiClient",
+      "technology": "REST",
+      "configurationKeys": [],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.AdminService.Web/Startup.cs",
+          "reason": "IRoatpApiClient is registered for dependency injection."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "http-api-roatp",
+      "description": "Calls the API of"
+    },
+    {
+      "sourceId": "adminservice",
       "name": "RoATP Application",
       "kind": "http-api",
       "classification": "internal",
       "direction": "outbound",
       "client": "RoatpApplicationApiClient",
-      "technology": "HttpClient",
+      "technology": "HTTP",
       "configurationKeys": [
         "RoatpApplicationApiClientConfiguration"
       ],
       "authentication": {
-        "type": "managed-identity",
-        "configurationKeys": []
+        "type": "Managed Identity",
+        "configurationKeys": [
+          "RoatpApplicationApiClientConfiguration"
+        ]
       },
       "operations": [
         {
@@ -510,48 +620,11 @@
         {
           "method": "GET",
           "methodName": "GetApplicationOversightDetailsForDownload",
-          "path": "/Oversights/Download",
+          "path": "Oversights/Download?dateFrom={dateFrom:yyyy-MM-dd}&dateTo={dateTo:yyyy-MM-dd}",
           "sourceFile": "src/SFA.DAS.AdminService.Infrastructure/ApiClients/RoatpApplication/RoatpApplicationApiClient.cs"
-        }
-      ],
-      "resources": [
-        {
-          "type": "http-endpoint",
-          "name": "/AllowedProviders",
-          "direction": "outbound",
-          "sourceFile": "src/SFA.DAS.AdminService.Infrastructure/ApiClients/RoatpApplication/RoatpApplicationApiClient.cs"
-        }
-      ],
-      "evidence": [
-        {
-          "sourceFile": "src/SFA.DAS.AdminService.Infrastructure/ApiClients/RoatpApplication/IRoatpApplicationApiClientFactory.cs",
-          "reason": "Custom factory for RoATP Application HttpClient creation"
         },
         {
-          "sourceFile": "src/SFA.DAS.AdminService.Infrastructure/ApiClients/RoatpApplication/RoatpApplicationApiClient.cs",
-          "reason": "HttpClient usage in the RoatpApplicationApiClient implementation"
-        }
-      ],
-      "confidence": "high",
-      "targetId": "http-api-roatp-application",
-      "description": "Calls the API of"
-    },
-    {
-      "sourceId": "admin-service",
-      "name": "RoATP Application",
-      "kind": "http-api",
-      "classification": "internal",
-      "direction": "outbound",
-      "client": "IRoatpApplicationApiClient",
-      "technology": null,
-      "configurationKeys": [],
-      "authentication": {
-        "type": null,
-        "configurationKeys": []
-      },
-      "operations": [
-        {
-          "method": null,
+          "method": "GET",
           "methodName": "GetApplicationOversightDetailsForDownload",
           "path": null,
           "sourceFile": "src/SFA.DAS.AdminService.Web/Controllers/Roatp/DownloadRoatpController.cs"
@@ -560,13 +633,250 @@
       "resources": [],
       "evidence": [
         {
+          "sourceFile": "src/SFA.DAS.AdminService.Infrastructure/ApiClients/RoatpApplication/IRoatpApplicationApiClientFactory.cs",
+          "reason": "Factory interface indicating dependency creation."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.AdminService.Infrastructure/ApiClients/RoatpApplication/RoatpApplicationApiClient.cs",
+          "reason": "RoatpApplicationApiClient uses HttpClient for outbound HTTP API calls."
+        },
+        {
           "sourceFile": "src/SFA.DAS.AdminService.Web/Controllers/Roatp/DownloadRoatpController.cs",
-          "reason": "IRoatpApplicationApiClient is used to interact with Roatp Application API, such as retrieving application oversight details."
+          "reason": "Uses IRoatpApplicationApiClient to perform HTTP operations."
         }
       ],
       "confidence": "high",
       "targetId": "http-api-roatp-application",
       "description": "Calls the API of"
+    },
+    {
+      "sourceId": "admin-service",
+      "name": "Roatp Application",
+      "kind": "http-api",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "IRoatpApplicationApiClient",
+      "technology": "REST",
+      "configurationKeys": [],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.AdminService.Web/Startup.cs",
+          "reason": "IRoatpApplicationApiClient is registered for dependency injection."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "http-api-roatp-application",
+      "description": "Calls the API of"
+    },
+    {
+      "sourceId": "admin-service",
+      "name": "Schedule",
+      "kind": "http-api",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "IScheduleApiClient",
+      "technology": "REST",
+      "configurationKeys": [],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.AdminService.Web/Startup.cs",
+          "reason": "IScheduleApiClient is registered for dependency injection."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "http-api-schedule",
+      "description": "Calls the API of"
+    },
+    {
+      "sourceId": "admin-service",
+      "name": "Staff Reports",
+      "kind": "http-api",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "IStaffReportsApiClient",
+      "technology": "REST",
+      "configurationKeys": [],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.AdminService.Web/Startup.cs",
+          "reason": "IStaffReportsApiClient is registered for dependency injection."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "http-api-staff-reports",
+      "description": "Calls the API of"
+    },
+    {
+      "sourceId": "admin-service",
+      "name": "Staff Search",
+      "kind": "http-api",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "IStaffSearchApiClient",
+      "technology": "REST",
+      "configurationKeys": [],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.AdminService.Web/Startup.cs",
+          "reason": "IStaffSearchApiClient is registered for dependency injection."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "http-api-staff-search",
+      "description": "Calls the API of"
+    },
+    {
+      "sourceId": "admin-service",
+      "name": "Standard Version",
+      "kind": "http-api",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "IStandardVersionApiClient",
+      "technology": "REST",
+      "configurationKeys": [],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.AdminService.Web/Startup.cs",
+          "reason": "IStandardVersionApiClient is registered for dependency injection."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "http-api-standard-version",
+      "description": "Calls the API of"
+    },
+    {
+      "sourceId": "adminservice",
+      "name": "DfE Sign-in",
+      "kind": "identity-provider",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.AdminService.Web/Controllers/AccountController.cs",
+          "reason": "Authentication integration with DfE sign-in evidenced by the UseDfESignIn flag."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "identity-provider-dfe-sign-in",
+      "description": "Authenticates with"
+    },
+    {
+      "sourceId": "admin-service",
+      "name": "DfE Sign-in",
+      "kind": "identity-provider",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.AdminService.Web/Startup.cs",
+          "reason": "AddAndConfigureDfESignInAuthentication uses DfE Sign-in for authentication."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "identity-provider-dfe-sign-in",
+      "description": "Authenticates with"
+    },
+    {
+      "sourceId": "adminservice",
+      "name": "Application Insights",
+      "kind": "telemetry",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "APPLICATIONINSIGHTS_CONNECTION_STRING"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.AdminService.Web/appsettings.json",
+          "reason": "Application Insights connection string found in configuration."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "telemetry-application-insights",
+      "description": "Sends telemetry to"
+    },
+    {
+      "sourceId": "admin-service",
+      "name": "Application Insights",
+      "kind": "telemetry",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "APPLICATIONINSIGHTS_CONNECTION_STRING"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.AdminService.Web/Extensions/AddOpenTelemetryExtensions.cs",
+          "reason": "AddOpenTelemetry with UseAzureMonitor is used for telemetry data integration with Application Insights."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "telemetry-application-insights",
+      "description": "Sends telemetry to"
     }
   ]
 }

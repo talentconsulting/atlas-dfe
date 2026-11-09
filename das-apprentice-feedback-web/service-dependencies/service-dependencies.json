@@ -5,24 +5,24 @@
   "systemName": "Apprentice Feedback",
   "containers": [
     {
-      "id": "apprentice-feedback-nservicebuslistener",
-      "name": "Apprentice Feedback NServiceBus Listener",
-      "type": "job",
-      "evidence": [
-        {
-          "sourceFile": "src/SFA.DAS.ApprenticeFeedback.Web.NServiceBusListener/Program.cs",
-          "reason": "Hosted service with NServiceBus endpoint"
-        }
-      ]
-    },
-    {
       "id": "apprentice-feedback-web",
-      "name": "Apprentice Feedback",
+      "name": "Apprentice Feedback Web",
       "type": "web",
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.ApprenticeFeedback.Web/Program.cs",
-          "reason": "ASP.NET web entry point (WebHost.CreateDefaultBuilder)"
+          "reason": "ASP.NET Core WebHost entry point detected."
+        }
+      ]
+    },
+    {
+      "id": "apprentice-feedback-web-nservicebuslistener",
+      "name": "Apprentice Feedback Web NServiceBusListener",
+      "type": "job",
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.ApprenticeFeedback.Web.NServiceBusListener/Program.cs",
+          "reason": "Contains NServiceBus EndpointConfiguration."
         }
       ]
     }
@@ -30,74 +30,159 @@
   "dependencies": [
     {
       "sourceId": "apprentice-feedback-web",
-      "name": "Azure Redis",
+      "name": "Redis",
       "kind": "cache",
-      "classification": "third-party",
+      "classification": "unknown",
       "direction": "outbound",
-      "client": null,
+      "client": "ConnectionMultiplexer",
       "technology": "StackExchange.Redis",
       "configurationKeys": [
-        "DataProtectionKeysDatabase",
-        "RedisConnectionString"
+        "DataProtection:DataProtectionKeysDatabase",
+        "DataProtection:RedisConnectionString"
       ],
       "authentication": {
         "type": null,
         "configurationKeys": []
       },
       "operations": [],
-      "resources": [
-        {
-          "type": "Redis instance",
-          "name": null,
-          "direction": "outbound",
-          "sourceFile": "src/SFA.DAS.ApprenticeFeedback.Web/Startup/DataProtectionStartup.cs"
-        }
-      ],
+      "resources": [],
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.ApprenticeFeedback.Web/Startup/DataProtectionStartup.cs",
-          "reason": "StackExchange.Redis cache or data protection registration with a redis connection"
+          "reason": "StackExchange Redis used for data protection and caching."
         }
       ],
       "confidence": "high",
-      "targetId": "cache-azure-redis",
+      "targetId": "cache-redis",
       "description": "Caches data in"
     },
     {
-      "sourceId": "apprentice-feedback-nservicebuslistener",
-      "name": "Azure Service Bus",
-      "kind": "message-broker",
+      "sourceId": "apprentice-feedback-web",
+      "name": "Azure Table Storage configuration",
+      "kind": "configuration-store",
       "classification": "third-party",
       "direction": "outbound",
       "client": null,
-      "technology": "NServiceBus.Azure.Transports.WindowsAzureServiceBus",
+      "technology": null,
+      "configurationKeys": [
+        "ConfigNames",
+        "ConfigurationStorageConnectionString",
+        "EnvironmentName"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.ApprenticeFeedback.Web/Startup/ApplicationStartup.cs",
+          "reason": "Azure Table Storage configuration registered."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "configuration-store-azure-table-storage-configuration",
+      "description": "Reads configuration from"
+    },
+    {
+      "sourceId": "apprentice-feedback-web",
+      "name": "Azure Service Bus",
+      "kind": "message-broker",
+      "classification": "unknown",
+      "direction": "outbound",
+      "client": "NServiceBus Endpoint",
+      "technology": "Azure Service Bus",
+      "configurationKeys": [
+        "AppSettings:NServiceBusConnectionString"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.ApprenticeFeedback.Web/Startup/NServiceBusRegistration.cs",
+          "reason": "Azure Service Bus transport registered with NServiceBus."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "message-broker-azure-service-bus",
+      "description": "Publishes messages to and consumes messages from"
+    },
+    {
+      "sourceId": "apprentice-feedback-web-nservicebuslistener",
+      "name": "Azure Service Bus",
+      "kind": "message-broker",
+      "classification": "unknown",
+      "direction": "inbound",
+      "client": "NServiceBus Endpoint",
+      "technology": "Azure Service Bus",
       "configurationKeys": [
         "NServiceBusConnectionString"
       ],
       "authentication": {
-        "type": "connection string",
-        "configurationKeys": [
-          "NServiceBusConnectionString"
-        ]
+        "type": null,
+        "configurationKeys": []
       },
-      "operations": [],
+      "operations": [
+        {
+          "method": "RECEIVE",
+          "methodName": "Handle",
+          "path": "SFA.DAS.ApprenticeFeedback",
+          "sourceFile": "src/SFA.DAS.ApprenticeFeedback.Web.NServiceBusListener/Program.cs"
+        }
+      ],
       "resources": [
         {
-          "type": "Azure Service Bus namespace",
-          "name": null,
-          "direction": "outbound",
+          "type": "subscription",
+          "name": "SFA.DAS.ApprenticeFeedback",
+          "direction": "inbound",
           "sourceFile": "src/SFA.DAS.ApprenticeFeedback.Web.NServiceBusListener/Program.cs"
         }
       ],
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.ApprenticeFeedback.Web.NServiceBusListener/Program.cs",
-          "reason": "Azure Service Bus connection via NServiceBus configuration"
+          "reason": "NServiceBus listener configured to receive messages."
         }
       ],
       "confidence": "high",
       "targetId": "message-broker-azure-service-bus",
       "description": "Publishes messages to and consumes messages from"
+    },
+    {
+      "sourceId": "apprentice-feedback-web",
+      "name": "Application Insights",
+      "kind": "telemetry",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "APPLICATIONINSIGHTS_CONNECTION_STRING"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.ApprenticeFeedback.Web/Startup/AddOpenTelemetryExtensions.cs",
+          "reason": "Application Insights telemetry registered via OpenTelemetry."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.ApprenticeFeedback.Web/Startup/ApplicationStartup.cs",
+          "reason": "Telemetry destination set using APPLICATIONINSIGHTS_CONNECTION_STRING."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "telemetry-application-insights",
+      "description": "Sends telemetry to"
     }
   ]
 }

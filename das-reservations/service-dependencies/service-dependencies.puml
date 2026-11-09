@@ -3,13 +3,25 @@
 LAYOUT_WITH_LEGEND()
 
 System_Boundary(sys_SkillsFundingAgency_das_reservations, "Reservations") {
-  Container(c_reservations_web, "Reservations", "Web Application")
+  Container(c_reservations, "Reservations", "Web Application")
 }
 
-SystemDb_Ext(d_cache_redis_cache, "Redis Cache", "StackExchangeRedis")
-System_Ext(d_http_api_reservations_api, "Reservations API", "HttpClient")
+SystemDb_Ext(d_cache_redis_cache, "Redis Cache", "StackExchange.Redis")
+SystemDb_Ext(d_configuration_store_azure_app_configuration, "Azure App Configuration")
+System_Ext(d_http_api_reservations, "Reservations", "HttpClient")
+System_Ext(d_http_api_reservations_outer, "Reservations Outer")
+System_Ext(d_identity_provider_dfe_sign_in, "DfE Sign-in")
+System_Ext(d_identity_provider_gov_uk_one_login, "GOV.UK One Login")
+System_Ext(d_identity_provider_microsoft_entra_id, "Microsoft Entra ID")
+System_Ext(d_telemetry_application_insights, "Application Insights", "Azure Monitor")
 
-Rel(c_reservations_web, d_cache_redis_cache, "Caches data in", "StackExchangeRedis")
-Rel(c_reservations_web, d_http_api_reservations_api, "Calls the API of", "HttpClient")
+Rel(c_reservations, d_cache_redis_cache, "Caches data in", "StackExchange.Redis")
+Rel(c_reservations, d_configuration_store_azure_app_configuration, "Reads configuration from")
+Rel(c_reservations, d_http_api_reservations, "Calls the API of", "HttpClient")
+Rel(c_reservations, d_http_api_reservations_outer, "Calls the API of")
+Rel(c_reservations, d_identity_provider_dfe_sign_in, "Authenticates with")
+Rel(c_reservations, d_identity_provider_gov_uk_one_login, "Authenticates with")
+Rel(c_reservations, d_identity_provider_microsoft_entra_id, "Authenticates with")
+Rel(c_reservations, d_telemetry_application_insights, "Sends telemetry to", "Azure Monitor")
 
 @enduml

@@ -3,14 +3,15 @@
 LAYOUT_WITH_LEGEND()
 
 System_Boundary(sys_SkillsFundingAgency_das_apprentice_commitments_jobs, "Apprentice Commitments") {
-  Container(c_apprentice_commitments_jobs_fake_server, "Apprentice Commitments Jobs Fake Server", "Background Job")
   Container(c_apprentice_commitments_jobs_functions, "Apprentice Commitments Jobs Functions", "Background Job")
 }
 
-System_Ext(d_http_api_apprentice_commitments_api, "Apprentice Commitments API", "HTTP")
+SystemDb_Ext(d_configuration_store_azure_table_storage_configuration, "Azure Table Storage configuration", "Azure Table Storage")
 SystemQueue_Ext(d_message_broker_azure_service_bus, "Azure Service Bus", "Azure Service Bus")
+System_Ext(d_telemetry_application_insights, "Application Insights")
 
-Rel(c_apprentice_commitments_jobs_functions, d_http_api_apprentice_commitments_api, "Calls the API of", "HTTP")
+Rel(c_apprentice_commitments_jobs_functions, d_configuration_store_azure_table_storage_configuration, "Reads configuration from", "Azure Table Storage")
 Rel(c_apprentice_commitments_jobs_functions, d_message_broker_azure_service_bus, "Publishes messages to and consumes messages from", "Azure Service Bus")
+Rel(c_apprentice_commitments_jobs_functions, d_telemetry_application_insights, "Sends telemetry to")
 
 @enduml

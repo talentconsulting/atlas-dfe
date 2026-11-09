@@ -11,18 +11,22 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.Notifications.Api/Program.cs",
-          "reason": "ASP.NET Core web API entry point evidenced by IWebHostBuilder with UseStartup."
+          "reason": "ASP.NET Core web application entry point"
         }
       ]
     },
     {
-      "id": "notifications-messagehandlers",
-      "name": "Notifications MessageHandlers",
+      "id": "notifications-message-handlers",
+      "name": "Notifications Message Handlers",
       "type": "job",
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.Notifications.MessageHandlers/Program.cs",
-          "reason": "Worker entry point evidenced by HostBuilder configuration for a continuous WebJob."
+          "reason": "Background/hosted service entry point"
+        },
+        {
+          "sourceFile": "src/SFA.DAS.Notifications.MessageHandlers/Startup/NServiceBusStartup.cs",
+          "reason": "Message-handling startup code with NServiceBus endpoint configuration."
         }
       ]
     }
@@ -30,8 +34,252 @@
   "dependencies": [
     {
       "sourceId": "notifications",
+      "name": "Azure Table Storage Configuration",
+      "kind": "configuration-store",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "APPSETTING_ConfigurationStorageConnectionString",
+        "APPSETTING_EnvironmentName",
+        "SFA.DAS.Notifications.MessageHandlers"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Notifications.Api/Startup.cs",
+          "reason": "Azure configuration registration via AddAzureTableStorage"
+        }
+      ],
+      "confidence": "high",
+      "targetId": "configuration-store-azure-table-storage-configuration",
+      "description": "Reads configuration from"
+    },
+    {
+      "sourceId": "notifications-message-handlers",
+      "name": "Azure Table Storage Configuration",
+      "kind": "configuration-store",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "NotificationConfigurationKeys.Notifications",
+        "NotificationConfigurationKeys.NotificationsTemplates"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Notifications.MessageHandlers/Startup/HostBuilderExtensions.cs",
+          "reason": "Azure configuration registration via AddAzureTableStorage"
+        }
+      ],
+      "confidence": "high",
+      "targetId": "configuration-store-azure-table-storage-configuration",
+      "description": "Reads configuration from"
+    },
+    {
+      "sourceId": "notifications-message-handlers",
+      "name": "SQL Server",
+      "kind": "database",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": "NServiceBus SQL Persistence",
+      "configurationKeys": [],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Notifications.MessageHandlers/Startup/NServiceBusStartup.cs",
+          "reason": "Configured SQL Server persistence for NServiceBus with a DbConnection instance."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "database-sql-server",
+      "description": "Reads from and writes to"
+    },
+    {
+      "sourceId": "notifications",
+      "name": "SQL Server",
+      "kind": "database",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": "DbConnection",
+      "technology": "SqlClient",
+      "configurationKeys": [
+        "DatabaseConnectionString"
+      ],
+      "authentication": {
+        "type": "Azure Active Directory",
+        "configurationKeys": [
+          "APPSETTING_EnvironmentName"
+        ]
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Notifications.Infrastructure/DependencyResolution/DataRegistry.cs",
+          "reason": "SQL client connection via AzureServiceTokenProvider"
+        },
+        {
+          "sourceFile": "src/SFA.DAS.Notifications.Api/StartupExtensions/NServiceBusStartUp.cs",
+          "reason": "SQL client connection via UseSqlServerPersistence"
+        }
+      ],
+      "confidence": "high",
+      "targetId": "database-sql-server",
+      "description": "Reads from and writes to"
+    },
+    {
+      "sourceId": "notifications",
+      "name": "Microsoft Entra ID",
+      "kind": "identity-provider",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "ApiAuthentication:ApiAudiences",
+        "ApiAuthentication:ApiIssuer",
+        "ApiAuthentication:ApiTokenSecret"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Notifications.Api/Startup.cs",
+          "reason": "Identity provider registration via AddJwtBearer"
+        }
+      ],
+      "confidence": "high",
+      "targetId": "identity-provider-microsoft-entra-id",
+      "description": "Authenticates with"
+    },
+    {
+      "sourceId": "notifications-message-handlers",
+      "name": "Azure Service Bus",
+      "kind": "message-broker",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": "NServiceBus",
+      "configurationKeys": [
+        "NotificationConfigurationKeys.NServiceBusConfiguration",
+        "nservicebusConfiguration.ServiceBusConnectionString"
+      ],
+      "authentication": {
+        "type": "managed-identity",
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Notifications.MessageHandlers/Startup/NServiceBusStartup.cs",
+          "reason": "Configured Azure Service Bus transport with managed identity for outbound messaging."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "message-broker-azure-service-bus",
+      "description": "Publishes messages to and consumes messages from"
+    },
+    {
+      "sourceId": "notifications",
+      "name": "Azure Service Bus",
+      "kind": "message-broker",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": "RoutingSettings",
+      "technology": null,
+      "configurationKeys": [
+        "NServiceBusConfiguration:ServiceBusConnectionString"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [
+        {
+          "method": "SEND",
+          "methodName": null,
+          "path": "SFA.DAS.Notifications.MessageHandlers",
+          "sourceFile": "src/SFA.DAS.Notifications.Api/StartupExtensions/NServiceBusStartUp.cs"
+        }
+      ],
+      "resources": [
+        {
+          "type": "queue",
+          "name": "SFA.DAS.Notifications.MessageHandlers",
+          "direction": "outbound",
+          "sourceFile": "src/SFA.DAS.Notifications.Api/StartupExtensions/NServiceBusStartUp.cs"
+        }
+      ],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Notifications.Api/StartupExtensions/NServiceBusStartUp.cs",
+          "reason": "Service Bus registration via UseAzureServiceBusTransport"
+        }
+      ],
+      "confidence": "high",
+      "targetId": "message-broker-azure-service-bus",
+      "description": "Publishes messages to and consumes messages from"
+    },
+    {
+      "sourceId": "notifications-message-handlers",
       "name": "Application Insights",
-      "kind": "cloud-service",
+      "kind": "telemetry",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "APPINSIGHTS_INSTRUMENTATIONKEY"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Notifications.MessageHandlers/Startup/NServiceBusStartup.cs",
+          "reason": "Default telemetry export expected for .NET-based worker applications."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.Notifications.MessageHandlers/Program.cs",
+          "reason": "Telemetry registration via AddApplicationInsightsWebJobs"
+        }
+      ],
+      "confidence": "high",
+      "targetId": "telemetry-application-insights",
+      "description": "Sends telemetry to"
+    },
+    {
+      "sourceId": "notifications",
+      "name": "Application Insights",
+      "kind": "telemetry",
       "classification": "third-party",
       "direction": "outbound",
       "client": null,
@@ -48,131 +296,12 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.Notifications.Api/Startup.cs",
-          "reason": "AddApplicationInsightsTelemetry invoked for telemetry integration."
+          "reason": "Telemetry registration via AddApplicationInsightsTelemetry"
         }
       ],
       "confidence": "high",
-      "targetId": "cloud-service-application-insights",
-      "description": "Uses"
-    },
-    {
-      "sourceId": "notifications-messagehandlers",
-      "name": "Application Insights",
-      "kind": "cloud-service",
-      "classification": "third-party",
-      "direction": "outbound",
-      "client": null,
-      "technology": null,
-      "configurationKeys": [
-        "APPINSIGHTS_INSTRUMENTATIONKEY"
-      ],
-      "authentication": {
-        "type": null,
-        "configurationKeys": []
-      },
-      "operations": [],
-      "resources": [],
-      "evidence": [
-        {
-          "sourceFile": "src/SFA.DAS.Notifications.MessageHandlers/Program.cs",
-          "reason": "Application Insights instrumentation key configured for logging."
-        }
-      ],
-      "confidence": "high",
-      "targetId": "cloud-service-application-insights",
-      "description": "Uses"
-    },
-    {
-      "sourceId": "notifications-messagehandlers",
-      "name": "Azure Table Storage Configuration",
-      "kind": "cloud-service",
-      "classification": "third-party",
-      "direction": "outbound",
-      "client": null,
-      "technology": "Azure Table Storage",
-      "configurationKeys": [
-        "APPSETTING_ConfigurationStorageConnectionString"
-      ],
-      "authentication": {
-        "type": null,
-        "configurationKeys": []
-      },
-      "operations": [],
-      "resources": [],
-      "evidence": [
-        {
-          "sourceFile": "src/SFA.DAS.Notifications.Api/Startup.cs",
-          "reason": "AddAzureTableStorage invoked for configuration loading."
-        }
-      ],
-      "confidence": "high",
-      "targetId": "cloud-service-azure-table-storage-configuration",
-      "description": "Uses"
-    },
-    {
-      "sourceId": "notifications",
-      "name": "SQL Server Notifications Database",
-      "kind": "database",
-      "classification": "internal",
-      "direction": "outbound",
-      "client": null,
-      "technology": "SQL Server",
-      "configurationKeys": [
-        "DatabaseConnectionString"
-      ],
-      "authentication": {
-        "type": "Azure Active Directory",
-        "configurationKeys": []
-      },
-      "operations": [],
-      "resources": [
-        {
-          "type": "database",
-          "name": null,
-          "direction": "outbound",
-          "sourceFile": "src/SFA.DAS.Notifications.Infrastructure/DependencyResolution/DataRegistry.cs"
-        }
-      ],
-      "evidence": [
-        {
-          "sourceFile": "src/SFA.DAS.Notifications.Infrastructure/DependencyResolution/DataRegistry.cs",
-          "reason": "DbConnection for SQL Server using Azure Service Token Provider."
-        },
-        {
-          "sourceFile": "src/SFA.DAS.Notifications.Api/StartupExtensions/NServiceBusStartUp.cs",
-          "reason": "UseSqlServerPersistence with a SQL connection string."
-        }
-      ],
-      "confidence": "high",
-      "targetId": "database-sql-server-notifications-database",
-      "description": "Reads from and writes to"
-    },
-    {
-      "sourceId": "notifications",
-      "name": "Azure Service Bus",
-      "kind": "message-broker",
-      "classification": "third-party",
-      "direction": "outbound",
-      "client": null,
-      "technology": "Azure Service Bus",
-      "configurationKeys": [
-        "NServiceBusConfiguration:ServiceBusConnectionString"
-      ],
-      "authentication": {
-        "type": null,
-        "configurationKeys": []
-      },
-      "operations": [],
-      "resources": [],
-      "evidence": [
-        {
-          "sourceFile": "src/SFA.DAS.Notifications.Api/StartupExtensions/NServiceBusStartUp.cs",
-          "reason": "EndpointConfiguration uses Azure Service Bus transport."
-        }
-      ],
-      "confidence": "high",
-      "targetId": "message-broker-azure-service-bus",
-      "description": "Publishes messages to and consumes messages from"
+      "targetId": "telemetry-application-insights",
+      "description": "Sends telemetry to"
     }
   ]
 }

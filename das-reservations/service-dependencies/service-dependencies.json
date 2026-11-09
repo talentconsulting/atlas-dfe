@@ -5,30 +5,42 @@
   "systemName": "Reservations",
   "containers": [
     {
-      "id": "reservations-web",
+      "id": "reservations",
       "name": "Reservations",
       "type": "web",
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.Reservations.Web/Startup.cs",
-          "reason": "Configures web application services and middleware."
+          "sourceFile": "src/SFA.DAS.Reservations.Web/appsettings.json",
+          "reason": "File contains configuration for a hosted web service."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.Reservations.Web/AppStart/ControllerConventions.cs",
+          "reason": "File contains web entry point configuration using ASP.NET conventions."
         },
         {
           "sourceFile": "src/SFA.DAS.Reservations.Web/Program.cs",
-          "reason": "Contains a WebHost entry point indicating a web container."
+          "reason": "Program class with .NET Core WebHost.CreateDefaultBuilder for a web application."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.Reservations.Web/SFA.DAS.Reservations.Web.csproj",
+          "reason": "Project file indicating an ASP.NET Core Web application."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.Reservations.Web/Startup.cs",
+          "reason": "Startup class configuring ASP.NET Core middleware and services."
         }
       ]
     }
   ],
   "dependencies": [
     {
-      "sourceId": "reservations-web",
+      "sourceId": "reservations",
       "name": "Redis Cache",
       "kind": "cache",
-      "classification": "unknown",
+      "classification": "third-party",
       "direction": "outbound",
       "client": null,
-      "technology": "StackExchangeRedis",
+      "technology": "StackExchange.Redis",
       "configurationKeys": [
         "ReservationsWeb:RedisCacheConnectionString"
       ],
@@ -41,7 +53,7 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.Reservations.Web/Startup.cs",
-          "reason": "StackExchangeRedisCache is configured for distributed caching."
+          "reason": "AddStackExchangeRedisCache is used to configure the Redis cache client."
         }
       ],
       "confidence": "high",
@@ -49,72 +61,203 @@
       "description": "Caches data in"
     },
     {
-      "sourceId": "reservations-web",
-      "name": "Reservations API",
+      "sourceId": "reservations",
+      "name": "Azure App Configuration",
+      "kind": "configuration-store",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "ConfigNames",
+        "ConfigurationStorageConnectionString"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Reservations.Web/Extensions/ConfigurationExtensions.cs",
+          "reason": "Detected the use of AddAzureTableStorage method for configuration loading."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "configuration-store-azure-app-configuration",
+      "description": "Reads configuration from"
+    },
+    {
+      "sourceId": "reservations",
+      "name": "Reservations",
       "kind": "http-api",
       "classification": "internal",
       "direction": "outbound",
       "client": "IApiClient",
       "technology": "HttpClient",
-      "configurationKeys": [
-        "ReservationsWeb:ApiConfiguration:Url"
-      ],
+      "configurationKeys": [],
       "authentication": {
-        "type": "Azure AD",
-        "configurationKeys": [
-          "ReservationsWeb:ApiConfiguration:Id",
-          "ReservationsWeb:ApiConfiguration:Identifier",
-          "ReservationsWeb:ApiConfiguration:Secret",
-          "ReservationsWeb:ApiConfiguration:Tenant"
-        ]
+        "type": null,
+        "configurationKeys": []
       },
-      "operations": [
-        {
-          "method": "DELETE",
-          "methodName": "Delete",
-          "path": null,
-          "sourceFile": "src/SFA.DAS.Reservations.Infrastructure/Api/ApiClientBase.cs"
-        },
-        {
-          "method": "GET",
-          "methodName": "Get",
-          "path": null,
-          "sourceFile": "src/SFA.DAS.Reservations.Infrastructure/Api/ApiClientBase.cs"
-        },
-        {
-          "method": "GET",
-          "methodName": "Ping",
-          "path": "ping",
-          "sourceFile": "src/SFA.DAS.Reservations.Infrastructure/Api/ApiClient.cs"
-        },
-        {
-          "method": "POST",
-          "methodName": "Create",
-          "path": null,
-          "sourceFile": "src/SFA.DAS.Reservations.Infrastructure/Api/ApiClientBase.cs"
-        }
-      ],
-      "resources": [
-        {
-          "type": "http",
-          "name": "ReservationsApiConfiguration.Url",
-          "direction": "outbound",
-          "sourceFile": "src/SFA.DAS.Reservations.Infrastructure/Api/ApiClient.cs"
-        }
-      ],
+      "operations": [],
+      "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.Reservations.Infrastructure/Api/ApiClient.cs",
-          "reason": "ApiClient implementation uses HttpClient to make HTTP calls."
+          "sourceFile": "src/SFA.DAS.Reservations.Web/AppStart/ServiceRegistrationExtension.cs",
+          "reason": "AddSingleton registration of IApiClient as a service dependency indicates outbound HTTP API calls."
         },
         {
-          "sourceFile": "src/SFA.DAS.Reservations.Web/AppStart/ServiceRegistrationExtension.cs",
-          "reason": "IApiClient is registered as a dependency."
+          "sourceFile": "src/SFA.DAS.Reservations.Web/Startup.cs",
+          "reason": "HealthCheck registration with name 'Reservation Api' and evidence of a third-party API."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.Reservations.Infrastructure/Api/ApiClient.cs",
+          "reason": "Provides implementation of IApiClient, directly constructs HttpClient and performs calls to make outbound HTTP requests."
         }
       ],
       "confidence": "high",
-      "targetId": "http-api-reservations-api",
+      "targetId": "http-api-reservations",
       "description": "Calls the API of"
+    },
+    {
+      "sourceId": "reservations",
+      "name": "Reservations Outer",
+      "kind": "http-api",
+      "classification": "unknown",
+      "direction": "outbound",
+      "client": "IReservationsOuterApiClient",
+      "technology": null,
+      "configurationKeys": [],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Reservations.Web/AppStart/ServiceRegistrationExtension.cs",
+          "reason": "AddTransient registration of IReservationsOuterApiClient as a service dependency indicates outbound HTTP API calls."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "http-api-reservations-outer",
+      "description": "Calls the API of"
+    },
+    {
+      "sourceId": "reservations",
+      "name": "DfE Sign-in",
+      "kind": "identity-provider",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "GovUkOidcConfiguration"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Reservations.Web/Extensions/AuthenticationStartupExtensions.cs",
+          "reason": "Detected AddAndConfigureDfESignInAuthentication registration for external identity provider."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "identity-provider-dfe-sign-in",
+      "description": "Authenticates with"
+    },
+    {
+      "sourceId": "reservations",
+      "name": "GOV.UK One Login",
+      "kind": "identity-provider",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "GovUkOidcConfiguration"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Reservations.Web/Extensions/AuthenticationStartupExtensions.cs",
+          "reason": "Detected AddAndConfigureGovUkAuthentication registration for external identity provider."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "identity-provider-gov-uk-one-login",
+      "description": "Authenticates with"
+    },
+    {
+      "sourceId": "reservations",
+      "name": "Microsoft Entra ID",
+      "kind": "identity-provider",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "AzureActiveDirectoryConfiguration",
+        "AzureAd"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Reservations.Web/Startup.cs",
+          "reason": "JwtBearer authentication is configured indicating use of Microsoft Entra ID."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "identity-provider-microsoft-entra-id",
+      "description": "Authenticates with"
+    },
+    {
+      "sourceId": "reservations",
+      "name": "Application Insights",
+      "kind": "telemetry",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": "Azure Monitor",
+      "configurationKeys": [
+        "APPLICATIONINSIGHTS_CONNECTION_STRING"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Reservations.Web/appsettings.json",
+          "reason": "Detected APPLICATIONINSIGHTS_CONNECTION_STRING in the appsettings.json file, indicating telemetry integration."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.Reservations.Web/Program.cs",
+          "reason": "UseApplicationInsights is called to configure telemetry collection."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "telemetry-application-insights",
+      "description": "Sends telemetry to"
     }
   ]
 }

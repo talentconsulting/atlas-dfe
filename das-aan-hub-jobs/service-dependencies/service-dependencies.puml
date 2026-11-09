@@ -2,16 +2,22 @@
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
 LAYOUT_WITH_LEGEND()
 
-System_Boundary(sys_SkillsFundingAgency_das_aan_hub_jobs, "Aan Hub") {
-  Container(c_aan_hub_jobs, "Aan Hub Jobs", "Background Job")
+System_Boundary(sys_SkillsFundingAgency_das_aan_hub_jobs, "AAN Hub") {
+  Container(c_aan_hub_jobs, "AAN Hub", "Background Job")
 }
 
-SystemDb_Ext(d_database_aan_sql_database, "Aan SQL Database", "SQL Server")
-System_Ext(d_http_api_aan_outer, "Aan Outer", "RestEase")
-System_Ext(d_http_api_apprentice_accounts, "Apprentice Accounts", "RestEase")
+SystemDb_Ext(d_configuration_store_azure_table_storage_configuration, "Azure Table Storage configuration")
+SystemDb_Ext(d_database_aan_data, "Aan Data", "SQL Server")
+System_Ext(d_http_api_aan_outer, "Aan Outer")
+System_Ext(d_http_api_apprentice_accounts, "Apprentice Accounts")
+SystemQueue_Ext(d_message_broker_azure_service_bus, "Azure Service Bus", "Azure Service Bus")
+System_Ext(d_telemetry_application_insights, "Application Insights")
 
-Rel(c_aan_hub_jobs, d_database_aan_sql_database, "Reads from and writes to", "SQL Server")
-Rel(c_aan_hub_jobs, d_http_api_aan_outer, "Calls the API of", "RestEase")
-Rel(c_aan_hub_jobs, d_http_api_apprentice_accounts, "Calls the API of", "RestEase")
+Rel(c_aan_hub_jobs, d_configuration_store_azure_table_storage_configuration, "Reads configuration from")
+Rel(c_aan_hub_jobs, d_database_aan_data, "Reads from and writes to", "SQL Server")
+Rel(c_aan_hub_jobs, d_http_api_aan_outer, "Calls the API of")
+Rel(c_aan_hub_jobs, d_http_api_apprentice_accounts, "Calls the API of")
+Rel(c_aan_hub_jobs, d_message_broker_azure_service_bus, "Publishes messages to and consumes messages from", "Azure Service Bus")
+Rel(c_aan_hub_jobs, d_telemetry_application_insights, "Sends telemetry to")
 
 @enduml

@@ -3,21 +3,28 @@
 LAYOUT_WITH_LEGEND()
 
 System_Boundary(sys_SkillsFundingAgency_das_courses_api, "Courses") {
-  Container(c_courses, "Courses", "API")
+  Container(c_courses, "Courses", "Component")
+  Container(c_courses_2, "Courses", "API")
 }
 
-SystemDb_Ext(d_cache_redis_cache, "Redis Cache", "Redis")
-SystemDb_Ext(d_database_courses_database, "Courses Database", "Entity Framework Core")
-System_Ext(d_http_api_data_download, "Data Download", "HttpClient")
-System_Ext(d_http_api_qualification_sector_subject_area, "Qualification Sector Subject Area", "HttpClient")
-System_Ext(d_http_api_skills_england, "Skills England", "HttpClient")
-System_Ext(d_http_api_slack_notification, "Slack Notification", "HttpClient")
+SystemDb_Ext(d_cache_redis, "Redis", "Redis")
+SystemDb_Ext(d_configuration_store_azure_app_configuration, "Azure App Configuration")
+SystemDb_Ext(d_database_courses, "Courses", "Microsoft SQL Server")
+System_Ext(d_http_api_data_download, "Data Download")
+System_Ext(d_http_api_qualification_sector_subject_area, "Qualification Sector Subject Area")
+System_Ext(d_http_api_skills_england, "Skills England")
+System_Ext(d_http_api_slack_notification, "Slack Notification")
+System_Ext(d_identity_provider_microsoft_entra_id, "Microsoft Entra ID")
+System_Ext(d_telemetry_application_insights, "Application Insights")
 
-Rel(c_courses, d_cache_redis_cache, "Caches data in", "Redis")
-Rel(c_courses, d_database_courses_database, "Reads from and writes to", "Entity Framework Core")
-Rel(c_courses, d_http_api_data_download, "Calls the API of", "HttpClient")
-Rel(c_courses, d_http_api_qualification_sector_subject_area, "Calls the API of", "HttpClient")
-Rel(c_courses, d_http_api_skills_england, "Calls the API of", "HttpClient")
-Rel(c_courses, d_http_api_slack_notification, "Calls the API of", "HttpClient")
+Rel(c_courses_2, d_cache_redis, "Caches data in", "Redis")
+Rel(c_courses_2, d_configuration_store_azure_app_configuration, "Reads configuration from")
+Rel(c_courses_2, d_database_courses, "Reads from and writes to", "Microsoft SQL Server")
+Rel(c_courses_2, d_http_api_data_download, "Calls the API of")
+Rel(c_courses_2, d_http_api_qualification_sector_subject_area, "Calls the API of")
+Rel(c_courses_2, d_http_api_skills_england, "Calls the API of")
+Rel(c_courses_2, d_http_api_slack_notification, "Calls the API of")
+Rel(c_courses_2, d_identity_provider_microsoft_entra_id, "Authenticates with")
+Rel(c_courses_2, d_telemetry_application_insights, "Sends telemetry to")
 
 @enduml

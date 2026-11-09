@@ -10,16 +10,8 @@
       "type": "api",
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Api/Startup.cs",
-          "reason": "ASP.NET MVC setup, controllers mapping, and Swagger endpoint configuration"
-        },
-        {
-          "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Api/SFA.DAS.RequestApprenticeTraining.Api.csproj",
-          "reason": "ASP.NET Web SDK project file for API entry point"
-        },
-        {
           "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Api/Program.cs",
-          "reason": "ASP.NET web project's entry point with web service setup"
+          "reason": "ASP.NET Core Program class with Web Host configured"
         }
       ]
     }
@@ -27,41 +19,41 @@
   "dependencies": [
     {
       "sourceId": "request-apprentice-training",
-      "name": "Azure Key Vault",
-      "kind": "cloud-service",
-      "classification": "unknown",
+      "name": "Azure Table Storage configuration",
+      "kind": "configuration-store",
+      "classification": "third-party",
       "direction": "outbound",
-      "client": "ChainedTokenCredential",
-      "technology": "Azure.Identity",
-      "configurationKeys": [],
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "ConfigNames",
+        "ConfigurationStorageConnectionString",
+        "EnvironmentName"
+      ],
       "authentication": {
-        "type": "Azure Managed Identity",
+        "type": null,
         "configurationKeys": []
       },
       "operations": [],
       "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Data/RequestApprenticeTrainingDataContext.cs",
-          "reason": "Azure.Identity ChainedTokenCredential used in DbContext for authentication"
-        },
-        {
-          "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Api/AppStart/AddDatabaseRegistrations.cs",
-          "reason": "ChainedTokenCredential configured for Azure resources including Key Vault"
+          "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Api/Startup.cs",
+          "reason": "AddAzureTableStorage registration detected"
         }
       ],
-      "confidence": "medium",
-      "targetId": "cloud-service-azure-key-vault",
-      "description": "Uses"
+      "confidence": "high",
+      "targetId": "configuration-store-azure-table-storage-configuration",
+      "description": "Reads configuration from"
     },
     {
       "sourceId": "request-apprentice-training",
-      "name": "SQL Server Database",
+      "name": "Request Apprentice Training Database",
       "kind": "database",
       "classification": "internal",
       "direction": "outbound",
       "client": null,
-      "technology": "Microsoft.EntityFrameworkCore.SqlServer",
+      "technology": "SQL Server",
       "configurationKeys": [
         "ApplicationSettings:DbConnectionString"
       ],
@@ -70,40 +62,57 @@
         "configurationKeys": []
       },
       "operations": [],
-      "resources": [
-        {
-          "type": "database",
-          "name": "ApplicationSettings:DbConnectionString",
-          "direction": "outbound",
-          "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Api/AppStart/AddDatabaseRegistrations.cs"
-        }
-      ],
+      "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Data/RequestApprenticeTrainingDataContext.cs",
-          "reason": "DbContext implementation using SQL Server with potential Azure Managed Identity authentication"
-        },
-        {
           "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Api/AppStart/AddDatabaseRegistrations.cs",
-          "reason": "DbContext registration for SQL Server using Entity Framework"
+          "reason": "Database registration for RequestApprenticeTrainingDataContext using UseSqlServer"
         },
         {
-          "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Api/AppStart/NServiceBusRegistration.cs",
-          "reason": "SQL Server connection used in NServiceBus configuration"
+          "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Data/RequestApprenticeTrainingDataContext.cs",
+          "reason": "RequestApprenticeTrainingDataContext configured with SQL Server"
         }
       ],
       "confidence": "high",
-      "targetId": "database-sql-server-database",
+      "targetId": "database-request-apprentice-training-database",
       "description": "Reads from and writes to"
+    },
+    {
+      "sourceId": "request-apprentice-training",
+      "name": "Microsoft Entra ID",
+      "kind": "identity-provider",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "ApplicationSettings:AzureAd:Audiences",
+        "ApplicationSettings:AzureAd:Tenant"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Api/Authentication/AuthenticationServiceCollectionExtensions.cs",
+          "reason": "AddJwtBearer registration with Azure AD Authority"
+        }
+      ],
+      "confidence": "high",
+      "targetId": "identity-provider-microsoft-entra-id",
+      "description": "Authenticates with"
     },
     {
       "sourceId": "request-apprentice-training",
       "name": "Azure Service Bus",
       "kind": "message-broker",
-      "classification": "unknown",
+      "classification": "third-party",
       "direction": "outbound",
       "client": null,
-      "technology": "NServiceBus",
+      "technology": "Azure Service Bus",
       "configurationKeys": [
         "ApplicationSettings:NServiceBusConnectionString"
       ],
@@ -112,23 +121,70 @@
         "configurationKeys": []
       },
       "operations": [],
-      "resources": [
-        {
-          "type": "message-broker",
-          "name": "ApplicationSettings:NServiceBusConnectionString",
-          "direction": "outbound",
-          "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Api/AppStart/NServiceBusRegistration.cs"
-        }
-      ],
+      "resources": [],
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Api/AppStart/NServiceBusRegistration.cs",
-          "reason": "Azure Service Bus transport configured with NServiceBus"
+          "reason": "UseAzureServiceBusTransport registration detected"
         }
       ],
       "confidence": "high",
       "targetId": "message-broker-azure-service-bus",
       "description": "Publishes messages to and consumes messages from"
+    },
+    {
+      "sourceId": "request-apprentice-training",
+      "name": "Learning Transport",
+      "kind": "message-broker",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": null,
+      "technology": "Learning Transport",
+      "configurationKeys": [
+        "ApplicationSettings:NServiceBusConnectionString"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Api/AppStart/NServiceBusRegistration.cs",
+          "reason": "UseTransport with LearningTransport registration detected"
+        }
+      ],
+      "confidence": "high",
+      "targetId": "message-broker-learning-transport",
+      "description": "Publishes messages to and consumes messages from"
+    },
+    {
+      "sourceId": "request-apprentice-training",
+      "name": "Application Insights",
+      "kind": "telemetry",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "APPLICATIONINSIGHTS_CONNECTION_STRING"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.RequestApprenticeTraining.Api/AppStart/AddOpenTelemetryExtensions.cs",
+          "reason": "UseAzureMonitor registration detected"
+        }
+      ],
+      "confidence": "high",
+      "targetId": "telemetry-application-insights",
+      "description": "Sends telemetry to"
     }
   ]
 }

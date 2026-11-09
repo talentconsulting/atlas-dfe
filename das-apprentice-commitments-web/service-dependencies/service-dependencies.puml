@@ -4,13 +4,17 @@ LAYOUT_WITH_LEGEND()
 
 System_Boundary(sys_SkillsFundingAgency_das_apprentice_commitments_web, "Apprentice Commitments") {
   Container(c_apprentice_commitments, "Apprentice Commitments", "Web Application")
-  Container(c_apprentice_commitments_mock_server, "Apprentice Commitments Mock Server", "Component")
+  Container(c_apprentice_commitments_mockserver, "Apprentice Commitments Mockserver", "Component")
 }
 
 SystemDb_Ext(d_cache_redis, "Redis", "Redis")
-System_Ext(d_cloud_service_azure_table_storage, "Azure Table Storage", "Azure Table Storage")
+SystemDb_Ext(d_configuration_store_azure_table_storage_configuration, "Azure Table Storage Configuration")
+System_Ext(d_identity_provider_microsoft_entra_id, "Microsoft Entra ID", "OpenID Connect")
+System_Ext(d_telemetry_application_insights, "Application Insights")
 
 Rel(c_apprentice_commitments, d_cache_redis, "Caches data in", "Redis")
-Rel(c_apprentice_commitments, d_cloud_service_azure_table_storage, "Uses", "Azure Table Storage")
+Rel(c_apprentice_commitments, d_configuration_store_azure_table_storage_configuration, "Reads configuration from")
+Rel(c_apprentice_commitments, d_identity_provider_microsoft_entra_id, "Authenticates with", "OpenID Connect")
+Rel(c_apprentice_commitments, d_telemetry_application_insights, "Sends telemetry to")
 
 @enduml

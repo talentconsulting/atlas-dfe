@@ -3,15 +3,19 @@
 LAYOUT_WITH_LEGEND()
 
 System_Boundary(sys_SkillsFundingAgency_das_employer_feedback_web, "Employer Feedback") {
-  Container(c_employer_feedback_web, "Employer Feedback", "Web Application")
+  Container(c_employer_feedback, "Employer Feedback", "Web Application")
 }
 
-SystemDb_Ext(d_cache_data_protection_keys_redis, "Data Protection Keys Redis", "StackExchange.Redis")
-SystemDb_Ext(d_cache_redis, "Redis", "StackExchange.Redis")
-System_Ext(d_cloud_service_application_insights, "Application Insights", "Azure Application Insights")
+SystemDb_Ext(d_cache_redis, "Redis", "StackExchangeRedis")
+SystemDb_Ext(d_configuration_store_azure_app_configuration, "Azure App Configuration")
+System_Ext(d_http_api_employer_feedback_outer, "Employer Feedback Outer")
+System_Ext(d_identity_provider_microsoft_entra_id, "Microsoft Entra ID")
+System_Ext(d_telemetry_application_insights, "Application Insights")
 
-Rel(c_employer_feedback_web, d_cache_data_protection_keys_redis, "Caches data in", "StackExchange.Redis")
-Rel(c_employer_feedback_web, d_cache_redis, "Caches data in", "StackExchange.Redis")
-Rel(c_employer_feedback_web, d_cloud_service_application_insights, "Uses", "Azure Application Insights")
+Rel(c_employer_feedback, d_cache_redis, "Caches data in", "StackExchangeRedis")
+Rel(c_employer_feedback, d_configuration_store_azure_app_configuration, "Reads configuration from")
+Rel(c_employer_feedback, d_http_api_employer_feedback_outer, "Calls the API of")
+Rel(c_employer_feedback, d_identity_provider_microsoft_entra_id, "Authenticates with")
+Rel(c_employer_feedback, d_telemetry_application_insights, "Sends telemetry to")
 
 @enduml

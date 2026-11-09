@@ -7,25 +7,36 @@
     {
       "id": "courses",
       "name": "Courses",
+      "type": "other",
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Courses.Infrastructure/SFA.DAS.Courses.Infrastructure.csproj",
+          "reason": "Project includes shared libraries and does not have an entry point, indicating it is not a deployable container."
+        }
+      ]
+    },
+    {
+      "id": "courses-2",
+      "name": "Courses",
       "type": "api",
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.Courses.Api/Program.cs",
-          "reason": "ASP.NET entry point detected using CreateHostBuilder."
+          "reason": "Main entry point of the API."
         },
         {
           "sourceFile": "src/SFA.DAS.Courses.Api/SFA.DAS.Courses.Api.csproj",
-          "reason": "Project SDK is Web, indicating an API or web application."
+          "reason": "Project type is ASP.NET Core Web SDK, indicating it's the main API."
         }
       ]
     }
   ],
   "dependencies": [
     {
-      "sourceId": "courses",
-      "name": "Redis Cache",
+      "sourceId": "courses-2",
+      "name": "Redis",
       "kind": "cache",
-      "classification": "internal",
+      "classification": "third-party",
       "direction": "outbound",
       "client": null,
       "technology": "Redis",
@@ -41,59 +52,85 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.Courses.Api/Startup.cs",
-          "reason": "AddStackExchangeRedisOutputCache call with configuration from Courses:RedisConnectionString."
+          "reason": "Output cache registered with StackExchangeRedisOutputCache."
         }
       ],
       "confidence": "high",
-      "targetId": "cache-redis-cache",
+      "targetId": "cache-redis",
       "description": "Caches data in"
     },
     {
-      "sourceId": "courses",
-      "name": "Courses Database",
+      "sourceId": "courses-2",
+      "name": "Azure App Configuration",
+      "kind": "configuration-store",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "ConfigNames",
+        "ConfigurationStorageConnectionString",
+        "Environment"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Courses.Api/Startup.cs",
+          "reason": "Configuration registered via AddAzureTableStorage."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "configuration-store-azure-app-configuration",
+      "description": "Reads configuration from"
+    },
+    {
+      "sourceId": "courses-2",
+      "name": "Courses",
       "kind": "database",
       "classification": "internal",
       "direction": "outbound",
-      "client": "CoursesDataContext",
-      "technology": "Entity Framework Core",
+      "client": null,
+      "technology": "Microsoft SQL Server",
       "configurationKeys": [
         "Courses:ConnectionString"
       ],
       "authentication": {
-        "type": "Azure Default Credential",
+        "type": "Azure AD",
         "configurationKeys": []
       },
       "operations": [],
-      "resources": [
-        {
-          "type": "sql-server",
-          "name": null,
-          "direction": "outbound",
-          "sourceFile": "src/SFA.DAS.Courses.Api/AppStart/AddDatabaseExtension.cs"
-        }
-      ],
+      "resources": [],
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.Courses.Api/AppStart/AddDatabaseExtension.cs",
-          "reason": "AddDbContext call for CoursesDataContext with optional SQL Server and in-memory database configurations."
+          "reason": "Database context registered with UseSqlServer."
         },
         {
           "sourceFile": "src/SFA.DAS.Courses.Data/CoursesDataContext.cs",
-          "reason": "Entity Framework Core DbContext subclass CoursesDataContext detected."
+          "reason": "DbContext subclass with SQL Server configuration."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.Courses.Api/Startup.cs",
+          "reason": "Health check added for the CoursesDataContext."
         }
       ],
       "confidence": "high",
-      "targetId": "database-courses-database",
+      "targetId": "database-courses",
       "description": "Reads from and writes to"
     },
     {
-      "sourceId": "courses",
+      "sourceId": "courses-2",
       "name": "Data Download",
       "kind": "http-api",
       "classification": "unknown",
       "direction": "outbound",
-      "client": "DataDownloadService",
-      "technology": "HttpClient",
+      "client": "IDataDownloadService",
+      "technology": null,
       "configurationKeys": [],
       "authentication": {
         "type": null,
@@ -104,7 +141,7 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.Courses.Api/AppStart/AddServiceRegistrationExtension.cs",
-          "reason": "HttpClient registration for IDataDownloadService detected."
+          "reason": "HttpClient registered for IDataDownloadService."
         }
       ],
       "confidence": "high",
@@ -112,13 +149,13 @@
       "description": "Calls the API of"
     },
     {
-      "sourceId": "courses",
+      "sourceId": "courses-2",
       "name": "Qualification Sector Subject Area",
       "kind": "http-api",
       "classification": "unknown",
       "direction": "outbound",
-      "client": "QualificationSectorSubjectAreaService",
-      "technology": "HttpClient",
+      "client": "IQualificationSectorSubjectAreaService",
+      "technology": null,
       "configurationKeys": [],
       "authentication": {
         "type": null,
@@ -129,7 +166,7 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.Courses.Api/AppStart/AddServiceRegistrationExtension.cs",
-          "reason": "HttpClient registration for IQualificationSectorSubjectAreaService detected."
+          "reason": "HttpClient registered for IQualificationSectorSubjectAreaService."
         }
       ],
       "confidence": "high",
@@ -137,13 +174,13 @@
       "description": "Calls the API of"
     },
     {
-      "sourceId": "courses",
+      "sourceId": "courses-2",
       "name": "Skills England",
       "kind": "http-api",
-      "classification": "unknown",
+      "classification": "third-party",
       "direction": "outbound",
-      "client": "SkillsEnglandService",
-      "technology": "HttpClient",
+      "client": "ISkillsEnglandService",
+      "technology": null,
       "configurationKeys": [],
       "authentication": {
         "type": null,
@@ -154,7 +191,7 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.Courses.Api/AppStart/AddServiceRegistrationExtension.cs",
-          "reason": "HttpClient registration for ISkillsEnglandService detected."
+          "reason": "HttpClient registered for ISkillsEnglandService."
         }
       ],
       "confidence": "high",
@@ -162,13 +199,13 @@
       "description": "Calls the API of"
     },
     {
-      "sourceId": "courses",
+      "sourceId": "courses-2",
       "name": "Slack Notification",
       "kind": "http-api",
-      "classification": "unknown",
+      "classification": "third-party",
       "direction": "outbound",
-      "client": "SlackNotificationService",
-      "technology": "HttpClient",
+      "client": "ISlackNotificationService",
+      "technology": null,
       "configurationKeys": [],
       "authentication": {
         "type": null,
@@ -179,12 +216,66 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.Courses.Api/AppStart/AddServiceRegistrationExtension.cs",
-          "reason": "HttpClient registration for ISlackNotificationService detected."
+          "reason": "HttpClient registered for ISlackNotificationService."
         }
       ],
       "confidence": "high",
       "targetId": "http-api-slack-notification",
       "description": "Calls the API of"
+    },
+    {
+      "sourceId": "courses-2",
+      "name": "Microsoft Entra ID",
+      "kind": "identity-provider",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "AzureAd"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Courses.Api/Startup.cs",
+          "reason": "Authentication registered with AzureAd configuration."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "identity-provider-microsoft-entra-id",
+      "description": "Authenticates with"
+    },
+    {
+      "sourceId": "courses-2",
+      "name": "Application Insights",
+      "kind": "telemetry",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "APPLICATIONINSIGHTS_CONNECTION_STRING"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Courses.Api/AppStart/AddOpenTelemetryExtensions.cs",
+          "reason": "Telemetry registered with Azure Monitor using AddOpenTelemetry."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "telemetry-application-insights",
+      "description": "Sends telemetry to"
     }
   ]
 }

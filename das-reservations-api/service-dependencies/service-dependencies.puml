@@ -2,22 +2,23 @@
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
 LAYOUT_WITH_LEGEND()
 
-System_Boundary(sys_SkillsFundingAgency_das_reservations_api, "Reservations") {
+System_Boundary(sys_SkillsFundingAgency_das_reservations_api, "SFA.DAS.Reservations") {
   Container(c_reservations, "Reservations", "API")
-  Container(c_reservations_jobs, "Reservations Jobs", "Background Job")
-  Container(c_reservations_nservicebuslistener, "Reservations NServiceBusListener", "Background Job")
+  Container(c_sfa_das_reservations_nservicebuslistener, "SFA.DAS.Reservations NServiceBusListener", "Background Job")
 }
 
-System_Ext(d_cloud_service_azure_active_directory, "Azure Active Directory", "Azure AD")
-System_Ext(d_cloud_service_azure_search, "Azure Search", "Azure Cognitive Search")
-SystemDb_Ext(d_database_sql_database, "SQL Database", "System.Data.SqlClient")
-SystemQueue_Ext(d_message_broker_azure_service_bus, "Azure Service Bus", "NServiceBus.Transport.AzureServiceBus")
+SystemDb_Ext(d_configuration_store_azure_table_storage_configuration, "Azure Table Storage Configuration")
+SystemDb_Ext(d_database_azure_sql_database, "Azure SQL Database", "Entity Framework Core")
+System_Ext(d_identity_provider_microsoft_entra_id, "Microsoft Entra ID")
+SystemQueue_Ext(d_message_broker_azure_service_bus, "Azure Service Bus", "Azure.Messaging.ServiceBus")
+System_Ext(d_telemetry_application_insights, "Application Insights")
 
-Rel(c_reservations, d_cloud_service_azure_active_directory, "Uses", "Azure AD")
-Rel(c_reservations, d_cloud_service_azure_search, "Uses", "Azure Cognitive Search")
-Rel(c_reservations_jobs, d_database_sql_database, "Reads from and writes to", "System.Data.SqlClient")
-Rel(c_reservations, d_database_sql_database, "Reads from and writes to", "SQL Server")
-Rel(c_reservations_jobs, d_message_broker_azure_service_bus, "Publishes messages to and consumes messages from", "NServiceBus.Transport.AzureServiceBus")
-Rel(c_reservations, d_message_broker_azure_service_bus, "Publishes messages to and consumes messages from", "Azure Service Bus")
+Rel(c_reservations, d_configuration_store_azure_table_storage_configuration, "Reads configuration from")
+Rel(c_reservations, d_database_azure_sql_database, "Reads from and writes to", "Entity Framework Core")
+Rel(c_reservations, d_identity_provider_microsoft_entra_id, "Authenticates with")
+Rel(c_sfa_das_reservations_nservicebuslistener, d_message_broker_azure_service_bus, "Publishes messages to and consumes messages from", "Azure.Messaging.ServiceBus")
+Rel(c_reservations, d_message_broker_azure_service_bus, "Publishes messages to and consumes messages from")
+Rel(c_sfa_das_reservations_nservicebuslistener, d_telemetry_application_insights, "Sends telemetry to")
+Rel(c_reservations, d_telemetry_application_insights, "Sends telemetry to")
 
 @enduml

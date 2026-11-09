@@ -6,12 +6,18 @@ System_Boundary(sys_SkillsFundingAgency_das_rat_api, "Request Apprentice Trainin
   Container(c_request_apprentice_training, "Request Apprentice Training", "API")
 }
 
-System_Ext(d_cloud_service_azure_key_vault, "Azure Key Vault", "Azure.Identity")
-SystemDb_Ext(d_database_sql_server_database, "SQL Server Database", "Microsoft.EntityFrameworkCore.SqlServer")
-SystemQueue_Ext(d_message_broker_azure_service_bus, "Azure Service Bus", "NServiceBus")
+SystemDb_Ext(d_configuration_store_azure_table_storage_configuration, "Azure Table Storage configuration")
+SystemDb_Ext(d_database_request_apprentice_training_database, "Request Apprentice Training Database", "SQL Server")
+System_Ext(d_identity_provider_microsoft_entra_id, "Microsoft Entra ID")
+SystemQueue_Ext(d_message_broker_azure_service_bus, "Azure Service Bus", "Azure Service Bus")
+SystemQueue_Ext(d_message_broker_learning_transport, "Learning Transport", "Learning Transport")
+System_Ext(d_telemetry_application_insights, "Application Insights")
 
-Rel(c_request_apprentice_training, d_cloud_service_azure_key_vault, "Uses", "Azure.Identity")
-Rel(c_request_apprentice_training, d_database_sql_server_database, "Reads from and writes to", "Microsoft.EntityFrameworkCore.SqlServer")
-Rel(c_request_apprentice_training, d_message_broker_azure_service_bus, "Publishes messages to and consumes messages from", "NServiceBus")
+Rel(c_request_apprentice_training, d_configuration_store_azure_table_storage_configuration, "Reads configuration from")
+Rel(c_request_apprentice_training, d_database_request_apprentice_training_database, "Reads from and writes to", "SQL Server")
+Rel(c_request_apprentice_training, d_identity_provider_microsoft_entra_id, "Authenticates with")
+Rel(c_request_apprentice_training, d_message_broker_azure_service_bus, "Publishes messages to and consumes messages from", "Azure Service Bus")
+Rel(c_request_apprentice_training, d_message_broker_learning_transport, "Publishes messages to and consumes messages from", "Learning Transport")
+Rel(c_request_apprentice_training, d_telemetry_application_insights, "Sends telemetry to")
 
 @enduml

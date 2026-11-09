@@ -3,21 +3,19 @@
 LAYOUT_WITH_LEGEND()
 
 System_Boundary(sys_SkillsFundingAgency_das_funding_projection_api, "Funding Projection") {
-  Container(c_funding_projection, "Funding Projection", "Component")
-  Container(c_funding_projection_2, "Funding Projection", "API")
+  Container(c_funding_projection, "Funding Projection", "API")
 }
 
-SystemDb_Ext(d_configuration_store_azure_table_storage_configuration, "Azure Table Storage Configuration")
+SystemDb_Ext(d_configuration_store_azure_app_configuration, "Azure App Configuration")
 SystemDb_Ext(d_database_funding_projection_database, "Funding Projection Database", "SQL Server")
 System_Ext(d_identity_provider_microsoft_entra_id, "Microsoft Entra ID")
-SystemQueue_Ext(d_message_broker_service_bus, "Service Bus", "Azure Service Bus")
+SystemQueue_Ext(d_message_broker_azure_service_bus, "Azure Service Bus", "Azure Service Bus")
 System_Ext(d_telemetry_application_insights, "Application Insights")
 
-Rel(c_funding_projection_2, d_configuration_store_azure_table_storage_configuration, "Reads configuration from")
-Rel(c_funding_projection_2, d_database_funding_projection_database, "Reads from and writes to", "SQL Server")
-Rel(c_funding_projection_2, d_identity_provider_microsoft_entra_id, "Authenticates with")
-Rel(c_funding_projection, d_message_broker_service_bus, "Publishes messages to and consumes messages from", "Azure Service Bus")
-Rel(c_funding_projection_2, d_message_broker_service_bus, "Publishes messages to and consumes messages from", "Azure Service Bus")
-Rel(c_funding_projection_2, d_telemetry_application_insights, "Sends telemetry to")
+Rel(c_funding_projection, d_configuration_store_azure_app_configuration, "Reads configuration from")
+Rel(c_funding_projection, d_database_funding_projection_database, "Reads from and writes to", "SQL Server")
+Rel(c_funding_projection, d_identity_provider_microsoft_entra_id, "Authenticates with")
+Rel(c_funding_projection, d_message_broker_azure_service_bus, "Publishes messages to and consumes messages from", "Azure Service Bus")
+Rel(c_funding_projection, d_telemetry_application_insights, "Sends telemetry to")
 
 @enduml

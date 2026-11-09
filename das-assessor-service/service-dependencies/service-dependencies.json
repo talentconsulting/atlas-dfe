@@ -10,8 +10,8 @@
       "type": "other",
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.AssessorService.Infrastructure/SFA.DAS.AssessorService.Infrastructure.csproj",
-          "reason": "Infrastructure project file for Assessor Service."
+          "sourceFile": "src/SFA.DAS.AssessorService.Application.Api.Client/Clients/MergeOrganisationsApiClient.cs",
+          "reason": "Client evidences this is part of core service functionality."
         }
       ]
     },
@@ -21,47 +21,35 @@
       "type": "api",
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.AssessorService.Application.Api.Client/Clients/MergeOrganisationsApiClient.cs",
-          "reason": "API client implementations indicate outbound dependencies."
-        },
-        {
-          "sourceFile": "src/SFA.DAS.AssessorService.Application.Api.Client/Clients/RegisterApiClient.cs",
-          "reason": "API client implementations indicate outbound dependencies."
-        },
-        {
-          "sourceFile": "src/SFA.DAS.AssessorService.Application.Api.Client/Clients/StandardsApiClient.cs",
-          "reason": "API client implementations indicate outbound dependencies."
-        },
-        {
-          "sourceFile": "src/SFA.DAS.AssessorService.Api.Common/SFA.DAS.AssessorService.Api.Common.csproj",
-          "reason": "API-related project file referencing web-related SDKs and dependencies."
+          "sourceFile": "src/SFA.DAS.AssessorService.Application.Api/SFA.DAS.AssessorService.Application.Api.csproj",
+          "reason": "ASP.NET Core Web SDK project for the API"
         },
         {
           "sourceFile": "src/SFA.DAS.AssessorService.Application.Api/Program.cs",
-          "reason": "ASP.NET API entry point detected."
+          "reason": "ASP.NET Core web application entry point detected."
         },
         {
-          "sourceFile": "src/SFA.DAS.AssessorService.Application.Api/SFA.DAS.AssessorService.Application.Api.csproj",
-          "reason": "ASP.NET target framework with web SDK in project file."
+          "sourceFile": "src/SFA.DAS.AssessorService.Api.Common/SFA.DAS.AssessorService.Api.Common.csproj",
+          "reason": "Contains library references relevant to the API function."
         },
         {
-          "sourceFile": "src/SFA.DAS.AssessorService.Application.Api/StartupConfiguration/Startup.cs",
-          "reason": "Identified as the startup class for an ASP.NET API, with routing and middleware configuration."
+          "sourceFile": "src/SFA.DAS.AssessorService.Infrastructure/ApiClients/OuterApi/ApiClient.cs",
+          "reason": "Evidences HTTP API client construction."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.AssessorService.Data/StandardRepository.cs",
+          "reason": "Evidences database interactions using SQL Server."
         }
       ]
     },
     {
       "id": "assessor-service-external-api",
-      "name": "Assessor Service External API",
+      "name": "Assessor Service External",
       "type": "api",
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.AssessorService.Application.Api.External/Program.cs",
-          "reason": "ASP.NET API entry point detected."
-        },
-        {
-          "sourceFile": "src/SFA.DAS.AssessorService.Application.Api.External/SFA.DAS.AssessorService.Application.Api.External.csproj",
-          "reason": "ASP.NET target framework with web SDK in project file."
+          "reason": "ASP.NET Core web application entry point detected."
         }
       ]
     },
@@ -71,12 +59,12 @@
       "type": "web",
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.AssessorService.Web/Program.cs",
-          "reason": "ASP.NET Core entry point evidenced by CreateWebHostBuilder method."
+          "sourceFile": "src/SFA.DAS.AssessorService.Web/Startup.cs",
+          "reason": "ASP.NET Core web application entry point"
         },
         {
-          "sourceFile": "src/SFA.DAS.AssessorService.Web/SFA.DAS.AssessorService.Web.csproj",
-          "reason": "Project file evidences a web application by using the Microsoft.NET.Sdk.Web SDK."
+          "sourceFile": "src/SFA.DAS.AssessorService.Web/Program.cs",
+          "reason": "Detected ASP.NET Core web application entry point."
         }
       ]
     }
@@ -84,43 +72,12 @@
   "dependencies": [
     {
       "sourceId": "assessor-service-web",
-      "name": "Redis",
+      "name": "Distributed Redis Cache",
       "kind": "cache",
       "classification": "third-party",
       "direction": "outbound",
       "client": null,
-      "technology": "StackExchange.Redis",
-      "configurationKeys": [
-        "SessionRedisConnectionString"
-      ],
-      "authentication": {
-        "type": null,
-        "configurationKeys": []
-      },
-      "operations": [],
-      "resources": [],
-      "evidence": [
-        {
-          "sourceFile": "src/SFA.DAS.AssessorService.Web/StartupConfiguration/ServiceCollectionExtensions.cs",
-          "reason": "AddStackExchangeRedisCache method called with configuration for Redis session state cache."
-        },
-        {
-          "sourceFile": "src/SFA.DAS.AssessorService.Web/StartupConfiguration/ServiceCollectionExtensions.cs",
-          "reason": "PersistKeysToStackExchangeRedis method called for data protection using Redis."
-        }
-      ],
-      "confidence": "high",
-      "targetId": "cache-redis",
-      "description": "Caches data in"
-    },
-    {
-      "sourceId": "assessor-service-web",
-      "name": "Azure Key Vault",
-      "kind": "cloud-service",
-      "classification": "third-party",
-      "direction": "outbound",
-      "client": null,
-      "technology": "Azure.Identity",
+      "technology": "Redis",
       "configurationKeys": [],
       "authentication": {
         "type": null,
@@ -131,99 +88,143 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.AssessorService.Web/SFA.DAS.AssessorService.Web.csproj",
-          "reason": "Azure.Identity package included for accessing Azure Key Vault."
-        },
-        {
-          "sourceFile": "src/SFA.DAS.AssessorService.Web/Program.cs",
-          "reason": "OpenTelemetry configured with Application Insights using Azure Key Vault connection string."
+          "reason": "Detected Microsoft.Extensions.Caching.StackExchangeRedis and Microsoft.AspNetCore.DataProtection.StackExchangeRedis usage for caching."
         }
       ],
-      "confidence": "medium",
-      "targetId": "cloud-service-azure-key-vault",
-      "description": "Uses"
+      "confidence": "high",
+      "targetId": "cache-distributed-redis-cache",
+      "description": "Caches data in"
     },
     {
-      "sourceId": "assessor-service",
-      "name": "Azure Table Storage",
-      "kind": "cloud-service",
+      "sourceId": "assessor-service-web",
+      "name": "Azure Table Storage Configuration",
+      "kind": "configuration-store",
       "classification": "third-party",
       "direction": "outbound",
       "client": null,
-      "technology": "Azure.Data.Tables library",
+      "technology": null,
       "configurationKeys": [
         "storageConnectionString"
       ],
       "authentication": {
         "type": null,
-        "configurationKeys": [
-          "storageConnectionString"
-        ]
+        "configurationKeys": []
       },
       "operations": [],
       "resources": [],
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.AssessorService.Settings/ConfigurationService.cs",
-          "reason": "TableServiceClient construction indicates connection to Azure Table Storage."
+          "reason": "The code queries Azure Table Storage for configuration using TableServiceClient and GetTableClient."
         }
       ],
       "confidence": "high",
-      "targetId": "cloud-service-azure-table-storage",
-      "description": "Uses"
+      "targetId": "configuration-store-azure-table-storage-configuration",
+      "description": "Reads configuration from"
     },
     {
       "sourceId": "assessor-service-api",
-      "name": "Assessor Database",
+      "name": "SQL Database",
       "kind": "database",
       "classification": "internal",
       "direction": "outbound",
       "client": "AssessorDbContext",
-      "technology": "EntityFramework",
+      "technology": "SQL Server",
       "configurationKeys": [
-        "_config.SandboxSqlConnectionString",
+        "ConnectionStrings:DefaultConnection",
         "SandboxSqlConnectionString",
         "SqlConnectionString"
       ],
       "authentication": {
-        "type": "managed-identity",
-        "configurationKeys": [
-          "SandboxSqlConnectionString"
-        ]
+        "type": "Azure AD",
+        "configurationKeys": []
       },
       "operations": [],
-      "resources": [
-        {
-          "type": "database",
-          "name": "SqlConnectionString",
-          "direction": "outbound",
-          "sourceFile": "src/SFA.DAS.AssessorService.Application.Api/StartupConfiguration/DatabaseExtensions.cs"
-        }
-      ],
+      "resources": [],
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.AssessorService.Application.Api/StartupConfiguration/DatabaseExtensions.cs",
-          "reason": "AssessorDbContext registered in dependency injection with a SqlConnection."
+          "reason": "EF Core database context registration"
         },
         {
-          "sourceFile": "src/SFA.DAS.AssessorService.Data/AssessorDbContext.cs",
-          "reason": "AssessorDbContext registered with DbContextOptions pointing to a SQL Server database."
-        },
-        {
-          "sourceFile": "src/SFA.DAS.AssessorService.Data/SandboxDbRepository.cs",
-          "reason": "SandboxDbRepository uses SQL for database operations and starts a SQL connection using the Sandbox SQL connection string."
+          "sourceFile": "src/SFA.DAS.AssessorService.Data/StandardRepository.cs",
+          "reason": "SQL Server database interaction found in Dapper and EF Core usage, such as SqlConnection, SqlMapper, and DbContext."
         }
       ],
       "confidence": "high",
-      "targetId": "database-assessor-database",
+      "targetId": "database-sql-database",
       "description": "Reads from and writes to"
     },
     {
-      "sourceId": "assessor-service-api",
-      "name": "Application Management",
+      "sourceId": "assessor-service-web",
+      "name": "Charity Commission",
+      "kind": "grpc-service",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": "CharityCommissionService.SearchCharitiesV1SoapClient",
+      "technology": "gRPC (Soap)",
+      "configurationKeys": [],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [
+        {
+          "method": "CALL",
+          "methodName": "GetCharityByRegisteredCharityNumberAndSubsidiaryNumberAsync",
+          "path": null,
+          "sourceFile": "src/SFA.DAS.AssessorService.Infrastructure/Connected Services/CharityCommissionService/Reference.cs"
+        },
+        {
+          "method": "CALL",
+          "methodName": "GetCharityByRegisteredCharityNumberAsync",
+          "path": null,
+          "sourceFile": "src/SFA.DAS.AssessorService.Infrastructure/Connected Services/CharityCommissionService/Reference.cs"
+        }
+      ],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.AssessorService.Infrastructure/Connected Services/CharityCommissionService/Reference.cs",
+          "reason": "Detected gRPC client CharityCommissionService.SearchCharitiesV1SoapClient invoking Charity Commission endpoints."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "grpc-service-charity-commission",
+      "description": "Calls the gRPC service of"
+    },
+    {
+      "sourceId": "assessor-service-web",
+      "name": "Application",
       "kind": "http-api",
       "classification": "internal",
       "direction": "outbound",
       "client": "IApplicationApiClient",
+      "technology": "HTTP",
+      "configurationKeys": [],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.AssessorService.Web/StartupConfiguration/ServiceCollectionExtensions.cs",
+          "reason": "IApplicationApiClient registered as transient"
+        }
+      ],
+      "confidence": "high",
+      "targetId": "http-api-application",
+      "description": "Calls the API of"
+    },
+    {
+      "sourceId": "assessor-service-api",
+      "name": "Application",
+      "kind": "http-api",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "ApplicationApiClient",
       "technology": "HttpClient",
       "configurationKeys": [],
       "authentication": {
@@ -238,6 +239,12 @@
           "sourceFile": "src/SFA.DAS.AssessorService.Application.Api.Client/Clients/ApplicationApiClient.cs"
         },
         {
+          "method": "GET",
+          "methodName": "GetStandardApplications",
+          "path": "/api/v1/applications/{userId}/standard-applications",
+          "sourceFile": "src/SFA.DAS.AssessorService.Application.Api.Client/Clients/ApplicationApiClient.cs"
+        },
+        {
           "method": "POST",
           "methodName": "CreateApplication",
           "path": "api/v1/applications/createApplication",
@@ -248,11 +255,36 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.AssessorService.Application.Api.Client/Clients/ApplicationApiClient.cs",
-          "reason": "Handles HttpClient calls to the Application Service for various operations."
+          "reason": "HttpClient usage for making outbound requests."
         }
       ],
       "confidence": "high",
-      "targetId": "http-api-application-management",
+      "targetId": "http-api-application",
+      "description": "Calls the API of"
+    },
+    {
+      "sourceId": "assessor-service-web",
+      "name": "Approvals Learner",
+      "kind": "http-api",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "IApprovalsLearnerApiClient",
+      "technology": "HTTP",
+      "configurationKeys": [],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.AssessorService.Web/StartupConfiguration/ServiceCollectionExtensions.cs",
+          "reason": "IApprovalsLearnerApiClient registered as transient"
+        }
+      ],
+      "confidence": "high",
+      "targetId": "http-api-approvals-learner",
       "description": "Calls the API of"
     },
     {
@@ -261,7 +293,7 @@
       "kind": "http-api",
       "classification": "internal",
       "direction": "outbound",
-      "client": "IApprovalsLearnerApiClient",
+      "client": "ApprovalsLearnerApiClient",
       "technology": "HttpClient",
       "configurationKeys": [],
       "authentication": {
@@ -272,7 +304,7 @@
         {
           "method": "GET",
           "methodName": "GetLearnerRecord",
-          "path": "/api/approvals/learner?stdCode={stdCode}&uln={uln}",
+          "path": "/api/approvals/learner",
           "sourceFile": "src/SFA.DAS.AssessorService.Application.Api.Client/Clients/ApprovalsLearnerApiClient.cs"
         }
       ],
@@ -280,7 +312,7 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.AssessorService.Application.Api.Client/Clients/ApprovalsLearnerApiClient.cs",
-          "reason": "Approvals Learner API client for HttpClient integration."
+          "reason": "HttpClient usage for making outbound requests."
         }
       ],
       "confidence": "high",
@@ -289,70 +321,63 @@
     },
     {
       "sourceId": "assessor-service-web",
-      "name": "Assessor API",
+      "name": "Azure",
       "kind": "http-api",
       "classification": "internal",
       "direction": "outbound",
-      "client": null,
-      "technology": null,
+      "client": "IAzureApiClient",
+      "technology": "HTTP",
       "configurationKeys": [
-        "AssessorApiAuthentication:ApiBaseAddress"
+        "AzureApiClientConfiguration"
       ],
       "authentication": {
-        "type": "Bearer",
-        "configurationKeys": [
-          "AssessorApiAuthentication:ClientId",
-          "AssessorApiAuthentication:ClientSecret"
-        ]
+        "type": null,
+        "configurationKeys": []
       },
       "operations": [],
       "resources": [],
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.AssessorService.Web/StartupConfiguration/ServiceCollectionExtensions.cs",
-          "reason": "AddApiClients method registers IApplicationApiClient calling Assessor API."
+          "reason": "IAzureApiClient registered as transient"
         }
       ],
       "confidence": "high",
-      "targetId": "http-api-assessor-api",
+      "targetId": "http-api-azure",
       "description": "Calls the API of"
     },
     {
-      "sourceId": "assessor-service-api",
-      "name": "Assessor API",
+      "sourceId": "assessor-service-web",
+      "name": "Certificate",
       "kind": "http-api",
       "classification": "internal",
       "direction": "outbound",
-      "client": "IAssessorApiClientFactory",
-      "technology": "HttpClient",
-      "configurationKeys": [
-        "AssessorApiClientConfiguration"
-      ],
+      "client": "ICertificateApiClient",
+      "technology": "HTTP",
+      "configurationKeys": [],
       "authentication": {
-        "type": "ManagedIdentity",
-        "configurationKeys": [
-          "AssessorApiClientConfiguration"
-        ]
+        "type": null,
+        "configurationKeys": []
       },
       "operations": [],
       "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.AssessorService.Application.Api.Client/AssessorApiClientFactory.cs",
-          "reason": "Factory creates HttpClient with ManagedIdentity usage."
+          "sourceFile": "src/SFA.DAS.AssessorService.Web/StartupConfiguration/ServiceCollectionExtensions.cs",
+          "reason": "ICertificateApiClient registered as transient"
         }
       ],
       "confidence": "high",
-      "targetId": "http-api-assessor-api",
+      "targetId": "http-api-certificate",
       "description": "Calls the API of"
     },
     {
       "sourceId": "assessor-service-api",
-      "name": "Certificate Management",
+      "name": "Certificates",
       "kind": "http-api",
       "classification": "internal",
       "direction": "outbound",
-      "client": "ICertificateApiClient",
+      "client": "CertificateApiClient",
       "technology": "HttpClient",
       "configurationKeys": [],
       "authentication": {
@@ -363,7 +388,7 @@
         {
           "method": "GET",
           "methodName": "GetCertificate",
-          "path": "api/v1/certificates/{certificateId}?includeLogs={includeLogs}",
+          "path": "api/v1/certificates/{certificateId}",
           "sourceFile": "src/SFA.DAS.AssessorService.Application.Api.Client/Clients/CertificateApiClient.cs"
         },
         {
@@ -377,11 +402,11 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.AssessorService.Application.Api.Client/Clients/CertificateApiClient.cs",
-          "reason": "Handles HttpClient calls to the Certificate Management Service."
+          "reason": "HttpClient usage for making outbound requests."
         }
       ],
       "confidence": "high",
-      "targetId": "http-api-certificate-management",
+      "targetId": "http-api-certificates",
       "description": "Calls the API of"
     },
     {
@@ -391,10 +416,8 @@
       "classification": "third-party",
       "direction": "outbound",
       "client": "ICharityCommissionApiClient",
-      "technology": "HttpClient",
-      "configurationKeys": [
-        "ApiConfiguration.CharityCommissionApiAuthentication"
-      ],
+      "technology": "HTTP",
+      "configurationKeys": [],
       "authentication": {
         "type": null,
         "configurationKeys": []
@@ -404,7 +427,7 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.AssessorService.Application.Api/StartupConfiguration/ServiceCollectionExtensions.cs",
-          "reason": "AddHttpClient call registering ICharityCommissionApiClient."
+          "reason": "Registered HTTP client for Charity Commission API"
         }
       ],
       "confidence": "high",
@@ -418,10 +441,8 @@
       "classification": "third-party",
       "direction": "outbound",
       "client": "ICompaniesHouseApiClient",
-      "technology": "HttpClient",
-      "configurationKeys": [
-        "ApiConfiguration.CompaniesHouseApiAuthentication"
-      ],
+      "technology": "HTTP",
+      "configurationKeys": [],
       "authentication": {
         "type": null,
         "configurationKeys": []
@@ -431,7 +452,7 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.AssessorService.Application.Api/StartupConfiguration/ServiceCollectionExtensions.cs",
-          "reason": "AddHttpClient call registering ICompaniesHouseApiClient."
+          "reason": "Registered HTTP client for Companies House API"
         }
       ],
       "confidence": "high",
@@ -439,80 +460,37 @@
       "description": "Calls the API of"
     },
     {
-      "sourceId": "assessor-service-external-api",
-      "name": "External Standards API",
+      "sourceId": "assessor-service-web",
+      "name": "Contacts",
       "kind": "http-api",
-      "classification": "third-party",
+      "classification": "internal",
       "direction": "outbound",
-      "client": "ApiClient",
-      "technology": "HttpClient",
+      "client": "IContactsApiClient",
+      "technology": "HTTP",
       "configurationKeys": [],
       "authentication": {
         "type": null,
         "configurationKeys": []
       },
-      "operations": [
-        {
-          "method": "DELETE",
-          "methodName": "DeleteEpa",
-          "path": "/api/v1/epas/batch/{request.Uln}/{request.FamilyName}/{request.Standard}/{request.EpaReference}/{request.UkPrn}",
-          "sourceFile": "src/SFA.DAS.AssessorService.Application.Api.External/Infrastructure/ApiClient.cs"
-        },
-        {
-          "method": "GET",
-          "methodName": "GetCertificate",
-          "path": "/api/v1/certificates/batch/{request.Uln}/{request.FamilyName}/{request.Standard}/{request.UkPrn}",
-          "sourceFile": "src/SFA.DAS.AssessorService.Application.Api.External/Infrastructure/ApiClient.cs"
-        },
-        {
-          "method": "GET",
-          "methodName": "GetLearner",
-          "path": "/api/v1/learners/batch/{request.Uln}/{request.FamilyName}/{request.Standard}/{request.UkPrn}",
-          "sourceFile": "src/SFA.DAS.AssessorService.Application.Api.External/Infrastructure/ApiClient.cs"
-        },
-        {
-          "method": "POST",
-          "methodName": "CreateCertificates",
-          "path": "/api/v1/certificates/batch",
-          "sourceFile": "src/SFA.DAS.AssessorService.Application.Api.External/Infrastructure/ApiClient.cs"
-        },
-        {
-          "method": "POST",
-          "methodName": "CreateEpas",
-          "path": "/api/v1/epas/batch",
-          "sourceFile": "src/SFA.DAS.AssessorService.Application.Api.External/Infrastructure/ApiClient.cs"
-        },
-        {
-          "method": "POST",
-          "methodName": "SubmitCertificates",
-          "path": "/api/v1/certificates/batch/submit",
-          "sourceFile": "src/SFA.DAS.AssessorService.Application.Api.External/Infrastructure/ApiClient.cs"
-        },
-        {
-          "method": "PUT",
-          "methodName": "UpdateEpas",
-          "path": "/api/v1/epas/batch",
-          "sourceFile": "src/SFA.DAS.AssessorService.Application.Api.External/Infrastructure/ApiClient.cs"
-        }
-      ],
+      "operations": [],
       "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.AssessorService.Application.Api.External/Infrastructure/ApiClient.cs",
-          "reason": "ApiClient accesses multiple HTTP endpoints."
+          "sourceFile": "src/SFA.DAS.AssessorService.Web/StartupConfiguration/ServiceCollectionExtensions.cs",
+          "reason": "IContactsApiClient registered as transient"
         }
       ],
       "confidence": "high",
-      "targetId": "http-api-external-standards-api",
+      "targetId": "http-api-contacts",
       "description": "Calls the API of"
     },
     {
       "sourceId": "assessor-service-api",
-      "name": "Learner Details",
+      "name": "Contacts",
       "kind": "http-api",
       "classification": "internal",
       "direction": "outbound",
-      "client": "ILearnerDetailsApiClient",
+      "client": "ContactsApiClient",
       "technology": "HttpClient",
       "configurationKeys": [],
       "authentication": {
@@ -522,25 +500,111 @@
       "operations": [
         {
           "method": "GET",
-          "methodName": "GetLearnerDetail",
-          "path": "/api/v1/learnerDetails?stdCode={stdCode}&uln={uln}&alllogs={allLogs}",
-          "sourceFile": "src/SFA.DAS.AssessorService.Application.Api.Client/Clients/LearnerDetailsApiClient.cs"
+          "methodName": "GetPrivileges",
+          "path": "/api/v1/contacts/privileges",
+          "sourceFile": "src/SFA.DAS.AssessorService.Application.Api.Client/Clients/ContactsApiClient.cs"
         }
       ],
       "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.AssessorService.Application.Api.Client/Clients/LearnerDetailsApiClient.cs",
-          "reason": "API Client handling HttpClient calls for Learner Details."
+          "sourceFile": "src/SFA.DAS.AssessorService.Application.Api.Client/Clients/ContactsApiClient.cs",
+          "reason": "HttpClient usage for making outbound requests."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.AssessorService.Application.Api/StartupConfiguration/ServiceCollectionExtensions.cs",
+          "reason": "Registered HTTP client for Contacts API"
         }
       ],
       "confidence": "high",
-      "targetId": "http-api-learner-details",
+      "targetId": "http-api-contacts",
       "description": "Calls the API of"
     },
     {
       "sourceId": "assessor-service-web",
-      "name": "Login API",
+      "name": "Dashboard",
+      "kind": "http-api",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "IDashboardApiClient",
+      "technology": "HTTP",
+      "configurationKeys": [],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.AssessorService.Web/StartupConfiguration/ServiceCollectionExtensions.cs",
+          "reason": "IDashboardApiClient registered as transient"
+        }
+      ],
+      "confidence": "high",
+      "targetId": "http-api-dashboard",
+      "description": "Calls the API of"
+    },
+    {
+      "sourceId": "assessor-service-api",
+      "name": "Dashboard",
+      "kind": "http-api",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "DashboardApiClient",
+      "technology": "HttpClient",
+      "configurationKeys": [],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [
+        {
+          "method": "GET",
+          "methodName": "GetEpaoDashboard",
+          "path": "/api/v1/dashboard/{epaoId}",
+          "sourceFile": "src/SFA.DAS.AssessorService.Application.Api.Client/Clients/DashboardApiClient.cs"
+        }
+      ],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.AssessorService.Application.Api.Client/Clients/DashboardApiClient.cs",
+          "reason": "HttpClient usage for making outbound requests."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "http-api-dashboard",
+      "description": "Calls the API of"
+    },
+    {
+      "sourceId": "assessor-service-web",
+      "name": "Email",
+      "kind": "http-api",
+      "classification": "unknown",
+      "direction": "outbound",
+      "client": "IEmailApiClient",
+      "technology": "HTTP",
+      "configurationKeys": [],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.AssessorService.Web/StartupConfiguration/ServiceCollectionExtensions.cs",
+          "reason": "IEmailApiClient registered as transient"
+        }
+      ],
+      "confidence": "high",
+      "targetId": "http-api-email",
+      "description": "Calls the API of"
+    },
+    {
+      "sourceId": "assessor-service-external-api",
+      "name": "IApiClient",
       "kind": "http-api",
       "classification": "internal",
       "direction": "outbound",
@@ -548,32 +612,29 @@
       "technology": null,
       "configurationKeys": [],
       "authentication": {
-        "type": "Bearer",
-        "configurationKeys": [
-          "AzureApiAuthentication:ClientId",
-          "AzureApiAuthentication:ClientSecret"
-        ]
+        "type": null,
+        "configurationKeys": []
       },
       "operations": [],
       "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.AssessorService.Web/StartupConfiguration/ServiceCollectionExtensions.cs",
-          "reason": "Login API interaction evidenced by AddApiClients registration."
+          "sourceFile": "src/SFA.DAS.AssessorService.Application.Api.External/StartupConfiguration/ServiceCollectionExtensions.cs",
+          "reason": "IApiClient registered for dependency injection."
         }
       ],
       "confidence": "high",
-      "targetId": "http-api-login-api",
+      "targetId": "http-api-iapiclient",
       "description": "Calls the API of"
     },
     {
-      "sourceId": "assessor-service-api",
+      "sourceId": "assessor-service",
       "name": "Merge Organisations",
       "kind": "http-api",
       "classification": "internal",
       "direction": "outbound",
       "client": "MergeOrganisationsApiClient",
-      "technology": "HttpClient",
+      "technology": "HTTP",
       "configurationKeys": [],
       "authentication": {
         "type": null,
@@ -583,13 +644,13 @@
         {
           "method": "GET",
           "methodName": "GetMergeLog",
-          "path": "api/v1/mergeorganisations/log?pageSize={request.PageSize.Value}&pageIndex={request.PageIndex.Value}&orderBy={request.SortColumn}&orderDirection={request.SortDirection}&primaryEPAOId={request.PrimaryEPAOId}&secondaryEPAOId={request.SecondaryEPAOId}",
+          "path": "/api/v1/mergeorganisations/log",
           "sourceFile": "src/SFA.DAS.AssessorService.Application.Api.Client/Clients/MergeOrganisationsApiClient.cs"
         },
         {
           "method": "GET",
           "methodName": "GetMergeLogEntry",
-          "path": "api/v1/mergeorganisations?id={mergeId}",
+          "path": "/api/v1/mergeorganisations",
           "sourceFile": "src/SFA.DAS.AssessorService.Application.Api.Client/Clients/MergeOrganisationsApiClient.cs"
         },
         {
@@ -603,7 +664,7 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.AssessorService.Application.Api.Client/Clients/MergeOrganisationsApiClient.cs",
-          "reason": "Identified HttpClient initialization and API calls for Merge Organisations."
+          "reason": "HTTP operations demonstrate externally called endpoints."
         }
       ],
       "confidence": "high",
@@ -614,28 +675,21 @@
       "sourceId": "assessor-service-api",
       "name": "Notifications",
       "kind": "http-api",
-      "classification": "internal",
+      "classification": "third-party",
       "direction": "outbound",
       "client": "INotificationsApi",
-      "technology": "HttpClient",
-      "configurationKeys": [
-        "Notifications.Api.Client.Configuration.INotificationsApiClientConfiguration.ApiBaseUrl"
-      ],
+      "technology": "HTTP",
+      "configurationKeys": [],
       "authentication": {
-        "type": "bearer-token",
-        "configurationKeys": [
-          "ClientId",
-          "ClientSecret",
-          "IdentifierUri",
-          "Tenant"
-        ]
+        "type": null,
+        "configurationKeys": []
       },
       "operations": [],
       "resources": [],
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.AssessorService.Application.Api/StartupConfiguration/ServiceCollectionExtensions.cs",
-          "reason": "AddHttpClient call registering INotificationsApi."
+          "reason": "Registered HTTP client for Notifications API"
         }
       ],
       "confidence": "high",
@@ -643,63 +697,13 @@
       "description": "Calls the API of"
     },
     {
-      "sourceId": "assessor-service-api",
-      "name": "Opp Finder",
-      "kind": "http-api",
-      "classification": "internal",
-      "direction": "outbound",
-      "client": "OppFinderApiClient",
-      "technology": "HttpClient",
-      "configurationKeys": [],
-      "authentication": {
-        "type": null,
-        "configurationKeys": []
-      },
-      "operations": [
-        {
-          "method": "POST",
-          "methodName": "GetApprovedStandards",
-          "path": "/api/v1/oppfinder/approved",
-          "sourceFile": "src/SFA.DAS.AssessorService.Application.Api.Client/Clients/OppFinderApiClient.cs"
-        },
-        {
-          "method": "POST",
-          "methodName": "GetFilterStandards",
-          "path": "/api/v1/oppfinder/filter",
-          "sourceFile": "src/SFA.DAS.AssessorService.Application.Api.Client/Clients/OppFinderApiClient.cs"
-        },
-        {
-          "method": "POST",
-          "methodName": "GetNonApprovedStandards",
-          "path": "/api/v1/oppfinder/nonapproved",
-          "sourceFile": "src/SFA.DAS.AssessorService.Application.Api.Client/Clients/OppFinderApiClient.cs"
-        },
-        {
-          "method": "POST",
-          "methodName": "RecordExpresionOfInterest",
-          "path": "/api/v1/oppfinder/expression-of-interest",
-          "sourceFile": "src/SFA.DAS.AssessorService.Application.Api.Client/Clients/OppFinderApiClient.cs"
-        }
-      ],
-      "resources": [],
-      "evidence": [
-        {
-          "sourceFile": "src/SFA.DAS.AssessorService.Application.Api.Client/Clients/OppFinderApiClient.cs",
-          "reason": "Identified HttpClient initialization and API calls for Opp Finder."
-        }
-      ],
-      "confidence": "high",
-      "targetId": "http-api-opp-finder",
-      "description": "Calls the API of"
-    },
-    {
-      "sourceId": "assessor-service-api",
-      "name": "Organisations",
+      "sourceId": "assessor-service",
+      "name": "Organisation Search",
       "kind": "http-api",
       "classification": "internal",
       "direction": "outbound",
       "client": "OrganisationsApiClient",
-      "technology": "HttpClient",
+      "technology": "HTTP",
       "configurationKeys": [],
       "authentication": {
         "type": null,
@@ -708,20 +712,20 @@
       "operations": [
         {
           "method": "GET",
+          "methodName": "GetOrganisation",
+          "path": "/api/v1/organisations/ukprn/{ukprn}",
+          "sourceFile": "src/SFA.DAS.AssessorService.Application.Api.Client/Clients/OrganisationsApiClient.cs"
+        },
+        {
+          "method": "GET",
           "methodName": "GetOrganisationByUserId",
           "path": "/api/v1/organisations/forContact/{userId}",
           "sourceFile": "src/SFA.DAS.AssessorService.Application.Api.Client/Clients/OrganisationsApiClient.cs"
         },
         {
-          "method": "POST",
-          "methodName": "Create",
-          "path": "/api/v1/organisations/",
-          "sourceFile": "src/SFA.DAS.AssessorService.Application.Api.Client/Clients/OrganisationsApiClient.cs"
-        },
-        {
-          "method": "PUT",
-          "methodName": "Update",
-          "path": "/api/v1/organisations/",
+          "method": "GET",
+          "methodName": "GetOrganisationContacts",
+          "path": "/api/v1/organisations/organisation/{organisationId}/contacts",
           "sourceFile": "src/SFA.DAS.AssessorService.Application.Api.Client/Clients/OrganisationsApiClient.cs"
         }
       ],
@@ -729,7 +733,32 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.AssessorService.Application.Api.Client/Clients/OrganisationsApiClient.cs",
-          "reason": "Identified HttpClient initialization and API calls for Organisations."
+          "reason": "HTTP operations demonstrate externally called endpoints."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "http-api-organisation-search",
+      "description": "Calls the API of"
+    },
+    {
+      "sourceId": "assessor-service-api",
+      "name": "Organisations",
+      "kind": "http-api",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": "IOrganisationsApiClient",
+      "technology": "HTTP",
+      "configurationKeys": [],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.AssessorService.Application.Api/StartupConfiguration/ServiceCollectionExtensions.cs",
+          "reason": "Registered HTTP client for Organisations API"
         }
       ],
       "confidence": "high",
@@ -742,10 +771,10 @@
       "kind": "http-api",
       "classification": "internal",
       "direction": "outbound",
-      "client": "IOuterApiClient",
+      "client": "OuterApiClient",
       "technology": "HttpClient",
       "configurationKeys": [
-        "ApiConfiguration.OuterApi"
+        "OuterApiClientConfiguration"
       ],
       "authentication": {
         "type": null,
@@ -755,8 +784,12 @@
       "resources": [],
       "evidence": [
         {
+          "sourceFile": "src/SFA.DAS.AssessorService.Infrastructure/ApiClients/OuterApi/ApiClient.cs",
+          "reason": "OuterApiClient makes outbound HTTP requests and uses configuration for API."
+        },
+        {
           "sourceFile": "src/SFA.DAS.AssessorService.Application.Api/StartupConfiguration/ServiceCollectionExtensions.cs",
-          "reason": "AddHttpClient call registering IOuterApiClient."
+          "reason": "Registered HTTP client for Outer API"
         }
       ],
       "confidence": "high",
@@ -767,73 +800,31 @@
       "sourceId": "assessor-service-api",
       "name": "QnA",
       "kind": "http-api",
-      "classification": "internal",
-      "direction": "outbound",
-      "client": "IQnaApiClient",
-      "technology": "HttpClient",
-      "configurationKeys": [
-        "ApiConfiguration.QnaApiAuthentication"
-      ],
-      "authentication": {
-        "type": null,
-        "configurationKeys": []
-      },
-      "operations": [],
-      "resources": [],
-      "evidence": [
-        {
-          "sourceFile": "src/SFA.DAS.AssessorService.Application.Api/StartupConfiguration/ServiceCollectionExtensions.cs",
-          "reason": "AddHttpClient call registering IQnaApiClient."
-        }
-      ],
-      "confidence": "high",
-      "targetId": "http-api-qna",
-      "description": "Calls the API of"
-    },
-    {
-      "sourceId": "assessor-service",
-      "name": "QnA",
-      "kind": "http-api",
       "classification": "third-party",
       "direction": "outbound",
       "client": "QnaApiClient",
       "technology": "HttpClient",
-      "configurationKeys": [],
+      "configurationKeys": [
+        "QnaApiClientConfiguration"
+      ],
       "authentication": {
-        "type": null,
+        "type": "custom-http-header",
         "configurationKeys": []
       },
-      "operations": [
-        {
-          "method": "GET",
-          "methodName": "GetApplicationData",
-          "path": "/applications/{applicationId}/applicationData",
-          "sourceFile": "src/SFA.DAS.AssessorService.Infrastructure/ApiClients/QnA/QnaApiClient.cs"
-        },
-        {
-          "method": "POST",
-          "methodName": "SnapshotApplication",
-          "path": "/applications/{applicationId}/snapshot",
-          "sourceFile": "src/SFA.DAS.AssessorService.Infrastructure/ApiClients/QnA/QnaApiClient.cs"
-        },
-        {
-          "method": "POST",
-          "methodName": "StartApplications",
-          "path": "/applications/start",
-          "sourceFile": "src/SFA.DAS.AssessorService.Infrastructure/ApiClients/QnA/QnaApiClient.cs"
-        },
-        {
-          "method": "POST",
-          "methodName": "UpdateApplicationData",
-          "path": "/applications/{applicationId}/applicationData",
-          "sourceFile": "src/SFA.DAS.AssessorService.Infrastructure/ApiClients/QnA/QnaApiClient.cs"
-        }
-      ],
+      "operations": [],
       "resources": [],
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.AssessorService.Infrastructure/ApiClients/QnA/QnaApiClient.cs",
-          "reason": "Constructor and operations in QnaApiClient indicate outbound HTTP calls to the QnA API."
+          "reason": "QnaApiClient interacts with a separately hosted QnA service."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.AssessorService.Infrastructure/ApiClients/QnA/QnaApiClientFactory.cs",
+          "reason": "QnaApiClientFactory constructs HttpClient for QnA API."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.AssessorService.Application.Api/StartupConfiguration/ServiceCollectionExtensions.cs",
+          "reason": "Registered HTTP client for QnA API"
         }
       ],
       "confidence": "high",
@@ -841,92 +832,34 @@
       "description": "Calls the API of"
     },
     {
-      "sourceId": "assessor-service-web",
-      "name": "QnA API",
-      "kind": "http-api",
-      "classification": "internal",
-      "direction": "outbound",
-      "client": null,
-      "technology": null,
-      "configurationKeys": [
-        "QnaApiAuthentication:ApiBaseAddress"
-      ],
-      "authentication": {
-        "type": "Bearer",
-        "configurationKeys": [
-          "QnaApiAuthentication:ClientId",
-          "QnaApiAuthentication:ClientSecret"
-        ]
-      },
-      "operations": [],
-      "resources": [],
-      "evidence": [
-        {
-          "sourceFile": "src/SFA.DAS.AssessorService.Web/StartupConfiguration/ServiceCollectionExtensions.cs",
-          "reason": "AddApiClients method registers IQnaApiClient for interaction with QnA API."
-        }
-      ],
-      "confidence": "high",
-      "targetId": "http-api-qna-api",
-      "description": "Calls the API of"
-    },
-    {
       "sourceId": "assessor-service-api",
-      "name": "Reference Data",
-      "kind": "http-api",
-      "classification": "internal",
-      "direction": "outbound",
-      "client": "IReferenceDataApiClient",
-      "technology": "HttpClient",
-      "configurationKeys": [
-        "ApiConfiguration.ReferenceDataApiAuthentication"
-      ],
-      "authentication": {
-        "type": null,
-        "configurationKeys": []
-      },
-      "operations": [],
-      "resources": [],
-      "evidence": [
-        {
-          "sourceFile": "src/SFA.DAS.AssessorService.Application.Api/StartupConfiguration/ServiceCollectionExtensions.cs",
-          "reason": "AddHttpClient call registering IReferenceDataApiClient."
-        }
-      ],
-      "confidence": "high",
-      "targetId": "http-api-reference-data",
-      "description": "Calls the API of"
-    },
-    {
-      "sourceId": "assessor-service",
       "name": "Reference Data",
       "kind": "http-api",
       "classification": "third-party",
       "direction": "outbound",
       "client": "ReferenceDataApiClient",
       "technology": "HttpClient",
-      "configurationKeys": [],
+      "configurationKeys": [
+        "ReferenceDataApiClientConfiguration"
+      ],
       "authentication": {
-        "type": "Azure Active Directory",
+        "type": "oauth2",
         "configurationKeys": []
       },
-      "operations": [
-        {
-          "method": "GET",
-          "methodName": "SearchOrgansiation",
-          "path": "/api/organisations?searchTerm={searchTerm}",
-          "sourceFile": "src/SFA.DAS.AssessorService.Infrastructure/ApiClients/ReferenceData/ReferenceDataApiClient.cs"
-        }
-      ],
+      "operations": [],
       "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.AssessorService.Infrastructure/ApiClients/ReferenceData/ReferenceDataApiClientFactory.cs",
-          "reason": "Factory with Azure Active Directory authentication mechanism for Reference Data API client."
+          "sourceFile": "src/SFA.DAS.AssessorService.Infrastructure/ApiClients/ReferenceData/ReferenceDataApiClient.cs",
+          "reason": "ReferenceDataApiClient makes outbound HTTP requests for organization data."
         },
         {
-          "sourceFile": "src/SFA.DAS.AssessorService.Infrastructure/ApiClients/ReferenceData/ReferenceDataApiClient.cs",
-          "reason": "ReferenceDataApiClient performs outbound HTTP calls to the Reference Data API."
+          "sourceFile": "src/SFA.DAS.AssessorService.Infrastructure/ApiClients/ReferenceData/ReferenceDataApiClientFactory.cs",
+          "reason": "ReferenceDataApiClientFactory constructs HttpClient for Reference Data API."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.AssessorService.Application.Api/StartupConfiguration/ServiceCollectionExtensions.cs",
+          "reason": "Registered HTTP client for Reference Data"
         }
       ],
       "confidence": "high",
@@ -935,14 +868,106 @@
     },
     {
       "sourceId": "assessor-service-api",
-      "name": "Roatp",
+      "name": "RoATP",
       "kind": "http-api",
-      "classification": "internal",
+      "classification": "third-party",
       "direction": "outbound",
-      "client": "IRoatpApiClient",
+      "client": "RoatpApiClient",
       "technology": "HttpClient",
       "configurationKeys": [
-        "ApiConfiguration.RoatpApiAuthentication"
+        "RoatpApiClientConfiguration"
+      ],
+      "authentication": {
+        "type": "oauth2",
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.AssessorService.Application.Api/StartupConfiguration/ServiceCollectionExtensions.cs",
+          "reason": "Registered HTTP client for RoATP"
+        },
+        {
+          "sourceFile": "src/SFA.DAS.AssessorService.Infrastructure/ApiClients/Roatp/RoatpApiClient.cs",
+          "reason": "RoatpApiClient makes outbound HTTP requests for organization data."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.AssessorService.Infrastructure/ApiClients/Roatp/RoatpApiClientFactory.cs",
+          "reason": "RoatpApiClientFactory constructs HttpClient for RoATP API."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "http-api-roatp",
+      "description": "Calls the API of"
+    },
+    {
+      "sourceId": "assessor-service-external-api",
+      "name": "Microsoft Entra ID",
+      "kind": "identity-provider",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "ExternalApiAuthentication.Tenant",
+        "SandboxExternalApiAuthentication.Tenant"
+      ],
+      "authentication": {
+        "type": "JWT Bearer",
+        "configurationKeys": [
+          "ExternalApiAuthentication.Audiences",
+          "SandboxExternalApiAuthentication.Audiences"
+        ]
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.AssessorService.Application.Api.External/StartupConfiguration/ServiceCollectionExtensions.cs",
+          "reason": "JWT Bearer authentication configured for Microsoft Entra ID."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "identity-provider-microsoft-entra-id",
+      "description": "Authenticates with"
+    },
+    {
+      "sourceId": "assessor-service-web",
+      "name": "Microsoft Entra ID",
+      "kind": "identity-provider",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.AssessorService.Web/SFA.DAS.AssessorService.Web.csproj",
+          "reason": "Detected use of Microsoft.Identity.Client package, which is part of Microsoft Entra ID authentication."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "identity-provider-microsoft-entra-id",
+      "description": "Authenticates with"
+    },
+    {
+      "sourceId": "assessor-service-api",
+      "name": "Microsoft Entra ID",
+      "kind": "identity-provider",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "ApiAuthentication",
+        "SandboxApiAuthentication"
       ],
       "authentication": {
         "type": null,
@@ -953,136 +978,117 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.AssessorService.Application.Api/StartupConfiguration/ServiceCollectionExtensions.cs",
-          "reason": "AddHttpClient call registering IRoatpApiClient."
+          "reason": "JWT Bearer authentication configured for Microsoft Entra ID"
         }
       ],
       "confidence": "high",
-      "targetId": "http-api-roatp",
-      "description": "Calls the API of"
-    },
-    {
-      "sourceId": "assessor-service",
-      "name": "RoATP",
-      "kind": "http-api",
-      "classification": "third-party",
-      "direction": "outbound",
-      "client": "RoatpApiClient",
-      "technology": "HttpClient",
-      "configurationKeys": [],
-      "authentication": {
-        "type": "Managed Identity",
-        "configurationKeys": []
-      },
-      "operations": [
-        {
-          "method": "GET",
-          "methodName": "SearchOrganisationByName",
-          "path": "/organisations?searchTerm={searchTerm}",
-          "sourceFile": "src/SFA.DAS.AssessorService.Infrastructure/ApiClients/Roatp/RoatpApiClient.cs"
-        },
-        {
-          "method": "GET",
-          "methodName": "SearchOrganisationInUkrlp",
-          "path": "/organisations/{ukprn}/ukrlp-data",
-          "sourceFile": "src/SFA.DAS.AssessorService.Infrastructure/ApiClients/Roatp/RoatpApiClient.cs"
-        }
-      ],
-      "resources": [],
-      "evidence": [
-        {
-          "sourceFile": "src/SFA.DAS.AssessorService.Infrastructure/ApiClients/Roatp/RoatpApiClientFactory.cs",
-          "reason": "Factory with Managed Identity authentication mechanism for RoATP API client."
-        },
-        {
-          "sourceFile": "src/SFA.DAS.AssessorService.Infrastructure/ApiClients/Roatp/RoatpApiClient.cs",
-          "reason": "RoatpApiClient performs outbound HTTP calls to the RoATP API."
-        }
-      ],
-      "confidence": "high",
-      "targetId": "http-api-roatp",
-      "description": "Calls the API of"
+      "targetId": "identity-provider-microsoft-entra-id",
+      "description": "Authenticates with"
     },
     {
       "sourceId": "assessor-service-api",
-      "name": "Standards",
-      "kind": "http-api",
-      "classification": "internal",
+      "name": "Application Insights",
+      "kind": "telemetry",
+      "classification": "third-party",
       "direction": "outbound",
-      "client": "StandardsApiClient",
-      "technology": "HttpClient",
-      "configurationKeys": [],
+      "client": null,
+      "technology": "Azure Monitor",
+      "configurationKeys": [
+        "APPLICATIONINSIGHTS_CONNECTION_STRING"
+      ],
       "authentication": {
         "type": null,
         "configurationKeys": []
       },
-      "operations": [
-        {
-          "method": "GET",
-          "methodName": "GetEpaoPipelineStandards",
-          "path": "/api/v1/standards/pipelines/{epaoId}?standardFilterId={standardFilterId}&providerFilterId={providerFilterId}&epaDateFilterId={epaDateFilterId}&pageSize={pageSize}&pageIndex={pageIndex}&orderBy={orderBy}&orderDirection={orderDirection}",
-          "sourceFile": "src/SFA.DAS.AssessorService.Application.Api.Client/Clients/StandardsApiClient.cs"
-        },
-        {
-          "method": "GET",
-          "methodName": "GetEpaoRegisteredStandards",
-          "path": "/api/v1/standards/{epaoId}?requireAtLeastOneVersion=true&pageIndex={pageIndex}&pageSize={pageSize}",
-          "sourceFile": "src/SFA.DAS.AssessorService.Application.Api.Client/Clients/StandardsApiClient.cs"
-        }
-      ],
+      "operations": [],
       "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.AssessorService.Application.Api.Client/Clients/StandardsApiClient.cs",
-          "reason": "Identified HttpClient initialization and API calls for Standards."
+          "sourceFile": "src/SFA.DAS.AssessorService.Application.Api/SFA.DAS.AssessorService.Application.Api.csproj",
+          "reason": "Telemetry (Azure Monitor) is configured"
+        },
+        {
+          "sourceFile": "src/SFA.DAS.AssessorService.Application.Api/Program.cs",
+          "reason": "Telemetry service registered with Azure Monitor."
         }
       ],
       "confidence": "high",
-      "targetId": "http-api-standards",
-      "description": "Calls the API of"
+      "targetId": "telemetry-application-insights",
+      "description": "Sends telemetry to"
     },
     {
       "sourceId": "assessor-service-external-api",
-      "name": "Validation API",
-      "kind": "http-api",
+      "name": "Application Insights",
+      "kind": "telemetry",
       "classification": "third-party",
       "direction": "outbound",
-      "client": "ValidationApiClient",
-      "technology": "HttpClient",
+      "client": null,
+      "technology": "Azure Monitor",
+      "configurationKeys": [
+        "APPLICATIONINSIGHTS_CONNECTION_STRING"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.AssessorService.Application.Api.External/Program.cs",
+          "reason": "Telemetry service registered with Azure Monitor."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "telemetry-application-insights",
+      "description": "Sends telemetry to"
+    },
+    {
+      "sourceId": "assessor-service-web",
+      "name": "Application Insights",
+      "kind": "telemetry",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "APPLICATIONINSIGHTS_CONNECTION_STRING"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.AssessorService.Web/Extensions/AddOpenTelemetryExtensions.cs",
+          "reason": "Detected telemetry service registration with Azure Monitor/App Insights using AddOpenTelemetry and UseAzureMonitor."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "telemetry-application-insights",
+      "description": "Sends telemetry to"
+    },
+    {
+      "sourceId": "assessor-service",
+      "name": "Telemetry with Application Insights",
+      "kind": "telemetry",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
       "configurationKeys": [],
       "authentication": {
         "type": null,
         "configurationKeys": []
       },
-      "operations": [
-        {
-          "method": "GET",
-          "methodName": "ValidateEmailAddress",
-          "path": "/api/validation/is-email-format/{emailToValidate}",
-          "sourceFile": "src/SFA.DAS.AssessorService.Application.Api.Client/Clients/ValidationApiClient.cs"
-        },
-        {
-          "method": "GET",
-          "methodName": "ValidatePhoneNumber",
-          "path": "/api/validation/is-phonenumber-format/{phoneNumberToValidate}",
-          "sourceFile": "src/SFA.DAS.AssessorService.Application.Api.Client/Clients/ValidationApiClient.cs"
-        },
-        {
-          "method": "GET",
-          "methodName": "ValidateWebsiteLink",
-          "path": "/api/validation/is-websitelink-format",
-          "sourceFile": "src/SFA.DAS.AssessorService.Application.Api.Client/Clients/ValidationApiClient.cs"
-        }
-      ],
+      "operations": [],
       "resources": [],
-      "evidence": [
-        {
-          "sourceFile": "src/SFA.DAS.AssessorService.Application.Api.Client/Clients/ValidationApiClient.cs",
-          "reason": "ValidationApiClient accesses HTTP endpoints for validation."
-        }
-      ],
-      "confidence": "high",
-      "targetId": "http-api-validation-api",
-      "description": "Calls the API of"
+      "evidence": [],
+      "confidence": "medium",
+      "targetId": "telemetry-telemetry-with-application-insights",
+      "description": "Sends telemetry to"
     }
   ]
 }

@@ -7,28 +7,39 @@
     {
       "id": "apprentice-commitments",
       "name": "Apprentice Commitments",
+      "type": "other",
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.ApprenticeCommitments/SFA.DAS.ApprenticeCommitments.csproj",
+          "reason": "This project has a .csproj file but does not indicate a specific entry-point file or project type (API or job)."
+        }
+      ]
+    },
+    {
+      "id": "apprentice-commitments-2",
+      "name": "Apprentice Commitments",
       "type": "api",
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.ApprenticeCommitments.Api/Program.cs",
-          "reason": "ASP.NET Core web application entry point"
+          "sourceFile": "src/SFA.DAS.ApprenticeCommitments.Api/SFA.DAS.ApprenticeCommitments.Api.csproj",
+          "reason": "ASP.NET Core Web SDK project file."
         },
         {
-          "sourceFile": "src/SFA.DAS.ApprenticeCommitments.Api/SFA.DAS.ApprenticeCommitments.Api.csproj",
-          "reason": "Project SDK indicates a web application"
+          "sourceFile": "src/SFA.DAS.ApprenticeCommitments.Api/Program.cs",
+          "reason": "Host builder and web application entry point."
         }
       ]
     }
   ],
   "dependencies": [
     {
-      "sourceId": "apprentice-commitments",
-      "name": "Azure Table Storage",
-      "kind": "cloud-service",
+      "sourceId": "apprentice-commitments-2",
+      "name": "Azure Table Storage configuration",
+      "kind": "configuration-store",
       "classification": "third-party",
       "direction": "outbound",
-      "client": "Azure Table Storage",
-      "technology": "Azure Table Storage",
+      "client": null,
+      "technology": null,
       "configurationKeys": [
         "ConfigNames",
         "ConfigurationStorageConnectionString",
@@ -43,21 +54,46 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.ApprenticeCommitments.Api/Startup.cs",
-          "reason": "AddAzureTableStorage used for configuration setup"
+          "reason": "AddAzureTableStorage configuration extension."
         }
       ],
       "confidence": "high",
-      "targetId": "cloud-service-azure-table-storage",
-      "description": "Uses"
+      "targetId": "configuration-store-azure-table-storage-configuration",
+      "description": "Reads configuration from"
     },
     {
       "sourceId": "apprentice-commitments",
-      "name": "Apprentice Commitments Database",
+      "name": "SQL Server",
       "kind": "database",
       "classification": "internal",
       "direction": "outbound",
-      "client": "Apprentice Commitments DbContext",
-      "technology": "Microsoft SQL Server",
+      "client": null,
+      "technology": "SQL Server",
+      "configurationKeys": [],
+      "authentication": {
+        "type": "managed-identity",
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.ApprenticeCommitments/Infrastructure/SqlServerConnectionFactory.cs",
+          "reason": "UseSqlServer and SqlConnection evidence SQL Server database usage with a managed-identity authentication mechanism."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "database-sql-server",
+      "description": "Reads from and writes to"
+    },
+    {
+      "sourceId": "apprentice-commitments-2",
+      "name": "SQL Server",
+      "kind": "database",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "ApprenticeCommitmentsDbContext",
+      "technology": "SQL Server",
       "configurationKeys": [
         "ApplicationSettings:DbConnectionString"
       ],
@@ -66,43 +102,62 @@
         "configurationKeys": []
       },
       "operations": [],
-      "resources": [
-        {
-          "type": "database",
-          "name": "Apprentice Commitments Database",
-          "direction": "outbound",
-          "sourceFile": "src/SFA.DAS.ApprenticeCommitments/Infrastructure/SqlServerConnectionFactory.cs"
-        }
-      ],
+      "resources": [],
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.ApprenticeCommitments/Data/Models/ApprenticeCommitmentsDbContext.cs",
-          "reason": "DbContext implementation for Apprentice Commitments data"
+          "reason": "DbContext representing database entity mapping."
         },
         {
           "sourceFile": "src/SFA.DAS.ApprenticeCommitments/Infrastructure/ServiceCollectionExtensions.cs",
-          "reason": "DbContext setup using SQL Server for ApprenticeCommitmentsDbContext"
-        },
-        {
-          "sourceFile": "src/SFA.DAS.ApprenticeCommitments/Infrastructure/SqlServerConnectionFactory.cs",
-          "reason": "SqlServerConnectionFactory constructs SQL connections"
+          "reason": "DbContextOptionsBuilder configured with database connection settings."
         }
       ],
       "confidence": "high",
-      "targetId": "database-apprentice-commitments-database",
+      "targetId": "database-sql-server",
       "description": "Reads from and writes to"
     },
     {
-      "sourceId": "apprentice-commitments",
+      "sourceId": "apprentice-commitments-2",
+      "name": "Microsoft Entra ID",
+      "kind": "identity-provider",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "AzureAd"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.ApprenticeCommitments.Api/Authentication/ServiceCollectionExtensions.cs",
+          "reason": "AddJwtBearer authentication configured with Azure AD parameters."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.ApprenticeCommitments.Api/Startup.cs",
+          "reason": "Azure AD configuration section used for authentication."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "identity-provider-microsoft-entra-id",
+      "description": "Authenticates with"
+    },
+    {
+      "sourceId": "apprentice-commitments-2",
       "name": "Azure Service Bus",
       "kind": "message-broker",
       "classification": "third-party",
       "direction": "outbound",
-      "client": "NServiceBus",
-      "technology": "Azure Service Bus",
+      "client": null,
+      "technology": null,
       "configurationKeys": [
-        "ApplicationSettings:NServiceBusConnectionString",
-        "ApplicationSettings:NServiceBusLicense"
+        "ApplicationSettings:NServiceBusConnectionString"
       ],
       "authentication": {
         "type": null,
@@ -113,12 +168,68 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.ApprenticeCommitments/Infrastructure/ServiceCollectionExtensions.cs",
-          "reason": "NServiceBus configuration setup with Azure Service Bus transport"
+          "reason": "Service Bus transport configuration in NServiceBus settings."
         }
       ],
       "confidence": "high",
       "targetId": "message-broker-azure-service-bus",
       "description": "Publishes messages to and consumes messages from"
+    },
+    {
+      "sourceId": "apprentice-commitments",
+      "name": "Application Insights",
+      "kind": "telemetry",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": "Azure Monitor",
+      "configurationKeys": [],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.ApprenticeCommitments/SFA.DAS.ApprenticeCommitments.csproj",
+          "reason": "Azure.Monitor.OpenTelemetry.AspNetCore package reference evidences telemetry integration with Application Insights."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "telemetry-application-insights",
+      "description": "Sends telemetry to"
+    },
+    {
+      "sourceId": "apprentice-commitments-2",
+      "name": "Application Insights",
+      "kind": "telemetry",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "APPLICATIONINSIGHTS_CONNECTION_STRING"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.ApprenticeCommitments.Api/Startup.cs",
+          "reason": "AddApplicationInsightsTelemetry registration."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.ApprenticeCommitments.Api/AppStart/AddTelemetryRegistrationExtension.cs",
+          "reason": "Telemetry registration with UseAzureMonitor."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "telemetry-application-insights",
+      "description": "Sends telemetry to"
     }
   ]
 }

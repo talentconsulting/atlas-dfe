@@ -11,26 +11,26 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.ApprenticeCommitments.Web/Program.cs",
-          "reason": "AspNetCore web application entry point detected with WebHost.CreateDefaultBuilder and UseStartup."
+          "reason": "ASP.NET Core WebHost entry point for web application."
         },
         {
           "sourceFile": "src/SFA.DAS.ApprenticeCommitments.Web/SFA.DAS.ApprenticeCommitments.Web.csproj",
-          "reason": "Project file specifies SDK as Microsoft.NET.Sdk.Web, which indicates a web application."
+          "reason": "Project file declares SDK as Microsoft.NET.Sdk.Web."
         }
       ]
     },
     {
-      "id": "apprentice-commitments-mock-server",
-      "name": "Apprentice Commitments Mock Server",
+      "id": "apprentice-commitments-mockserver",
+      "name": "Apprentice Commitments Mockserver",
       "type": "other",
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.ApprenticeCommitments.Web.MockServer/Program.cs",
-          "reason": "Custom mock server entry point detected with apprentice commitments API mock setup."
+          "reason": "Custom executable for mocking external dependencies."
         },
         {
           "sourceFile": "src/SFA.DAS.ApprenticeCommitments.Web.MockServer/SFA.DAS.ApprenticeCommitments.Web.MockServer.csproj",
-          "reason": "Project file specifies executable output type, indicating a standalone application."
+          "reason": "Project file declares SDK as Microsoft.NET.Sdk and OutputType as Exe."
         }
       ]
     }
@@ -42,9 +42,11 @@
       "kind": "cache",
       "classification": "third-party",
       "direction": "outbound",
-      "client": "StackExchange.Redis",
+      "client": null,
       "technology": "Redis",
-      "configurationKeys": [],
+      "configurationKeys": [
+        "ConnectionStrings"
+      ],
       "authentication": {
         "type": null,
         "configurationKeys": []
@@ -54,7 +56,11 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.ApprenticeCommitments.Web/SFA.DAS.ApprenticeCommitments.Web.csproj",
-          "reason": "Redis integration referenced via Microsoft.AspNetCore.DataProtection.StackExchangeRedis and StackExchange.Redis packages."
+          "reason": "Redis package reference found (Microsoft.AspNetCore.DataProtection.StackExchangeRedis)."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.ApprenticeCommitments.Web/Startup/ApplicationStartup.cs",
+          "reason": "Use of AddDataProtection with Redis option."
         }
       ],
       "confidence": "high",
@@ -63,13 +69,79 @@
     },
     {
       "sourceId": "apprentice-commitments",
-      "name": "Azure Table Storage",
-      "kind": "cloud-service",
+      "name": "Azure Table Storage Configuration",
+      "kind": "configuration-store",
       "classification": "third-party",
       "direction": "outbound",
       "client": null,
-      "technology": "Azure Table Storage",
+      "technology": null,
+      "configurationKeys": [
+        "ConfigNames",
+        "ConfigurationStorageConnectionString",
+        "EnvironmentName"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.ApprenticeCommitments.Web/Startup/ConfigurationStartup.cs",
+          "reason": "Azure Table Configuration added to the configuration pipeline."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.ApprenticeCommitments.Web/Program.cs",
+          "reason": "Call to ConfigureAzureTableConfiguration in Program.cs."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "configuration-store-azure-table-storage-configuration",
+      "description": "Reads configuration from"
+    },
+    {
+      "sourceId": "apprentice-commitments",
+      "name": "Microsoft Entra ID",
+      "kind": "identity-provider",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": "OpenID Connect",
       "configurationKeys": [],
+      "authentication": {
+        "type": "OpenID Connect",
+        "configurationKeys": [
+          "Authentication"
+        ]
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.ApprenticeCommitments.Web/SFA.DAS.ApprenticeCommitments.Web.csproj",
+          "reason": "Microsoft.AspNetCore.Authentication.OpenIdConnect package is referenced."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.ApprenticeCommitments.Web/Startup/ApplicationStartup.cs",
+          "reason": "OpenID Connect authentication added through AddAuthentication and AddGovLoginAuthentication."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "identity-provider-microsoft-entra-id",
+      "description": "Authenticates with"
+    },
+    {
+      "sourceId": "apprentice-commitments",
+      "name": "Application Insights",
+      "kind": "telemetry",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "APPLICATIONINSIGHTS_CONNECTION_STRING"
+      ],
       "authentication": {
         "type": null,
         "configurationKeys": []
@@ -79,12 +151,16 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.ApprenticeCommitments.Web/SFA.DAS.ApprenticeCommitments.Web.csproj",
-          "reason": "Azure Table Storage integration detected via SFA.DAS.Configuration.AzureTableStorage package."
+          "reason": "ApplicationInsights.AspNetCore package is referenced."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.ApprenticeCommitments.Web/Startup/AddTelemetryRegistrationExtension.cs",
+          "reason": "Telemetry registration with Application Insights is configured."
         }
       ],
       "confidence": "high",
-      "targetId": "cloud-service-azure-table-storage",
-      "description": "Uses"
+      "targetId": "telemetry-application-insights",
+      "description": "Sends telemetry to"
     }
   ]
 }

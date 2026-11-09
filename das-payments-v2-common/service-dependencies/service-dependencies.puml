@@ -3,11 +3,15 @@
 LAYOUT_WITH_LEGEND()
 
 System_Boundary(sys_SkillsFundingAgency_das_payments_v2_common, "Payments") {
-  Container(c_payments, "Payments", "Component")
+  Container(c_payments, "Payments", "API")
 }
 
-SystemDb_Ext(d_database_sql_server, "SQL Server", "Entity Framework Core")
+SystemDb_Ext(d_configuration_store_azure_table_storage_configuration, "Azure Table Storage configuration")
+SystemDb_Ext(d_database_payments_sql_database, "Payments SQL Database", "SQL Server")
+SystemQueue_Ext(d_message_broker_azure_service_bus, "Azure Service Bus", "Azure Service Bus")
 
-Rel(c_payments, d_database_sql_server, "Reads from and writes to", "Entity Framework Core")
+Rel(c_payments, d_configuration_store_azure_table_storage_configuration, "Reads configuration from")
+Rel(c_payments, d_database_payments_sql_database, "Reads from and writes to", "SQL Server")
+Rel(c_payments, d_message_broker_azure_service_bus, "Publishes messages to and consumes messages from", "Azure Service Bus")
 
 @enduml
