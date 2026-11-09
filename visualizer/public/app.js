@@ -184,6 +184,69 @@ function combineDependencies(source, dependencies, messages) {
   }
 }
 
+// Two services joined only through a Service Bus queue or topic often each define their own copy of the
+// message class (das-funding-projection-api's and das-employer-finance-jobs' ImportLearnersCostEvent), so
+// no shared namespace links them. Their service-dependency catalogues do: the sender lists the entity as an
+// outbound message-broker resource and the receiver as an inbound one. For each such entity this adds a
+// message dependency from each sender to each receiver, named for the events and commands both repositories'
+// catalogues define (the entity name when they share none), so the landscape draws the edge and its event
+// filter lists those messages. Returns the number of dependencies added.
+function addQueueMessageDependencies(entries, messagesBySourceId) {
+  const entities = new Map();
+  for (const { source, dependencies } of entries) {
+    for (const dependency of dependencies) {
+      if (dependency.kind !== 'message-broker') continue;
+      for (const resource of dependency.resources || []) {
+        if (!resource.name || !['queue', 'topic', 'subscription'].includes(resource.type)) continue;
+        const key = resource.name.toLowerCase();
+        if (!entities.has(key)) entities.set(key, { name: resource.name, type: resource.type, senders: new Map(), receivers: new Set() });
+        const entity = entities.get(key);
+        if (resource.direction === 'inbound') entity.receivers.add(source.id);
+        else if (resource.direction === 'outbound') entity.senders.set(source.id, resource.sourceFile || null);
+      }
+    }
+  }
+  const messageNames = (sourceId) => {
+    const messages = messagesBySourceId(sourceId) || {};
+    return new Map([
+      ...(messages.events || []).map((message) => [message.name, 'EVENT']),
+      ...(messages.commands || []).map((message) => [message.name, 'COMMAND'])
+    ]);
+  };
+  const byId = new Map(entries.map((entry) => [entry.source.id, entry]));
+  let added = 0;
+  for (const entity of entities.values()) {
+    for (const [senderId, sourceFile] of entity.senders) {
+      for (const receiverId of entity.receivers) {
+        if (receiverId === senderId || !byId.has(receiverId)) continue;
+        const receiverMessages = messageNames(receiverId);
+        const shared = [...messageNames(senderId)].filter(([name]) => receiverMessages.has(name));
+        const operations = shared.length
+          ? shared.map(([name, method]) => ({ method, path: name, sourceFile }))
+          : [{ method: 'QUEUE', path: entity.name, sourceFile }];
+        byId.get(senderId).dependencies.push({
+          name: titleCase(byId.get(receiverId).source.name),
+          kind: 'message',
+          targetRepo: receiverId,
+          classification: 'internal',
+          direction: 'outbound',
+          description: 'Sends messages to',
+          client: null,
+          technology: `Service Bus ${entity.type}`,
+          configurationKeys: [],
+          authentication: { type: null, configurationKeys: [] },
+          operations,
+          resources: [{ type: entity.type, name: entity.name, direction: 'outbound', sourceFile }],
+          evidence: [{ sourceFile, reason: `Sends to the ${entity.type} ${entity.name}, which ${byId.get(receiverId).source.name} receives from` }],
+          confidence: 'medium'
+        });
+        added += 1;
+      }
+    }
+  }
+  return added;
+}
+
 function orgRepoSlug(repositoryUrl) {
   return (repositoryUrl || '').replace(/^https?:\/\/[^/]+\//, '').replace(/\/$/, '');
 }
@@ -1967,6 +2030,7 @@ async function fetchLandscapeGraph() {
     const data = combineDependencies(source, entry?.dependencies, entry?.messages);
     return data.dependencies?.length ? { source, ref: data.ref, dependencies: data.dependencies } : null;
   }).filter(Boolean);
+  addQueueMessageDependencies(state.landscapeSources, (sourceId) => byId.get(sourceId)?.messages);
   state.landscapeInputs = [landscapeCatalog, state.landscapeSources];
   return buildLandscape(landscapeCatalog, state.landscapeSources);
 }
