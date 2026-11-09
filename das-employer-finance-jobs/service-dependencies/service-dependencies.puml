@@ -1,0 +1,30 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+LAYOUT_WITH_LEGEND()
+
+System_Boundary(sys_SkillsFundingAgency_das_employer_finance_jobs, "Employer Finance Jobs") {
+  Container(c_employer_finance_jobs, "Employer Finance Jobs", "Background Job")
+  Container(c_employer_finance_jobs_expire_funds, "Employer Finance Jobs Expire Funds", "Background Job")
+  Container(c_employer_finance_jobs_functions, "Employer Finance Jobs Functions", "Background Job")
+  Container(c_employer_finance_jobs_funding_projection, "Employer Finance Jobs Funding Projection", "Background Job")
+  Container(c_employer_finance_jobs_import_levy, "Employer Finance Jobs Import Levy", "Background Job")
+}
+
+SystemDb_Ext(d_cache_stackexchange_redis, "StackExchange Redis", "StackExchange.Redis")
+SystemDb_Ext(d_configuration_store_azure_table_storage_configuration, "Azure Table Storage configuration")
+System_Ext(d_http_api_hmrc_api, "HMRC API", "HTTP")
+SystemQueue_Ext(d_message_broker_azure_service_bus, "Azure Service Bus", "Azure Service Bus")
+System_Ext(d_telemetry_application_insights, "Application Insights")
+
+Rel(c_employer_finance_jobs, d_cache_stackexchange_redis, "Caches data in", "StackExchange.Redis")
+Rel(c_employer_finance_jobs_import_levy, d_configuration_store_azure_table_storage_configuration, "Reads configuration from")
+Rel(c_employer_finance_jobs, d_configuration_store_azure_table_storage_configuration, "Reads configuration from")
+Rel(c_employer_finance_jobs, d_http_api_hmrc_api, "Calls the API of", "HTTP")
+Rel(c_employer_finance_jobs_funding_projection, d_message_broker_azure_service_bus, "Publishes messages to and consumes messages from", "Azure Service Bus")
+Rel(c_employer_finance_jobs, d_message_broker_azure_service_bus, "Publishes messages to and consumes messages from", "Azure Service Bus")
+Rel(c_employer_finance_jobs_expire_funds, d_telemetry_application_insights, "Sends telemetry to")
+Rel(c_employer_finance_jobs_funding_projection, d_telemetry_application_insights, "Sends telemetry to")
+Rel(c_employer_finance_jobs_import_levy, d_telemetry_application_insights, "Sends telemetry to")
+Rel(c_employer_finance_jobs, d_telemetry_application_insights, "Sends telemetry to")
+
+@enduml

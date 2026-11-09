@@ -7,10 +7,24 @@ System_Boundary(sys_SkillsFundingAgency_das_apprentice_progress_api, "Apprentice
   Container(c_apprentice_progress_functions, "Apprentice Progress Functions", "Background Job")
 }
 
-SystemDb_Ext(d_database_apprentice_progress_database, "Apprentice Progress Database", "SQL Server")
-System_Ext(d_http_api_apprentice_progress_api, "Apprentice Progress API", "HTTP")
+SystemDb_Ext(d_configuration_store_azure_table_storage_configuration, "Azure Table Storage configuration")
+SystemDb_Ext(d_database_sfa_das_apprenticeprogress, "SFA.DAS.ApprenticeProgress", "SqlServer")
+System_Ext(d_http_api_apprentice_progress_api, "Apprentice Progress API", "RestEase")
+System_Ext(d_http_api_contentful, "Contentful", "ContentfulClient")
+System_Ext(d_identity_provider_microsoft_entra_id, "Microsoft Entra ID")
+SystemQueue_Ext(d_message_broker_azure_service_bus, "Azure Service Bus", "Azure Service Bus")
+SystemQueue_Ext(d_message_broker_nservicebus, "NServiceBus")
+System_Ext(d_telemetry_application_insights, "Application Insights")
 
-Rel(c_apprentice_progress, d_database_apprentice_progress_database, "Reads from and writes to", "SQL Server")
-Rel(c_apprentice_progress_functions, d_http_api_apprentice_progress_api, "Calls the API of", "HTTP")
+Rel(c_apprentice_progress, d_configuration_store_azure_table_storage_configuration, "Reads configuration from")
+Rel(c_apprentice_progress_functions, d_configuration_store_azure_table_storage_configuration, "Reads configuration from")
+Rel(c_apprentice_progress, d_database_sfa_das_apprenticeprogress, "Reads from and writes to", "SqlServer")
+Rel(c_apprentice_progress_functions, d_database_sfa_das_apprenticeprogress, "Reads from and writes to", "SQL Server")
+Rel(c_apprentice_progress, d_http_api_apprentice_progress_api, "Calls the API of", "RestEase")
+Rel(c_apprentice_progress, d_http_api_contentful, "Calls the API of", "ContentfulClient")
+Rel(c_apprentice_progress, d_identity_provider_microsoft_entra_id, "Authenticates with")
+Rel(c_apprentice_progress, d_message_broker_azure_service_bus, "Publishes messages to and consumes messages from", "Azure Service Bus")
+Rel(c_apprentice_progress_functions, d_message_broker_nservicebus, "Publishes messages to and consumes messages from")
+Rel(c_apprentice_progress, d_telemetry_application_insights, "Sends telemetry to")
 
 @enduml

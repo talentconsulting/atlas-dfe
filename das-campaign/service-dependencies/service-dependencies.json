@@ -5,17 +5,32 @@
   "systemName": "Campaign",
   "containers": [
     {
+      "id": "campaign-mockserver",
+      "name": "Campaign Mock Server",
+      "type": "other",
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Campaign.MockServer/Program.cs",
+          "reason": "Custom mock server entry point evidenced."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.Campaign.MockServer/SFA.DAS.Campaign.MockServer.csproj",
+          "reason": "Standalone project for running a mock server."
+        }
+      ]
+    },
+    {
       "id": "campaign-web",
       "name": "Campaign",
       "type": "web",
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.Campaign.Web/Program.cs",
-          "reason": "ASP.NET Core web entry point (IWebHostBuilder)."
+          "reason": "ASP.NET Core entry point to the web application."
         },
         {
           "sourceFile": "src/SFA.DAS.Campaign.Web/SFA.DAS.Campaign.Web.csproj",
-          "reason": "Project targeting `Microsoft.NET.Sdk.Web`."
+          "reason": "Uses the Microsoft.NET.Sdk.Web SDK, indicating a web application."
         }
       ]
     }
@@ -23,11 +38,11 @@
   "dependencies": [
     {
       "sourceId": "campaign-web",
-      "name": "Redis",
+      "name": "Shared Redis",
       "kind": "cache",
-      "classification": "third-party",
+      "classification": "internal",
       "direction": "outbound",
-      "client": "IConnectionMultiplexer",
+      "client": "ConnectionMultiplexer",
       "technology": "StackExchange.Redis",
       "configurationKeys": [
         "CampaignConfiguration:ConnectionStrings:SharedRedis"
@@ -41,53 +56,45 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.Campaign.Web/Helpers/StartupExtensions.cs",
-          "reason": "ConnectionMultiplexer configuration for StackExchange.Redis, with a named connection string."
-        },
-        {
-          "sourceFile": "src/SFA.DAS.Campaign.Domain/SFA.DAS.Campaign.Domain.csproj",
-          "reason": "Redis client package `StackExchange.Redis` referenced."
-        },
-        {
-          "sourceFile": "src/SFA.DAS.Campaign.Web/SFA.DAS.Campaign.Web.csproj",
-          "reason": "Redis client package `StackExchange.Redis` referenced."
+          "reason": "Redis connection configured for data protection."
         }
       ],
       "confidence": "high",
-      "targetId": "cache-redis",
+      "targetId": "cache-shared-redis",
       "description": "Caches data in"
     },
     {
       "sourceId": "campaign-web",
-      "name": "Azure Key Vault",
-      "kind": "cloud-service",
+      "name": "Azure App Configuration",
+      "kind": "configuration-store",
       "classification": "third-party",
       "direction": "outbound",
-      "client": "TokenCredential",
-      "technology": "Azure.Identity",
+      "client": null,
+      "technology": null,
       "configurationKeys": [
-        "TenantId"
+        "ConfigNames",
+        "ConfigurationStorageConnectionString",
+        "Environment"
       ],
       "authentication": {
-        "type": "oidc",
-        "configurationKeys": [
-          "TenantId"
-        ]
+        "type": "managedIdentity",
+        "configurationKeys": []
       },
       "operations": [],
       "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.Campaign.Web/Helpers/StartupExtensions.cs",
-          "reason": "Azure Key Vault client configured with TenantId using Azure.Identity library."
+          "sourceFile": "src/SFA.DAS.Campaign.Web/Startup.cs",
+          "reason": "Azure App Configuration registered and integrated."
         }
       ],
       "confidence": "high",
-      "targetId": "cloud-service-azure-key-vault",
-      "description": "Uses"
+      "targetId": "configuration-store-azure-app-configuration",
+      "description": "Reads configuration from"
     },
     {
       "sourceId": "campaign-web",
-      "name": "Outer API",
+      "name": "Outer Api",
       "kind": "http-api",
       "classification": "internal",
       "direction": "outbound",
@@ -98,7 +105,7 @@
         "CampaignConfiguration:OuterApi:Key"
       ],
       "authentication": {
-        "type": "key",
+        "type": "apiKey",
         "configurationKeys": [
           "CampaignConfiguration:OuterApi:Key"
         ]
@@ -107,22 +114,15 @@
         {
           "method": "GET",
           "methodName": "Get",
-          "path": "{request.GetUrl}",
+          "path": null,
           "sourceFile": "src/SFA.DAS.Campaign.Infrastructure/Api/ApiClient.cs"
         }
       ],
-      "resources": [
-        {
-          "type": "endpoint",
-          "name": null,
-          "direction": "outbound",
-          "sourceFile": "src/SFA.DAS.Campaign.Infrastructure/Api/ApiClient.cs"
-        }
-      ],
+      "resources": [],
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.Campaign.Infrastructure/Api/ApiClient.cs",
-          "reason": "HttpClient configured with BaseAddress from CampaignConfiguration and subscription key is set in headers."
+          "reason": "Custom HttpClient setup and outbound API interaction."
         }
       ],
       "confidence": "high",
@@ -131,14 +131,14 @@
     },
     {
       "sourceId": "campaign-web",
-      "name": "Azure Queue Storage",
-      "kind": "message-broker",
+      "name": "Microsoft Entra ID",
+      "kind": "identity-provider",
       "classification": "third-party",
       "direction": "outbound",
       "client": null,
-      "technology": "Azure Storage Queue",
+      "technology": null,
       "configurationKeys": [
-        "CampaignConfiguration:QueueConnectionString"
+        "TenantId"
       ],
       "authentication": {
         "type": null,
@@ -149,12 +149,43 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.Campaign.Web/Helpers/StartupExtensions.cs",
-          "reason": "Azure Queue Storage health check configured with campaign QueueConnectionString."
+          "reason": "Token credential chain for Azure authentication using ManagedIdentity, Azure CLI, VisualStudioCodeCredential, and VisualStudioCredential."
         }
       ],
       "confidence": "high",
-      "targetId": "message-broker-azure-queue-storage",
-      "description": "Publishes messages to and consumes messages from"
+      "targetId": "identity-provider-microsoft-entra-id",
+      "description": "Authenticates with"
+    },
+    {
+      "sourceId": "campaign-web",
+      "name": "Application Insights",
+      "kind": "telemetry",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "APPLICATIONINSIGHTS_CONNECTION_STRING"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Campaign.Web/Startup.cs",
+          "reason": "Application Insights telemetry registration present."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.Campaign.Web/MiddleWare/AddOpenTelemetryExtensions.cs",
+          "reason": "Azure Monitor telemetry option configured for OpenTelemetry."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "telemetry-application-insights",
+      "description": "Sends telemetry to"
     }
   ]
 }

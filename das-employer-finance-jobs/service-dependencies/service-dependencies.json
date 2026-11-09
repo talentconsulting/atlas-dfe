@@ -1,0 +1,394 @@
+{
+  "repository": "SkillsFundingAgency/das-employer-finance-jobs",
+  "ref": "870a7f698abb41843d0663a663740c404b25ba29",
+  "path": "src",
+  "systemName": "Employer Finance Jobs",
+  "containers": [
+    {
+      "id": "employer-finance-jobs",
+      "name": "Employer Finance Jobs",
+      "type": "job",
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Employer.Finance.Jobs.Infrastructure/SFA.DAS.Employer.Finance.Jobs.Infrastructure.csproj",
+          "reason": "Contains the project file for the infrastructure of the service, indicating a job."
+        }
+      ]
+    },
+    {
+      "id": "employer-finance-jobs-expire-funds",
+      "name": "Employer Finance Jobs Expire Funds",
+      "type": "job",
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Employer.Finance.Jobs.Functions.ExpireFunds/SFA.DAS.Employer.Finance.Jobs.Functions.ExpireFunds.csproj",
+          "reason": "Azure Functions project file with 'OutputType' set to 'Exe' and 'AzureFunctionsVersion' defined."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.Employer.Finance.Jobs.Functions.ExpireFunds/Program.cs",
+          "reason": "Azure Functions worker entry point for Expire Funds functionality."
+        }
+      ]
+    },
+    {
+      "id": "employer-finance-jobs-functions",
+      "name": "Employer Finance Jobs Functions",
+      "type": "job",
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Employer.Finance.Jobs.Functions/SFA.DAS.Employer.Finance.Jobs.Functions.csproj",
+          "reason": "Azure Functions project file with 'OutputType' set to 'Exe' and 'AzureFunctionsVersion' defined."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.Employer.Finance.Jobs.Functions/Program.cs",
+          "reason": "Azure Functions worker entry point for general jobs."
+        }
+      ]
+    },
+    {
+      "id": "employer-finance-jobs-funding-projection",
+      "name": "Employer Finance Jobs Funding Projection",
+      "type": "job",
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Employer.Finance.Jobs.Functions.FundingProjection/SFA.DAS.Employer.Finance.Jobs.Functions.FundingProjection.csproj",
+          "reason": "Azure Functions project file with 'OutputType' set to 'Exe' and 'AzureFunctionsVersion' defined."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.Employer.Finance.Jobs.Functions.FundingProjection/Program.cs",
+          "reason": "Azure Functions worker entry point for Funding Projection functionality."
+        }
+      ]
+    },
+    {
+      "id": "employer-finance-jobs-import-levy",
+      "name": "Employer Finance Jobs Import Levy",
+      "type": "job",
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Employer.Finance.Jobs.Functions.ImportLevy/SFA.DAS.Employer.Finance.Jobs.Functions.ImportLevy.csproj",
+          "reason": "Azure Functions project file with 'OutputType' set to 'Exe' and 'AzureFunctionsVersion' defined."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.Employer.Finance.Jobs.Functions.ImportLevy/Program.cs",
+          "reason": "Azure Functions worker entry point for Import Levy functionality."
+        }
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "sourceId": "employer-finance-jobs",
+      "name": "StackExchange Redis",
+      "kind": "cache",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": "ConnectionMultiplexer",
+      "technology": "StackExchange.Redis",
+      "configurationKeys": [
+        "DataProtectionKeysDatabase",
+        "RedisConnectionString"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Employer.Finance.Jobs.Infrastructure/Extensions/DataProtectionExtensions.cs",
+          "reason": "ConnectionMultiplexer.Connect is used to connect to Redis."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "cache-stackexchange-redis",
+      "description": "Caches data in"
+    },
+    {
+      "sourceId": "employer-finance-jobs-import-levy",
+      "name": "Azure Table Storage configuration",
+      "kind": "configuration-store",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "ConfigNames",
+        "ConfigurationStorageConnectionString",
+        "EnvironmentName"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": [
+          "ConfigurationStorageConnectionString"
+        ]
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Employer.Finance.Jobs.Functions.ImportLevy/Extensions/ConfigurationExtensions.cs",
+          "reason": "Configured AddAzureTableStorage for Azure Table Storage configuration store."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "configuration-store-azure-table-storage-configuration",
+      "description": "Reads configuration from"
+    },
+    {
+      "sourceId": "employer-finance-jobs",
+      "name": "Azure Table Storage configuration",
+      "kind": "configuration-store",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "ConfigNames",
+        "ConfigurationStorageConnectionString",
+        "EnvironmentName"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Employer.Finance.Jobs.Infrastructure/Extensions/ConfigurationExtensions.cs",
+          "reason": "Configuration loaded using AddAzureTableStorage."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "configuration-store-azure-table-storage-configuration",
+      "description": "Reads configuration from"
+    },
+    {
+      "sourceId": "employer-finance-jobs",
+      "name": "HMRC API",
+      "kind": "http-api",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": "HttpClient",
+      "technology": "HTTP",
+      "configurationKeys": [],
+      "authentication": {
+        "type": "client-credentials",
+        "configurationKeys": [
+          "HmrcConfiguration.ClientId",
+          "HmrcConfiguration.ClientSecret",
+          "HmrcConfiguration.Scope"
+        ]
+      },
+      "operations": [
+        {
+          "method": "POST",
+          "methodName": "GetAccessTokenAsync",
+          "path": "oauth/token",
+          "sourceFile": "src/SFA.DAS.Employer.Finance.Jobs.Infrastructure/Services/HmrcTokenProvider.cs"
+        }
+      ],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Employer.Finance.Jobs.Infrastructure/Services/HmrcTokenProvider.cs",
+          "reason": "HttpClient is used to post to the HMRC API for token retrieval."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "http-api-hmrc-api",
+      "description": "Calls the API of"
+    },
+    {
+      "sourceId": "employer-finance-jobs-funding-projection",
+      "name": "Azure Service Bus",
+      "kind": "message-broker",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": "Azure Service Bus",
+      "configurationKeys": [
+        "ServiceBusConnection"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": [
+          "ServiceBusConnection"
+        ]
+      },
+      "operations": [],
+      "resources": [
+        {
+          "type": "queue",
+          "name": "funding-projection-requests",
+          "direction": "outbound",
+          "sourceFile": "src/SFA.DAS.Employer.Finance.Jobs.Functions.FundingProjection/ServiceBus/QueueConstants.cs"
+        }
+      ],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Employer.Finance.Jobs.Functions.FundingProjection/ServiceBus/QueueConstants.cs",
+          "reason": "Queue constant 'funding-projection-requests' of Service Bus is defined."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.Employer.Finance.Jobs.Functions.FundingProjection/Program.cs",
+          "reason": "Registered Service Bus queue initializer."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "message-broker-azure-service-bus",
+      "description": "Publishes messages to and consumes messages from"
+    },
+    {
+      "sourceId": "employer-finance-jobs",
+      "name": "Azure Service Bus",
+      "kind": "message-broker",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": "AzureServiceBusTransport",
+      "technology": "Azure Service Bus",
+      "configurationKeys": [
+        "AzureWebJobsServiceBus",
+        "AzureWebJobsServiceBus:fullyQualifiedNamespace",
+        "AzureWebJobsServiceBus__fullyQualifiedNamespace"
+      ],
+      "authentication": {
+        "type": "DefaultAzureCredential",
+        "configurationKeys": []
+      },
+      "operations": [
+        {
+          "method": "SEND",
+          "methodName": "ConfigureNServiceBusForSend",
+          "path": null,
+          "sourceFile": "src/SFA.DAS.Employer.Finance.Jobs.Infrastructure/Extensions/NServiceBusExtensions.cs"
+        }
+      ],
+      "resources": [
+        {
+          "type": "queue",
+          "name": "SFA.DAS.EmployerFinance.Jobs.Levy-errors",
+          "direction": "outbound",
+          "sourceFile": "src/SFA.DAS.Employer.Finance.Jobs.Infrastructure/Extensions/NServiceBusExtensions.cs"
+        },
+        {
+          "type": "queue",
+          "name": "SFA.DAS.EmployerFinance.Jobs.Payments-errors",
+          "direction": "outbound",
+          "sourceFile": "src/SFA.DAS.Employer.Finance.Jobs.Infrastructure/Extensions/NServiceBusExtensions.cs"
+        }
+      ],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Employer.Finance.Jobs.Infrastructure/Extensions/NServiceBusExtensions.cs",
+          "reason": "NServiceBus is configured to use Azure Service Bus with specified endpoints."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "message-broker-azure-service-bus",
+      "description": "Publishes messages to and consumes messages from"
+    },
+    {
+      "sourceId": "employer-finance-jobs-expire-funds",
+      "name": "Application Insights",
+      "kind": "telemetry",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Employer.Finance.Jobs.Functions.ExpireFunds/Program.cs",
+          "reason": "Configured AddApplicationInsightsTelemetryWorkerService for Application Insights telemetry."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "telemetry-application-insights",
+      "description": "Sends telemetry to"
+    },
+    {
+      "sourceId": "employer-finance-jobs-funding-projection",
+      "name": "Application Insights",
+      "kind": "telemetry",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Employer.Finance.Jobs.Functions.FundingProjection/Program.cs",
+          "reason": "Configured AddApplicationInsightsTelemetryWorkerService for Application Insights telemetry."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "telemetry-application-insights",
+      "description": "Sends telemetry to"
+    },
+    {
+      "sourceId": "employer-finance-jobs-import-levy",
+      "name": "Application Insights",
+      "kind": "telemetry",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Employer.Finance.Jobs.Functions.ImportLevy/Extensions/LoggingExtensions.cs",
+          "reason": "Configured AddApplicationInsightsTelemetryWorkerService for Application Insights telemetry."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "telemetry-application-insights",
+      "description": "Sends telemetry to"
+    },
+    {
+      "sourceId": "employer-finance-jobs",
+      "name": "Application Insights",
+      "kind": "telemetry",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Employer.Finance.Jobs.Infrastructure/SFA.DAS.Employer.Finance.Jobs.Infrastructure.csproj",
+          "reason": "Contains a reference to Microsoft.ApplicationInsights.WorkerService, indicating telemetry integration."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "telemetry-application-insights",
+      "description": "Sends telemetry to"
+    }
+  ]
+}
