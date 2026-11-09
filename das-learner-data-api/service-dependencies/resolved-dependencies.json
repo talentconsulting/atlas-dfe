@@ -10,12 +10,12 @@
       "type": "api",
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.LearnerData.Api/Program.cs",
-          "reason": "ASP.NET Core entry point"
+          "sourceFile": "src/SFA.DAS.LearnerData.Api/SFA.DAS.LearnerData.Api.csproj",
+          "reason": "ASP.NET Core web SDK project file."
         },
         {
-          "sourceFile": "src/SFA.DAS.LearnerData.Api/SFA.DAS.LearnerData.Api.csproj",
-          "reason": "Project with ASP.NET Core Web SDK"
+          "sourceFile": "src/SFA.DAS.LearnerData.Api/Program.cs",
+          "reason": "ASP.NET Core web project with Program.cs entry point showing a web application startup configuration."
         }
       ]
     }
@@ -25,46 +25,14 @@
       "sourceId": "learner-data",
       "name": "Redis",
       "kind": "cache",
-      "classification": "internal",
-      "direction": "outbound",
-      "client": "ConnectionMultiplexer",
-      "technology": "StackExchange.Redis",
-      "configurationKeys": [
-        "LearnerDataApi:DataProtectionKeysDatabase",
-        "LearnerDataApi:RedisConnectionString"
-      ],
-      "authentication": {
-        "type": null,
-        "configurationKeys": []
-      },
-      "operations": [],
-      "resources": [
-        {
-          "type": "cache",
-          "name": "LearnerDataApi:RedisConnectionString",
-          "direction": "outbound",
-          "sourceFile": "src/SFA.DAS.LearnerData.Api/StartupExtensions/DataProtectionStartupExtensions.cs"
-        }
-      ],
-      "evidence": [
-        {
-          "sourceFile": "src/SFA.DAS.LearnerData.Api/StartupExtensions/DataProtectionStartupExtensions.cs",
-          "reason": "ConnectionMultiplexer.Connect for Redis cache"
-        }
-      ],
-      "confidence": "high",
-      "targetId": "cache-redis",
-      "description": "Caches data in"
-    },
-    {
-      "sourceId": "learner-data",
-      "name": "Azure Key Vault",
-      "kind": "cloud-service",
-      "classification": "internal",
+      "classification": "third-party",
       "direction": "outbound",
       "client": null,
-      "technology": "Azure.Identity",
-      "configurationKeys": [],
+      "technology": "StackExchange.Redis",
+      "configurationKeys": [
+        "DataProtectionKeysDatabase",
+        "RedisConnectionString"
+      ],
       "authentication": {
         "type": null,
         "configurationKeys": []
@@ -73,42 +41,68 @@
       "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.LearnerData/SFA.DAS.LearnerData.csproj",
-          "reason": "Azure SDK and connection traces for Key Vault"
+          "sourceFile": "src/SFA.DAS.LearnerData.Api/StartupExtensions/DataProtectionStartupExtensions.cs",
+          "reason": "StackExchange.Redis ConnectionMultiplexer.Connect used with DataProtection keys."
         }
       ],
-      "confidence": "medium",
-      "targetId": "cloud-service-azure-key-vault",
-      "description": "Uses"
+      "confidence": "high",
+      "targetId": "cache-redis",
+      "description": "Caches data in"
+    },
+    {
+      "sourceId": "learner-data",
+      "name": "Azure Table Storage configuration",
+      "kind": "configuration-store",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "ConfigNames",
+        "ConfigurationStorageConnectionString",
+        "EnvironmentName"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.LearnerData.Api/StartupExtensions/ConfigurationExtensions.cs",
+          "reason": "AddAzureTableStorage configuration extension method used."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "configuration-store-azure-table-storage-configuration",
+      "description": "Reads configuration from"
     },
     {
       "sourceId": "learner-data",
       "name": "SQL Server",
       "kind": "database",
-      "classification": "internal",
+      "classification": "third-party",
       "direction": "outbound",
-      "client": "SqlConnection",
+      "client": "LearnerDataDbContext",
       "technology": "Entity Framework Core",
       "configurationKeys": [
-        "LearnerDataApi:DatabaseConnectionString"
+        "DatabaseConnectionString"
       ],
       "authentication": {
-        "type": "managed-identity",
+        "type": null,
         "configurationKeys": []
       },
       "operations": [],
-      "resources": [
-        {
-          "type": "database",
-          "name": "LearnerDataApi:DatabaseConnectionString",
-          "direction": "outbound",
-          "sourceFile": "src/SFA.DAS.LearnerData.Api/StartupExtensions/EntityFrameworkStartupExtensions.cs"
-        }
-      ],
+      "resources": [],
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.LearnerData.Api/StartupExtensions/EntityFrameworkStartupExtensions.cs",
-          "reason": "AddDbContext for LearnerDataDbContext"
+          "reason": "AddDbContext invoked with SQL Server database configuration."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.LearnerData/Data/LearnerDataDbContext.cs",
+          "reason": "DbContext subclass for database access."
         }
       ],
       "confidence": "high",
@@ -117,14 +111,14 @@
     },
     {
       "sourceId": "learner-data",
-      "name": "Azure Service Bus",
-      "kind": "message-broker",
-      "classification": "internal",
+      "name": "Microsoft Entra ID",
+      "kind": "identity-provider",
+      "classification": "third-party",
       "direction": "outbound",
-      "client": "IEndpointInstance",
-      "technology": "NServiceBus",
+      "client": null,
+      "technology": null,
       "configurationKeys": [
-        "NServiceBusConnectionString"
+        "AzureAd"
       ],
       "authentication": {
         "type": null,
@@ -135,12 +129,71 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.LearnerData.Api/Startup.cs",
-          "reason": "AddNServiceBus for Azure Service Bus"
+          "reason": "AddAuthentication configured with AzureAd section."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "identity-provider-microsoft-entra-id",
+      "description": "Authenticates with"
+    },
+    {
+      "sourceId": "learner-data",
+      "name": "Azure Service Bus",
+      "kind": "message-broker",
+      "classification": "third-party",
+      "direction": "bidirectional",
+      "client": null,
+      "technology": "Azure Service Bus",
+      "configurationKeys": [
+        "NServiceBusConnectionString"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [
+        {
+          "type": "queue",
+          "name": "SFA.DAS.LearnerData.Api-error",
+          "direction": "inbound",
+          "sourceFile": "src/SFA.DAS.LearnerData.Api/StartupExtensions/NServiceBusStartupExtensions.cs"
+        }
+      ],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.LearnerData.Api/StartupExtensions/NServiceBusStartupExtensions.cs",
+          "reason": "NServiceBus configured with Azure Service Bus transport and error queue."
         }
       ],
       "confidence": "high",
       "targetId": "message-broker-azure-service-bus",
       "description": "Publishes messages to and consumes messages from"
+    },
+    {
+      "sourceId": "learner-data",
+      "name": "Application Insights",
+      "kind": "telemetry",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.LearnerData.Api/Startup.cs",
+          "reason": "AddApplicationInsightsTelemetry configured."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "telemetry-application-insights",
+      "description": "Sends telemetry to"
     }
   ],
   "resolution": {

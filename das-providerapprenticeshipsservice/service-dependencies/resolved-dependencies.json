@@ -5,181 +5,57 @@
   "systemName": "Provider Apprenticeships Service",
   "containers": [
     {
-      "id": "pas-account-api",
-      "name": "PAS Account",
+      "id": "provider-apprenticeships-service-api",
+      "name": "Provider Apprenticeships Service",
       "type": "api",
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.PAS.Account.Api/Program.cs",
-          "reason": "ASP.NET Core web entry point detected"
+          "reason": "ASP.NET Core application entry point detected as it uses WebHostDefaults and Startup."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.PAS.Account.Api/SFA.DAS.PAS.Account.Api.csproj",
+          "reason": "The project file indicates an ASP.NET Core application with output type 'Exe'."
         }
       ]
     },
     {
-      "id": "pas-jobs",
-      "name": "PAS Jobs",
+      "id": "provider-apprenticeships-service-jobs",
+      "name": "Provider Apprenticeships Service Jobs",
       "type": "job",
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.PAS.Jobs/Program.cs",
-          "reason": "Azure Functions entry point detected"
+          "reason": "Azure Functions application entry point detected as it uses FunctionsApplicationBuilder."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.PAS.Jobs/SFA.DAS.PAS.Jobs.csproj",
+          "reason": "Azure Functions project for background job processing."
         }
       ]
     },
     {
-      "id": "provider-apprenticeships-service-web",
+      "id": "providerapprenticeshipsservice-web",
       "name": "Provider Apprenticeships Service",
       "type": "web",
       "evidence": [
         {
+          "sourceFile": "src/SFA.DAS.ProviderApprenticeshipsService.Web/SFA.DAS.ProviderApprenticeshipsService.Web.csproj",
+          "reason": "Project file for an ASP.NET Core web application."
+        },
+        {
           "sourceFile": "src/SFA.DAS.ProviderApprenticeshipsService.Web/Program.cs",
-          "reason": "Main method initializes a web application entry point using WebHost configuration"
+          "reason": "Web application entry point detected."
         }
       ]
     }
   ],
   "dependencies": [
     {
-      "sourceId": "pas-jobs",
-      "name": "Redis Cache",
+      "sourceId": "providerapprenticeshipsservice-web",
+      "name": "Redis",
       "kind": "cache",
-      "classification": "internal",
-      "direction": "outbound",
-      "client": null,
-      "technology": "Redis",
-      "configurationKeys": [],
-      "authentication": {
-        "type": null,
-        "configurationKeys": []
-      },
-      "operations": [],
-      "resources": [],
-      "evidence": [
-        {
-          "sourceFile": "src/SFA.DAS.ProviderApprenticeshipsService.Application/SFA.DAS.ProviderApprenticeshipsService.Application.csproj",
-          "reason": "StackExchange.Redis package reference detected"
-        }
-      ],
-      "confidence": "high",
-      "targetId": "cache-redis-cache",
-      "description": "Caches data in"
-    },
-    {
-      "sourceId": "pas-account-api",
-      "name": "Application Insights",
-      "kind": "cloud-service",
       "classification": "third-party",
-      "direction": "outbound",
-      "client": null,
-      "technology": "Azure Application Insights",
-      "configurationKeys": [],
-      "authentication": {
-        "type": null,
-        "configurationKeys": []
-      },
-      "operations": [],
-      "resources": [],
-      "evidence": [
-        {
-          "sourceFile": "src/SFA.DAS.PAS.Account.Api/StartUp.cs",
-          "reason": "Application Insights telemetry registration detected"
-        }
-      ],
-      "confidence": "high",
-      "targetId": "cloud-service-application-insights",
-      "description": "Uses"
-    },
-    {
-      "sourceId": "provider-apprenticeships-service-web",
-      "name": "SQL Database",
-      "kind": "database",
-      "classification": "internal",
-      "direction": "outbound",
-      "client": "SqlConnection",
-      "technology": "Microsoft.Data.SqlClient",
-      "configurationKeys": [],
-      "authentication": {
-        "type": "Azure Managed Identity",
-        "configurationKeys": []
-      },
-      "operations": [],
-      "resources": [
-        {
-          "type": "database",
-          "name": "database.windows.net",
-          "direction": "outbound",
-          "sourceFile": "src/SFA.DAS.ProviderApprenticeshipsService.Infrastructure/Data/SqlConnectionFactory.cs"
-        }
-      ],
-      "evidence": [
-        {
-          "sourceFile": "src/SFA.DAS.ProviderApprenticeshipsService.Infrastructure/Data/SqlConnectionFactory.cs",
-          "reason": "SQL database client factory creates SqlConnection instances and optionally uses Azure Managed Identity for authentication."
-        },
-        {
-          "sourceFile": "src/SFA.DAS.ProviderApprenticeshipsService.Infrastructure/Data/BaseRepository.cs",
-          "reason": "SQL database usage evidenced by SqlConnection operations in WithConnection and WithTransaction methods."
-        }
-      ],
-      "confidence": "high",
-      "targetId": "database-sql-database",
-      "description": "Reads from and writes to"
-    },
-    {
-      "sourceId": "pas-account-api",
-      "name": "SQL Database",
-      "kind": "database",
-      "classification": "internal",
-      "direction": "outbound",
-      "client": null,
-      "technology": "SQL Server",
-      "configurationKeys": [],
-      "authentication": {
-        "type": "managed-identity",
-        "configurationKeys": []
-      },
-      "operations": [],
-      "resources": [],
-      "evidence": [
-        {
-          "sourceFile": "src/SFA.DAS.ProviderApprenticeshipsService.Application/Extensions/DatabaseExtensions.cs",
-          "reason": "SQL database connection creation evidenced in DatabaseExtensions"
-        }
-      ],
-      "confidence": "high",
-      "targetId": "database-sql-database",
-      "description": "Reads from and writes to"
-    },
-    {
-      "sourceId": "pas-jobs",
-      "name": "DfE Sign In Auth",
-      "kind": "http-api",
-      "classification": "internal",
-      "direction": "outbound",
-      "client": "IApiHelper",
-      "technology": "HttpClient",
-      "configurationKeys": [],
-      "authentication": {
-        "type": null,
-        "configurationKeys": []
-      },
-      "operations": [],
-      "resources": [],
-      "evidence": [
-        {
-          "sourceFile": "src/SFA.DAS.PAS.Jobs/Extensions/AddApplicationRegistrationsExtension.cs",
-          "reason": "HttpClient registration for DfE Sign In Auth evidenced"
-        }
-      ],
-      "confidence": "high",
-      "targetId": "http-api-dfe-sign-in-auth",
-      "description": "Calls the API of"
-    },
-    {
-      "sourceId": "pas-account-api",
-      "name": "Notifications",
-      "kind": "http-api",
-      "classification": "internal",
       "direction": "outbound",
       "client": null,
       "technology": null,
@@ -192,22 +68,230 @@
       "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.PAS.Account.Api/SFA.DAS.PAS.Account.Api.csproj",
-          "reason": "Package reference for Notifications API client detected"
+          "sourceFile": "src/SFA.DAS.ProviderApprenticeshipsService.Web/Startup.cs",
+          "reason": "AddDataProtection uses Microsoft.AspNetCore.DataProtection.StackExchangeRedis."
         }
       ],
       "confidence": "high",
-      "targetId": "http-api-notifications",
+      "targetId": "cache-redis",
+      "description": "Caches data in"
+    },
+    {
+      "sourceId": "provider-apprenticeships-service-jobs",
+      "name": "Redis Cache",
+      "kind": "cache",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "StackExchange.Redis",
+      "technology": "Redis",
+      "configurationKeys": [
+        "RedisConnectionString"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.ProviderApprenticeshipsService.Infrastructure/Configuration/ProviderApprenticeshipsServiceConfiguration.cs",
+          "reason": "RedisConnectionString included in configuration."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.ProviderApprenticeshipsService.Application/SFA.DAS.ProviderApprenticeshipsService.Application.csproj",
+          "reason": "StackExchange.Redis package indicates usage of Redis."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "cache-redis-cache",
+      "description": "Caches data in"
+    },
+    {
+      "sourceId": "providerapprenticeshipsservice-web",
+      "name": "Azure App Configuration",
+      "kind": "configuration-store",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "ConfigNames",
+        "ConfigurationStorageConnectionString",
+        "EnvironmentName"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.ProviderApprenticeshipsService.Web/Extensions/ConfigurationExtensions.cs",
+          "reason": "AddAzureTableStorage configures Azure Table Storage for distributed configuration."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "configuration-store-azure-app-configuration",
+      "description": "Reads configuration from"
+    },
+    {
+      "sourceId": "provider-apprenticeships-service-jobs",
+      "name": "Azure App Configuration",
+      "kind": "configuration-store",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": "Azure App Configuration",
+      "configurationKeys": [],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.PAS.Jobs/SFA.DAS.PAS.Jobs.csproj",
+          "reason": "Dependency on SFA.DAS.Configuration.AzureTableStorage for Azure App Configuration."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "configuration-store-azure-app-configuration",
+      "description": "Reads configuration from"
+    },
+    {
+      "sourceId": "provider-apprenticeships-service-api",
+      "name": "Azure Table Storage Configuration",
+      "kind": "configuration-store",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": "Azure Table Storage",
+      "configurationKeys": [
+        "ConfigNames",
+        "ConfigurationStorageConnectionString",
+        "EnvironmentName"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.PAS.Account.Api/App_Start/ConfigurationExtensions.cs",
+          "reason": "AddAzureTableStorage indicates loading configuration from Azure Table Storage."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "configuration-store-azure-table-storage-configuration",
+      "description": "Reads configuration from"
+    },
+    {
+      "sourceId": "provider-apprenticeships-service-jobs",
+      "name": "Azure Table Storage Configuration",
+      "kind": "configuration-store",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": "Azure Table Storage",
+      "configurationKeys": [
+        "ConfigNames",
+        "ConfigurationStorageConnectionString",
+        "EnvironmentName"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.PAS.Jobs/Extensions/AddConfigurationExtension.cs",
+          "reason": "AddAzureTableStorage indicates loading configuration from Azure Table Storage."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "configuration-store-azure-table-storage-configuration",
+      "description": "Reads configuration from"
+    },
+    {
+      "sourceId": "provider-apprenticeships-service-jobs",
+      "name": "SQL Server Database",
+      "kind": "database",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "SqlConnection",
+      "technology": "Microsoft.Data.SqlClient",
+      "configurationKeys": [
+        "DatabaseConnectionString"
+      ],
+      "authentication": {
+        "type": "Active Directory Managed Identity",
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.ProviderApprenticeshipsService.Infrastructure/Data/BaseRepository.cs",
+          "reason": "Database access with retry policy."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.ProviderApprenticeshipsService.Application/Extensions/DatabaseExtensions.cs",
+          "reason": "Evidence of SqlConnection construction and managed identity authentication."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.ProviderApprenticeshipsService.Infrastructure/Data/SqlConnectionFactory.cs",
+          "reason": "SqlConnectionFactory providing connections potentially using managed identity."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "database-sql-server-database",
+      "description": "Reads from and writes to"
+    },
+    {
+      "sourceId": "provider-apprenticeships-service-jobs",
+      "name": "DfE Sign In",
+      "kind": "http-api",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": "IApiHelper",
+      "technology": "HTTP",
+      "configurationKeys": [
+        "DfEOidcConfiguration",
+        "DfEOidcConfiguration_ProviderRoATP"
+      ],
+      "authentication": {
+        "type": "OAuth",
+        "configurationKeys": [
+          "DfEOidcConfiguration"
+        ]
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.PAS.Jobs/Services/UserSyncService.cs",
+          "reason": "IApiHelper with DfEOidcConfiguration is used to make authenticated HTTP calls to DfE Sign In."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "http-api-dfe-sign-in",
       "description": "Calls the API of"
     },
     {
-      "sourceId": "pas-jobs",
-      "name": "Roatp",
+      "sourceId": "provider-apprenticeships-service-jobs",
+      "name": "RoATP",
       "kind": "http-api",
-      "classification": "internal",
+      "classification": "third-party",
       "direction": "outbound",
       "client": "IRoatpApiClient",
-      "technology": "Refit",
+      "technology": "HTTP",
       "configurationKeys": [],
       "authentication": {
         "type": null,
@@ -218,7 +302,7 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.PAS.Jobs/Extensions/AddApplicationRegistrationsExtension.cs",
-          "reason": "Refit API client registration for RoATP detected"
+          "reason": "Refit-based client IRoatpApiClient indicates outbound HTTP calls to RoATP."
         }
       ],
       "confidence": "high",
@@ -226,13 +310,13 @@
       "description": "Calls the API of"
     },
     {
-      "sourceId": "provider-apprenticeships-service-web",
-      "name": "Azure Service Bus",
-      "kind": "message-broker",
-      "classification": "internal",
+      "sourceId": "provider-apprenticeships-service-jobs",
+      "name": "DfE Sign-in",
+      "kind": "identity-provider",
+      "classification": "third-party",
       "direction": "outbound",
       "client": null,
-      "technology": "Azure.Messaging.ServiceBus",
+      "technology": "DfE Sign-in",
       "configurationKeys": [],
       "authentication": {
         "type": null,
@@ -242,17 +326,185 @@
       "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.ProviderApprenticeshipsService.Infrastructure/SFA.DAS.ProviderApprenticeshipsService.Infrastructure.csproj",
-          "reason": "Azure Service Bus evidenced by the reference to Azure.Messaging.ServiceBus package."
-        },
-        {
-          "sourceFile": "src/SFA.DAS.ProviderApprenticeshipsService.Web/Startup.cs",
-          "reason": "ServiceBus usage evidenced by NServiceBus configuration in ConfigureContainer."
+          "sourceFile": "src/SFA.DAS.PAS.Jobs/SFA.DAS.PAS.Jobs.csproj",
+          "reason": "Dependency on SFA.DAS.DfESignIn.Auth indicating integration with DfE Sign-in."
         }
       ],
-      "confidence": "medium",
+      "confidence": "high",
+      "targetId": "identity-provider-dfe-sign-in",
+      "description": "Authenticates with"
+    },
+    {
+      "sourceId": "providerapprenticeshipsservice-web",
+      "name": "Microsoft Entra ID",
+      "kind": "identity-provider",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "EnvironmentName"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.ProviderApprenticeshipsService.Web/Authentication/AuthenticationExtensions.cs",
+          "reason": "AddAndConfigureDfESignInAuthentication for external identity authentication."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "identity-provider-microsoft-entra-id",
+      "description": "Authenticates with"
+    },
+    {
+      "sourceId": "provider-apprenticeships-service-api",
+      "name": "Microsoft Entra ID",
+      "kind": "identity-provider",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "ConfigurationKeys.AzureActiveDirectoryApiConfiguration"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.PAS.Account.Api/Authentication/AuthenticationExtensions.cs",
+          "reason": "AddAuthentication suggests an external authentication provider (Azure Active Directory)."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "identity-provider-microsoft-entra-id",
+      "description": "Authenticates with"
+    },
+    {
+      "sourceId": "provider-apprenticeships-service-jobs",
+      "name": "Azure Service Bus",
+      "kind": "message-broker",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": "Azure Service Bus",
+      "configurationKeys": [
+        "ServiceBusConnectionString"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.ProviderApprenticeshipsService.Application/Extensions/NServiceBusServiceRegistrations.cs",
+          "reason": "Configuration of NServiceBus with Azure Service Bus transport."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.ProviderApprenticeshipsService.Application/Extensions/EndpointConfigurationExtensions.cs",
+          "reason": "UseAzureServiceBusTransport configured with connection string."
+        }
+      ],
+      "confidence": "high",
       "targetId": "message-broker-azure-service-bus",
       "description": "Publishes messages to and consumes messages from"
+    },
+    {
+      "sourceId": "providerapprenticeshipsservice-web",
+      "name": "Application Insights",
+      "kind": "telemetry",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "APPLICATIONINSIGHTS_CONNECTION_STRING"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.ProviderApprenticeshipsService.Web/Extensions/AddOpenTelemetryExtensions.cs",
+          "reason": "UseAzureMonitor with Application Insights connection string for telemetry."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "telemetry-application-insights",
+      "description": "Sends telemetry to"
+    },
+    {
+      "sourceId": "provider-apprenticeships-service-jobs",
+      "name": "Application Insights",
+      "kind": "telemetry",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": "Azure Monitor",
+      "configurationKeys": [
+        "APPLICATIONINSIGHTS_CONNECTION_STRING"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.PAS.Jobs/Program.cs",
+          "reason": "AddApplicationInsightsTelemetryWorkerService indicates telemetry is sent to Application Insights."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.PAS.Jobs/SFA.DAS.PAS.Jobs.csproj",
+          "reason": "Dependency on Microsoft.ApplicationInsights.WorkerService."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.ProviderApprenticeshipsService.Infrastructure/Extensions/AddTelemetryRegistrationExtension.cs",
+          "reason": "Telemetry registration using Application Insights."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "telemetry-application-insights",
+      "description": "Sends telemetry to"
+    },
+    {
+      "sourceId": "provider-apprenticeships-service-api",
+      "name": "Application Insights",
+      "kind": "telemetry",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.PAS.Account.Api/StartUp.cs",
+          "reason": "AddApplicationInsightsTelemetry indicates telemetry is sent to Application Insights."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "telemetry-application-insights",
+      "description": "Sends telemetry to"
     }
   ],
   "resolution": {

@@ -2,56 +2,29 @@
   "repository": "SkillsFundingAgency/das-campaign-api",
   "ref": "main",
   "path": "src",
-  "systemName": "SFA.DAS.Campaign",
+  "systemName": "Campaign",
   "containers": [
     {
-      "id": "sfa-das-campaign",
-      "name": "SFA.DAS.Campaign",
+      "id": "campaign",
+      "name": "Campaign",
       "type": "api",
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.Campaign.Api/Program.cs",
-          "reason": "Found web entry point via CreateWebHostBuilder method and UseStartup<Startup>."
+          "reason": "Detected a web application entry point"
         },
         {
           "sourceFile": "src/SFA.DAS.Campaign.Api/SFA.DAS.Campaign.Api.csproj",
-          "reason": "Project uses the Microsoft.NET.Sdk.Web SDK, indicating a web application."
+          "reason": "Project SDK is Microsoft.NET.Sdk.Web, indicating a web or API application"
         }
       ]
     }
   ],
   "dependencies": [
     {
-      "sourceId": "sfa-das-campaign",
-      "name": "Azure Active Directory",
-      "kind": "cloud-service",
-      "classification": "third-party",
-      "direction": "outbound",
-      "client": null,
-      "technology": null,
-      "configurationKeys": [
-        "AzureAd"
-      ],
-      "authentication": {
-        "type": null,
-        "configurationKeys": []
-      },
-      "operations": [],
-      "resources": [],
-      "evidence": [
-        {
-          "sourceFile": "src/SFA.DAS.Campaign.Api/Startup.cs",
-          "reason": "AzureAd authorization configuration found in Startup class."
-        }
-      ],
-      "confidence": "high",
-      "targetId": "cloud-service-azure-active-directory",
-      "description": "Uses"
-    },
-    {
-      "sourceId": "sfa-das-campaign",
-      "name": "Azure Table Storage",
-      "kind": "cloud-service",
+      "sourceId": "campaign",
+      "name": "Azure Table Storage configuration",
+      "kind": "configuration-store",
       "classification": "third-party",
       "direction": "outbound",
       "client": null,
@@ -68,43 +41,107 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.Campaign.Api/Startup.cs",
-          "reason": "Found AddAzureTableStorage configuration with storage connection string."
+          "reason": "Detected Azure Table Storage configuration setup with AddAzureTableStorage"
         }
       ],
       "confidence": "high",
-      "targetId": "cloud-service-azure-table-storage",
-      "description": "Uses"
+      "targetId": "configuration-store-azure-table-storage-configuration",
+      "description": "Reads configuration from"
     },
     {
-      "sourceId": "sfa-das-campaign",
-      "name": "SQL Database",
+      "sourceId": "campaign",
+      "name": "Campaign Database",
       "kind": "database",
       "classification": "internal",
       "direction": "outbound",
-      "client": "SqlConnection",
-      "technology": "SQL Server",
+      "client": "CampaignDataContext",
+      "technology": "Microsoft SQL Server",
       "configurationKeys": [
         "CampaignConfiguration.SqlConnectionString"
       ],
       "authentication": {
-        "type": "Azure AD Token",
+        "type": "Azure Active Directory",
         "configurationKeys": []
       },
       "operations": [],
       "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.Campaign.Api/AppStart/AddDatabaseExtension.cs",
-          "reason": "Found AddDbContext for CampaignDataContext with SQL Server configuration."
+          "sourceFile": "src/SFA.DAS.Campaign.Api/Startup.cs",
+          "reason": "Database configuration references CampaignConfiguration.SqlConnectionString"
         },
         {
           "sourceFile": "src/SFA.DAS.Campaign.Api.Data/CampaignDataContext.cs",
-          "reason": "Found CampaignDataContext which sets up connection to SQL Database using Azure AD token."
+          "reason": "Detected DbContext subclass for database operations"
+        },
+        {
+          "sourceFile": "src/SFA.DAS.Campaign.Api/AppStart/AddDatabaseExtension.cs",
+          "reason": "Detected registration of CampaignDataContext with SQL Server configuration"
         }
       ],
       "confidence": "high",
-      "targetId": "database-sql-database",
+      "targetId": "database-campaign-database",
       "description": "Reads from and writes to"
+    },
+    {
+      "sourceId": "campaign",
+      "name": "Microsoft Entra ID",
+      "kind": "identity-provider",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "AzureAd"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": [
+          "AzureAd"
+        ]
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Campaign.Api/Startup.cs",
+          "reason": "Detected Microsoft Entra ID authentication setup"
+        }
+      ],
+      "confidence": "high",
+      "targetId": "identity-provider-microsoft-entra-id",
+      "description": "Authenticates with"
+    },
+    {
+      "sourceId": "campaign",
+      "name": "Application Insights",
+      "kind": "telemetry",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "APPLICATIONINSIGHTS_CONNECTION_STRING"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Campaign.Api/Startup.cs",
+          "reason": "Configuration key APPLICATIONINSIGHTS_CONNECTION_STRING is used for telemetry setup"
+        },
+        {
+          "sourceFile": "src/SFA.DAS.Campaign.Api/AppStart/AddOpenTelemetryExtensions.cs",
+          "reason": "Registered telemetry using AddOpenTelemetry().UseAzureMonitor"
+        }
+      ],
+      "confidence": "high",
+      "targetId": "telemetry-application-insights",
+      "description": "Sends telemetry to"
     }
   ],
   "resolution": {

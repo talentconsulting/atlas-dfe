@@ -11,7 +11,11 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.FAA.Api/Program.cs",
-          "reason": "Main method entry point indicating an API container."
+          "reason": "ASP.NET application entry point via CreateHostBuilder."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.FAA.Api/SFA.DAS.FAA.Api.csproj",
+          "reason": "Project targets Microsoft.NET.Sdk.Web, indicating a web/API application."
         }
       ]
     }
@@ -19,43 +23,127 @@
   "dependencies": [
     {
       "sourceId": "findapprenticeships",
-      "name": "SQL Server",
+      "name": "Azure Table Storage configuration",
+      "kind": "configuration-store",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "ConfigNames",
+        "ConfigurationStorageConnectionString",
+        "Environment"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.FAA.Api/Startup.cs",
+          "reason": "Configuration loaded from Azure Table Storage via AddAzureTableStorage."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "configuration-store-azure-table-storage-configuration",
+      "description": "Reads configuration from"
+    },
+    {
+      "sourceId": "findapprenticeships",
+      "name": "Find Apprenticeships",
       "kind": "database",
       "classification": "internal",
       "direction": "outbound",
-      "client": "FindApprenticeshipsDataContext",
-      "technology": "Entity Framework Core",
+      "client": null,
+      "technology": "Microsoft SQL Server",
       "configurationKeys": [
         "FindApprenticeshipsApi:DatabaseConnectionString"
       ],
       "authentication": {
-        "type": "connection-string",
-        "configurationKeys": [
-          "FindApprenticeshipsApi:DatabaseConnectionString"
-        ]
+        "type": null,
+        "configurationKeys": []
       },
       "operations": [],
-      "resources": [
-        {
-          "type": "database",
-          "name": "FindApprenticeshipsApi:DatabaseConnectionString",
-          "direction": "outbound",
-          "sourceFile": "src/SFA.DAS.FAA.Data/FindApprenticeshipsDataContext.cs"
-        }
-      ],
+      "resources": [],
       "evidence": [
         {
+          "sourceFile": "src/SFA.DAS.FAA.Api/Startup.cs",
+          "reason": "Database configured via AddDatabaseRegistration in Startup."
+        },
+        {
           "sourceFile": "src/SFA.DAS.FAA.Api/AppStart/DatabaseExtensions.cs",
-          "reason": "AddDbContext registration for FindApprenticeshipsDataContext with a SQL Server connection."
+          "reason": "DbContext for Find Apprenticeships configured with UseSqlServer and a connection string."
         },
         {
           "sourceFile": "src/SFA.DAS.FAA.Data/FindApprenticeshipsDataContext.cs",
-          "reason": "SQL Server client and connection configuration in Entity Framework DbContext."
+          "reason": "FindApprenticeshipsDataContext connects to a SQL Server database."
         }
       ],
       "confidence": "high",
-      "targetId": "database-sql-server",
+      "targetId": "database-find-apprenticeships",
       "description": "Reads from and writes to"
+    },
+    {
+      "sourceId": "findapprenticeships",
+      "name": "Microsoft Entra ID",
+      "kind": "identity-provider",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "AzureAd"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.FAA.Api/Startup.cs",
+          "reason": "Microsoft JWT Bearer authentication configured via AddAuthentication and AzureAd section."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.FAA.Api/SFA.DAS.FAA.Api.csproj",
+          "reason": "Microsoft.AspNetCore.Authentication.JwtBearer package is referenced."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "identity-provider-microsoft-entra-id",
+      "description": "Authenticates with"
+    },
+    {
+      "sourceId": "findapprenticeships",
+      "name": "Application Insights",
+      "kind": "telemetry",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.FAA.Api/SFA.DAS.FAA.Api.csproj",
+          "reason": "Microsoft.ApplicationInsights.AspNetCore package is referenced."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.FAA.Api/Startup.cs",
+          "reason": "Telemetry configured with UseAzureMonitor, targeting Application Insights."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "telemetry-application-insights",
+      "description": "Sends telemetry to"
     }
   ],
   "resolution": {

@@ -2,16 +2,16 @@
   "repository": "SkillsFundingAgency/das-pr-jobs",
   "ref": "main",
   "path": "src",
-  "systemName": "PR Jobs",
+  "systemName": "PR",
   "containers": [
     {
       "id": "pr-jobs",
-      "name": "PR Jobs",
+      "name": "PR",
       "type": "job",
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.PR.Jobs/Program.cs",
-          "reason": "Azure Functions Worker entry point"
+          "reason": "HostBuilder configuration evidences the container is a job."
         }
       ]
     }
@@ -19,7 +19,36 @@
   "dependencies": [
     {
       "sourceId": "pr-jobs",
-      "name": "PR Database",
+      "name": "Azure Table Storage configuration",
+      "kind": "configuration-store",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "ConfigNames",
+        "ConfigurationStorageConnectionString",
+        "EnvironmentName"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.PR.Jobs/Extensions/AddConfigurationExtension.cs",
+          "reason": "AddAzureTableStorage registration evidences Azure Table Storage configuration usage."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "configuration-store-azure-table-storage-configuration",
+      "description": "Reads configuration from"
+    },
+    {
+      "sourceId": "pr-jobs",
+      "name": "Provider Relationships Database",
       "kind": "database",
       "classification": "internal",
       "direction": "outbound",
@@ -29,56 +58,44 @@
         "SqlConnectionString"
       ],
       "authentication": {
-        "type": "Azure AD Token",
+        "type": "access-token",
         "configurationKeys": []
       },
       "operations": [],
-      "resources": [
-        {
-          "type": "database",
-          "name": "SqlConnectionString",
-          "direction": "outbound",
-          "sourceFile": "src/SFA.DAS.PR.Data/Extensions/AddPrDataContextExtension.cs"
-        }
-      ],
+      "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.PR.Data/ProviderRelationshipsDataContext.cs",
-          "reason": "ProviderRelationshipsDataContext defined as DbContext"
+          "sourceFile": "src/SFA.DAS.PR.Data/Extensions/AddPrDataContextExtension.cs",
+          "reason": "AddDbContext registration with SQL Server is defined for ProviderRelationshipsDataContext."
         },
         {
-          "sourceFile": "src/SFA.DAS.PR.Data/Extensions/AddPrDataContextExtension.cs",
-          "reason": "ProviderRelationshipsDataContext registered with DbContext and SQL Server"
+          "sourceFile": "src/SFA.DAS.PR.Data/ProviderRelationshipsDataContext.cs",
+          "reason": "DbContext subclass evidences a database dependency configured for relational mapping."
         }
       ],
       "confidence": "high",
-      "targetId": "database-pr-database",
+      "targetId": "database-provider-relationships-database",
       "description": "Reads from and writes to"
     },
     {
       "sourceId": "pr-jobs",
       "name": "Commitments V2",
       "kind": "http-api",
-      "classification": "internal",
+      "classification": "unknown",
       "direction": "outbound",
-      "client": "ICommitmentsV2ApiClient",
-      "technology": "HTTP",
-      "configurationKeys": [
-        "CommitmentsV2ApiConfiguration:Identifier",
-        "CommitmentsV2ApiConfiguration:Url"
-      ],
+      "client": null,
+      "technology": null,
+      "configurationKeys": [],
       "authentication": {
-        "type": "Azure AD",
-        "configurationKeys": [
-          "CommitmentsV2ApiConfiguration:Identifier"
-        ]
+        "type": null,
+        "configurationKeys": []
       },
       "operations": [],
       "resources": [],
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.PR.Jobs/Extensions/AddServiceRegistrationsExtension.cs",
-          "reason": "ICommitmentsV2ApiClient registered with Refit"
+          "reason": "ICommitmentsV2ApiClient client registration evidences an outbound HTTP API dependency."
         }
       ],
       "confidence": "high",
@@ -90,26 +107,21 @@
       "sourceId": "pr-jobs",
       "name": "Employer Accounts",
       "kind": "http-api",
-      "classification": "internal",
+      "classification": "unknown",
       "direction": "outbound",
-      "client": "IEmployerAccountsApiClient",
-      "technology": "HTTP",
-      "configurationKeys": [
-        "EmployerAccountsApiConfiguration:Identifier",
-        "EmployerAccountsApiConfiguration:Url"
-      ],
+      "client": null,
+      "technology": null,
+      "configurationKeys": [],
       "authentication": {
-        "type": "Azure AD",
-        "configurationKeys": [
-          "EmployerAccountsApiConfiguration:Identifier"
-        ]
+        "type": null,
+        "configurationKeys": []
       },
       "operations": [],
       "resources": [],
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.PR.Jobs/Extensions/AddServiceRegistrationsExtension.cs",
-          "reason": "IEmployerAccountsApiClient registered with Refit"
+          "reason": "IEmployerAccountsApiClient client registration evidences an outbound HTTP API dependency."
         }
       ],
       "confidence": "high",
@@ -121,26 +133,21 @@
       "sourceId": "pr-jobs",
       "name": "PAS Account",
       "kind": "http-api",
-      "classification": "internal",
+      "classification": "unknown",
       "direction": "outbound",
-      "client": "IPasAccountApiClient",
-      "technology": "HTTP",
-      "configurationKeys": [
-        "PasAccountApiConfiguration:Identifier",
-        "PasAccountApiConfiguration:Url"
-      ],
+      "client": null,
+      "technology": null,
+      "configurationKeys": [],
       "authentication": {
-        "type": "Azure AD",
-        "configurationKeys": [
-          "PasAccountApiConfiguration:Identifier"
-        ]
+        "type": null,
+        "configurationKeys": []
       },
       "operations": [],
       "resources": [],
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.PR.Jobs/Extensions/AddServiceRegistrationsExtension.cs",
-          "reason": "IPasAccountApiClient registered with Refit"
+          "reason": "IPasAccountApiClient client registration evidences an outbound HTTP API dependency."
         }
       ],
       "confidence": "high",
@@ -151,26 +158,21 @@
       "sourceId": "pr-jobs",
       "name": "Provider Relationships",
       "kind": "http-api",
-      "classification": "internal",
+      "classification": "unknown",
       "direction": "outbound",
-      "client": "IProviderRelationshipsApiClient",
-      "technology": "HTTP",
-      "configurationKeys": [
-        "ProviderRelationshipsApiConfiguration:Identifier",
-        "ProviderRelationshipsApiConfiguration:Url"
-      ],
+      "client": null,
+      "technology": null,
+      "configurationKeys": [],
       "authentication": {
-        "type": "Azure AD",
-        "configurationKeys": [
-          "ProviderRelationshipsApiConfiguration:Identifier"
-        ]
+        "type": null,
+        "configurationKeys": []
       },
       "operations": [],
       "resources": [],
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.PR.Jobs/Extensions/AddServiceRegistrationsExtension.cs",
-          "reason": "IProviderRelationshipsApiClient registered with Refit"
+          "reason": "IProviderRelationshipsApiClient client registration evidences an outbound HTTP API dependency."
         }
       ],
       "confidence": "high",
@@ -181,31 +183,104 @@
       "sourceId": "pr-jobs",
       "name": "RoATP Service",
       "kind": "http-api",
-      "classification": "internal",
+      "classification": "unknown",
       "direction": "outbound",
-      "client": "IRoatpServiceApiClient",
-      "technology": "HTTP",
-      "configurationKeys": [
-        "RoatpServiceApiConfiguration:Identifier",
-        "RoatpServiceApiConfiguration:Url"
-      ],
+      "client": null,
+      "technology": null,
+      "configurationKeys": [],
       "authentication": {
-        "type": "Azure AD",
-        "configurationKeys": [
-          "RoatpServiceApiConfiguration:Identifier"
-        ]
+        "type": null,
+        "configurationKeys": []
       },
       "operations": [],
       "resources": [],
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.PR.Jobs/Extensions/AddServiceRegistrationsExtension.cs",
-          "reason": "IRoatpServiceApiClient registered with Refit"
+          "reason": "IRoatpServiceApiClient client registration evidences an outbound HTTP API dependency."
         }
       ],
       "confidence": "high",
       "targetId": "http-api-roatp-service",
       "description": "Calls the API of"
+    },
+    {
+      "sourceId": "pr-jobs",
+      "name": "Azure Service Bus",
+      "kind": "message-broker",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": "NServiceBus",
+      "configurationKeys": [
+        "NServiceBusConfiguration:NServiceBusLicense"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [
+        {
+          "method": "PUBLISH",
+          "methodName": null,
+          "path": "SFA.DAS.Notifications.MessageHandlers",
+          "sourceFile": "src/SFA.DAS.PR.Jobs/Extensions/ConfigureNServiceBusExtension.cs"
+        },
+        {
+          "method": "SEND",
+          "methodName": null,
+          "path": "SFA.DAS.PR.Jobs-error",
+          "sourceFile": "src/SFA.DAS.PR.Jobs/Extensions/ConfigureNServiceBusExtension.cs"
+        }
+      ],
+      "resources": [
+        {
+          "type": "queue",
+          "name": "SFA.DAS.Notifications.MessageHandlers",
+          "direction": "outbound",
+          "sourceFile": "src/SFA.DAS.PR.Jobs/Extensions/ConfigureNServiceBusExtension.cs"
+        },
+        {
+          "type": "queue",
+          "name": "SFA.DAS.PR.Jobs-error",
+          "direction": "outbound",
+          "sourceFile": "src/SFA.DAS.PR.Jobs/Extensions/ConfigureNServiceBusExtension.cs"
+        }
+      ],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.PR.Jobs/Extensions/ConfigureNServiceBusExtension.cs",
+          "reason": "NServiceBus configuration evidences Azure Service Bus queues."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "message-broker-azure-service-bus",
+      "description": "Publishes messages to and consumes messages from"
+    },
+    {
+      "sourceId": "pr-jobs",
+      "name": "Application Insights",
+      "kind": "telemetry",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.PR.Jobs/Program.cs",
+          "reason": "AddApplicationInsightsTelemetryWorkerService registration evidences the use of Application Insights."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "telemetry-application-insights",
+      "description": "Sends telemetry to"
     }
   ],
   "resolution": {

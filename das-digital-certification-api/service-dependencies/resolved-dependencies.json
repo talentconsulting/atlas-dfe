@@ -11,11 +11,15 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.DigitalCertificates.Api/Program.cs",
-          "reason": "ASP.NET Core application entry point using CreateHostBuilder."
+          "reason": "ASP.NET application entry point"
+        },
+        {
+          "sourceFile": "src/SFA.DAS.DigitalCertificates.Api/Startup.cs",
+          "reason": "ASP.NET application startup configuration"
         },
         {
           "sourceFile": "src/SFA.DAS.DigitalCertificates.Api/SFA.DAS.DigitalCertificates.Api.csproj",
-          "reason": "Project file targeting Microsoft.NET.Sdk.Web, indicating a web API."
+          "reason": "Web SDK project file"
         }
       ]
     }
@@ -23,32 +27,32 @@
   "dependencies": [
     {
       "sourceId": "digital-certificates",
-      "name": "Azure Key Vault Authentication",
-      "kind": "cloud-service",
+      "name": "Azure App Configuration",
+      "kind": "configuration-store",
       "classification": "third-party",
       "direction": "outbound",
-      "client": "ChainedTokenCredential",
-      "technology": "Azure Key Vault",
-      "configurationKeys": [],
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "ConfigNames",
+        "ConfigurationStorageConnectionString",
+        "EnvironmentName"
+      ],
       "authentication": {
-        "type": "Azure Managed Identity",
+        "type": null,
         "configurationKeys": []
       },
       "operations": [],
       "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.DigitalCertificates.Data/DigitalCertificatesDataContext.cs",
-          "reason": "Authentication for SQL Server database is done using Azure Managed Identity with ChainedTokenCredential."
-        },
-        {
-          "sourceFile": "src/SFA.DAS.DigitalCertificates.Api/AppStart/AddDatabaseRegistrations.cs",
-          "reason": "ChainedTokenCredential registration with support for Azure Key Vault authentication."
+          "sourceFile": "src/SFA.DAS.DigitalCertificates.Api/Startup.cs",
+          "reason": "Azure App Configuration registration"
         }
       ],
       "confidence": "high",
-      "targetId": "cloud-service-azure-key-vault-authentication",
-      "description": "Uses"
+      "targetId": "configuration-store-azure-app-configuration",
+      "description": "Reads configuration from"
     },
     {
       "sourceId": "digital-certificates",
@@ -56,7 +60,7 @@
       "kind": "database",
       "classification": "internal",
       "direction": "outbound",
-      "client": "DbContext",
+      "client": "DigitalCertificatesDataContext",
       "technology": "SQL Server",
       "configurationKeys": [
         "ApplicationSettings:DbConnectionString"
@@ -66,27 +70,86 @@
         "configurationKeys": []
       },
       "operations": [],
-      "resources": [
-        {
-          "type": "database",
-          "name": "ApplicationSettings:DbConnectionString",
-          "direction": "outbound",
-          "sourceFile": "src/SFA.DAS.DigitalCertificates.Api/AppStart/AddDatabaseRegistrations.cs"
-        }
-      ],
+      "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.DigitalCertificates.Api/AppStart/AddDatabaseRegistrations.cs",
-          "reason": "AddDbContext for DigitalCertificatesDataContext using SQL Server, configured via AppSettings:DbConnectionString."
+          "sourceFile": "src/SFA.DAS.DigitalCertificates.Domain/Configuration/ApplicationSettings.cs",
+          "reason": "Configuration model containing DbConnectionString"
         },
         {
           "sourceFile": "src/SFA.DAS.DigitalCertificates.Data/DigitalCertificatesDataContext.cs",
-          "reason": "DbContext class implementing database operations, with SQL Server configuration."
+          "reason": "DbContext class implementation for SQL Server"
+        },
+        {
+          "sourceFile": "src/SFA.DAS.DigitalCertificates.Api/AppStart/AddDatabaseRegistrations.cs",
+          "reason": "DbContext registration with connection string and authentication setup"
         }
       ],
       "confidence": "high",
       "targetId": "database-digital-certificates-database",
       "description": "Reads from and writes to"
+    },
+    {
+      "sourceId": "digital-certificates",
+      "name": "Microsoft Entra ID",
+      "kind": "identity-provider",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "ApplicationSettings:AzureAd"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.DigitalCertificates.Api/Startup.cs",
+          "reason": "Azure Active Directory authentication configured"
+        },
+        {
+          "sourceFile": "src/SFA.DAS.DigitalCertificates.Domain/Configuration/ApplicationSettings.cs",
+          "reason": "Azure Active Directory configuration model"
+        }
+      ],
+      "confidence": "high",
+      "targetId": "identity-provider-microsoft-entra-id",
+      "description": "Authenticates with"
+    },
+    {
+      "sourceId": "digital-certificates",
+      "name": "Application Insights",
+      "kind": "telemetry",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "APPLICATIONINSIGHTS_CONNECTION_STRING"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.DigitalCertificates.Api/Startup.cs",
+          "reason": "Application Insights connection string used in telemetry registration"
+        },
+        {
+          "sourceFile": "src/SFA.DAS.DigitalCertificates.Api/AppStart/AddOpenTelemetryExtensions.cs",
+          "reason": "OpenTelemetry configured with Azure Monitor"
+        }
+      ],
+      "confidence": "high",
+      "targetId": "telemetry-application-insights",
+      "description": "Sends telemetry to"
     }
   ],
   "resolution": {
