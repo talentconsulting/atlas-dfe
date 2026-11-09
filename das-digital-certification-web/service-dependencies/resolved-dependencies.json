@@ -5,32 +5,31 @@
   "systemName": "Digital Certificates",
   "containers": [
     {
-      "id": "digital-certificates-web",
+      "id": "digital-certificates",
       "name": "Digital Certificates",
       "type": "web",
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.DigitalCertificates.Web/Program.cs",
-          "reason": "ASP.NET Core Web entry point with web hosting configuration"
+          "sourceFile": "src/SFA.DAS.DigitalCertificates.Web/Startup.cs",
+          "reason": "ASP.NET Core Startup class recognized for MVC/web registration."
         },
         {
-          "sourceFile": "src/SFA.DAS.DigitalCertificates.Web/SFA.DAS.DigitalCertificates.Web.csproj",
-          "reason": "Project file declares SDK as Microsoft.NET.Sdk.Web"
+          "sourceFile": "src/SFA.DAS.DigitalCertificates.Web/Program.cs",
+          "reason": "Entry point for the web application identified."
         }
       ]
     }
   ],
   "dependencies": [
     {
-      "sourceId": "digital-certificates-web",
-      "name": "Redis",
+      "sourceId": "digital-certificates",
+      "name": "Redis Cache",
       "kind": "cache",
-      "classification": "internal",
+      "classification": "third-party",
       "direction": "outbound",
       "client": null,
-      "technology": "StackExchange.Redis",
+      "technology": "StackExchange Redis",
       "configurationKeys": [
-        "DataProtectionKeysDatabase",
         "RedisConnectionString"
       ],
       "authentication": {
@@ -38,36 +37,23 @@
         "configurationKeys": []
       },
       "operations": [],
-      "resources": [
-        {
-          "type": "cache",
-          "name": null,
-          "direction": "outbound",
-          "sourceFile": "src/SFA.DAS.DigitalCertificates.Web/StartupExtensions/CacheStartupExtensions.cs"
-        },
-        {
-          "type": "cache",
-          "name": null,
-          "direction": "outbound",
-          "sourceFile": "src/SFA.DAS.DigitalCertificates.Web/StartupExtensions/DataProtectionStartupExtensions.cs"
-        }
-      ],
+      "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.DigitalCertificates.Web/StartupExtensions/DataProtectionStartupExtensions.cs",
-          "reason": "Redis client registered for DataProtection using ConnectionMultiplexer.Connect and PersistKeysToStackExchangeRedis"
+          "sourceFile": "src/SFA.DAS.DigitalCertificates.Web/StartupExtensions/CacheStartupExtensions.cs",
+          "reason": "Redis cache configured for distributed caching."
         },
         {
-          "sourceFile": "src/SFA.DAS.DigitalCertificates.Web/StartupExtensions/CacheStartupExtensions.cs",
-          "reason": "Redis client registered using AddStackExchangeRedisCache"
+          "sourceFile": "src/SFA.DAS.DigitalCertificates.Web/StartupExtensions/DataProtectionStartupExtensions.cs",
+          "reason": "Redis used for data protection key persistence."
         }
       ],
       "confidence": "high",
-      "targetId": "cache-redis",
+      "targetId": "cache-redis-cache",
       "description": "Caches data in"
     },
     {
-      "sourceId": "digital-certificates-web",
+      "sourceId": "digital-certificates",
       "name": "Application Insights",
       "kind": "cloud-service",
       "classification": "third-party",
@@ -86,7 +72,7 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.DigitalCertificates.Web/Startup.cs",
-          "reason": "AddOpenTelemetryRegistration called with Application Insights connection string"
+          "reason": "OpenTelemetry configured with Application Insights connection string."
         }
       ],
       "confidence": "high",
@@ -94,7 +80,7 @@
       "description": "Uses"
     },
     {
-      "sourceId": "digital-certificates-web",
+      "sourceId": "digital-certificates",
       "name": "Digital Certificates API",
       "kind": "http-api",
       "classification": "internal",
@@ -102,7 +88,7 @@
       "client": "IDigitalCertificatesApiClient",
       "technology": "RestEase",
       "configurationKeys": [
-        "DigitalCertificatesOuterApiConfiguration.ApiBaseUrl"
+        "DigitalCertificatesOuterApiConfiguration:ApiBaseUrl"
       ],
       "authentication": {
         "type": null,
@@ -113,7 +99,7 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.DigitalCertificates.Web/StartupExtensions/AddServiceRegistrationExtensions.cs",
-          "reason": "RestEase client IDigitalCertificatesOuterApi registered with API base URL configuration"
+          "reason": "IDigitalCertificatesOuterApi registered with RestEase using an API base URL."
         },
         {
           "sourceFile": "das-apim-endpoints/src/DigitalCertificates/SFA.DAS.DigitalCertificates/Application/Commands/CreateOrUpdateUser/CreateOrUpdateUserCommandHandler.cs",
@@ -144,7 +130,7 @@
       }
     },
     {
-      "sourceId": "digital-certificates-web",
+      "sourceId": "digital-certificates",
       "name": "Assessors API",
       "kind": "http-api",
       "classification": "internal",
@@ -152,7 +138,7 @@
       "client": "IAssessorsApiClient",
       "technology": "RestEase",
       "configurationKeys": [
-        "DigitalCertificatesOuterApiConfiguration.ApiBaseUrl"
+        "DigitalCertificatesOuterApiConfiguration:ApiBaseUrl"
       ],
       "authentication": {
         "type": null,
@@ -163,7 +149,7 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.DigitalCertificates.Web/StartupExtensions/AddServiceRegistrationExtensions.cs",
-          "reason": "RestEase client IDigitalCertificatesOuterApi registered with API base URL configuration"
+          "reason": "IDigitalCertificatesOuterApi registered with RestEase using an API base URL."
         },
         {
           "sourceFile": "das-apim-endpoints/src/DigitalCertificates/SFA.DAS.DigitalCertificates/Application/Commands/CreateCertificatePrintRequest/CreateCertificatePrintRequestCommandHandler.cs",
@@ -193,7 +179,7 @@
       }
     },
     {
-      "sourceId": "digital-certificates-web",
+      "sourceId": "digital-certificates",
       "name": "Location API",
       "kind": "http-api",
       "classification": "internal",
@@ -201,7 +187,7 @@
       "client": "ILocationApiClient",
       "technology": "RestEase",
       "configurationKeys": [
-        "DigitalCertificatesOuterApiConfiguration.ApiBaseUrl"
+        "DigitalCertificatesOuterApiConfiguration:ApiBaseUrl"
       ],
       "authentication": {
         "type": null,
@@ -212,7 +198,7 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.DigitalCertificates.Web/StartupExtensions/AddServiceRegistrationExtensions.cs",
-          "reason": "RestEase client IDigitalCertificatesOuterApi registered with API base URL configuration"
+          "reason": "IDigitalCertificatesOuterApi registered with RestEase using an API base URL."
         },
         {
           "sourceFile": "das-apim-endpoints/src/DigitalCertificates/SFA.DAS.DigitalCertificates/Application/Queries/GetLocations/GetLocationsQueryHandler.cs",
@@ -238,7 +224,7 @@
       }
     },
     {
-      "sourceId": "digital-certificates-web",
+      "sourceId": "digital-certificates",
       "kind": "message",
       "direction": "outbound",
       "client": null,
@@ -259,7 +245,7 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.DigitalCertificates.Web/StartupExtensions/AddServiceRegistrationExtensions.cs",
-          "reason": "RestEase client IDigitalCertificatesOuterApi registered with API base URL configuration"
+          "reason": "IDigitalCertificatesOuterApi registered with RestEase using an API base URL."
         },
         {
           "sourceFile": "das-apim-endpoints/src/DigitalCertificates/SFA.DAS.DigitalCertificates/Application/Commands/CreateCertificatePrintRequest/CreateCertificatePrintRequestCommandHandler.cs",
@@ -288,13 +274,13 @@
       "targetRepo": "das-notifications"
     },
     {
-      "sourceId": "digital-certificates-web",
+      "sourceId": "digital-certificates",
       "name": "Azure Blob Storage",
       "kind": "object-storage",
       "classification": "third-party",
       "direction": "outbound",
       "client": "BlobServiceClient",
-      "technology": "Azure.Storage.Blobs",
+      "technology": "Azure Storage Blobs",
       "configurationKeys": [
         "StorageConnectionString"
       ],
@@ -303,22 +289,15 @@
         "configurationKeys": []
       },
       "operations": [],
-      "resources": [
-        {
-          "type": "object-storage",
-          "name": null,
-          "direction": "outbound",
-          "sourceFile": "src/SFA.DAS.DigitalCertificates.Web/Services/BlobService.cs"
-        }
-      ],
+      "resources": [],
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.DigitalCertificates.Web/Services/BlobService.cs",
-          "reason": "BlobServiceClient constructor used for Azure Blob Storage integration"
+          "reason": "BlobServiceClient instance found in class construction."
         },
         {
           "sourceFile": "src/SFA.DAS.DigitalCertificates.Web/StartupExtensions/AddServiceRegistrationExtensions.cs",
-          "reason": "BlobServiceClient registered and configured with StorageConnectionString"
+          "reason": "BlobServiceClient registered with a connection string."
         }
       ],
       "confidence": "high",
@@ -328,7 +307,7 @@
   ],
   "resolution": {
     "overlay": "dfe-overlay/apim-routing.json",
-    "apimCommit": "7c83d23270959bfc4da9e92d355f95e1f2f4d257",
+    "apimCommit": "cb28ce9d593dcd27df01e56dfe6b143479db94ff",
     "precision": "area"
   }
 }
