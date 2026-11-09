@@ -11,11 +11,11 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.ProviderFeedback.Web/Program.cs",
-          "reason": "ASP.NET Core web application entry point detected."
+          "reason": "ASP.NET Core Program.cs used to configure and run the application."
         },
         {
           "sourceFile": "src/SFA.DAS.ProviderFeedback.Web/SFA.DAS.ProviderFeedback.Web.csproj",
-          "reason": "Project SDK indicates a web application."
+          "reason": "Project file indicating a web application entry point."
         }
       ]
     }
@@ -23,7 +23,7 @@
   "dependencies": [
     {
       "sourceId": "provider-feedback",
-      "name": "Redis",
+      "name": "Redis Cache",
       "kind": "cache",
       "classification": "third-party",
       "direction": "outbound",
@@ -41,11 +41,15 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.ProviderFeedback.Web/SFA.DAS.ProviderFeedback.Web.csproj",
-          "reason": "StackExchange.Redis used as a cache provider."
+          "reason": "Contains references to StackExchange.Redis and Microsoft.Extensions.Caching.StackExchangeRedis."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.ProviderFeedback.Web/Program.cs",
+          "reason": "Redis setup evidenced by AddDataProtection using StackExchange.Redis."
         }
       ],
-      "confidence": "medium",
-      "targetId": "cache-redis",
+      "confidence": "high",
+      "targetId": "cache-redis-cache",
       "description": "Caches data in"
     },
     {
@@ -61,7 +65,7 @@
         "ProviderFeedbackOuterApi:SubscriptionKey"
       ],
       "authentication": {
-        "type": "key",
+        "type": "header",
         "configurationKeys": [
           "ProviderFeedbackOuterApi:SubscriptionKey"
         ]
@@ -71,11 +75,11 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.ProviderFeedback.Infrastructure/Api/ApiClient.cs",
-          "reason": "Custom HttpClient API client defined."
+          "reason": "HttpClient constructed with base URL and subscription key for API calls."
         },
         {
           "sourceFile": "src/SFA.DAS.ProviderFeedback.Web/AppStart/AddServiceRegistrationExtensions.cs",
-          "reason": "HttpClient client 'IApiClient' registered."
+          "reason": "IApiClient registered with AddHttpClient for outbound HTTP API communication."
         },
         {
           "sourceFile": "das-apim-endpoints/src/ProviderFeedback/SFA.DAS.ProviderFeedback/Application/Queries/GetProviderFeedback/GetProviderFeedbackQueryHandler.cs",
@@ -97,7 +101,7 @@
         "repo": "das-apim-endpoints",
         "label": "APIM",
         "area": "ProviderFeedback",
-        "dependencyName": "Provider Feedback Outer",
+        "dependencyName": "Provider Feedback Outer API",
         "operations": [
           {
             "method": "GET",
@@ -130,7 +134,7 @@
         "ProviderFeedbackOuterApi:SubscriptionKey"
       ],
       "authentication": {
-        "type": "key",
+        "type": "header",
         "configurationKeys": [
           "ProviderFeedbackOuterApi:SubscriptionKey"
         ]
@@ -140,11 +144,11 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.ProviderFeedback.Infrastructure/Api/ApiClient.cs",
-          "reason": "Custom HttpClient API client defined."
+          "reason": "HttpClient constructed with base URL and subscription key for API calls."
         },
         {
           "sourceFile": "src/SFA.DAS.ProviderFeedback.Web/AppStart/AddServiceRegistrationExtensions.cs",
-          "reason": "HttpClient client 'IApiClient' registered."
+          "reason": "IApiClient registered with AddHttpClient for outbound HTTP API communication."
         },
         {
           "sourceFile": "das-apim-endpoints/src/ProviderFeedback/SFA.DAS.ProviderFeedback/Application/Queries/GetProviderFeedback/GetProviderFeedbackQueryHandler.cs",
@@ -166,7 +170,7 @@
         "repo": "das-apim-endpoints",
         "label": "APIM",
         "area": "ProviderFeedback",
-        "dependencyName": "Provider Feedback Outer",
+        "dependencyName": "Provider Feedback Outer API",
         "operations": [
           {
             "method": "GET",
@@ -199,7 +203,7 @@
         "ProviderFeedbackOuterApi:SubscriptionKey"
       ],
       "authentication": {
-        "type": "key",
+        "type": "header",
         "configurationKeys": [
           "ProviderFeedbackOuterApi:SubscriptionKey"
         ]
@@ -209,11 +213,11 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.ProviderFeedback.Infrastructure/Api/ApiClient.cs",
-          "reason": "Custom HttpClient API client defined."
+          "reason": "HttpClient constructed with base URL and subscription key for API calls."
         },
         {
           "sourceFile": "src/SFA.DAS.ProviderFeedback.Web/AppStart/AddServiceRegistrationExtensions.cs",
-          "reason": "HttpClient client 'IApiClient' registered."
+          "reason": "IApiClient registered with AddHttpClient for outbound HTTP API communication."
         },
         {
           "sourceFile": "das-apim-endpoints/src/ProviderFeedback/SFA.DAS.ProviderFeedback.Api/AppStart/AddServiceRegistrationExtensions.cs",
@@ -227,7 +231,7 @@
         "repo": "das-apim-endpoints",
         "label": "APIM",
         "area": "ProviderFeedback",
-        "dependencyName": "Provider Feedback Outer",
+        "dependencyName": "Provider Feedback Outer API",
         "operations": [
           {
             "method": "GET",
@@ -250,7 +254,7 @@
   ],
   "resolution": {
     "overlay": "dfe-overlay/apim-routing.json",
-    "apimCommit": "7c83d23270959bfc4da9e92d355f95e1f2f4d257",
+    "apimCommit": "cb28ce9d593dcd27df01e56dfe6b143479db94ff",
     "precision": "area"
   }
 }

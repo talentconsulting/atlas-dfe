@@ -10,16 +10,12 @@
       "type": "api",
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.ApprenticeCommitments.Api/Startup.cs",
-          "reason": "ASP.NET Startup class with application configuration."
-        },
-        {
           "sourceFile": "src/SFA.DAS.ApprenticeCommitments.Api/Program.cs",
-          "reason": "ASP.NET entry point with web host configuration."
+          "reason": "ASP.NET Core web application entry point"
         },
         {
           "sourceFile": "src/SFA.DAS.ApprenticeCommitments.Api/SFA.DAS.ApprenticeCommitments.Api.csproj",
-          "reason": "Project file indicates a web application."
+          "reason": "Project SDK indicates a web application"
         }
       ]
     }
@@ -31,7 +27,7 @@
       "kind": "cloud-service",
       "classification": "third-party",
       "direction": "outbound",
-      "client": "Table Storage SDK",
+      "client": "Azure Table Storage",
       "technology": "Azure Table Storage",
       "configurationKeys": [
         "ConfigNames",
@@ -47,7 +43,7 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.ApprenticeCommitments.Api/Startup.cs",
-          "reason": "Azure Table Storage registered for configuration management."
+          "reason": "AddAzureTableStorage used for configuration setup"
         }
       ],
       "confidence": "high",
@@ -56,51 +52,51 @@
     },
     {
       "sourceId": "apprentice-commitments",
-      "name": "SQL Server",
+      "name": "Apprentice Commitments Database",
       "kind": "database",
       "classification": "internal",
       "direction": "outbound",
-      "client": null,
+      "client": "Apprentice Commitments DbContext",
       "technology": "Microsoft SQL Server",
       "configurationKeys": [
         "ApplicationSettings:DbConnectionString"
       ],
       "authentication": {
-        "type": "Managed Identity",
+        "type": null,
         "configurationKeys": []
       },
       "operations": [],
       "resources": [
         {
           "type": "database",
-          "name": "ApplicationSettings:DbConnectionString",
+          "name": "Apprentice Commitments Database",
           "direction": "outbound",
           "sourceFile": "src/SFA.DAS.ApprenticeCommitments/Infrastructure/SqlServerConnectionFactory.cs"
         }
       ],
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.ApprenticeCommitments/Infrastructure/ServiceCollectionExtensions.cs",
-          "reason": "DbContextOptions configured for SQL Server."
-        },
-        {
           "sourceFile": "src/SFA.DAS.ApprenticeCommitments/Data/Models/ApprenticeCommitmentsDbContext.cs",
-          "reason": "Entity Framework DbContext providing access to SQL Server."
+          "reason": "DbContext implementation for Apprentice Commitments data"
         },
         {
-          "sourceFile": "src/SFA.DAS.ApprenticeCommitments.Api/Startup.cs",
-          "reason": "Entity Framework context registered with SQL Server connection string."
+          "sourceFile": "src/SFA.DAS.ApprenticeCommitments/Infrastructure/ServiceCollectionExtensions.cs",
+          "reason": "DbContext setup using SQL Server for ApprenticeCommitmentsDbContext"
+        },
+        {
+          "sourceFile": "src/SFA.DAS.ApprenticeCommitments/Infrastructure/SqlServerConnectionFactory.cs",
+          "reason": "SqlServerConnectionFactory constructs SQL connections"
         }
       ],
       "confidence": "high",
-      "targetId": "database-sql-server",
+      "targetId": "database-apprentice-commitments-database",
       "description": "Reads from and writes to"
     },
     {
       "sourceId": "apprentice-commitments",
       "name": "Azure Service Bus",
       "kind": "message-broker",
-      "classification": "internal",
+      "classification": "third-party",
       "direction": "outbound",
       "client": "NServiceBus",
       "technology": "Azure Service Bus",
@@ -117,7 +113,7 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.ApprenticeCommitments/Infrastructure/ServiceCollectionExtensions.cs",
-          "reason": "NServiceBus endpoint configured with Azure Service Bus transport."
+          "reason": "NServiceBus configuration setup with Azure Service Bus transport"
         }
       ],
       "confidence": "high",
@@ -127,7 +123,7 @@
   ],
   "resolution": {
     "overlay": "dfe-overlay/apim-routing.json",
-    "apimCommit": "7c83d23270959bfc4da9e92d355f95e1f2f4d257",
+    "apimCommit": "cb28ce9d593dcd27df01e56dfe6b143479db94ff",
     "precision": "area"
   }
 }
