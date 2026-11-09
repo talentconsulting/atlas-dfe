@@ -11,11 +11,15 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments.Web/SFA.DAS.ProviderCommitments.Web.csproj",
-          "reason": "ASP.NET Core Web SDK project"
+          "reason": "Project file indicating a web application."
         },
         {
           "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments.Web/Program.cs",
-          "reason": "ASP.NET Core web app entry point using CreateHostBuilder."
+          "reason": "Web application entry point using ASP.NET Core host."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments.Web/Program.cs",
+          "reason": "Web project evidenced by Program.cs with ASP.NET Core host configuration."
         }
       ]
     }
@@ -23,15 +27,14 @@
   "dependencies": [
     {
       "sourceId": "provider-commitments-web",
-      "name": "Redis",
+      "name": "StackExchange Redis",
       "kind": "cache",
       "classification": "third-party",
       "direction": "outbound",
       "client": null,
       "technology": "Redis",
       "configurationKeys": [
-        "ProviderCommitmentsConfigurationKeys.DataProtectionConnectionStrings",
-        "RedisConnectionString"
+        "DataProtectionConnectionStrings:RedisConnectionString"
       ],
       "authentication": {
         "type": null,
@@ -42,105 +45,21 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments.Web/Extensions/CacheStartupExtensions.cs",
-          "reason": "AddStackExchangeRedisCache with a configuration key for Redis being registered."
+          "reason": "AddStackExchangeRedisCache registration with configuration evidences Redis usage."
         }
       ],
       "confidence": "high",
-      "targetId": "cache-redis",
+      "targetId": "cache-stackexchange-redis",
       "description": "Caches data in"
     },
     {
       "sourceId": "provider-commitments-web",
-      "name": "Azure Table Storage configuration",
-      "kind": "configuration-store",
-      "classification": "third-party",
+      "name": "Blob File Transfer",
+      "kind": "cloud-service",
+      "classification": "unknown",
       "direction": "outbound",
-      "client": null,
-      "technology": "Azure Table Storage",
-      "configurationKeys": [
-        "ConfigNames",
-        "ConfigurationStorageConnectionString",
-        "EnvironmentName"
-      ],
-      "authentication": {
-        "type": null,
-        "configurationKeys": []
-      },
-      "operations": [],
-      "resources": [],
-      "evidence": [
-        {
-          "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments.Web/Extensions/ConfigurationExtensions.cs",
-          "reason": "Configuration loaded from Azure Table Storage with AddAzureTableStorage."
-        }
-      ],
-      "confidence": "high",
-      "targetId": "configuration-store-azure-table-storage-configuration",
-      "description": "Reads configuration from"
-    },
-    {
-      "sourceId": "provider-commitments-web",
-      "name": "Configuration Store",
-      "kind": "configuration-store",
-      "classification": "third-party",
-      "direction": "outbound",
-      "client": null,
+      "client": "IBlobFileTransferClient",
       "technology": null,
-      "configurationKeys": [
-        "SFA.DAS.Configuration.AzureTableStorage"
-      ],
-      "authentication": {
-        "type": null,
-        "configurationKeys": []
-      },
-      "operations": [],
-      "resources": [],
-      "evidence": [
-        {
-          "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments.Web/Startup.cs",
-          "reason": "Azure Table Storage configuration registration"
-        }
-      ],
-      "confidence": "high",
-      "targetId": "configuration-store-configuration-store",
-      "description": "Reads configuration from"
-    },
-    {
-      "sourceId": "provider-commitments-web",
-      "name": "Commitments",
-      "kind": "http-api",
-      "classification": "internal",
-      "direction": "outbound",
-      "client": "ICommitmentsApiClient",
-      "technology": "HttpClient",
-      "configurationKeys": [
-        "CommitmentsClientApiConfiguration"
-      ],
-      "authentication": {
-        "type": "Basic",
-        "configurationKeys": []
-      },
-      "operations": [],
-      "resources": [],
-      "evidence": [
-        {
-          "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments.Web/LocalDevRegistry/CommitmentApiClientFactory.cs",
-          "reason": "ICommitmentsApiClient is implemented in LocalDevApiClientFactory, indicating an HTTP API dependency."
-        }
-      ],
-      "confidence": "high",
-      "targetId": "http-api-commitments",
-      "description": "Calls the API of",
-      "targetRepo": "das-commitments"
-    },
-    {
-      "sourceId": "provider-commitments-web",
-      "name": "Outer API",
-      "kind": "http-api",
-      "classification": "internal",
-      "direction": "outbound",
-      "client": "IOuterApiClient",
-      "technology": "HttpClient",
       "configurationKeys": [],
       "authentication": {
         "type": null,
@@ -151,7 +70,1235 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments.Web/ServiceRegistrations/ApplicationServiceRegistrations.cs",
-          "reason": "IOuterApiClient registered as a transient service."
+          "reason": "IBlobFileTransferClient service registration in ApplicationServiceRegistrations."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "cloud-service-blob-file-transfer",
+      "description": "Uses"
+    },
+    {
+      "sourceId": "provider-commitments-web",
+      "name": "Azure Table Storage configuration",
+      "kind": "configuration-store",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "ConfigNames",
+        "ConfigurationStorageConnectionString",
+        "EnvironmentName",
+        "SFA.DAS.Configuration.AzureTableStorage"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments.Web/Extensions/ConfigurationExtensions.cs",
+          "reason": "AddAzureTableStorage registration evidences remote configuration store usage."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments.Web/SFA.DAS.ProviderCommitments.Web.csproj",
+          "reason": "Azure Table Storage configuration loaded using SFA.DAS.Configuration.AzureTableStorage."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "configuration-store-azure-table-storage-configuration",
+      "description": "Reads configuration from"
+    },
+    {
+      "sourceId": "provider-commitments-web",
+      "name": "Commitments API",
+      "kind": "http-api",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "ICommitmentsV2ApiClient, IInternalApiClient, InternalApiClient",
+      "technology": null,
+      "configurationKeys": [
+        "ApprovalsOuterApiConfiguration"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments/Infrastructure/ApprovalsOuterApiHttpClientFactory.cs",
+          "reason": "Factory creating HTTP client using ApprovalsOuterApiConfiguration for outbound calls."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments/Infrastructure/OuterApi/OuterApiClient.cs",
+          "reason": "HTTP client built using ApprovalsOuterApiConfiguration with BaseAddress for outbound requests."
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals/Application/AccountLegalEntity/Queries/GetAccountLegalEntityQueryHandler.cs",
+          "reason": "Approvals APIM area calls Commitments API through ICommitmentsV2ApiClient, IInternalApiClient, InternalApiClient"
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals/Application/Apprentices/Commands/AcknowledgeApprovalRequestAlerts/UpdateApprovalRequestAlertAcknowledgeCommandHandler.cs",
+          "reason": "Approvals APIM area calls Commitments API through ICommitmentsV2ApiClient, IInternalApiClient, InternalApiClient"
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals/Application/Apprentices/Commands/ChangeEmployer/Confirm/CreateChangeOfEmployerCommandHandler.cs",
+          "reason": "Approvals APIM area calls Commitments API through ICommitmentsV2ApiClient, IInternalApiClient, InternalApiClient"
+        }
+      ],
+      "confidence": "medium",
+      "targetId": "http-api-commitments-api",
+      "targetRepo": "das-commitments",
+      "description": "Calls via APIM (Approvals)",
+      "via": {
+        "repo": "das-apim-endpoints",
+        "label": "APIM",
+        "area": "Approvals",
+        "dependencyName": "Approvals Outer API",
+        "operations": [],
+        "areas": [
+          "Approvals"
+        ]
+      }
+    },
+    {
+      "sourceId": "provider-commitments-web",
+      "name": "Employer Accounts API",
+      "kind": "http-api",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "IAccountsApiClient",
+      "technology": null,
+      "configurationKeys": [
+        "ApprovalsOuterApiConfiguration"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments/Infrastructure/ApprovalsOuterApiHttpClientFactory.cs",
+          "reason": "Factory creating HTTP client using ApprovalsOuterApiConfiguration for outbound calls."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments/Infrastructure/OuterApi/OuterApiClient.cs",
+          "reason": "HTTP client built using ApprovalsOuterApiConfiguration with BaseAddress for outbound requests."
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals/Application/Accounts/Queries/GetAccountQuery/GetAccountQueryHandler.cs",
+          "reason": "Approvals APIM area calls Employer Accounts API through IAccountsApiClient"
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals/Application/Accounts/Queries/GetAccountUsersQuery/GetAccountUsersQueryHandler.cs",
+          "reason": "Approvals APIM area calls Employer Accounts API through IAccountsApiClient"
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals/Application/AgreementNotSigned/Queries/GetAgreementNotSignedQueryHandler.cs",
+          "reason": "Approvals APIM area calls Employer Accounts API through IAccountsApiClient"
+        }
+      ],
+      "confidence": "medium",
+      "targetId": "http-api-employer-accounts-api",
+      "targetRepo": "das-employer-accounts",
+      "description": "Calls via APIM (Approvals)",
+      "via": {
+        "repo": "das-apim-endpoints",
+        "label": "APIM",
+        "area": "Approvals",
+        "dependencyName": "Approvals Outer API",
+        "operations": [],
+        "areas": [
+          "Approvals"
+        ]
+      }
+    },
+    {
+      "sourceId": "provider-commitments-web",
+      "name": "Reservations API",
+      "kind": "http-api",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "IReservationApiClient",
+      "technology": null,
+      "configurationKeys": [
+        "ApprovalsOuterApiConfiguration"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments/Infrastructure/ApprovalsOuterApiHttpClientFactory.cs",
+          "reason": "Factory creating HTTP client using ApprovalsOuterApiConfiguration for outbound calls."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments/Infrastructure/OuterApi/OuterApiClient.cs",
+          "reason": "HTTP client built using ApprovalsOuterApiConfiguration with BaseAddress for outbound requests."
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals/Application/BulkUpload/Commands/BulkUploadAddAndApproveDraftApprenticeshipsCommandHandler.cs",
+          "reason": "Approvals APIM area calls Reservations API through IReservationApiClient"
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals/Application/BulkUpload/Commands/BulkUploadAddDraftApprenticeshipsCommandHandler.cs",
+          "reason": "Approvals APIM area calls Reservations API through IReservationApiClient"
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals/Application/BulkUpload/Commands/ValidateBulkUploadRecordsCommandHandler.cs",
+          "reason": "Approvals APIM area calls Reservations API through IReservationApiClient"
+        }
+      ],
+      "confidence": "medium",
+      "targetId": "http-api-reservations-api",
+      "targetRepo": "das-reservations-api",
+      "description": "Calls via APIM (Approvals)",
+      "via": {
+        "repo": "das-apim-endpoints",
+        "label": "APIM",
+        "area": "Approvals",
+        "dependencyName": "Approvals Outer API",
+        "operations": [],
+        "areas": [
+          "Approvals"
+        ]
+      }
+    },
+    {
+      "sourceId": "provider-commitments-web",
+      "name": "Courses API",
+      "kind": "http-api",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "ICoursesApiClient",
+      "technology": null,
+      "configurationKeys": [
+        "ApprovalsOuterApiConfiguration"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments/Infrastructure/ApprovalsOuterApiHttpClientFactory.cs",
+          "reason": "Factory creating HTTP client using ApprovalsOuterApiConfiguration for outbound calls."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments/Infrastructure/OuterApi/OuterApiClient.cs",
+          "reason": "HTTP client built using ApprovalsOuterApiConfiguration with BaseAddress for outbound requests."
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals/Application/Cohorts/Queries/GetCohortDetails/GetCohortDetailsQuery.cs",
+          "reason": "Approvals APIM area calls Courses API through ICoursesApiClient"
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals/Application/TrainingCourses/Queries/GetCoursesQueryHandler.cs",
+          "reason": "Approvals APIM area calls Courses API through ICoursesApiClient"
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals/Application/TrainingCourses/Queries/GetFrameworksQueryHandler.cs",
+          "reason": "Approvals APIM area calls Courses API through ICoursesApiClient"
+        }
+      ],
+      "confidence": "medium",
+      "targetId": "http-api-courses-api",
+      "targetRepo": "das-courses-api",
+      "description": "Calls via APIM (Approvals)",
+      "via": {
+        "repo": "das-apim-endpoints",
+        "label": "APIM",
+        "area": "Approvals",
+        "dependencyName": "Approvals Outer API",
+        "operations": [],
+        "areas": [
+          "Approvals"
+        ]
+      }
+    },
+    {
+      "sourceId": "provider-commitments-web",
+      "name": "Levy Transfer Matching API",
+      "kind": "http-api",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "ILevyTransferMatchingApiClient",
+      "technology": null,
+      "configurationKeys": [
+        "ApprovalsOuterApiConfiguration"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments/Infrastructure/ApprovalsOuterApiHttpClientFactory.cs",
+          "reason": "Factory creating HTTP client using ApprovalsOuterApiConfiguration for outbound calls."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments/Infrastructure/OuterApi/OuterApiClient.cs",
+          "reason": "HTTP client built using ApprovalsOuterApiConfiguration with BaseAddress for outbound requests."
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals/Application/LevyTransferMatching/Queries/GetApprovedAccountApplication/GetAcceptedEmployerAccountApplicationsQueryHandler.cs",
+          "reason": "Approvals APIM area calls Levy Transfer Matching API through ILevyTransferMatchingApiClient"
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals/Application/LevyTransferMatching/Queries/GetPledgeApplicationQueryHandler.cs",
+          "reason": "Approvals APIM area calls Levy Transfer Matching API through ILevyTransferMatchingApiClient"
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals/Application/SelectFunding/Queries/GetSelectFundingOptionsQueryHandler.cs",
+          "reason": "Approvals APIM area calls Levy Transfer Matching API through ILevyTransferMatchingApiClient"
+        }
+      ],
+      "confidence": "medium",
+      "targetId": "http-api-levy-transfer-matching-api",
+      "description": "Calls via APIM (Approvals)",
+      "via": {
+        "repo": "das-apim-endpoints",
+        "label": "APIM",
+        "area": "Approvals",
+        "dependencyName": "Approvals Outer API",
+        "operations": [],
+        "areas": [
+          "Approvals"
+        ]
+      }
+    },
+    {
+      "sourceId": "provider-commitments-web",
+      "name": "Provider Courses API",
+      "kind": "http-api",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "IProviderCoursesApiClient",
+      "technology": null,
+      "configurationKeys": [
+        "ApprovalsOuterApiConfiguration"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments/Infrastructure/ApprovalsOuterApiHttpClientFactory.cs",
+          "reason": "Factory creating HTTP client using ApprovalsOuterApiConfiguration for outbound calls."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments/Infrastructure/OuterApi/OuterApiClient.cs",
+          "reason": "HTTP client built using ApprovalsOuterApiConfiguration with BaseAddress for outbound requests."
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals/Application/Providers/Queries/GetProvidersQueryHandler.cs",
+          "reason": "Approvals APIM area calls Provider Courses API through IProviderCoursesApiClient"
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals/Services/DeliveryModelService.cs",
+          "reason": "Approvals APIM area calls Provider Courses API through IProviderCoursesApiClient"
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals/Services/ProviderCoursesOrStandardsService.cs",
+          "reason": "Approvals APIM area calls Provider Courses API through IProviderCoursesApiClient"
+        }
+      ],
+      "confidence": "medium",
+      "targetId": "http-api-provider-courses-api",
+      "description": "Calls via APIM (Approvals)",
+      "via": {
+        "repo": "das-apim-endpoints",
+        "label": "APIM",
+        "area": "Approvals",
+        "dependencyName": "Approvals Outer API",
+        "operations": [],
+        "areas": [
+          "Approvals"
+        ]
+      }
+    },
+    {
+      "sourceId": "provider-commitments-web",
+      "name": "Provider Relationships API",
+      "kind": "http-api",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "IProviderRelationshipsApiClient",
+      "technology": null,
+      "configurationKeys": [
+        "ApprovalsOuterApiConfiguration"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments/Infrastructure/ApprovalsOuterApiHttpClientFactory.cs",
+          "reason": "Factory creating HTTP client using ApprovalsOuterApiConfiguration for outbound calls."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments/Infrastructure/OuterApi/OuterApiClient.cs",
+          "reason": "HTTP client built using ApprovalsOuterApiConfiguration with BaseAddress for outbound requests."
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals/Application/Apprentices/Queries/Apprenticeship/GetSelectNewEmployer/GetSelectNewEmployerQueryHandler.cs",
+          "reason": "Approvals APIM area calls Provider Relationships API through IProviderRelationshipsApiClient"
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals/Application/Cohorts/Queries/GetSelectEmployer/GetSelectEmployerQueryHandler.cs",
+          "reason": "Approvals APIM area calls Provider Relationships API through IProviderRelationshipsApiClient"
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals/Application/ProviderPermissions/Queries/GetAccountProviderLegalEntitiesQueryHandler.cs",
+          "reason": "Approvals APIM area calls Provider Relationships API through IProviderRelationshipsApiClient"
+        }
+      ],
+      "confidence": "medium",
+      "targetId": "http-api-provider-relationships-api",
+      "description": "Calls via APIM (Approvals)",
+      "via": {
+        "repo": "das-apim-endpoints",
+        "label": "APIM",
+        "area": "Approvals",
+        "dependencyName": "Approvals Outer API",
+        "operations": [],
+        "areas": [
+          "Approvals"
+        ]
+      }
+    },
+    {
+      "sourceId": "provider-commitments-web",
+      "name": "Learner Data API",
+      "kind": "http-api",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "IInternalApiClient",
+      "technology": null,
+      "configurationKeys": [
+        "ApprovalsOuterApiConfiguration"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments/Infrastructure/ApprovalsOuterApiHttpClientFactory.cs",
+          "reason": "Factory creating HTTP client using ApprovalsOuterApiConfiguration for outbound calls."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments/Infrastructure/OuterApi/OuterApiClient.cs",
+          "reason": "HTTP client built using ApprovalsOuterApiConfiguration with BaseAddress for outbound requests."
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals/Application/DraftApprenticeships/Commands/SyncLearnerData/SyncLearnerDataCommandHandler.cs",
+          "reason": "Approvals APIM area calls Learner Data API through IInternalApiClient"
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals/Application/Learners/Queries/GetLearnerForProviderQueryHandler.cs",
+          "reason": "Approvals APIM area calls Learner Data API through IInternalApiClient"
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals/Application/Learners/Queries/GetLearnersForProviderQueryHandler.cs",
+          "reason": "Approvals APIM area calls Learner Data API through IInternalApiClient"
+        }
+      ],
+      "confidence": "medium",
+      "targetId": "http-api-learner-data-api",
+      "targetRepo": "das-learner-data-api",
+      "description": "Calls via APIM (Approvals)",
+      "via": {
+        "repo": "das-apim-endpoints",
+        "label": "APIM",
+        "area": "Approvals",
+        "dependencyName": "Approvals Outer API",
+        "operations": [],
+        "areas": [
+          "Approvals"
+        ]
+      }
+    },
+    {
+      "sourceId": "provider-commitments-web",
+      "name": "Provider Account API",
+      "kind": "http-api",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "IProviderAccountApiClient",
+      "technology": null,
+      "configurationKeys": [
+        "ApprovalsOuterApiConfiguration"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments/Infrastructure/ApprovalsOuterApiHttpClientFactory.cs",
+          "reason": "Factory creating HTTP client using ApprovalsOuterApiConfiguration for outbound calls."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments/Infrastructure/OuterApi/OuterApiClient.cs",
+          "reason": "HTTP client built using ApprovalsOuterApiConfiguration with BaseAddress for outbound requests."
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals/Application/ProviderUsers/Commands/ProviderEmailCommandHandler.cs",
+          "reason": "Approvals APIM area calls Provider Account API through IProviderAccountApiClient"
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals/Application/ProviderUsers/Queries/GetProviderUsersQueryHandler.cs",
+          "reason": "Approvals APIM area calls Provider Account API through IProviderAccountApiClient"
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals.Api/AppStart/AddServiceRegistrationExtensions.cs",
+          "reason": "Approvals APIM area calls Provider Account API through IProviderAccountApiClient"
+        }
+      ],
+      "confidence": "medium",
+      "targetId": "http-api-provider-account-api",
+      "description": "Calls via APIM (Approvals)",
+      "via": {
+        "repo": "das-apim-endpoints",
+        "label": "APIM",
+        "area": "Approvals",
+        "dependencyName": "Approvals Outer API",
+        "operations": [],
+        "areas": [
+          "Approvals"
+        ]
+      }
+    },
+    {
+      "sourceId": "provider-commitments-web",
+      "name": "Provider Events API",
+      "kind": "http-api",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "IProviderPaymentEventsApiClient",
+      "technology": null,
+      "configurationKeys": [
+        "ApprovalsOuterApiConfiguration"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments/Infrastructure/ApprovalsOuterApiHttpClientFactory.cs",
+          "reason": "Factory creating HTTP client using ApprovalsOuterApiConfiguration for outbound calls."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments/Infrastructure/OuterApi/OuterApiClient.cs",
+          "reason": "HTTP client built using ApprovalsOuterApiConfiguration with BaseAddress for outbound requests."
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals/Application/CommitmentPayment/Queries/GetDataLockEvents/GetDataLockStatusesQueryHandler.cs",
+          "reason": "Approvals APIM area calls Provider Events API through IProviderPaymentEventsApiClient"
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals/Application/PaymentEvents/Queries/GetPaymentSubmissionEventsQueryHandler.cs",
+          "reason": "Approvals APIM area calls Provider Events API through IProviderPaymentEventsApiClient"
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals.Api/AppStart/AddServiceRegistrationExtensions.cs",
+          "reason": "Approvals APIM area calls Provider Events API through IProviderPaymentEventsApiClient"
+        }
+      ],
+      "confidence": "medium",
+      "targetId": "http-api-provider-events-api",
+      "description": "Calls via APIM (Approvals)",
+      "via": {
+        "repo": "das-apim-endpoints",
+        "label": "APIM",
+        "area": "Approvals",
+        "dependencyName": "Approvals Outer API",
+        "operations": [],
+        "areas": [
+          "Approvals"
+        ]
+      }
+    },
+    {
+      "sourceId": "provider-commitments-web",
+      "name": "Employer Finance API",
+      "kind": "http-api",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "IFinanceApiClient",
+      "technology": null,
+      "configurationKeys": [
+        "ApprovalsOuterApiConfiguration"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments/Infrastructure/ApprovalsOuterApiHttpClientFactory.cs",
+          "reason": "Factory creating HTTP client using ApprovalsOuterApiConfiguration for outbound calls."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments/Infrastructure/OuterApi/OuterApiClient.cs",
+          "reason": "HTTP client built using ApprovalsOuterApiConfiguration with BaseAddress for outbound requests."
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals/Application/SelectDirectTransferConnection/Queries/GetSelectDirectTransferConnectionQueryHandler.cs",
+          "reason": "Approvals APIM area calls Employer Finance API through IFinanceApiClient"
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals/Application/SelectFunding/Queries/GetSelectFundingOptionsQueryHandler.cs",
+          "reason": "Approvals APIM area calls Employer Finance API through IFinanceApiClient"
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals.Api/AppStart/AddServiceRegistrationExtensions.cs",
+          "reason": "Approvals APIM area calls Employer Finance API through IFinanceApiClient"
+        }
+      ],
+      "confidence": "medium",
+      "targetId": "http-api-employer-finance-api",
+      "targetRepo": "das-employer-finance",
+      "description": "Calls via APIM (Approvals)",
+      "via": {
+        "repo": "das-apim-endpoints",
+        "label": "APIM",
+        "area": "Approvals",
+        "dependencyName": "Approvals Outer API",
+        "operations": [],
+        "areas": [
+          "Approvals"
+        ]
+      }
+    },
+    {
+      "sourceId": "provider-commitments-web",
+      "name": "Apprentice Accounts API",
+      "kind": "http-api",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "IApprenticeAccountsApiClient",
+      "technology": null,
+      "configurationKeys": [
+        "ApprovalsOuterApiConfiguration"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments/Infrastructure/ApprovalsOuterApiHttpClientFactory.cs",
+          "reason": "Factory creating HTTP client using ApprovalsOuterApiConfiguration for outbound calls."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments/Infrastructure/OuterApi/OuterApiClient.cs",
+          "reason": "HTTP client built using ApprovalsOuterApiConfiguration with BaseAddress for outbound requests."
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals/Application/Apprentices/Queries/GetApprenticeQueryHandler.cs",
+          "reason": "Approvals APIM area calls Apprentice Accounts API through IApprenticeAccountsApiClient"
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals.Api/AppStart/AddServiceRegistrationExtensions.cs",
+          "reason": "Approvals APIM area calls Apprentice Accounts API through IApprenticeAccountsApiClient"
+        }
+      ],
+      "confidence": "medium",
+      "targetId": "http-api-apprentice-accounts-api",
+      "description": "Calls via APIM (Approvals)",
+      "via": {
+        "repo": "das-apim-endpoints",
+        "label": "APIM",
+        "area": "Approvals",
+        "dependencyName": "Approvals Outer API",
+        "operations": [],
+        "areas": [
+          "Approvals"
+        ]
+      }
+    },
+    {
+      "sourceId": "provider-commitments-web",
+      "name": "Assessors API",
+      "kind": "http-api",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "IAssessorsApiClient",
+      "technology": null,
+      "configurationKeys": [
+        "ApprovalsOuterApiConfiguration"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments/Infrastructure/ApprovalsOuterApiHttpClientFactory.cs",
+          "reason": "Factory creating HTTP client using ApprovalsOuterApiConfiguration for outbound calls."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments/Infrastructure/OuterApi/OuterApiClient.cs",
+          "reason": "HTTP client built using ApprovalsOuterApiConfiguration with BaseAddress for outbound requests."
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals/Application/Epaos/Queries/GetEpaosQueryHandler.cs",
+          "reason": "Approvals APIM area calls Assessors API through IAssessorsApiClient"
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals.Api/AppStart/AddServiceRegistrationExtensions.cs",
+          "reason": "Approvals APIM area calls Assessors API through IAssessorsApiClient"
+        }
+      ],
+      "confidence": "medium",
+      "targetId": "http-api-assessors-api",
+      "description": "Calls via APIM (Approvals)",
+      "via": {
+        "repo": "das-apim-endpoints",
+        "label": "APIM",
+        "area": "Approvals",
+        "dependencyName": "Approvals Outer API",
+        "operations": [],
+        "areas": [
+          "Approvals"
+        ]
+      }
+    },
+    {
+      "sourceId": "provider-commitments-web",
+      "name": "Fjaa API",
+      "kind": "http-api",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "IFjaaApiClient",
+      "technology": null,
+      "configurationKeys": [
+        "ApprovalsOuterApiConfiguration"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments/Infrastructure/ApprovalsOuterApiHttpClientFactory.cs",
+          "reason": "Factory creating HTTP client using ApprovalsOuterApiConfiguration for outbound calls."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments/Infrastructure/OuterApi/OuterApiClient.cs",
+          "reason": "HTTP client built using ApprovalsOuterApiConfiguration with BaseAddress for outbound requests."
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals/Services/FjaaService.cs",
+          "reason": "Approvals APIM area calls Fjaa API through IFjaaApiClient"
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals.Api/AppStart/AddServiceRegistrationExtensions.cs",
+          "reason": "Approvals APIM area calls Fjaa API through IFjaaApiClient"
+        }
+      ],
+      "confidence": "medium",
+      "targetId": "http-api-fjaa-api",
+      "description": "Calls via APIM (Approvals)",
+      "via": {
+        "repo": "das-apim-endpoints",
+        "label": "APIM",
+        "area": "Approvals",
+        "dependencyName": "Approvals Outer API",
+        "operations": [],
+        "areas": [
+          "Approvals"
+        ]
+      }
+    },
+    {
+      "sourceId": "provider-commitments-web",
+      "name": "Collection Calendar API",
+      "kind": "http-api",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "ICollectionCalendarApiClient",
+      "technology": null,
+      "configurationKeys": [
+        "ApprovalsOuterApiConfiguration"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments/Infrastructure/ApprovalsOuterApiHttpClientFactory.cs",
+          "reason": "Factory creating HTTP client using ApprovalsOuterApiConfiguration for outbound calls."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments/Infrastructure/OuterApi/OuterApiClient.cs",
+          "reason": "HTTP client built using ApprovalsOuterApiConfiguration with BaseAddress for outbound requests."
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals/Application/Apprentices/Queries/Apprenticeship/GetManageApprenticeshipDetails/GetManageApprenticeshipDetailsQueryHandler.cs",
+          "reason": "Approvals APIM area calls Collection Calendar API through ICollectionCalendarApiClient"
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals.Api/AppStart/AddServiceRegistrationExtensions.cs",
+          "reason": "Approvals APIM area calls Collection Calendar API through ICollectionCalendarApiClient"
+        }
+      ],
+      "confidence": "medium",
+      "targetId": "http-api-collection-calendar-api",
+      "description": "Calls via APIM (Approvals)",
+      "via": {
+        "repo": "das-apim-endpoints",
+        "label": "APIM",
+        "area": "Approvals",
+        "dependencyName": "Approvals Outer API",
+        "operations": [],
+        "areas": [
+          "Approvals"
+        ]
+      }
+    },
+    {
+      "sourceId": "provider-commitments-web",
+      "name": "Course Types API",
+      "kind": "http-api",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "IInternalApiClient",
+      "technology": null,
+      "configurationKeys": [
+        "ApprovalsOuterApiConfiguration"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments/Infrastructure/ApprovalsOuterApiHttpClientFactory.cs",
+          "reason": "Factory creating HTTP client using ApprovalsOuterApiConfiguration for outbound calls."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments/Infrastructure/OuterApi/OuterApiClient.cs",
+          "reason": "HTTP client built using ApprovalsOuterApiConfiguration with BaseAddress for outbound requests."
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals/Services/ICourseTypesApiClient.cs",
+          "reason": "Approvals APIM area calls Course Types API through IInternalApiClient"
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals.Api/Clients/CourseTypesApiClient.cs",
+          "reason": "Approvals APIM area calls Course Types API through IInternalApiClient"
+        }
+      ],
+      "confidence": "medium",
+      "targetId": "http-api-course-types-api",
+      "description": "Calls via APIM (Approvals)",
+      "via": {
+        "repo": "das-apim-endpoints",
+        "label": "APIM",
+        "area": "Approvals",
+        "dependencyName": "Approvals Outer API",
+        "operations": [],
+        "areas": [
+          "Approvals"
+        ]
+      }
+    },
+    {
+      "sourceId": "provider-commitments-web",
+      "name": "Employment Check API",
+      "kind": "http-api",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "IEmploymentCheckApiClient",
+      "technology": null,
+      "configurationKeys": [
+        "ApprovalsOuterApiConfiguration"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments/Infrastructure/ApprovalsOuterApiHttpClientFactory.cs",
+          "reason": "Factory creating HTTP client using ApprovalsOuterApiConfiguration for outbound calls."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments/Infrastructure/OuterApi/OuterApiClient.cs",
+          "reason": "HTTP client built using ApprovalsOuterApiConfiguration with BaseAddress for outbound requests."
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals/Application/EmploymentChecks/Queries/GetEmploymentChecksQuery/GetEmploymentChecksQueryHandler.cs",
+          "reason": "Approvals APIM area calls Employment Check API through IEmploymentCheckApiClient"
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals.Api/AppStart/AddServiceRegistrationExtensions.cs",
+          "reason": "Approvals APIM area calls Employment Check API through IEmploymentCheckApiClient"
+        }
+      ],
+      "confidence": "medium",
+      "targetId": "http-api-employment-check-api",
+      "description": "Calls via APIM (Approvals)",
+      "via": {
+        "repo": "das-apim-endpoints",
+        "label": "APIM",
+        "area": "Approvals",
+        "dependencyName": "Approvals Outer API",
+        "operations": [],
+        "areas": [
+          "Approvals"
+        ]
+      }
+    },
+    {
+      "sourceId": "provider-commitments-web",
+      "name": "Apprentice Commitments API",
+      "kind": "http-api",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "IApprenticeCommitmentsApiClient",
+      "technology": null,
+      "configurationKeys": [
+        "ApprovalsOuterApiConfiguration"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments/Infrastructure/ApprovalsOuterApiHttpClientFactory.cs",
+          "reason": "Factory creating HTTP client using ApprovalsOuterApiConfiguration for outbound calls."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments/Infrastructure/OuterApi/OuterApiClient.cs",
+          "reason": "HTTP client built using ApprovalsOuterApiConfiguration with BaseAddress for outbound requests."
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals.Api/AppStart/AddServiceRegistrationExtensions.cs",
+          "reason": "Approvals APIM area calls Apprentice Commitments API through IApprenticeCommitmentsApiClient"
+        }
+      ],
+      "confidence": "medium",
+      "targetId": "http-api-apprentice-commitments-api",
+      "targetRepo": "das-apprentice-commitments-api",
+      "description": "Calls via APIM (Approvals)",
+      "via": {
+        "repo": "das-apim-endpoints",
+        "label": "APIM",
+        "area": "Approvals",
+        "dependencyName": "Approvals Outer API",
+        "operations": [],
+        "areas": [
+          "Approvals"
+        ]
+      }
+    },
+    {
+      "sourceId": "provider-commitments-web",
+      "name": "Employer Profiles API",
+      "kind": "http-api",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "IEmployerProfilesApiClient",
+      "technology": null,
+      "configurationKeys": [
+        "ApprovalsOuterApiConfiguration"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments/Infrastructure/ApprovalsOuterApiHttpClientFactory.cs",
+          "reason": "Factory creating HTTP client using ApprovalsOuterApiConfiguration for outbound calls."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments/Infrastructure/OuterApi/OuterApiClient.cs",
+          "reason": "HTTP client built using ApprovalsOuterApiConfiguration with BaseAddress for outbound requests."
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals.Api/AppStart/AddServiceRegistrationExtensions.cs",
+          "reason": "Approvals APIM area calls Employer Profiles API through IEmployerProfilesApiClient"
+        }
+      ],
+      "confidence": "medium",
+      "targetId": "http-api-employer-profiles-api",
+      "description": "Calls via APIM (Approvals)",
+      "via": {
+        "repo": "das-apim-endpoints",
+        "label": "APIM",
+        "area": "Approvals",
+        "dependencyName": "Approvals Outer API",
+        "operations": [],
+        "areas": [
+          "Approvals"
+        ]
+      }
+    },
+    {
+      "sourceId": "provider-commitments-web",
+      "name": "Learning API",
+      "kind": "http-api",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "ILearningApiClient",
+      "technology": null,
+      "configurationKeys": [
+        "ApprovalsOuterApiConfiguration"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments/Infrastructure/ApprovalsOuterApiHttpClientFactory.cs",
+          "reason": "Factory creating HTTP client using ApprovalsOuterApiConfiguration for outbound calls."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments/Infrastructure/OuterApi/OuterApiClient.cs",
+          "reason": "HTTP client built using ApprovalsOuterApiConfiguration with BaseAddress for outbound requests."
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals.Api/AppStart/AddServiceRegistrationExtensions.cs",
+          "reason": "Approvals APIM area calls Learning API through ILearningApiClient"
+        }
+      ],
+      "confidence": "medium",
+      "targetId": "http-api-learning-api",
+      "targetRepo": "das-learning",
+      "description": "Calls via APIM (Approvals)",
+      "via": {
+        "repo": "das-apim-endpoints",
+        "label": "APIM",
+        "area": "Approvals",
+        "dependencyName": "Approvals Outer API",
+        "operations": [],
+        "areas": [
+          "Approvals"
+        ]
+      }
+    },
+    {
+      "sourceId": "provider-commitments-web",
+      "name": "Roatp API",
+      "kind": "http-api",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "IRoatpServiceApiClient",
+      "technology": null,
+      "configurationKeys": [
+        "ApprovalsOuterApiConfiguration"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments/Infrastructure/ApprovalsOuterApiHttpClientFactory.cs",
+          "reason": "Factory creating HTTP client using ApprovalsOuterApiConfiguration for outbound calls."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments/Infrastructure/OuterApi/OuterApiClient.cs",
+          "reason": "HTTP client built using ApprovalsOuterApiConfiguration with BaseAddress for outbound requests."
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals.Api/AppStart/AddServiceRegistrationExtensions.cs",
+          "reason": "Approvals APIM area calls Roatp API through IRoatpServiceApiClient"
+        }
+      ],
+      "confidence": "medium",
+      "targetId": "http-api-roatp-api",
+      "description": "Calls via APIM (Approvals)",
+      "via": {
+        "repo": "das-apim-endpoints",
+        "label": "APIM",
+        "area": "Approvals",
+        "dependencyName": "Approvals Outer API",
+        "operations": [],
+        "areas": [
+          "Approvals"
+        ]
+      }
+    },
+    {
+      "sourceId": "provider-commitments-web",
+      "name": "Roatp V2 API",
+      "kind": "http-api",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "IRoatpCourseManagementApiClient",
+      "technology": null,
+      "configurationKeys": [
+        "ApprovalsOuterApiConfiguration"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments/Infrastructure/ApprovalsOuterApiHttpClientFactory.cs",
+          "reason": "Factory creating HTTP client using ApprovalsOuterApiConfiguration for outbound calls."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments/Infrastructure/OuterApi/OuterApiClient.cs",
+          "reason": "HTTP client built using ApprovalsOuterApiConfiguration with BaseAddress for outbound requests."
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals.Api/AppStart/AddServiceRegistrationExtensions.cs",
+          "reason": "Approvals APIM area calls Roatp V2 API through IRoatpCourseManagementApiClient"
+        }
+      ],
+      "confidence": "medium",
+      "targetId": "http-api-roatp-v2-api",
+      "description": "Calls via APIM (Approvals)",
+      "via": {
+        "repo": "das-apim-endpoints",
+        "label": "APIM",
+        "area": "Approvals",
+        "dependencyName": "Approvals Outer API",
+        "operations": [],
+        "areas": [
+          "Approvals"
+        ]
+      }
+    },
+    {
+      "sourceId": "provider-commitments-web",
+      "name": "Commitment Permissions API",
+      "kind": "http-api",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "CommitmentPermissionsApiClientConfiguration"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments/Client/CommitmentPermissionsApiClientFactory.cs",
+          "reason": "Factory creating HTTP client using CommitmentPermissionsApiClientConfiguration."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "http-api-commitment-permissions-api",
+      "description": "Calls the API of"
+    },
+    {
+      "sourceId": "provider-commitments-web",
+      "name": "Commitments API",
+      "kind": "http-api",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "CommitmentsClientApiConfiguration"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments.Web/LocalDevRegistry/CommitmentApiClientFactory.cs",
+          "reason": "CommitmentsClientApiConfiguration evidences outbound API service."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments/Client/CommitmentApiClientFactory.cs",
+          "reason": "HTTP client built using CommitmentsClientApiConfiguration with BaseAddress for outbound requests."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "http-api-commitments-api",
+      "description": "Calls the API of",
+      "targetRepo": "das-commitments"
+    },
+    {
+      "sourceId": "provider-commitments-web",
+      "name": "Outer API",
+      "kind": "http-api",
+      "classification": "unknown",
+      "direction": "outbound",
+      "client": "IOuterApiClient",
+      "technology": null,
+      "configurationKeys": [],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments.Web/ServiceRegistrations/ApplicationServiceRegistrations.cs",
+          "reason": "IOuterApiClient service registration in ApplicationServiceRegistrations."
         }
       ],
       "confidence": "high",
@@ -160,12 +1307,12 @@
     },
     {
       "sourceId": "provider-commitments-web",
-      "name": "PAS Account",
+      "name": "PAS Account API",
       "kind": "http-api",
-      "classification": "third-party",
+      "classification": "unknown",
       "direction": "outbound",
       "client": "IPasAccountApiClient",
-      "technology": "HttpClient",
+      "technology": null,
       "configurationKeys": [
         "PasAccountApiConfiguration"
       ],
@@ -177,16 +1324,16 @@
       "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments.Web/LocalDevRegistry/LocalDevPasAccountApiClientFactory.cs",
-          "reason": "IPasAccountApiClient is implemented in LocalDevPasAccountApiClientFactory, indicating an HTTP API dependency."
+          "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments.Web/ServiceRegistrations/ProviderApprenticeshipsApiClientServiceRegistrations.cs",
+          "reason": "IPasAccountApiClient service registration in ProviderApprenticeshipsApiClientServiceRegistrations."
         },
         {
-          "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments.Web/ServiceRegistrations/ProviderApprenticeshipsApiClientServiceRegistrations.cs",
-          "reason": "IPasAccountApiClient registered as an outbound HTTP API client"
+          "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments.Web/LocalDevRegistry/LocalDevPasAccountApiClientFactory.cs",
+          "reason": "PasAccountApiConfiguration evidences outbound API client."
         }
       ],
       "confidence": "high",
-      "targetId": "http-api-pas-account",
+      "targetId": "http-api-pas-account-api",
       "description": "Calls the API of"
     },
     {
@@ -198,7 +1345,7 @@
       "client": null,
       "technology": null,
       "configurationKeys": [
-        "UseStubProviderAuth"
+        "SFA.DAS.Provider.DfeSignIn"
       ],
       "authentication": {
         "type": null,
@@ -225,8 +1372,34 @@
       "client": null,
       "technology": null,
       "configurationKeys": [
-        "Microsoft.AspNetCore.Authentication.JwtBearer"
+        "Microsoft.AspNetCore.Authentication.JwtBearer",
+        "Microsoft.AspNetCore.Authentication.OpenIdConnect"
       ],
+      "authentication": {
+        "type": "open-id-connect",
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments.Web/Startup.cs",
+          "reason": "JwtBearer and OpenIdConnect authentication configured in the application."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "identity-provider-microsoft-entra-id",
+      "description": "Authenticates with"
+    },
+    {
+      "sourceId": "provider-commitments-web",
+      "name": "Azure Blob Storage",
+      "kind": "object-storage",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": "Azure Storage",
+      "configurationKeys": [],
       "authentication": {
         "type": null,
         "configurationKeys": []
@@ -235,13 +1408,13 @@
       "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments.Web/SFA.DAS.ProviderCommitments.Web.csproj",
-          "reason": "Microsoft.Azure Active Directory authentication package"
+          "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments/Infrastructure/BlobFileTransferClient.cs",
+          "reason": "BlobServiceClient initialized for uploading, downloading, and deleting files."
         }
       ],
       "confidence": "high",
-      "targetId": "identity-provider-microsoft-entra-id",
-      "description": "Authenticates with"
+      "targetId": "object-storage-azure-blob-storage",
+      "description": "Stores objects in"
     },
     {
       "sourceId": "provider-commitments-web",
@@ -263,11 +1436,15 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments.Web/SFA.DAS.ProviderCommitments.Web.csproj",
-          "reason": "Application Insights SDK reference"
+          "reason": "Application Insights configured via Microsoft.ApplicationInsights.AspNetCore package."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments.Web/Startup.cs",
+          "reason": "OpenTelemetry logging configured in services for telemetry export."
         },
         {
           "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments.Web/Exceptions/AddOpenTelemetryExtensions.cs",
-          "reason": "UseAzureMonitor registration for Application Insights telemetry with connection string."
+          "reason": "UseAzureMonitor registration evidences Application Insights for telemetry."
         }
       ],
       "confidence": "high",

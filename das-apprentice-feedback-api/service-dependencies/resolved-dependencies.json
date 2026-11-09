@@ -11,11 +11,11 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.ApprenticeFeedback.Api/Program.cs",
-          "reason": "ASP.NET Core application entry point."
+          "reason": "Host.CreateDefaultBuilder and WebHost configuration indicating an API entry point."
         },
         {
           "sourceFile": "src/SFA.DAS.ApprenticeFeedback.Api/SFA.DAS.ApprenticeFeedback.Api.csproj",
-          "reason": "Project SDK is for a web application."
+          "reason": "Project file indicates this is an ASP.NET Core Web API project."
         }
       ]
     }
@@ -23,19 +23,19 @@
   "dependencies": [
     {
       "sourceId": "apprentice-feedback",
-      "name": "Azure Table Storage",
-      "kind": "cloud-service",
-      "classification": "internal",
+      "name": "Azure App Configuration",
+      "kind": "configuration-store",
+      "classification": "third-party",
       "direction": "outbound",
-      "client": "Azure Table Storage",
-      "technology": "Azure Table Storage",
+      "client": null,
+      "technology": null,
       "configurationKeys": [
         "ConfigNames",
         "ConfigurationStorageConnectionString",
         "EnvironmentName"
       ],
       "authentication": {
-        "type": "Azure AD",
+        "type": null,
         "configurationKeys": []
       },
       "operations": [],
@@ -43,12 +43,12 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.ApprenticeFeedback.Api/Startup.cs",
-          "reason": "Azure Table Storage configuration is added to the application."
+          "reason": "AddAzureTableStorage registration for remote configuration."
         }
       ],
       "confidence": "high",
-      "targetId": "cloud-service-azure-table-storage",
-      "description": "Uses"
+      "targetId": "configuration-store-azure-app-configuration",
+      "description": "Reads configuration from"
     },
     {
       "sourceId": "apprentice-feedback",
@@ -62,26 +62,19 @@
         "ApplicationSettings:DbConnectionString"
       ],
       "authentication": {
-        "type": "Azure AD",
+        "type": "Azure Managed Identity",
         "configurationKeys": []
       },
       "operations": [],
-      "resources": [
-        {
-          "type": "database",
-          "name": "Apprentice Feedback Database",
-          "direction": "outbound",
-          "sourceFile": "src/SFA.DAS.ApprenticeFeedback.Data/ApprenticeFeedbackDataContext.cs"
-        }
-      ],
+      "resources": [],
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.ApprenticeFeedback.Api/AppStart/AddDatabaseRegistrations.cs",
-          "reason": "AddDbContext with SQL Server is registered for ApprenticeFeedbackDataContext."
+          "reason": "AddDbContext registered with SQL Server configuration (ApprenticeFeedbackDataContext)."
         },
         {
           "sourceFile": "src/SFA.DAS.ApprenticeFeedback.Data/ApprenticeFeedbackDataContext.cs",
-          "reason": "ApprenticeFeedbackDataContext class configures SQL Server connection for the database."
+          "reason": "ApprenticeFeedbackDataContext uses SQL Server with Azure Managed Identity."
         }
       ],
       "confidence": "high",
@@ -90,11 +83,38 @@
     },
     {
       "sourceId": "apprentice-feedback",
+      "name": "Microsoft Entra ID",
+      "kind": "identity-provider",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "AzureAd"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.ApprenticeFeedback.Api/Authentication/ServiceCollectionExtensions.cs",
+          "reason": "AddAuthentication and AddJwtBearer configured using Azure Active Directory (AAD)."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "identity-provider-microsoft-entra-id",
+      "description": "Authenticates with"
+    },
+    {
+      "sourceId": "apprentice-feedback",
       "name": "Azure Service Bus",
       "kind": "message-broker",
       "classification": "internal",
       "direction": "outbound",
-      "client": "NServiceBus",
+      "client": null,
       "technology": "Azure Service Bus",
       "configurationKeys": [
         "ApplicationSettings:NServiceBusConnectionString"
@@ -108,12 +128,39 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.ApprenticeFeedback.Api/AppStart/NServiceBusRegistration.cs",
-          "reason": "NServiceBus Azure Service Bus transport is configured."
+          "reason": "NServiceBus endpoint configured with Azure Service Bus transport."
         }
       ],
       "confidence": "high",
       "targetId": "message-broker-azure-service-bus",
       "description": "Publishes messages to and consumes messages from"
+    },
+    {
+      "sourceId": "apprentice-feedback",
+      "name": "Application Insights",
+      "kind": "telemetry",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "APPLICATIONINSIGHTS_CONNECTION_STRING"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.ApprenticeFeedback.Api/AppStart/AddOpenTelemetryExtensions.cs",
+          "reason": "Telemetry configured and registered to send data to Azure Monitor via Application Insights."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "telemetry-application-insights",
+      "description": "Sends telemetry to"
     }
   ],
   "resolution": {
