@@ -13,7 +13,7 @@
       "evidence": [
         {
           "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2/Configuration/CommitmentsV2Configuration.cs",
-          "reason": "RedisConnectionString indicates connection details for Redis."
+          "reason": "Property RedisConnectionString indicates the need for a Redis cache."
         }
       ]
     },
@@ -22,189 +22,194 @@
       "kind": "database",
       "technology": "sqlserver",
       "configurationKeys": [
-        "Commitments:DatabaseConnectionString",
+        "CommitmentsDatabase:ConnectionString",
         "ConnectionStrings:ProviderCommitmentsDatabase",
         "ConnectionStrings:ProviderCommitmentsDb",
-        "ConnectionStrings:ProviderCommitmentsDbContext",
         "DatabaseConnectionString",
         "ReadOnlyDatabaseConnectionString"
       ],
       "evidence": [
         {
           "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2/Configuration/CommitmentsV2Configuration.cs",
-          "reason": "DatabaseConnectionString and ReadOnlyDatabaseConnectionString indicate SQL database connections."
+          "reason": "Properties DatabaseConnectionString and ReadOnlyDatabaseConnectionString indicate the need for SQL Server as a database."
         },
         {
           "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.Api/HealthChecks/ServiceCollectionExtensions.cs",
-          "reason": "AddSqlServer method used in health check setup with a database connection string."
-        },
-        {
-          "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.ExternalHandlers/EventHandlers/LearningResumedEventHandler.cs",
-          "reason": "Uses ProviderCommitmentsDbContext connected to SQL Server."
-        },
-        {
-          "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.ExternalHandlers/EventHandlers/LearningWithdrawnEventHandler.cs",
-          "reason": "Uses ProviderCommitmentsDbContext connected to SQL Server."
-        },
-        {
-          "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.ExternalHandlers/EventHandlers/RecordedAct1CompletionPaymentEventHandler.cs",
-          "reason": "Uses ProviderCommitmentsDbContext connected to SQL Server."
-        },
-        {
-          "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.ExternalHandlers/Services/WithDrawalNotificationToEmployerService.cs",
-          "reason": "Uses ProviderCommitmentsDbContext connected to SQL Server."
+          "reason": "SQL Server used in health check setup with AddSqlServer method"
         },
         {
           "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.MessageHandlers/CommandHandlers/EmployerSendCohortCommandHandler.cs",
-          "reason": "Uses ProviderCommitmentsDbContext connected to SQL Server."
+          "reason": "Interaction with ProviderCommitmentsDbContext implies SQL Server database dependency."
         },
         {
-          "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.MessageHandlers/CommandHandlers/ProviderApproveCohortCommandHandler.cs",
-          "reason": "Lazy<ProviderCommitmentsDbContext> with SaveChangesAsync and database interaction calls detected."
+          "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.ExternalHandlers/EventHandlers/LearningResumedEventHandler.cs",
+          "reason": "Use of Entity Framework Core with ProviderCommitmentsDbContext indicates dependency on a SQL Server database."
         },
         {
-          "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.MessageHandlers/CommandHandlers/ProviderSendCohortCommandHandler.cs",
-          "reason": "Lazy<ProviderCommitmentsDbContext> with SaveChangesAsync and database interaction calls detected."
-        },
-        {
-          "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.MessageHandlers/CommandHandlers/StoreLearningHistoryCommandHandler.cs",
-          "reason": "Lazy<ProviderCommitmentsDbContext> with SaveChangesAsync and database interaction calls detected."
+          "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.ExternalHandlers/EventHandlers/LearningWithdrawnEventHandler.cs",
+          "reason": "Use of Entity Framework Core with a DbContext suggests dependency on a SQL Server database."
         },
         {
           "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.MessageHandlers/EventHandlers/ApprenticeshipCreatedEmployerVerificationEventHandler.cs",
-          "reason": "Lazy<ProviderCommitmentsDbContext> with SaveChangesAsync and database interaction calls detected."
+          "reason": "Database actions for creating and finding EmployerVerificationRequests through DbContext suggest a SQL Server database."
+        },
+        {
+          "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.MessageHandlers/CommandHandlers/StoreLearningHistoryCommandHandler.cs",
+          "reason": "DbContext is used to interact with LearningChangeHistory and Apprenticeships, requiring a backing SQL Server."
         },
         {
           "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.MessageHandlers/CommandHandlers/SyncLearningDataBatchCommandHandler.cs",
-          "reason": "Lazy<ProviderCommitmentsDbContext> with database interaction calls detected."
+          "reason": "Queries and operations on apprenticeship aggregates through ProviderCommitmentsDbContext indicate a dependency on SQL Server."
         },
         {
-          "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.MessageHandlers/EventHandlers/ApprenticeshipPausedEventHandler.cs",
-          "reason": "Lazy<ProviderCommitmentsDbContext> and access to database entities through the context."
+          "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.MessageHandlers/CommandHandlers/ProviderSendCohortCommandHandler.cs",
+          "reason": "The code references ProviderCommitmentsDbContext and performs data operations, which implies a SQL Server instance is required."
         },
         {
-          "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.MessageHandlers/EventHandlers/ApprenticeshipResumedEventHandler.cs",
-          "reason": "Lazy<ProviderCommitmentsDbContext> and access to database entities through the context."
-        },
-        {
-          "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.MessageHandlers/EventHandlers/ApprenticeshipWithChangeOfPartyCreatedEventHandler.cs",
-          "reason": "Lazy<ProviderCommitmentsDbContext> and access to database entities through the context."
-        },
-        {
-          "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.MessageHandlers/EventHandlers/ChangeOfPartyRequestCreatedEventHandler.cs",
-          "reason": "Lazy<ProviderCommitmentsDbContext> and access to database entities through the context."
+          "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.MessageHandlers/CommandHandlers/ProviderApproveCohortCommandHandler.cs",
+          "reason": "The code uses a DbContext instance (ProviderCommitmentsDbContext) to query and persist data, which implies a dependency on a SQL Server database."
         },
         {
           "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.MessageHandlers/EventHandlers/ApprenticeshipEmployerTypeChangeEventHandlerToAutoRejectTransfers.cs",
-          "reason": "Lazy<ProviderCommitmentsDbContext> indicates usage of a database context."
+          "reason": "Usage of ProviderCommitmentsDbContext indicates a dependency on SQL Server."
+        },
+        {
+          "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.MessageHandlers/EventHandlers/ApprenticeshipPausedEventHandler.cs",
+          "reason": "Usage of ProviderCommitmentsDbContext indicates a dependency on SQL Server."
+        },
+        {
+          "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.MessageHandlers/EventHandlers/ApprenticeshipResumedEventHandler.cs",
+          "reason": "Usage of ProviderCommitmentsDbContext indicates a dependency on SQL Server."
+        },
+        {
+          "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.MessageHandlers/EventHandlers/ApprenticeshipWithChangeOfPartyCreatedEventHandler.cs",
+          "reason": "Usage of ProviderCommitmentsDbContext indicates a dependency on SQL Server."
+        },
+        {
+          "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.MessageHandlers/EventHandlers/ChangeOfPartyRequestCreatedEventHandler.cs",
+          "reason": "Usage of ProviderCommitmentsDbContext indicates a dependency on SQL Server."
         },
         {
           "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.MessageHandlers/EventHandlers/CohortWithChangeOfPartyCreatedEventHandler.cs",
-          "reason": "Lazy<ProviderCommitmentsDbContext> indicates a SQL Server dependency."
+          "reason": "Uses `ProviderCommitmentsDbContext` to access the database."
         },
         {
           "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.MessageHandlers/EventHandlers/CohortWithChangeOfPartyCreatedEventHandlerForEmail.cs",
-          "reason": "Lazy<ProviderCommitmentsDbContext> indicates a SQL Server dependency."
+          "reason": "Uses `ProviderCommitmentsDbContext` to access the database."
         },
         {
           "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.MessageHandlers/EventHandlers/CohortWithChangeOfPartyDeletedEventHandler.cs",
-          "reason": "Lazy<ProviderCommitmentsDbContext> indicates a SQL Server dependency."
+          "reason": "Uses `ProviderCommitmentsDbContext` to access the database."
         },
         {
           "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.MessageHandlers/EventHandlers/CohortWithChangeOfPartyFullyApprovedEventHandler.cs",
-          "reason": "Lazy<ProviderCommitmentsDbContext> indicates a SQL Server dependency."
+          "reason": "Uses `ProviderCommitmentsDbContext` to access the database."
         },
         {
           "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.MessageHandlers/EventHandlers/CohortWithChangeOfPartyUpdatedEventHandler.cs",
-          "reason": "Lazy<ProviderCommitmentsDbContext> indicates a SQL Server dependency."
+          "reason": "Uses `ProviderCommitmentsDbContext` to access the database."
         },
         {
           "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.MessageHandlers/EventHandlers/OverlappingTrainingDateRequest/CohortDeletedWithPendingOverlappingTrainingDateEventHandler.cs",
-          "reason": "The code references `ProviderCommitmentsDbContext` which likely requires a SQL Server connection."
+          "reason": "Lazy<ProviderCommitmentsDbContext> constructor argument indicates SQL Server dependency."
         },
         {
           "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.MessageHandlers/EventHandlers/OverlappingTrainingDateRequest/OverlappingTrainingDateForActiveApprenticeshipEventHandler.cs",
-          "reason": "The code references `ProviderCommitmentsDbContext` which likely requires a SQL Server connection."
+          "reason": "Lazy<ProviderCommitmentsDbContext> constructor argument indicates SQL Server dependency."
         },
         {
           "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.MessageHandlers/EventHandlers/OverlappingTrainingDateRequest/OverlappingTrainingDateForCompletedApprenticeshipEventHandler.cs",
-          "reason": "The code references `ProviderCommitmentsDbContext` which likely requires a SQL Server connection."
+          "reason": "Lazy<ProviderCommitmentsDbContext> constructor argument indicates SQL Server dependency."
         },
         {
           "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.MessageHandlers/EventHandlers/OverlappingTrainingDateRequest/OverlappingTrainingDateForStoppedApprenticeshipEventHandler.cs",
-          "reason": "The code references `ProviderCommitmentsDbContext` which likely requires a SQL Server connection."
+          "reason": "Lazy<ProviderCommitmentsDbContext> constructor argument indicates SQL Server dependency."
         },
         {
           "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.MessageHandlers/EventHandlers/OverlappingTrainingDateRequest/OverlappingTrainingDateRequestRejectedEventHandler.cs",
-          "reason": "The code references `ProviderCommitmentsDbContext` which likely requires a SQL Server connection."
+          "reason": "Lazy<ProviderCommitmentsDbContext> constructor argument indicates SQL Server dependency."
         },
         {
           "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.MessageHandlers/EventHandlers/OverlappingTrainingDateRequest/OverlappingTrainingDateResolvedEventHandler.cs",
-          "reason": "Lazy<ProviderCommitmentsDbContext> indicates dependency on SQL Server for local development."
-        },
-        {
-          "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.MessageHandlers/EventHandlers/ProviderRejectedChangeOfPartyRequestEventHandler.cs",
-          "reason": "Lazy<ProviderCommitmentsDbContext> indicates dependency on SQL Server for local development."
-        },
-        {
-          "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.MessageHandlers/EventHandlers/TransferRequestApprovedEventHandler.cs",
-          "reason": "Lazy<ProviderCommitmentsDbContext> indicates dependency on SQL Server for local development."
-        },
-        {
-          "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.MessageHandlers/EventHandlers/TransferRequestRejectedEventHandler.cs",
-          "reason": "Lazy<ProviderCommitmentsDbContext> indicates dependency on SQL Server for local development."
+          "reason": "Database context object `ProviderCommitmentsDbContext` is referenced, which indicates a dependency on a SQL Server."
         },
         {
           "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.MessageHandlers/EventHandlers/TransferRequestWithAutoApprovalCreatedEventHandler.cs",
-          "reason": "Lazy<ProviderCommitmentsDbContext> indicates dependency on SQL Server for local development."
+          "reason": "Evidences dependency on `ProviderCommitmentsDbContext` for querying the `TransferRequests` table."
         },
         {
-          "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2/Application/Commands/AddCohort/AddCohortWithOtherPartyHandler.cs",
-          "reason": "Lazy<ProviderCommitmentsDbContext> dependence, indicating SQL Server."
+          "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.MessageHandlers/EventHandlers/TransferRequestRejectedEventHandler.cs",
+          "reason": "References `ProviderCommitmentsDbContext` for database operations relating to cohorts."
         },
         {
-          "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2/Application/Commands/AddCohort/AddCohortCommandHandler.cs",
-          "reason": "Lazy<ProviderCommitmentsDbContext> dependency, indicating reliance on SQL Server."
+          "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.MessageHandlers/EventHandlers/TransferRequestApprovedEventHandler.cs",
+          "reason": "The context `ProviderCommitmentsDbContext` is invoked for executing database queries involving a `Cohorts` table."
         },
         {
-          "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2/Application/Commands/AddCohort/AddEmptyCohortHandler.cs",
-          "reason": "Lazy<ProviderCommitmentsDbContext> indicating SQL Server database dependency."
-        },
-        {
-          "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2/Application/Commands/AcknowledgeInvalidIlrChanges/AcknowledgeInvalidIlrChangesCommandHandler.cs",
-          "reason": "Usage of Lazy<ProviderCommitmentsDbContext> indicating SQL Server dependency."
+          "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.MessageHandlers/EventHandlers/ProviderRejectedChangeOfPartyRequestEventHandler.cs",
+          "reason": "`ProviderCommitmentsDbContext` and methods for database queries are used, showing dependency on SQL Server."
         },
         {
           "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2/Application/Commands/AcceptApprenticeshipUpdates/AcceptApprenticeshipUpdatesCommandHandler.cs",
-          "reason": "Usage of Lazy<ProviderCommitmentsDbContext> pointing to the SQL Server dependency."
+          "reason": "Lazy<ProviderCommitmentsDbContext> indicates usage of a SQL Server database."
+        },
+        {
+          "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2/Application/Commands/AcknowledgeInvalidIlrChanges/AcknowledgeInvalidIlrChangesCommandHandler.cs",
+          "reason": "Lazy<ProviderCommitmentsDbContext> indicates usage of a SQL Server database."
+        },
+        {
+          "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2/Application/Commands/AddCohort/AddCohortCommandHandler.cs",
+          "reason": "Lazy<ProviderCommitmentsDbContext> indicates usage of a SQL Server database."
+        },
+        {
+          "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2/Application/Commands/AddCohort/AddCohortWithOtherPartyHandler.cs",
+          "reason": "Lazy<ProviderCommitmentsDbContext> indicates usage of a SQL Server database."
+        },
+        {
+          "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2/Application/Commands/AddCohort/AddEmptyCohortHandler.cs",
+          "reason": "Lazy<ProviderCommitmentsDbContext> indicates usage of a SQL Server database."
         }
       ]
     },
     {
       "name": "NServiceBus",
       "kind": "message-broker",
-      "technology": "nservicebus",
-      "configurationKeys": [],
+      "technology": null,
+      "configurationKeys": [
+        "NServiceBusConfiguration:LearningTransportFolderPath",
+        "NServiceBusConfiguration:ServiceBusConnectionString",
+        "NServiceBusConfiguration:SharedServiceBusEndpointUrl"
+      ],
       "evidence": [
         {
-          "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.ExternalHandlers/EventHandlers/LearningResumedEventHandler.cs",
-          "reason": "References IMessageHandlerContext from NServiceBus."
-        },
-        {
-          "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.ExternalHandlers/EventHandlers/LearningWithdrawnEventHandler.cs",
-          "reason": "References IMessageHandlerContext from NServiceBus."
-        },
-        {
-          "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.ExternalHandlers/EventHandlers/RecordedAct1CompletionPaymentEventHandler.cs",
-          "reason": "References IMessageHandlerContext from NServiceBus."
+          "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2/Configuration/NServiceBusConfiguration.cs",
+          "reason": "NServiceBusConfiguration declares configuration keys potentially needed for local development when using NServiceBus with either a local or cloud-based service bus."
         },
         {
           "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.MessageHandlers/CommandHandlers/EmployerSendCohortCommandHandler.cs",
-          "reason": "References IMessageHandlerContext from NServiceBus."
+          "reason": "Use of NServiceBus for handling commands implies dependency on a message broker."
         },
         {
-          "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.ExternalHandlers/Services/WithDrawalNotificationToEmployerService.cs",
-          "reason": "Uses IMessageHandlerContext from NServiceBus."
+          "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.ExternalHandlers/EventHandlers/LearningResumedEventHandler.cs",
+          "reason": "Use of the NServiceBus API for handling messages suggests dependency on a local message broker."
+        },
+        {
+          "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.ExternalHandlers/EventHandlers/LearningWithdrawnEventHandler.cs",
+          "reason": "Use of the NServiceBus API for sending and handling messages suggests dependency on a local message broker."
+        }
+      ]
+    },
+    {
+      "name": "Azure Blob Storage",
+      "kind": "object-storage",
+      "technology": "azureblob",
+      "configurationKeys": [
+        "StorageConnectionString"
+      ],
+      "evidence": [
+        {
+          "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2/Configuration/CommitmentsV2Configuration.cs",
+          "reason": "Property StorageConnectionString suggests the requirement of Azure Blob Storage."
         }
       ]
     }
@@ -213,517 +218,357 @@
     {
       "key": "AllowedHosts",
       "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.Api/appsettings.json",
-      "reason": "Key used to configure allowed hosts for the API."
+      "reason": "Configuration for allowed hosts in the application."
     },
     {
       "key": "ApplicationInsights:InstrumentationKey",
       "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.Api/appsettings.json",
-      "reason": "Key used for configuring Application Insights."
-    },
-    {
-      "key": "ApprenticeshipInfoService",
-      "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2/Configuration/CommitmentsV2Configuration.cs",
-      "reason": "Declared as a configuration property, likely for an apprenticeship service."
+      "reason": "Instrumentation key for Application Insights."
     },
     {
       "key": "ApprenticeshipInfoServiceConfiguration:BaseUrl",
       "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2/Configuration/ApprenticeshipInfoServiceConfiguration.cs",
-      "reason": "Configuration property in ApprenticeshipInfoServiceConfiguration class for the API base URL."
+      "reason": "Base URL for the Apprenticeship Info service evidenced in a strongly-typed configuration class."
     },
     {
       "key": "ApprovalsOuterApiConfiguration:BaseUrl",
       "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2/Configuration/ApprovalsOuterApiConfiguration.cs",
-      "reason": "Configuration property in ApprovalsOuterApiConfiguration class for the API base URL."
+      "reason": "Base URL configuration for the Approvals Outer API evidenced in a strongly-typed configuration class."
     },
     {
       "key": "ApprovalsOuterApiConfiguration:Key",
       "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2/Configuration/ApprovalsOuterApiConfiguration.cs",
-      "reason": "Configuration property in ApprovalsOuterApiConfiguration class for the API key."
+      "reason": "API key configuration for the Approvals Outer API evidenced in a strongly-typed configuration class."
     },
     {
       "key": "AzureActiveDirectoryApiConfiguration:Identifier",
       "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2/Configuration/AzureActiveDirectoryApiConfiguration.cs",
-      "reason": "Configuration property in AzureActiveDirectoryApiConfiguration class for the identifier."
+      "reason": "Identifier configuration for Azure Active Directory evidenced in a strongly-typed configuration class."
     },
     {
       "key": "AzureActiveDirectoryApiConfiguration:Tenant",
       "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2/Configuration/AzureActiveDirectoryApiConfiguration.cs",
-      "reason": "Configuration property in AzureActiveDirectoryApiConfiguration class for the tenant."
-    },
-    {
-      "key": "AzureADApiAuthentication",
-      "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2/Configuration/CommitmentsV2Configuration.cs",
-      "reason": "Declared as a configuration property for Azure Active Directory API authentication."
+      "reason": "Tenant configuration for Azure Active Directory evidenced in a strongly-typed configuration class."
     },
     {
       "key": "AzureADClientAuthentication:ApiBaseUrl",
       "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.Api.Client.TestHarness/appsettings.json",
-      "reason": "Key used for API base URL configuration."
+      "reason": "Base URL for the API in Azure AD client configuration."
     },
     {
       "key": "AzureADClientAuthentication:ClientId",
       "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.Api.Client.TestHarness/appsettings.json",
-      "reason": "Key used for Azure AD client authentication configuration."
+      "reason": "Configuration for Azure AD client authentication."
     },
     {
       "key": "AzureADClientAuthentication:ClientSecret",
       "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.Api.Client.TestHarness/appsettings.json",
-      "reason": "Key used for Azure AD client authentication configuration."
+      "reason": "Configuration for Azure AD client authentication."
     },
     {
       "key": "AzureADClientAuthentication:IdentifierUri",
       "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.Api.Client.TestHarness/appsettings.json",
-      "reason": "Key used for Azure AD client authentication configuration."
+      "reason": "Configuration for Azure AD client authentication."
     },
     {
       "key": "AzureADClientAuthentication:Tenant",
       "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.Api.Client.TestHarness/appsettings.json",
-      "reason": "Key used for Azure AD client authentication configuration."
+      "reason": "Configuration for Azure AD client authentication."
     },
     {
-      "key": "CoCApprovalsActive",
-      "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2/Configuration/CommitmentsV2Configuration.cs",
-      "reason": "Declared as a configuration property to toggle approvals feature for Change of Circumstances (CoC)."
-    },
-    {
-      "key": "Commitments:DatabaseConnectionString",
+      "key": "CommitmentsDatabase:ConnectionString",
       "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.Api/HealthChecks/ServiceCollectionExtensions.cs",
-      "reason": "Used to configure SQL Server health check in AddDasHealthChecks method."
-    },
-    {
-      "key": "CommitmentsV2Configuration:EmployerCommitmentsBaseUrl",
-      "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.MessageHandlers/EventHandlers/OverlappingTrainingDateRequest/OverlappingTrainingDateForActiveApprenticeshipEventHandler.cs",
-      "reason": "The configuration `commitmentsV2Configuration.EmployerCommitmentsBaseUrl` is referenced to construct URLs."
-    },
-    {
-      "key": "CommitmentsV2Configuration:EmployerCommitmentsBaseUrl",
-      "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.MessageHandlers/EventHandlers/OverlappingTrainingDateRequest/OverlappingTrainingDateForCompletedApprenticeshipEventHandler.cs",
-      "reason": "The configuration `commitmentsV2Configuration.EmployerCommitmentsBaseUrl` is referenced to construct URLs."
-    },
-    {
-      "key": "CommitmentsV2Configuration:EmployerCommitmentsBaseUrl",
-      "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.MessageHandlers/EventHandlers/OverlappingTrainingDateRequest/OverlappingTrainingDateForStoppedApprenticeshipEventHandler.cs",
-      "reason": "The configuration `commitmentsV2Configuration.EmployerCommitmentsBaseUrl` is referenced to construct URLs."
+      "reason": "Required for SQL Server connection string configuration in health checks"
     },
     {
       "key": "CommitmentsV2Configuration:ProviderCommitmentsBaseUrl",
-      "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.MessageHandlers/EventHandlers/OverlappingTrainingDateRequest/OverlappingTrainingDateRequestRejectedEventHandler.cs",
-      "reason": "The configuration `commitmentsV2Configuration.ProviderCommitmentsBaseUrl` is referenced to construct a URL."
+      "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.MessageHandlers/EventHandlers/CohortWithChangeOfPartyCreatedEventHandlerForEmail.cs",
+      "reason": "Used to set the base URL for provider commitments in email-related logic."
+    },
+    {
+      "key": "CommitmentsV2Configuration:ProviderCommitmentsBaseUrl",
+      "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.MessageHandlers/EventHandlers/OverlappingTrainingDateRequest/OverlappingTrainingDateResolvedEventHandler.cs",
+      "reason": "This key is used to construct URLs for emails in the `BuildEmailToEmployerCommand` method."
     },
     {
       "key": "ConfigNames",
       "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.Api/appsettings.json",
-      "reason": "Key used to specify configuration names for the application."
+      "reason": "List of configuration names used by the application."
     },
     {
       "key": "ConfigurationStorageConnectionString",
       "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.Api/appsettings.json",
-      "reason": "Key used to configure the storage connection string."
+      "reason": "Connection string for configuration storage."
     },
     {
       "key": "ConnectionStrings:ProviderCommitmentsDatabase",
-      "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.MessageHandlers/CommandHandlers/ProviderApproveCohortCommandHandler.cs",
-      "reason": "Lazy<ProviderCommitmentsDbContext> indicates a dependency on a SQL Server database."
-    },
-    {
-      "key": "ConnectionStrings:ProviderCommitmentsDatabase",
-      "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.MessageHandlers/CommandHandlers/ProviderSendCohortCommandHandler.cs",
-      "reason": "Lazy<ProviderCommitmentsDbContext> indicates a dependency on a SQL Server database."
-    },
-    {
-      "key": "ConnectionStrings:ProviderCommitmentsDatabase",
-      "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.MessageHandlers/CommandHandlers/StoreLearningHistoryCommandHandler.cs",
-      "reason": "Lazy<ProviderCommitmentsDbContext> indicates a dependency on a SQL Server database."
-    },
-    {
-      "key": "ConnectionStrings:ProviderCommitmentsDatabase",
-      "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.MessageHandlers/CommandHandlers/SyncLearningDataBatchCommandHandler.cs",
-      "reason": "Lazy<ProviderCommitmentsDbContext> indicates a dependency on a SQL Server database."
-    },
-    {
-      "key": "ConnectionStrings:ProviderCommitmentsDatabase",
-      "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.MessageHandlers/EventHandlers/ApprenticeshipCreatedEmployerVerificationEventHandler.cs",
-      "reason": "Lazy<ProviderCommitmentsDbContext> indicates a dependency on a SQL Server database."
-    },
-    {
-      "key": "ConnectionStrings:ProviderCommitmentsDb",
-      "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.MessageHandlers/EventHandlers/ApprenticeshipEmployerTypeChangeEventHandlerToAutoRejectTransfers.cs",
-      "reason": "Database connection implied by use of ProviderCommitmentsDbContext."
-    },
-    {
-      "key": "ConnectionStrings:ProviderCommitmentsDb",
-      "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.MessageHandlers/EventHandlers/ApprenticeshipPausedEventHandler.cs",
-      "reason": "Database connection implied by use of ProviderCommitmentsDbContext."
-    },
-    {
-      "key": "ConnectionStrings:ProviderCommitmentsDb",
-      "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.MessageHandlers/EventHandlers/ApprenticeshipResumedEventHandler.cs",
-      "reason": "Database connection implied by use of ProviderCommitmentsDbContext."
-    },
-    {
-      "key": "ConnectionStrings:ProviderCommitmentsDb",
-      "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.MessageHandlers/EventHandlers/ApprenticeshipWithChangeOfPartyCreatedEventHandler.cs",
-      "reason": "Database connection implied by use of ProviderCommitmentsDbContext."
-    },
-    {
-      "key": "ConnectionStrings:ProviderCommitmentsDb",
-      "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.MessageHandlers/EventHandlers/ChangeOfPartyRequestCreatedEventHandler.cs",
-      "reason": "Database connection implied by use of ProviderCommitmentsDbContext."
-    },
-    {
-      "key": "ConnectionStrings:ProviderCommitmentsDbContext",
       "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.MessageHandlers/EventHandlers/OverlappingTrainingDateRequest/CohortDeletedWithPendingOverlappingTrainingDateEventHandler.cs",
-      "reason": "The file contains a dependency on `ProviderCommitmentsDbContext`, indicating it needs database connection details configured."
+      "reason": "Lazy<ProviderCommitmentsDbContext> constructor argument indicates SQL Server dependency."
     },
     {
-      "key": "ConnectionStrings:ProviderCommitmentsDbContext",
+      "key": "ConnectionStrings:ProviderCommitmentsDatabase",
       "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.MessageHandlers/EventHandlers/OverlappingTrainingDateRequest/OverlappingTrainingDateForActiveApprenticeshipEventHandler.cs",
-      "reason": "The file contains a dependency on `ProviderCommitmentsDbContext`, indicating it needs database connection details configured."
+      "reason": "Lazy<ProviderCommitmentsDbContext> constructor argument indicates SQL Server dependency."
     },
     {
-      "key": "ConnectionStrings:ProviderCommitmentsDbContext",
+      "key": "ConnectionStrings:ProviderCommitmentsDatabase",
       "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.MessageHandlers/EventHandlers/OverlappingTrainingDateRequest/OverlappingTrainingDateForCompletedApprenticeshipEventHandler.cs",
-      "reason": "The file contains a dependency on `ProviderCommitmentsDbContext`, indicating it needs database connection details configured."
+      "reason": "Lazy<ProviderCommitmentsDbContext> constructor argument indicates SQL Server dependency."
     },
     {
-      "key": "ConnectionStrings:ProviderCommitmentsDbContext",
+      "key": "ConnectionStrings:ProviderCommitmentsDatabase",
       "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.MessageHandlers/EventHandlers/OverlappingTrainingDateRequest/OverlappingTrainingDateForStoppedApprenticeshipEventHandler.cs",
-      "reason": "The file contains a dependency on `ProviderCommitmentsDbContext`, indicating it needs database connection details configured."
+      "reason": "Lazy<ProviderCommitmentsDbContext> constructor argument indicates SQL Server dependency."
     },
     {
-      "key": "ConnectionStrings:ProviderCommitmentsDbContext",
+      "key": "ConnectionStrings:ProviderCommitmentsDatabase",
       "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.MessageHandlers/EventHandlers/OverlappingTrainingDateRequest/OverlappingTrainingDateRequestRejectedEventHandler.cs",
-      "reason": "The file contains a dependency on `ProviderCommitmentsDbContext`, indicating it needs database connection details configured."
+      "reason": "Lazy<ProviderCommitmentsDbContext> constructor argument indicates SQL Server dependency."
     },
     {
-      "key": "ConnectionStrings:ProviderCommitmentsDbContext",
+      "key": "ConnectionStrings:ProviderCommitmentsDb",
       "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2/Application/Commands/AcceptApprenticeshipUpdates/AcceptApprenticeshipUpdatesCommandHandler.cs",
-      "reason": "Required to configure the database connection for the application to connect to SQL Server."
+      "reason": "Lazy<ProviderCommitmentsDbContext> indicates a required connection string for SQL Server."
     },
     {
-      "key": "ConnectionStrings:ProviderCommitmentsDbContext",
+      "key": "ConnectionStrings:ProviderCommitmentsDb",
       "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2/Application/Commands/AcknowledgeInvalidIlrChanges/AcknowledgeInvalidIlrChangesCommandHandler.cs",
-      "reason": "Required for SQL Server database configuration in local development."
+      "reason": "Lazy<ProviderCommitmentsDbContext> indicates a required connection string for SQL Server."
     },
     {
-      "key": "ConnectionStrings:ProviderCommitmentsDbContext",
+      "key": "ConnectionStrings:ProviderCommitmentsDb",
       "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2/Application/Commands/AddCohort/AddCohortCommandHandler.cs",
-      "reason": "Needed for database interaction with SQL Server in the application."
+      "reason": "Lazy<ProviderCommitmentsDbContext> indicates a required connection string for SQL Server."
     },
     {
-      "key": "ConnectionStrings:ProviderCommitmentsDbContext",
+      "key": "ConnectionStrings:ProviderCommitmentsDb",
       "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2/Application/Commands/AddCohort/AddCohortWithOtherPartyHandler.cs",
-      "reason": "Required by the application to connect to SQL Server for local development."
+      "reason": "Lazy<ProviderCommitmentsDbContext> indicates a required connection string for SQL Server."
     },
     {
-      "key": "ConnectionStrings:ProviderCommitmentsDbContext",
+      "key": "ConnectionStrings:ProviderCommitmentsDb",
       "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2/Application/Commands/AddCohort/AddEmptyCohortHandler.cs",
-      "reason": "Dependency for application functionality relying on SQL Server in local development."
-    },
-    {
-      "key": "CurrentDateTime",
-      "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2/Configuration/CommitmentsV2Configuration.cs",
-      "reason": "Declared as a configuration property to override or mock the current datetime."
+      "reason": "Lazy<ProviderCommitmentsDbContext> indicates a required connection string for SQL Server."
     },
     {
       "key": "DatabaseConnectionString",
       "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2/Configuration/CommitmentsV2Configuration.cs",
-      "reason": "Declared as a configuration property for database connection in CommitmentsV2Configuration."
-    },
-    {
-      "key": "EmployerCommitmentsBaseUrl",
-      "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2/Configuration/CommitmentsV2Configuration.cs",
-      "reason": "Declared as a configuration property, likely for employer commitments base URL."
+      "reason": "Property DatabaseConnectionString suggests this configuration key is necessary for database setup."
     },
     {
       "key": "EnvironmentName",
       "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.Api/appsettings.json",
-      "reason": "Key used to configure the environment name."
+      "reason": "Environment name for the application."
     },
     {
       "key": "EventsApi:BaseUrl",
       "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2/Configuration/EventsApiClientConfiguration.cs",
-      "reason": "BaseUrl indicates the endpoint for the Events API client."
+      "reason": "Property BaseUrl in EventsApiClientConfiguration class suggests the need for this key for the Events API client."
     },
     {
       "key": "EventsApi:ClientToken",
       "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2/Configuration/EventsApiClientConfiguration.cs",
-      "reason": "ClientToken indicates authentication for the Events API client."
-    },
-    {
-      "key": "ExpireInactiveEmployerCohortImplementationDate",
-      "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2/Configuration/CommitmentsV2Configuration.cs",
-      "reason": "Declared as a configuration property, possibly a date for expiring inactive employer cohorts."
+      "reason": "Property ClientToken in EventsApiClientConfiguration class suggests the need for this key for the Events API client."
     },
     {
       "key": "InstrumentationKey",
       "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.Api/appsettings.json",
-      "reason": "Key used for configuring instrumentation."
+      "reason": "Instrumentation key for general telemetry."
     },
     {
-      "key": "LearningWithdrawalsIsActive",
-      "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2/Configuration/CommitmentsV2Configuration.cs",
-      "reason": "Declared as a configuration property to toggle learning withdrawals feature."
-    },
-    {
-      "key": "LevyTransferMatchingApiConfiguration:BaseUrl",
+      "key": "LevyTransferMatchingInnerApiConfiguration:BaseUrl",
       "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2/Configuration/LevyTransferMatchingApiConfiguration.cs",
-      "reason": "BaseUrl indicates the endpoint for the Levy Transfer Matching API."
+      "reason": "Property BaseUrl in LevyTransferMatchingApiConfiguration class suggests the need for this key for the Levy Transfer Matching API."
     },
     {
-      "key": "LevyTransferMatchingApiConfiguration:Identifier",
+      "key": "LevyTransferMatchingInnerApiConfiguration:Identifier",
       "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2/Configuration/LevyTransferMatchingApiConfiguration.cs",
-      "reason": "Identifier indicates configuration for the Levy Transfer Matching API."
-    },
-    {
-      "key": "LevyTransferMatchingInnerApiConfiguration",
-      "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2/Configuration/CommitmentsV2Configuration.cs",
-      "reason": "Declared as a configuration property for Levy Transfer Matching API."
-    },
-    {
-      "key": "Logging:LogLevel:Default",
-      "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.Api.Client.TestHarness/appsettings.json",
-      "reason": "Key used for configuring logging levels."
-    },
-    {
-      "key": "Logging:LogLevel:Default",
-      "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.Api/appsettings.json",
-      "reason": "Key used for configuring logging levels."
+      "reason": "Property Identifier in LevyTransferMatchingApiConfiguration class suggests the need for this key for the Levy Transfer Matching API."
     },
     {
       "key": "Logging:LogLevel:Default",
       "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.ExternalHandlers/appsettings.Development.json",
-      "reason": "Declared in appsettings file for Development environment"
+      "reason": "Key found in appsettings.Development.json for logging configuration."
     },
     {
       "key": "Logging:LogLevel:Default",
       "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.ExternalHandlers/appsettings.json",
-      "reason": "Declared in base appsettings file"
+      "reason": "Key found in appsettings.json for logging configuration."
     },
     {
       "key": "Logging:LogLevel:Default",
       "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.Jobs/appsettings.Development.json",
-      "reason": "Declared in appsettings file for Development environment"
+      "reason": "Key found in appsettings.Development.json for logging configuration."
     },
     {
       "key": "Logging:LogLevel:Default",
       "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.Jobs/appsettings.json",
-      "reason": "Declared in base appsettings file"
+      "reason": "Key found in appsettings.json for logging configuration."
     },
     {
       "key": "Logging:LogLevel:Default",
       "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.MessageHandlers/appsettings.Development.json",
-      "reason": "Declared in appsettings file for Development environment"
+      "reason": "Key found in appsettings.Development.json for logging configuration."
     },
     {
       "key": "Logging:LogLevel:Default",
       "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.MessageHandlers/appsettings.json",
-      "reason": "Key found in appsettings.json for logging configuration."
-    },
-    {
-      "key": "Logging:LogLevel:Microsoft",
-      "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.Api.Client.TestHarness/appsettings.json",
-      "reason": "Key used for configuring logging levels."
+      "reason": "Default logging level configuration evidenced in appsettings.json."
     },
     {
       "key": "Logging:LogLevel:Microsoft",
       "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.MessageHandlers/appsettings.Development.json",
-      "reason": "Declared in appsettings file for Development environment"
-    },
-    {
-      "key": "Logging:LogLevel:System",
-      "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.Api.Client.TestHarness/appsettings.json",
-      "reason": "Key used for configuring logging levels."
+      "reason": "Key found in appsettings.Development.json for logging Microsoft-specific configuration."
     },
     {
       "key": "Logging:LogLevel:System",
       "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.MessageHandlers/appsettings.Development.json",
-      "reason": "Declared in appsettings file for Development environment"
-    },
-    {
-      "key": "NServiceBusConfiguration",
-      "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2/Configuration/CommitmentsV2Configuration.cs",
-      "reason": "Declared as a configuration property for NServiceBus."
+      "reason": "Key found in appsettings.Development.json for logging system-specific configuration."
     },
     {
       "key": "NServiceBusConfiguration:LearningTransportFolderPath",
       "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2/Configuration/NServiceBusConfiguration.cs",
-      "reason": "Property in a configuration class specifying a folder path for NServiceBus Learning Transport."
-    },
-    {
-      "key": "NServiceBusConfiguration:NServiceBusLicense",
-      "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2/Configuration/NServiceBusConfiguration.cs",
-      "reason": "Property in a configuration class indicating a license key required for the NServiceBus message broker."
+      "reason": "Required if using LearningTransport (local development message storage)."
     },
     {
       "key": "NServiceBusConfiguration:ServiceBusConnectionString",
       "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2/Configuration/NServiceBusConfiguration.cs",
-      "reason": "Property in a configuration class indicating a required connection string for a message broker."
+      "reason": "Required to configure the messaging service connection string (e.g., to Azure Service Bus or other transport)."
     },
     {
       "key": "NServiceBusConfiguration:SharedServiceBusEndpointUrl",
       "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2/Configuration/NServiceBusConfiguration.cs",
-      "reason": "Property in a configuration class indicating an endpoint URL for a service."
-    },
-    {
-      "key": "NServiceBusConfiguration:UseServiceBusInDev",
-      "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2/Configuration/NServiceBusConfiguration.cs",
-      "reason": "Property in a configuration class determining whether to use a service bus in development."
+      "reason": "Optional configuration specifically for shared service bus endpoint usage in development."
     },
     {
       "key": "OLTDNotificationToServiceDeskJobSchdule",
       "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.Jobs/appsettings.json",
-      "reason": "Declared in base appsettings file"
-    },
-    {
-      "key": "ProviderCommitmentsBaseUrl",
-      "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2/Configuration/CommitmentsV2Configuration.cs",
-      "reason": "Declared as a configuration property, likely for provider commitments base URL."
+      "reason": "Key found for scheduling OLTD notification to service desk job."
     },
     {
       "key": "ProviderRelationshipsApiConfiguration:ApiBaseUrl",
       "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.Shared/ProviderRelationshipsApiClient/ProviderRelationshipsApiConfiguration.cs",
-      "reason": "Configuration property in ProviderRelationshipsApiConfiguration class for the API base URL."
+      "reason": "Base URL configuration for the Provider Relationships API evidenced in a strongly-typed configuration class."
     },
     {
       "key": "ProviderRelationshipsApiConfiguration:IdentifierUri",
       "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.Shared/ProviderRelationshipsApiClient/ProviderRelationshipsApiConfiguration.cs",
-      "reason": "Configuration property in ProviderRelationshipsApiConfiguration class for the API identifier URI."
-    },
-    {
-      "key": "ProviderUrl",
-      "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2/Configuration/CommitmentsV2Configuration.cs",
-      "reason": "Declared as a configuration property, likely for provider-specific URLs."
+      "reason": "Identifier URI configuration for managed identity evidenced in a strongly-typed configuration class."
     },
     {
       "key": "ProviderUrlConfiguration:CourseManagementBaseUrl",
       "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2/Configuration/ProviderUrlConfiguration.cs",
-      "reason": "Property in a configuration class indicating a base URL for Course Management."
+      "reason": "API base URL configuration for course management."
     },
     {
       "key": "ProviderUrlConfiguration:ProviderApprenticeshipServiceBaseUrl",
       "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2/Configuration/ProviderUrlConfiguration.cs",
-      "reason": "Property in a configuration class indicating a base URL for the Provider Apprenticeship Service."
+      "reason": "API base URL configuration for provider apprenticeship service."
     },
     {
       "key": "ReadOnlyDatabaseConnectionString",
       "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2/Configuration/CommitmentsV2Configuration.cs",
-      "reason": "Declared as a configuration property for read-only SQL database connection."
+      "reason": "Property ReadOnlyDatabaseConnectionString suggests this configuration key is necessary for connecting to a read-only database."
     },
     {
       "key": "RedisConnectionString",
       "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2/Configuration/CommitmentsV2Configuration.cs",
-      "reason": "Declared as a configuration property for Redis cache in CommitmentsV2Configuration."
-    },
-    {
-      "key": "ReplayApprenticeshipCreatedEventsDryRun",
-      "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2/Configuration/CommitmentsV2Configuration.cs",
-      "reason": "Declared as a configuration property for dry-run configuration of events replay."
-    },
-    {
-      "key": "ReplayApprenticeshipCreatedEventsJobSchedule",
-      "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2/Configuration/CommitmentsV2Configuration.cs",
-      "reason": "Declared as a configuration property for scheduling replay of apprenticeship-created events."
+      "reason": "Property RedisConnectionString suggests this configuration key is necessary for connecting to a Redis cache store."
     },
     {
       "key": "ReservationsClientApiConfiguration:ApiBaseUrl",
       "sourceFile": "src/CommitmentsV2/SFA.DAS.ReservationsV2.Api.Types/Configuration/ReservationsClientApiConfiguration.cs",
-      "reason": "Declared as a configuration property in ReservationsClientApiConfiguration class."
+      "reason": "Configuration property for the Reservations API base URL"
     },
     {
       "key": "ReservationsClientApiConfiguration:ClientId",
       "sourceFile": "src/CommitmentsV2/SFA.DAS.ReservationsV2.Api.Types/Configuration/ReservationsClientApiConfiguration.cs",
-      "reason": "Declared as a configuration property in ReservationsClientApiConfiguration class."
+      "reason": "Configuration property for API authentication client ID"
     },
     {
       "key": "ReservationsClientApiConfiguration:ClientSecret",
       "sourceFile": "src/CommitmentsV2/SFA.DAS.ReservationsV2.Api.Types/Configuration/ReservationsClientApiConfiguration.cs",
-      "reason": "Declared as a configuration property in ReservationsClientApiConfiguration class."
-    },
-    {
-      "key": "ReservationsClientApiConfiguration:EffectiveApiBaseUrl",
-      "sourceFile": "src/CommitmentsV2/SFA.DAS.ReservationsV2.Api.Types/Configuration/ReservationsClientApiConfiguration.cs",
-      "reason": "Indirectly derived from ApiBaseUrl and UseStub in ReservationsClientApiConfiguration class."
+      "reason": "Configuration property for API authentication client secret"
     },
     {
       "key": "ReservationsClientApiConfiguration:IdentifierUri",
       "sourceFile": "src/CommitmentsV2/SFA.DAS.ReservationsV2.Api.Types/Configuration/ReservationsClientApiConfiguration.cs",
-      "reason": "Declared as a configuration property in ReservationsClientApiConfiguration class."
+      "reason": "Configuration property for API identifier URI"
     },
     {
       "key": "ReservationsClientApiConfiguration:Tenant",
       "sourceFile": "src/CommitmentsV2/SFA.DAS.ReservationsV2.Api.Types/Configuration/ReservationsClientApiConfiguration.cs",
-      "reason": "Declared as a configuration property in ReservationsClientApiConfiguration class."
+      "reason": "Configuration property for API authentication tenant"
     },
     {
       "key": "ReservationsClientApiConfiguration:UseStub",
       "sourceFile": "src/CommitmentsV2/SFA.DAS.ReservationsV2.Api.Types/Configuration/ReservationsClientApiConfiguration.cs",
-      "reason": "Declared as a configuration property in ReservationsClientApiConfiguration class."
+      "reason": "Configuration property to toggle between stub and real API"
     },
     {
       "key": "RplSettingsConfiguration:MaximumTrainingTimeReduction",
       "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2/Configuration/RplSettingsConfiguration.cs",
-      "reason": "Property in a configuration class indicating the maximum training time reduction for RPL."
+      "reason": "Settings related to reduced training time."
     },
     {
       "key": "RplSettingsConfiguration:MinimumPriceReduction",
       "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2/Configuration/RplSettingsConfiguration.cs",
-      "reason": "Property in a configuration class indicating the minimum price reduction for RPL."
+      "reason": "Settings related to reduced prior learning pricing."
     },
     {
       "key": "StorageConnectionString",
       "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2/Configuration/CommitmentsV2Configuration.cs",
-      "reason": "Declared as a configuration property, likely for a storage service."
+      "reason": "Property StorageConnectionString suggests this configuration key is necessary for connecting to Azure Blob Storage."
     },
     {
       "key": "UseStubAccountApiClient",
       "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.Api/appsettings.Development.json",
-      "reason": "Key indicates whether to use a stub API client during development."
+      "reason": "Stubbed client configuration for development."
     },
     {
       "key": "UseStubAccountApiClient",
       "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.Api/appsettings.json",
-      "reason": "Key indicates whether to use a stub API client."
+      "reason": "Stubbed client configuration for production or default settings."
     },
     {
       "key": "UseStubAccountApiClient",
       "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.ExternalHandlers/appsettings.Development.json",
-      "reason": "Declared in appsettings file for Development environment"
+      "reason": "Key found for enabling stubbed Account API client."
     },
     {
       "key": "UseStubAccountApiClient",
       "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.ExternalHandlers/appsettings.json",
-      "reason": "Declared in base appsettings file"
+      "reason": "Key found for enabling stubbed Account API client."
     },
     {
       "key": "UseStubAccountApiClient",
       "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.MessageHandlers/appsettings.Development.json",
-      "reason": "Declared in appsettings file for Development environment"
+      "reason": "Key found in appsettings.Development.json for enabling stubbed Account API client."
     },
     {
       "key": "UseStubAccountApiClient",
       "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.MessageHandlers/appsettings.json",
-      "reason": "Key found in appsettings.json for toggling API client usage."
+      "reason": "Feature toggle for using a stub API client evidenced in appsettings.json."
     },
     {
       "key": "UseStubProviderRelationships",
       "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.Api/appsettings.Development.json",
-      "reason": "Key indicates whether to use a stub for provider relationships during development."
+      "reason": "Stubbed provider relationship configuration for development."
     },
     {
       "key": "UseStubProviderRelationships",
       "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.Api/appsettings.json",
-      "reason": "Key indicates whether to use a stub for provider relationships."
+      "reason": "Stubbed provider relationship configuration for production or default settings."
     },
     {
       "key": "UseStubProviderRelationships",
       "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2.MessageHandlers/appsettings.Development.json",
-      "reason": "Declared in appsettings file for Development environment"
+      "reason": "Key found in appsettings.Development.json for enabling stubbed Provider Relationships."
     },
     {
       "key": "ZenDeskEmailAddress",
       "sourceFile": "src/CommitmentsV2/SFA.DAS.CommitmentsV2/Configuration/CommitmentsV2Configuration.cs",
-      "reason": "Declared as a configuration property, likely for a support email address."
+      "reason": "Property ZenDeskEmailAddress indicates a required configuration for the helpdesk email setup."
     }
   ]
 }
