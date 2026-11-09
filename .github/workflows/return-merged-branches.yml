@@ -1,0 +1,61 @@
+name: Return merged feature branches to the default branch
+
+# A manifest node can scan a named "branch" (for example a feature branch whose work isn't on the
+# default branch yet). Once that branch is merged or deleted, this opens a pull request pointing the
+# node back at tree/<default branch>/<folder>, with its hash cleared so the next run rescans it.
+on:
+  schedule:
+    - cron: '0 7 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: return-merged-branches
+  cancel-in-progress: false
+
+jobs:
+  return:
+    runs-on: ubuntu-latest
+    env:
+      BRANCH: manifest/return-merged-branches
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Test the script
+        run: node --test .github/workflows/scripts/test/*.test.mjs
+
+      - name: Point merged branches back at the default branch
+        id: return
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          node .github/workflows/scripts/return-merged-branches.mjs manifest.json > "$RUNNER_TEMP/summary.md"
+          cat "$RUNNER_TEMP/summary.md"
+
+      - name: Open or update the pull request
+        run: |
+          if git diff --quiet -- manifest.json; then
+            echo "No feature branch in the manifest has been merged or deleted."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -c "$BRANCH"
+          git commit -m "Scan default branches again for merged feature branches" -- manifest.json
+          # One pull request at a time: a later run replaces its contents rather than opening another.
+          git push --force origin "$BRANCH"
+          if [ -n "$(gh pr list --head "$BRANCH" --state open --json number -q '.[].number')" ]; then
+            gh pr edit "$BRANCH" --body-file "$RUNNER_TEMP/summary.md"
+          else
+            gh pr create --base main --head "$BRANCH" \
+              --title "Scan default branches again for merged feature branches" \
+              --body-file "$RUNNER_TEMP/summary.md"
+          fi
