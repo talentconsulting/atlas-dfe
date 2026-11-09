@@ -1,14 +1,14 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Employer Vacancy Closure API",
+    "title": "Employer Vacancy Management API",
     "version": "1.0.0"
   },
   "paths": {
-    "/{EmployerAccountId}/{VacancyId}/close": {
+    "/accounts/{EmployerAccountId}/vacancies/{VacancyId}/close": {
       "get": {
-        "summary": "Get Close Vacancy Confirmation View",
-        "operationId": "getCloseVacancy",
+        "operationId": "CloseVacancy_Get",
+        "summary": "Get closure confirmation for a vacancy.",
         "parameters": [
           {
             "name": "EmployerAccountId",
@@ -30,16 +30,13 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful response"
-          },
-          "404": {
-            "description": "Not Found"
+            "description": "The closure confirmation view is returned."
           }
         }
       },
       "post": {
-        "summary": "Post Close Vacancy",
-        "operationId": "postCloseVacancy",
+        "operationId": "CloseVacancy_Post",
+        "summary": "Submit closure confirmation for a vacancy.",
         "parameters": [
           {
             "name": "EmployerAccountId",
@@ -70,14 +67,11 @@
           }
         },
         "responses": {
-          "200": {
-            "description": "Vacancy successfully closed"
+          "302": {
+            "description": "Redirects based on confirmation status or success."
           },
           "400": {
-            "description": "Validation error"
-          },
-          "404": {
-            "description": "Not Found"
+            "description": "Invalid request body."
           }
         }
       }
@@ -89,42 +83,28 @@
         "type": "object",
         "properties": {
           "EmployerAccountId": {
-            "type": "string",
-            "description": "The ID of the employer account"
+            "type": "string"
           },
           "VacancyId": {
             "type": "string",
-            "format": "uuid",
-            "description": "The ID of the vacancy"
+            "format": "uuid"
           }
-        },
-        "required": [
-          "EmployerAccountId",
-          "VacancyId"
-        ]
+        }
       },
       "CloseEditModel": {
         "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/VacancyRouteModel"
+          }
+        ],
         "properties": {
-          "EmployerAccountId": {
-            "type": "string",
-            "description": "The ID of the employer account"
-          },
-          "VacancyId": {
-            "type": "string",
-            "format": "uuid",
-            "description": "The ID of the vacancy"
-          },
           "ConfirmClose": {
             "type": "boolean",
             "nullable": true,
-            "description": "Confirmation to close the vacancy"
+            "description": "Indicates whether the user confirms vacancy closure."
           }
-        },
-        "required": [
-          "EmployerAccountId",
-          "VacancyId"
-        ]
+        }
       }
     }
   }

@@ -1,15 +1,14 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Employer Vacancy Management API",
-    "description": "API for managing employer job vacancies",
+    "title": "Dates API",
     "version": "1.0.0"
   },
   "paths": {
-    "/accounts/{EmployerAccountId}/vacancies/{VacancyId}/dates": {
+    "/{EmployerAccountId}/vacancies/{VacancyId}/dates": {
       "get": {
-        "summary": "Get Dates",
-        "operationId": "Dates_Get",
+        "operationId": "getDates",
+        "summary": "Get dates for a vacancy",
         "parameters": [
           {
             "name": "EmployerAccountId",
@@ -40,20 +39,16 @@
         ],
         "responses": {
           "200": {
-            "description": "Success - returns a view with the DatesViewModel.",
+            "description": "Successful operation",
             "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DatesViewModel"
-                }
-              }
+              "text/html": {}
             }
           }
         }
       },
       "post": {
-        "summary": "Post Dates",
-        "operationId": "Dates_Post",
+        "operationId": "postDates",
+        "summary": "Update dates for a vacancy",
         "parameters": [
           {
             "name": "EmployerAccountId",
@@ -93,16 +88,15 @@
         },
         "responses": {
           "200": {
-            "description": "Success - redirects based on the wizard parameter"
+            "description": "Operation completed successfully",
+            "content": {
+              "text/html": {}
+            }
           },
           "400": {
-            "description": "Bad Request - includes validation errors",
+            "description": "Validation error",
             "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DatesViewModel"
-                }
-              }
+              "application/json": {}
             }
           }
         }
@@ -111,40 +105,6 @@
   },
   "components": {
     "schemas": {
-      "DatesViewModel": {
-        "type": "object",
-        "properties": {
-          "PageInfo": {
-            "type": "object",
-            "additionalProperties": true
-          },
-          "CanShowTrainingErrorHint": {
-            "type": "boolean"
-          },
-          "SoftValidationErrors": {
-            "type": "object",
-            "properties": {
-              "Errors": {
-                "type": "array",
-                "items": {
-                  "type": "object",
-                  "properties": {
-                    "PropertyName": {
-                      "type": "string"
-                    },
-                    "ErrorMessage": {
-                      "type": "string"
-                    },
-                    "ErrorCode": {
-                      "type": "string"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
       "DatesEditModel": {
         "type": "object",
         "properties": {
@@ -165,9 +125,7 @@
             "type": "string"
           },
           "ClosingDate": {
-            "type": "string",
-            "nullable": true,
-            "description": "Formatted as dd/MM/yyyy if valid, otherwise null."
+            "type": "string"
           },
           "StartDay": {
             "type": "string"
@@ -179,11 +137,29 @@
             "type": "string"
           },
           "StartDate": {
-            "type": "string",
-            "nullable": true,
-            "description": "Formatted as dd/MM/yyyy if valid, otherwise null."
+            "type": "string"
           }
-        }
+        },
+        "required": [
+          "EmployerAccountId",
+          "VacancyId"
+        ]
+      },
+      "VacancyRouteModel": {
+        "type": "object",
+        "properties": {
+          "EmployerAccountId": {
+            "type": "string"
+          },
+          "VacancyId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "EmployerAccountId",
+          "VacancyId"
+        ]
       }
     }
   }

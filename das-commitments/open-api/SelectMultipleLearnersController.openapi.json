@@ -1,15 +1,15 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "SelectMultipleLearners API",
+    "title": "Select Multiple Learners API",
+    "description": "API to handle validation for selecting multiple learners.",
     "version": "1.0.0"
   },
   "paths": {
     "/api/{providerId}/selectmultiplelearners/validate": {
       "post": {
-        "summary": "Validate Select Multiple Learners",
-        "description": "Validates the request for selecting multiple learners.",
-        "operationId": "validateSelectMultipleLearners",
+        "summary": "Validate select multiple learners request",
+        "operationId": "validateSelectMultipleLearnersRequest",
         "parameters": [
           {
             "name": "providerId",
@@ -17,9 +17,9 @@
             "required": true,
             "schema": {
               "type": "integer",
-              "format": "int64",
-              "example": 12345
-            }
+              "format": "int64"
+            },
+            "description": "The ID of the provider."
           }
         ],
         "requestBody": {
@@ -34,25 +34,17 @@
         },
         "responses": {
           "200": {
-            "description": "Validation Result",
+            "description": "Validation result",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "example": {}
+                  "additionalProperties": true
                 }
               }
             }
-          },
-          "default": {
-            "description": "Unexpected error"
           }
-        },
-        "security": [
-          {
-            "BearerAuth": []
-          }
-        ]
+        }
       }
     }
   },
@@ -63,8 +55,7 @@
         "properties": {
           "ProviderId": {
             "type": "integer",
-            "format": "int64",
-            "example": 12345
+            "format": "int64"
           },
           "CsvRecords": {
             "type": "array",
@@ -87,19 +78,44 @@
           }
         }
       },
+      "BulkReservationValidationResults": {
+        "type": "object",
+        "properties": {
+          "ValidationErrors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BulkReservationValidation"
+            }
+          }
+        }
+      },
+      "BulkReservationValidation": {
+        "type": "object",
+        "properties": {
+          "Reason": {
+            "type": "string"
+          },
+          "RowNumber": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
       "BulkUploadAddDraftApprenticeshipRequest": {
         "type": "object",
         "properties": {
           "LegalEntityId": {
             "type": "integer",
-            "nullable": true
+            "nullable": true,
+            "format": "int64"
           },
           "AgreementId": {
             "type": "string"
           },
           "CohortId": {
             "type": "integer",
-            "nullable": true
+            "nullable": true,
+            "format": "int64"
           },
           "CohortRef": {
             "type": "string"
@@ -108,7 +124,8 @@
             "type": "string"
           },
           "ProviderId": {
-            "type": "integer"
+            "type": "integer",
+            "format": "int64"
           },
           "CourseCode": {
             "type": "string"
@@ -150,7 +167,8 @@
             "type": "string"
           },
           "RowNumber": {
-            "type": "integer"
+            "type": "integer",
+            "format": "int32"
           },
           "CostAsString": {
             "type": "string"
@@ -178,18 +196,23 @@
           },
           "MinimumAgeAtApprenticeshipStart": {
             "type": "integer",
-            "nullable": true
+            "nullable": true,
+            "format": "int32"
           },
           "MaximumAgeAtApprenticeshipStart": {
-            "type": "integer"
+            "type": "integer",
+            "nullable": true,
+            "format": "int32"
           },
           "TrainingPrice": {
             "type": "integer",
-            "nullable": true
+            "nullable": true,
+            "format": "int32"
           },
           "EndPointAssessmentPrice": {
             "type": "integer",
-            "nullable": true
+            "nullable": true,
+            "format": "int32"
           },
           "ActualStartDate": {
             "type": "string",
@@ -198,29 +221,8 @@
           },
           "LearnerDataId": {
             "type": "integer",
-            "nullable": true
-          }
-        }
-      },
-      "BulkReservationValidationResults": {
-        "type": "object",
-        "properties": {
-          "ValidationErrors": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/BulkReservationValidation"
-            }
-          }
-        }
-      },
-      "BulkReservationValidation": {
-        "type": "object",
-        "properties": {
-          "Reason": {
-            "type": "string"
-          },
-          "RowNumber": {
-            "type": "integer"
+            "nullable": true,
+            "format": "int64"
           }
         }
       },
@@ -249,31 +251,10 @@
           },
           "Level": {
             "type": "integer",
-            "nullable": true
+            "nullable": true,
+            "format": "int32"
           }
         }
-      },
-      "UserInfo": {
-        "type": "object",
-        "properties": {
-          "UserId": {
-            "type": "string"
-          },
-          "UserDisplayName": {
-            "type": "string"
-          },
-          "UserEmail": {
-            "type": "string",
-            "format": "email"
-          }
-        }
-      }
-    },
-    "securitySchemes": {
-      "BearerAuth": {
-        "type": "http",
-        "scheme": "bearer",
-        "bearerFormat": "JWT"
       }
     }
   }

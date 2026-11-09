@@ -2,20 +2,14 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Employer Finance API",
-    "description": "API for managing employer finance-related operations like transfer staging.",
     "version": "1.0.0"
   },
   "paths": {
     "/api/transfers/staging": {
       "post": {
-        "summary": "Stage Transfers",
-        "description": "Stages transfers using the provided payload.",
+        "summary": "Stage transfers",
+        "description": "Stages transfers for employer accounts.",
         "operationId": "StageTransfers",
-        "security": [
-          {
-            "ReadAllEmployerAccountBalances": []
-          }
-        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -28,26 +22,17 @@
         },
         "responses": {
           "400": {
-            "description": "Bad Request. The request is invalid or contains validation errors.",
+            "description": "Bad request",
             "content": {
               "application/json": {
-                "examples": {
-                  "InvalidPayload": {
-                    "value": "Transfers payload is required."
-                  },
-                  "ValidationErrors": {
-                    "value": {
-                      "validationErrors": [
-                        "TransferId must be greater than zero."
-                      ]
-                    }
-                  }
+                "example": {
+                  "message": "Transfers payload is required."
                 }
               }
             }
           },
           "409": {
-            "description": "Conflict. Conflicting transfer IDs exist.",
+            "description": "Conflict",
             "content": {
               "application/json": {
                 "schema": {
@@ -56,29 +41,32 @@
                     "transferIds": {
                       "type": "array",
                       "items": {
-                        "type": "integer",
-                        "format": "int64"
+                        "type": "integer"
                       }
                     }
                   }
+                },
+                "example": {
+                  "transferIds": [
+                    12345,
+                    67890
+                  ]
                 }
               }
             }
           },
           "500": {
-            "description": "An unexpected error occurred while staging transfers.",
+            "description": "Internal server error",
             "content": {
-              "text/plain": {
-                "examples": {
-                  "InternalServerError": {
-                    "value": "An unexpected error occurred while staging transfers."
-                  }
+              "application/json": {
+                "example": {
+                  "message": "An unexpected error occurred while staging transfers."
                 }
               }
             }
           },
           "201": {
-            "description": "Created. Transfers were successfully staged.",
+            "description": "Created",
             "content": {
               "application/json": {
                 "schema": {
@@ -90,33 +78,36 @@
                     "transferIds": {
                       "type": "array",
                       "items": {
-                        "type": "integer",
-                        "format": "int64"
+                        "type": "integer"
                       }
                     }
                   }
+                },
+                "example": {
+                  "insertedCount": 5,
+                  "transferIds": [
+                    12345,
+                    67890
+                  ]
                 }
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "ApiRoles.ReadAllEmployerAccountBalances": []
+          }
+        ]
       }
     }
   },
   "components": {
-    "securitySchemes": {
-      "ReadAllEmployerAccountBalances": {
-        "type": "apiKey",
-        "name": "Authorization",
-        "in": "header",
-        "description": "Authorization using the 'ReadAllEmployerAccountBalances' policy."
-      }
-    },
     "schemas": {
       "StageTransfersRequest": {
         "type": "object",
         "properties": {
-          "Transfers": {
+          "transfers": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/TransferStaging"
@@ -124,92 +115,106 @@
           }
         },
         "required": [
-          "Transfers"
+          "transfers"
         ]
       },
       "TransferStaging": {
         "type": "object",
         "properties": {
-          "TransferId": {
+          "transferId": {
             "type": "integer",
             "format": "int64"
           },
-          "SenderAccountId": {
+          "senderAccountId": {
             "type": "integer",
             "format": "int64"
           },
-          "SenderAccountName": {
+          "senderAccountName": {
             "type": "string"
           },
-          "ReceiverAccountId": {
+          "receiverAccountId": {
             "type": "integer",
             "format": "int64"
           },
-          "ReceiverAccountName": {
+          "receiverAccountName": {
             "type": "string"
           },
-          "Amount": {
+          "amount": {
             "type": "number",
             "format": "decimal"
           },
-          "TransferDate": {
+          "transferDate": {
             "type": "string",
             "format": "date-time"
           },
-          "PeriodEnd": {
+          "periodEnd": {
             "type": "string"
           },
-          "CollectionPeriodMonth": {
+          "collectionPeriodMonth": {
             "type": "integer"
           },
-          "CollectionPeriodYear": {
+          "collectionPeriodYear": {
             "type": "integer"
           },
-          "Ukprn": {
+          "ukprn": {
             "type": "integer",
             "format": "int64"
           },
-          "CourseName": {
+          "courseName": {
             "type": "string"
           },
-          "CourseLevel": {
+          "courseLevel": {
             "type": "integer",
             "nullable": true
           },
-          "LearningType": {
+          "learningType": {
             "type": "string"
           },
-          "ApprenticeshipId": {
+          "apprenticeshipId": {
             "type": "integer",
             "format": "int64"
           },
-          "Type": {
+          "type": {
             "type": "string"
           },
-          "RequiredPaymentId": {
+          "requiredPaymentId": {
             "type": "string",
             "format": "uuid"
           },
-          "CreatedBy": {
+          "createdBy": {
             "type": "string"
           },
-          "CorrelationId": {
+          "correlationId": {
             "type": "string"
           }
         },
         "required": [
-          "TransferId",
-          "SenderAccountId",
-          "ReceiverAccountId",
-          "Amount",
-          "TransferDate",
-          "PeriodEnd",
-          "CollectionPeriodMonth",
-          "CollectionPeriodYear",
-          "Ukprn",
-          "ApprenticeshipId",
-          "RequiredPaymentId"
+          "transferId",
+          "senderAccountId",
+          "senderAccountName",
+          "receiverAccountId",
+          "receiverAccountName",
+          "amount",
+          "transferDate",
+          "periodEnd",
+          "collectionPeriodMonth",
+          "collectionPeriodYear",
+          "ukprn",
+          "courseName",
+          "learningType",
+          "apprenticeshipId",
+          "type",
+          "requiredPaymentId",
+          "createdBy",
+          "correlationId"
         ]
+      }
+    },
+    "securitySchemes": {
+      "ApiRoles.ReadAllEmployerAccountBalances": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
       }
     }
   }

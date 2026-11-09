@@ -1,0 +1,364 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Certificate Management API",
+    "version": "1.0.0",
+    "description": "API for managing certificate deletion and related workflows."
+  },
+  "paths": {
+    "/confirm-delete-certificate": {
+      "get": {
+        "operationId": "ConfirmAndSubmitGet",
+        "summary": "Load confirmation page for certificate deletion.",
+        "parameters": [
+          {
+            "name": "CertificateId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "Page",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "SearchString",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "IsDeleteConfirmed",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "IncidentNumber",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ReasonForChange",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns the confirmation page.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CertificateSubmitDeleteViewModel"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "ConfirmAndSubmitPost",
+        "summary": "Handle certificate deletion confirmation.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CertificateSubmitDeleteViewModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Redirects based on user confirmation."
+          }
+        }
+      }
+    },
+    "/audit-details": {
+      "get": {
+        "operationId": "AuditDetailsGet",
+        "summary": "Load audit details for certificate deletion.",
+        "parameters": [
+          {
+            "name": "CertificateId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "ReasonForChange",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "IncidentNumber",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "IsDeleteConfirmed",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns audit details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CertificateAuditDetailsViewModel"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "AuditDetailsPost",
+        "summary": "Submit audit details for certificate deletion.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CertificateAuditDetailsViewModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Redirects to confirmation page."
+          }
+        }
+      }
+    },
+    "/check-your-answers": {
+      "get": {
+        "operationId": "ConfirmDeleteGet",
+        "summary": "Load confirmation page for certificate details.",
+        "parameters": [
+          {
+            "name": "CertificateId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "ReasonForChange",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "IncidentNumber",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "IsDeleteConfirmed",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns the confirmation page.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CertificateConfirmDeleteViewModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/successfully-deleted-this-certificate": {
+      "post": {
+        "operationId": "SuccessfulDeletePost",
+        "summary": "Handle successful certificate deletion.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CertificateConfirmDeleteViewModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Displays the successful deletion page.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CertificateConfirmDeleteViewModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CertificateDeleteViewModel": {
+        "type": "object",
+        "properties": {
+          "CertificateId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "ReasonForChange": {
+            "type": "string"
+          },
+          "IncidentNumber": {
+            "type": "string"
+          },
+          "IsDeleteConfirmed": {
+            "type": "boolean"
+          },
+          "SearchString": {
+            "type": "string"
+          },
+          "Page": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "CertificateId"
+        ]
+      },
+      "CertificateSubmitDeleteViewModel": {
+        "type": "object",
+        "properties": {
+          "Uln": {
+            "type": "integer"
+          },
+          "CertificateReference": {
+            "type": "string"
+          },
+          "IsDeleteConfirmed": {
+            "type": "boolean"
+          },
+          "SearchString": {
+            "type": "string"
+          },
+          "Page": {
+            "type": "integer"
+          },
+          "IncidentNumber": {
+            "type": "string"
+          },
+          "ReasonForChange": {
+            "type": "string"
+          },
+          "Id": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "Id"
+        ]
+      },
+      "CertificateAuditDetailsViewModel": {
+        "type": "object",
+        "properties": {
+          "Uln": {
+            "type": "integer"
+          },
+          "CertificateReference": {
+            "type": "string"
+          },
+          "IncidentNumber": {
+            "type": "string"
+          },
+          "IsDeleteConfirmed": {
+            "type": "boolean"
+          },
+          "Id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "ReasonForChange": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "Id"
+        ]
+      },
+      "CertificateConfirmDeleteViewModel": {
+        "type": "object",
+        "properties": {
+          "Uln": {
+            "type": "integer"
+          },
+          "CertificateReference": {
+            "type": "string"
+          },
+          "IncidentNumber": {
+            "type": "string"
+          },
+          "IsDeleteConfirmed": {
+            "type": "boolean"
+          },
+          "ReasonForChange": {
+            "type": "string"
+          },
+          "StandardCode": {
+            "type": "integer"
+          },
+          "Username": {
+            "type": "string"
+          },
+          "Id": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "Id"
+        ]
+      }
+    }
+  }
+}

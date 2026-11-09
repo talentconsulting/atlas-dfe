@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Approvals API",
-    "version": "1.0.0"
+    "version": "v1"
   },
   "paths": {
     "/approvals/{learningKey}": {
@@ -10,7 +10,9 @@
         "tags": [
           "Approvals"
         ],
-        "summary": "Update approvals for a specific learning key.",
+        "summary": "Update Approval Information",
+        "description": "Updates approval-related data for a given learning key.",
+        "operationId": "PutApprovals",
         "parameters": [
           {
             "name": "learningKey",
@@ -20,7 +22,7 @@
               "type": "string",
               "format": "uuid"
             },
-            "description": "The unique identifier for the learning key."
+            "description": "The unique identifier for the learning data."
           }
         ],
         "requestBody": {
@@ -35,7 +37,17 @@
         },
         "responses": {
           "200": {
-            "description": "Approvals updated successfully.",
+            "description": "Changes successfully processed and approval request canceled.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PutApprovalsResponse"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Changes successfully processed and new approval request created.",
             "content": {
               "application/json": {
                 "schema": {
@@ -45,26 +57,12 @@
             }
           },
           "400": {
-            "description": "Invalid LearningKey or request body.",
+            "description": "Mismatch between route and body learning key or other bad request.",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "201": {
-            "description": "Approvals created successfully.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PutApprovalsResponse"
+                  "type": "string",
+                  "example": "LearningKey in route does not match LearningKey in body"
                 }
               }
             }
@@ -74,12 +72,8 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string"
-                    }
-                  }
+                  "type": "string",
+                  "example": "An unexpected error occurred."
                 }
               }
             }
@@ -96,7 +90,7 @@
           "LearningKey": {
             "type": "string",
             "format": "uuid",
-            "description": "The unique identifier for the learning key."
+            "description": "Unique identifier for the learning."
           },
           "ApprenticeshipId": {
             "type": "integer",
@@ -105,7 +99,7 @@
           },
           "LearningType": {
             "type": "string",
-            "description": "Type of learning associated with the approval."
+            "description": "Type of learning."
           },
           "UKPRN": {
             "type": "string",
@@ -117,19 +111,21 @@
           },
           "ApprovedUri": {
             "type": "string",
-            "description": "URI used for the approval process."
+            "description": "URI for approved learning data."
           },
           "Changes": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/CocApprovalFieldChange"
-            }
+            },
+            "description": "List of field changes for the approval."
           },
           "NewPrices": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/PriceRecord"
-            }
+            },
+            "description": "New pricing records."
           }
         },
         "required": [
@@ -142,10 +138,11 @@
         "properties": {
           "ChangeType": {
             "type": "string",
-            "description": "Type of change in the field."
+            "description": "The type of change."
           },
           "Data": {
-            "$ref": "#/components/schemas/CocData"
+            "$ref": "#/components/schemas/CocData",
+            "description": "Old and new data regarding the change."
           }
         }
       },
@@ -154,11 +151,11 @@
         "properties": {
           "Old": {
             "type": "string",
-            "description": "Previous value."
+            "description": "The old value."
           },
           "New": {
             "type": "string",
-            "description": "Updated value."
+            "description": "The new value."
           }
         }
       },
@@ -168,17 +165,17 @@
           "TrainingPrice": {
             "type": "number",
             "format": "decimal",
-            "description": "Price for training."
+            "description": "The training price."
           },
           "AssessmentPrice": {
             "type": "number",
             "format": "decimal",
-            "description": "Price for assessment."
+            "description": "The assessment price."
           },
           "EffectiveFrom": {
             "type": "string",
             "format": "date-time",
-            "description": "Start date for the price record."
+            "description": "Effective starting date for the pricing."
           }
         }
       },
@@ -189,13 +186,15 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/ApprovalFieldChange"
-            }
+            },
+            "description": "Mapped changes after processing."
           },
           "NewPrices": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/PriceRecord"
-            }
+            },
+            "description": "New pricing records after processing."
           }
         }
       },
@@ -208,14 +207,15 @@
           },
           "ApprovalStatus": {
             "type": "string",
-            "description": "Approval status of the change."
+            "description": "The status of the approval."
           },
           "Reason": {
             "type": "string",
-            "description": "Reason for approval or denial."
+            "description": "Reason for the change."
           },
           "Data": {
-            "$ref": "#/components/schemas/CocData"
+            "$ref": "#/components/schemas/CocData",
+            "description": "Data associated with the change."
           }
         }
       }

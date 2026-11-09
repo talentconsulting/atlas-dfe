@@ -1,14 +1,15 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Duration API",
-    "version": "1.0.0"
+    "title": "DurationController API",
+    "version": "1.0.0",
+    "description": "API endpoints for managing Duration."
   },
   "paths": {
-    "/{EmployerAccountId}/vacancies/{VacancyId}/duration": {
+    "/accounts/{EmployerAccountId}/vacancies/{VacancyId}/duration": {
       "get": {
         "operationId": "GetDuration",
-        "summary": "Get duration view",
+        "summary": "Retrieve the duration view model for a vacancy.",
         "parameters": [
           {
             "name": "EmployerAccountId",
@@ -16,7 +17,8 @@
             "required": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Unique identifier for the employer account."
           },
           {
             "name": "VacancyId",
@@ -25,7 +27,8 @@
             "schema": {
               "type": "string",
               "format": "uuid"
-            }
+            },
+            "description": "Unique identifier for the vacancy."
           },
           {
             "name": "wizard",
@@ -33,18 +36,22 @@
             "schema": {
               "type": "string",
               "default": "true"
-            }
+            },
+            "description": "Controls the presentation mode of the duration wizard."
           }
         ],
         "responses": {
           "200": {
-            "description": "Duration view retrieved"
+            "description": "The duration view model retrieved successfully.",
+            "content": {
+              "text/html": {}
+            }
           }
         }
       },
       "post": {
         "operationId": "PostDuration",
-        "summary": "Submit duration",
+        "summary": "Submit the duration edit model for a vacancy.",
         "parameters": [
           {
             "name": "EmployerAccountId",
@@ -52,7 +59,8 @@
             "required": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Unique identifier for the employer account."
           },
           {
             "name": "VacancyId",
@@ -61,15 +69,16 @@
             "schema": {
               "type": "string",
               "format": "uuid"
-            }
+            },
+            "description": "Unique identifier for the vacancy."
           },
           {
             "name": "wizard",
             "in": "query",
-            "required": true,
             "schema": {
               "type": "boolean"
-            }
+            },
+            "description": "Indicates whether the user is completing the wizard flow."
           }
         ],
         "requestBody": {
@@ -84,10 +93,10 @@
         },
         "responses": {
           "200": {
-            "description": "Duration submitted successfully"
-          },
-          "400": {
-            "description": "Validation errors occurred"
+            "description": "Redirects to the next page based on wizard completion or validation errors.",
+            "content": {
+              "text/html": {}
+            }
           }
         }
       }
@@ -99,16 +108,17 @@
         "type": "object",
         "properties": {
           "EmployerAccountId": {
-            "type": "string"
+            "type": "string",
+            "description": "Unique identifier for the employer account."
           },
           "VacancyId": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "description": "Unique identifier for the vacancy."
           },
           "Duration": {
             "type": "string",
-            "description": "The duration of the vacancy",
-            "example": "12"
+            "description": "Expected duration in units."
           },
           "DurationUnit": {
             "type": "string",
@@ -117,23 +127,20 @@
               "Month",
               "Year"
             ],
-            "description": "The unit of the duration"
+            "description": "Unit for the duration."
           },
           "WorkingWeekDescription": {
             "type": "string",
-            "description": "Description of the working week",
-            "example": "Monday to Friday, 9am to 5pm"
+            "description": "Description of the working week."
           },
           "WeeklyHours": {
             "type": "string",
-            "description": "Hours worked per week",
-            "example": "37.5"
+            "description": "Hours per week as a decimal value."
           }
         },
         "required": [
           "EmployerAccountId",
-          "VacancyId",
-          "Duration"
+          "VacancyId"
         ]
       }
     }

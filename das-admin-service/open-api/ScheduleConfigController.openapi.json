@@ -1,0 +1,365 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Schedule Configuration API",
+    "version": "1.0.0",
+    "description": "API for managing schedule configurations."
+  },
+  "paths": {
+    "/ScheduleConfig": {
+      "get": {
+        "operationId": "GetScheduleConfigIndex",
+        "summary": "Retrieve all schedule configurations for Print Run.",
+        "responses": {
+          "200": {
+            "description": "List of schedule configurations.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ScheduleConfigViewModel"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "role-based-auth": [
+              "OperationsTeam",
+              "CertificationTeam"
+            ]
+          }
+        ]
+      }
+    },
+    "/ScheduleConfig/Delete/{scheduleRunId}": {
+      "get": {
+        "operationId": "GetScheduleConfigDelete",
+        "summary": "Retrieve a specific schedule configuration by ID for deletion confirmation.",
+        "parameters": [
+          {
+            "name": "scheduleRunId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Details of the schedule configuration to be deleted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScheduleConfigViewModel"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "role-based-auth": [
+              "OperationsTeam",
+              "CertificationTeam"
+            ]
+          }
+        ]
+      },
+      "post": {
+        "operationId": "PostScheduleConfigDelete",
+        "summary": "Delete a specific schedule configuration.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ScheduleConfigViewModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "302": {
+            "description": "Redirected to the index page."
+          }
+        },
+        "security": [
+          {
+            "role-based-auth": [
+              "OperationsTeam",
+              "CertificationTeam"
+            ]
+          }
+        ]
+      }
+    },
+    "/ScheduleConfig/Create": {
+      "get": {
+        "operationId": "GetScheduleConfigCreate",
+        "summary": "Retrieve a default view model for creating a new schedule configuration.",
+        "responses": {
+          "200": {
+            "description": "A default view model for schedule creation.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScheduleConfigViewModel"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "role-based-auth": [
+              "OperationsTeam",
+              "CertificationTeam"
+            ]
+          }
+        ]
+      },
+      "post": {
+        "operationId": "PostScheduleConfigCreate",
+        "summary": "Create a new schedule configuration.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ScheduleConfigViewModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "302": {
+            "description": "Redirected to the index page."
+          }
+        },
+        "security": [
+          {
+            "role-based-auth": [
+              "OperationsTeam",
+              "CertificationTeam"
+            ]
+          }
+        ]
+      }
+    },
+    "/ScheduleConfig/RunNow/{scheduleType}": {
+      "get": {
+        "operationId": "GetScheduleConfigRunNow",
+        "summary": "Retrieve a view model for running a schedule configuration immediately.",
+        "parameters": [
+          {
+            "name": "scheduleType",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A view model for running a schedule immediately.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScheduleConfigViewModel"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "role-based-auth": [
+              "OperationsTeam",
+              "CertificationTeam"
+            ]
+          }
+        ]
+      },
+      "post": {
+        "operationId": "PostScheduleConfigRunNow",
+        "summary": "Run a schedule configuration immediately.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ScheduleConfigViewModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "302": {
+            "description": "Redirected to the index page."
+          }
+        },
+        "security": [
+          {
+            "role-based-auth": [
+              "OperationsTeam",
+              "CertificationTeam"
+            ]
+          }
+        ]
+      }
+    },
+    "/ScheduleConfig/Restart/{scheduleRunId}": {
+      "get": {
+        "operationId": "GetScheduleConfigRestart",
+        "summary": "Retrieve a view model for restarting a schedule configuration.",
+        "parameters": [
+          {
+            "name": "scheduleRunId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A view model for restarting a schedule.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScheduleConfigViewModel"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "role-based-auth": [
+              "OperationsTeam",
+              "CertificationTeam"
+            ]
+          }
+        ]
+      },
+      "post": {
+        "operationId": "PostScheduleConfigRestart",
+        "summary": "Restart a schedule configuration.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ScheduleConfigViewModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "302": {
+            "description": "Redirected to the index page."
+          }
+        },
+        "security": [
+          {
+            "role-based-auth": [
+              "OperationsTeam",
+              "CertificationTeam"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ScheduleConfigViewModel": {
+        "type": "object",
+        "properties": {
+          "Id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "RunTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "Interval": {
+            "type": "string"
+          },
+          "ScheduleInterval": {
+            "$ref": "#/components/schemas/ScheduleInterval"
+          },
+          "IsRecurring": {
+            "type": "boolean"
+          },
+          "ScheduleType": {
+            "$ref": "#/components/schemas/ScheduleJobType"
+          },
+          "Date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "Day": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 31
+          },
+          "Month": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 12
+          },
+          "Year": {
+            "type": "integer",
+            "minimum": 2018,
+            "maximum": 9999
+          },
+          "Hour": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 23
+          },
+          "Minute": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 59
+          },
+          "LastRunStatus": {
+            "type": "string"
+          }
+        }
+      },
+      "ScheduleInterval": {
+        "type": "string",
+        "enum": [
+          "Hourly",
+          "Daily",
+          "Weekly"
+        ]
+      },
+      "ScheduleJobType": {
+        "type": "string",
+        "enum": [
+          "PrintRun"
+        ]
+      }
+    },
+    "securitySchemes": {
+      "role-based-auth": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "Bearer token-based authorization for specific roles."
+      }
+    }
+  }
+}

@@ -1,0 +1,501 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "SearchController API",
+    "version": "1.0.0",
+    "description": "API endpoints for performing various search operations, managing certificates, frameworks, and learner details."
+  },
+  "paths": {
+    "/Index": {
+      "get": {
+        "operationId": "getIndex",
+        "summary": "Render the main search page.",
+        "parameters": [
+          {
+            "name": "vm",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/SearchInputViewModel"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "HTML view for search input page."
+          }
+        }
+      }
+    },
+    "/Results": {
+      "get": {
+        "operationId": "getResults",
+        "summary": "Search and display results based on the input model.",
+        "parameters": [
+          {
+            "name": "vm",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/SearchInputViewModel"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "HTML view for displaying search results."
+          },
+          "302": {
+            "description": "Redirection to other pages depending on search type and result count."
+          }
+        }
+      }
+    },
+    "/learner-details": {
+      "get": {
+        "operationId": "getLearnerDetails",
+        "summary": "Fetch and display learner details.",
+        "parameters": [
+          {
+            "name": "stdCode",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "uln",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "searchString",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          },
+          {
+            "name": "allLogs",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          },
+          {
+            "name": "batchNumber",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "returnUrl",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "HTML view for displaying learner details."
+          }
+        }
+      }
+    },
+    "/FrameworkMultipleResults": {
+      "get": {
+        "operationId": "getFrameworkMultipleResults",
+        "summary": "Show multiple framework search results.",
+        "responses": {
+          "200": {
+            "description": "HTML view for multiple framework search results."
+          },
+          "302": {
+            "description": "Redirects to the Index page if there's no session data available."
+          }
+        }
+      }
+    },
+    "/FrameworkNoResults": {
+      "get": {
+        "operationId": "getFrameworkNoResults",
+        "summary": "Render no results page for framework search.",
+        "parameters": [
+          {
+            "name": "viewModel",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/FrameworkNoResultsViewModel"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "HTML view for framework no results page."
+          }
+        }
+      }
+    },
+    "/SelectFrameworkLearner": {
+      "post": {
+        "operationId": "postSelectFrameworkLearner",
+        "summary": "Select a specific framework learner from search results.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FrameworkMultipleResultsViewModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "302": {
+            "description": "Redirection based on the selection."
+          }
+        }
+      }
+    },
+    "/FrameworkLearnerDetails": {
+      "get": {
+        "operationId": "getFrameworkLearnerDetails",
+        "summary": "Display details of a specific framework learner.",
+        "parameters": [
+          {
+            "name": "frameworkLearnerId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "batchNumber",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "allLogs",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "returnUrl",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "HTML view for framework learner details."
+          }
+        }
+      }
+    },
+    "/FrameworkReprintReason": {
+      "get": {
+        "operationId": "getFrameworkReprintReason",
+        "summary": "Display reasons for framework certificate reprint.",
+        "parameters": [
+          {
+            "name": "backToCheckAnswers",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "HTML view for selecting framework reprint reason."
+          }
+        }
+      },
+      "post": {
+        "operationId": "postFrameworkReprintReason",
+        "summary": "Submit certificate reprint reason.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FrameworkReprintReasonViewModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "302": {
+            "description": "Redirection to further reprint steps or back to the input form."
+          }
+        }
+      }
+    },
+    "/FrameworkReprintAddress": {
+      "get": {
+        "operationId": "getFrameworkReprintAddress",
+        "summary": "Display address input page for framework certificate reprint.",
+        "parameters": [
+          {
+            "name": "backToCheckAnswers",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "HTML view for entering framework reprint address."
+          }
+        }
+      },
+      "post": {
+        "operationId": "postFrameworkReprintAddress",
+        "summary": "Submit framework certificate reprint address.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FrameworkReprintAddressViewModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "302": {
+            "description": "Redirection after submitting address information."
+          }
+        }
+      }
+    },
+    "/FrameworkReprintCheckDetails": {
+      "get": {
+        "operationId": "getFrameworkReprintCheckDetails",
+        "summary": "Display certificate reprint confirmation details.",
+        "responses": {
+          "200": {
+            "description": "HTML view confirming reprint details."
+          }
+        }
+      }
+    },
+    "/FrameworkReprintSubmit": {
+      "post": {
+        "operationId": "postFrameworkReprintSubmit",
+        "summary": "Submit the reprint request for framework certificates.",
+        "responses": {
+          "302": {
+            "description": "Redirection to submitted confirmation page."
+          }
+        }
+      }
+    },
+    "/FrameworkReprintSubmitted": {
+      "get": {
+        "operationId": "getFrameworkReprintSubmitted",
+        "summary": "Display confirmation of framework certificate reprint submission.",
+        "responses": {
+          "200": {
+            "description": "HTML view for reprint submission confirmation page."
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "SearchInputViewModel": {
+        "type": "object",
+        "properties": {
+          "SearchString": {
+            "type": "string"
+          },
+          "FirstName": {
+            "type": "string"
+          },
+          "LastName": {
+            "type": "string"
+          },
+          "Day": {
+            "type": "string"
+          },
+          "Month": {
+            "type": "string"
+          },
+          "Year": {
+            "type": "string"
+          },
+          "Date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "SearchType": {
+            "type": "string"
+          }
+        }
+      },
+      "FrameworkMultipleResultsViewModel": {
+        "type": "object",
+        "properties": {
+          "FirstName": {
+            "type": "string"
+          },
+          "LastName": {
+            "type": "string"
+          },
+          "DateOfBirth": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "FrameworkResults": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FrameworkResultViewModel"
+            }
+          },
+          "SelectedResult": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      },
+      "FrameworkNoResultsViewModel": {
+        "type": "object",
+        "properties": {
+          "FirstName": {
+            "type": "string"
+          },
+          "LastName": {
+            "type": "string"
+          },
+          "DateOfBirth": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "FrameworkReprintReasonViewModel": {
+        "type": "object",
+        "properties": {
+          "CertificateReference": {
+            "type": "string"
+          },
+          "TicketNumber": {
+            "type": "string"
+          },
+          "SelectedReprintReasons": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "OtherReason": {
+            "type": "string"
+          },
+          "BackToCheckAnswers": {
+            "type": "boolean"
+          },
+          "BackAction": {
+            "type": "string"
+          }
+        }
+      },
+      "FrameworkReprintAddressViewModel": {
+        "type": "object",
+        "properties": {
+          "AddressLine1": {
+            "type": "string"
+          },
+          "AddressLine2": {
+            "type": "string"
+          },
+          "TownOrCity": {
+            "type": "string"
+          },
+          "County": {
+            "type": "string"
+          },
+          "Postcode": {
+            "type": "string"
+          },
+          "BackAction": {
+            "type": "string"
+          }
+        }
+      },
+      "FrameworkReprintSubmittedViewModel": {
+        "type": "object",
+        "properties": {
+          "PrintRunDate": {
+            "type": "string"
+          }
+        }
+      },
+      "FrameworkResultViewModel": {
+        "type": "object",
+        "properties": {
+          "Id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "FrameworkName": {
+            "type": "string"
+          },
+          "ApprenticeshipLevelName": {
+            "type": "string"
+          },
+          "CertificationYear": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

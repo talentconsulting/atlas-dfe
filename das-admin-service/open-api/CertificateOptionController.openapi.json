@@ -1,0 +1,106 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Certificate Option API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/Option/{certificateId}": {
+      "get": {
+        "summary": "Get certificate options",
+        "parameters": [
+          {
+            "name": "certificateId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "The ID of the certificate."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved the certificate option view model.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CertificateOptionViewModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Certificate not found."
+          },
+          "500": {
+            "description": "Internal server error."
+          }
+        }
+      }
+    },
+    "/Option": {
+      "post": {
+        "summary": "Update certificate options",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CertificateOptionViewModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Successfully updated the certificate options."
+          },
+          "400": {
+            "description": "Invalid input data."
+          },
+          "500": {
+            "description": "Internal server error."
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CertificateOptionViewModel": {
+        "type": "object",
+        "properties": {
+          "Id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Certificate ID."
+          },
+          "HasAdditionalLearningOption": {
+            "type": "boolean",
+            "description": "Indicates if additional learning options are available."
+          },
+          "Option": {
+            "type": "string",
+            "description": "The course option for the certificate."
+          },
+          "SelectedOption": {
+            "type": "string",
+            "description": "The selected course option for the certificate."
+          },
+          "Options": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Available course options for the certificate."
+          }
+        },
+        "required": [
+          "Id"
+        ]
+      }
+    }
+  }
+}

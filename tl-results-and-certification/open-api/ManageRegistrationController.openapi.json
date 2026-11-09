@@ -1,29 +1,15 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Manage Registration API",
+    "title": "ManageRegistration API",
     "version": "1.0.0",
-    "description": "API for managing learner registrations and associated operations."
+    "description": "API definition for managing registration-related operations in tl-results-and-certification application."
   },
   "paths": {
     "/change-registration-learners-name/{profileId}": {
       "get": {
-        "operationId": "ChangeLearnersName_Get",
-        "responses": {
-          "200": {
-            "description": "Successful operation.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ChangeLearnersNameViewModel"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "No registration details found."
-          }
-        },
+        "operationId": "getChangeLearnersName",
+        "summary": "Get learner's registration profile for name change",
         "parameters": [
           {
             "name": "profileId",
@@ -33,13 +19,10 @@
               "type": "integer"
             }
           }
-        ]
-      },
-      "post": {
-        "operationId": "SubmitChangeLearnersName_Post",
+        ],
         "responses": {
           "200": {
-            "description": "Successful operation.",
+            "description": "Successful response",
             "content": {
               "application/json": {
                 "schema": {
@@ -48,13 +31,16 @@
               }
             }
           },
-          "400": {
-            "description": "Invalid request data."
-          },
           "404": {
-            "description": "No registration details found."
+            "description": "No registration details found for the provided profile ID"
           }
-        },
+        }
+      }
+    },
+    "/change-registration-learners-name": {
+      "post": {
+        "operationId": "postChangeLearnersName",
+        "summary": "Submit learner's name change request",
         "requestBody": {
           "required": true,
           "content": {
@@ -64,27 +50,18 @@
               }
             }
           }
+        },
+        "responses": {
+          "302": {
+            "description": "Redirection response"
+          }
         }
       }
     },
     "/change-registration-learners-date-of-birth/{profileId}": {
       "get": {
-        "operationId": "ChangeDateofBirth_Get",
-        "responses": {
-          "200": {
-            "description": "Successful operation.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ChangeDateofBirthViewModel"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "No registration details found."
-          }
-        },
+        "operationId": "getChangeDateofBirth",
+        "summary": "Get learner's registration profile for date of birth change",
         "parameters": [
           {
             "name": "profileId",
@@ -94,13 +71,10 @@
               "type": "integer"
             }
           }
-        ]
-      },
-      "post": {
-        "operationId": "SubmitChangeDateofBirth_Post",
+        ],
         "responses": {
           "200": {
-            "description": "Successful operation.",
+            "description": "Successful response",
             "content": {
               "application/json": {
                 "schema": {
@@ -109,13 +83,16 @@
               }
             }
           },
-          "400": {
-            "description": "Invalid request data."
-          },
           "404": {
-            "description": "No registration details found."
+            "description": "No registration details found for the provided profile ID"
           }
-        },
+        }
+      }
+    },
+    "/change-registration-learners-date-of-birth": {
+      "post": {
+        "operationId": "postChangeDateofBirth",
+        "summary": "Submit learner's date of birth change request",
         "requestBody": {
           "required": true,
           "content": {
@@ -125,27 +102,32 @@
               }
             }
           }
+        },
+        "responses": {
+          "302": {
+            "description": "Redirection response"
+          }
+        }
+      }
+    },
+    "/registration-details-change-confirmation": {
+      "get": {
+        "operationId": "getChangeConfirmationPage",
+        "summary": "Redirect to confirmation page after change",
+        "responses": {
+          "200": {
+            "description": "Redirect to confirmation page view."
+          },
+          "404": {
+            "description": "Unable to find confirmation."
+          }
         }
       }
     },
     "/change-registration-provider/{profileId}/{isback}": {
       "get": {
-        "operationId": "ChangeProvider_Get",
-        "responses": {
-          "200": {
-            "description": "Successful operation.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ChangeProviderViewModel"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "No registration details found."
-          }
-        },
+        "operationId": "getChangeProvider",
+        "summary": "Get learner's registration profile for provider change",
         "parameters": [
           {
             "name": "profileId",
@@ -160,16 +142,14 @@
             "in": "path",
             "required": false,
             "schema": {
-              "type": "boolean"
+              "type": "boolean",
+              "default": false
             }
           }
-        ]
-      },
-      "post": {
-        "operationId": "SubmitChangeProvider_Post",
+        ],
         "responses": {
           "200": {
-            "description": "Successful operation.",
+            "description": "Successful response",
             "content": {
               "application/json": {
                 "schema": {
@@ -178,13 +158,16 @@
               }
             }
           },
-          "400": {
-            "description": "Invalid request data."
-          },
           "404": {
             "description": "No registration details found."
           }
-        },
+        }
+      }
+    },
+    "/change-registration-provider": {
+      "post": {
+        "operationId": "postChangeProvider",
+        "summary": "Submit provider change request for learner registration",
         "requestBody": {
           "required": true,
           "content": {
@@ -194,47 +177,18 @@
               }
             }
           }
-        }
-      }
-    },
-    "/change-registration-provider-and-core-need-to-withdraw": {
-      "get": {
-        "operationId": "ChangeProviderAndCoreNeedToWithdraw_Get",
-        "responses": {
-          "200": {
-            "description": "Successful operation.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ChangeProviderAndCoreNeedToWithdrawViewModel"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "No registration details found."
-          }
-        }
-      }
-    },
-    "/amend-active-registration/{profileId}/{changeStatusId}": {
-      "get": {
-        "operationId": "AmendActiveRegistration_Get",
-        "responses": {
-          "200": {
-            "description": "Successful operation.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AmendActiveRegistrationViewModel"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "No registration details found."
-          }
         },
+        "responses": {
+          "302": {
+            "description": "Redirection response"
+          }
+        }
+      }
+    },
+    "/change-core-and-provider/{profileId}": {
+      "get": {
+        "operationId": "getChangeCoreQuestion",
+        "summary": "Get core change question details for registration",
         "parameters": [
           {
             "name": "profileId",
@@ -243,35 +197,42 @@
             "schema": {
               "type": "integer"
             }
-          },
-          {
-            "name": "changeStatusId",
-            "in": "path",
-            "required": false,
-            "schema": {
-              "type": "integer"
-            }
           }
-        ]
-      },
-      "post": {
-        "operationId": "SubmitAmendActiveRegistration_Post",
+        ],
         "responses": {
           "200": {
-            "description": "Successful operation."
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChangeCoreQuestionViewModel"
+                }
+              }
+            }
           },
-          "400": {
-            "description": "Invalid request data."
+          "404": {
+            "description": "No change core question details found."
           }
-        },
+        }
+      }
+    },
+    "/change-core-and-provider": {
+      "post": {
+        "operationId": "postChangeCoreQuestion",
+        "summary": "Submit core change question response for registration",
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/AmendActiveRegistrationViewModel"
+                "$ref": "#/components/schemas/ChangeCoreQuestionViewModel"
               }
             }
+          }
+        },
+        "responses": {
+          "302": {
+            "description": "Redirection response"
           }
         }
       }
@@ -301,9 +262,13 @@
           },
           "DateofBirth": {
             "type": "string",
-            "format": "date"
+            "description": "Date of birth in format DD/MM/YYYY"
           }
         }
+      },
+      "ManageRegistrationResponse": {
+        "type": "object",
+        "properties": {}
       },
       "ChangeProviderViewModel": {
         "type": "object",
@@ -314,44 +279,19 @@
           "SelectedProviderUkprn": {
             "type": "string"
           },
-          "ProvidersSelectList": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "Value": {
-                  "type": "string"
-                },
-                "Text": {
-                  "type": "string"
-                }
-              }
-            }
+          "SelectedProviderDisplayName": {
+            "type": "string"
           }
         }
       },
-      "ChangeProviderAndCoreNeedToWithdrawViewModel": {
-        "type": "object",
-        "properties": {
-          "ProfileId": {
-            "type": "integer"
-          }
-        }
-      },
-      "AmendActiveRegistrationViewModel": {
+      "ChangeCoreQuestionViewModel": {
         "type": "object",
         "properties": {
           "ProfileId": {
             "type": "integer"
           },
-          "ChangeStatus": {
-            "type": "string",
-            "enum": [
-              "Delete",
-              "Rejoin",
-              "Reregister",
-              "Withdrawn"
-            ]
+          "CanChangeCore": {
+            "type": "boolean"
           }
         }
       }

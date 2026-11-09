@@ -1,14 +1,14 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Transfer Connections API",
+    "title": "Employer Finance Web API",
     "version": "1.0.0"
   },
   "paths": {
     "/accounts/{hashedAccountId}/transfers/connections": {
       "get": {
-        "summary": "Get Transfer Connections",
-        "operationId": "getTransferConnections",
+        "operationId": "TransferConnections_Index",
+        "summary": "Retrieve transfer connections related to the specified account",
         "parameters": [
           {
             "name": "hashedAccountId",
@@ -17,12 +17,12 @@
             "schema": {
               "type": "string"
             },
-            "description": "Hashed identifier of the account."
+            "description": "Hashed ID of the employer account"
           }
         ],
         "responses": {
           "200": {
-            "description": "Successful response returns a view model of transfer connections.",
+            "description": "Successful response",
             "content": {
               "application/json": {
                 "schema": {
@@ -30,8 +30,22 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
-        }
+        },
+        "security": [
+          {
+            "PolicyNames.HasEmployerViewerTransactorOwnerAccount": []
+          }
+        ]
       }
     }
   },
@@ -59,27 +73,16 @@
       },
       "TransferAllowanceViewModel": {
         "type": "object",
-        "properties": {
-          "RemainingTransferAllowance": {
-            "type": "number",
-            "format": "decimal"
-          },
-          "TransferTotalCost": {
-            "type": "number",
-            "format": "decimal"
-          }
-        }
+        "additionalProperties": {}
       },
       "TransferConnectionInvitationAuthorizationViewModel": {
         "type": "object",
         "properties": {
           "HashedAccountId": {
             "type": "string"
-          },
-          "IsAuthorized": {
-            "type": "boolean"
           }
-        }
+        },
+        "additionalProperties": {}
       },
       "TransferConnectionInvitationsViewModel": {
         "type": "object",
@@ -103,13 +106,15 @@
               "$ref": "#/components/schemas/TransferConnectionInvitationDto"
             }
           }
-        }
+        },
+        "additionalProperties": {}
       },
       "TransferConnectionInvitationDto": {
         "type": "object",
         "properties": {
           "Changes": {
-            "type": "string"
+            "type": "array",
+            "items": {}
           },
           "Id": {
             "type": "integer",
@@ -123,10 +128,12 @@
             "format": "date-time"
           },
           "ReceiverAccount": {
-            "$ref": "#/components/schemas/AccountDto"
+            "type": "object",
+            "additionalProperties": {}
           },
           "SenderAccount": {
-            "$ref": "#/components/schemas/AccountDto"
+            "type": "object",
+            "additionalProperties": {}
           },
           "HashedId": {
             "type": "string"
@@ -142,46 +149,16 @@
           },
           "TransferRequests": {
             "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/TransferRequestDto"
-            }
+            "items": {}
           }
-        }
-      },
-      "TransferRequestDto": {
-        "type": "object",
-        "properties": {
-          "Id": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "Status": {
-            "type": "string"
-          },
-          "RequestedAmount": {
-            "type": "number",
-            "format": "decimal"
-          },
-          "CreatedDate": {
-            "type": "string",
-            "format": "date-time"
-          }
-        }
-      },
-      "AccountDto": {
-        "type": "object",
-        "properties": {
-          "Id": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "Name": {
-            "type": "string"
-          },
-          "HashedId": {
-            "type": "string"
-          }
-        }
+        },
+        "additionalProperties": {}
+      }
+    },
+    "securitySchemes": {
+      "PolicyNames.HasEmployerViewerTransactorOwnerAccount": {
+        "type": "http",
+        "scheme": "bearer"
       }
     }
   }

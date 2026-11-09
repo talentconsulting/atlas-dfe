@@ -1,15 +1,13 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Data Locks API",
-    "version": "1.0.0",
-    "description": "API for managing data locks related to apprenticeships."
+    "title": "Commitments V2 - DataLocks",
+    "version": "1.0.0"
   },
   "paths": {
     "/api/apprenticeships/{apprenticeshipId}/datalocks": {
       "get": {
-        "summary": "Retrieve data locks",
-        "operationId": "getDataLocks",
+        "summary": "Retrieve data locks for the specified apprenticeship",
         "parameters": [
           {
             "name": "apprenticeshipId",
@@ -19,12 +17,12 @@
               "type": "integer",
               "format": "int64"
             },
-            "description": "The ID of the apprenticeship."
+            "description": "The ID of the apprenticeship"
           }
         ],
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Data locks retrieved successfully",
             "content": {
               "application/json": {
                 "schema": {
@@ -33,18 +31,12 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "Authorization": []
-          }
-        ]
+        }
       }
     },
     "/api/apprenticeships/{apprenticeshipId}/datalocksummaries": {
       "get": {
-        "summary": "Retrieve data lock summaries",
-        "operationId": "getDataLockSummaries",
+        "summary": "Retrieve data lock summaries for the specified apprenticeship",
         "parameters": [
           {
             "name": "apprenticeshipId",
@@ -54,12 +46,12 @@
               "type": "integer",
               "format": "int64"
             },
-            "description": "The ID of the apprenticeship."
+            "description": "The ID of the apprenticeship"
           }
         ],
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Data lock summaries retrieved successfully",
             "content": {
               "application/json": {
                 "schema": {
@@ -68,18 +60,12 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "Authorization": []
-          }
-        ]
+        }
       }
     },
     "/api/apprenticeships/{apprenticeshipId}/datalocks/accept-changes": {
       "post": {
-        "summary": "Accept changes related to data locks",
-        "operationId": "acceptDataLockChanges",
+        "summary": "Accept changes for data locks",
         "parameters": [
           {
             "name": "apprenticeshipId",
@@ -89,7 +75,7 @@
               "type": "integer",
               "format": "int64"
             },
-            "description": "The ID of the apprenticeship."
+            "description": "The ID of the apprenticeship"
           }
         ],
         "requestBody": {
@@ -104,20 +90,14 @@
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Changes accepted successfully"
           }
-        },
-        "security": [
-          {
-            "Authorization": []
-          }
-        ]
+        }
       }
     },
     "/api/apprenticeships/{apprenticeshipId}/datalocks/reject-changes": {
       "post": {
-        "summary": "Reject changes related to data locks",
-        "operationId": "rejectDataLockChanges",
+        "summary": "Reject changes for data locks",
         "parameters": [
           {
             "name": "apprenticeshipId",
@@ -127,7 +107,7 @@
               "type": "integer",
               "format": "int64"
             },
-            "description": "The ID of the apprenticeship."
+            "description": "The ID of the apprenticeship"
           }
         ],
         "requestBody": {
@@ -142,20 +122,14 @@
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Changes rejected successfully"
           }
-        },
-        "security": [
-          {
-            "Authorization": []
-          }
-        ]
+        }
       }
     },
     "/api/apprenticeships/{apprenticeshipId}/datalocks/triage": {
       "post": {
-        "summary": "Triage data locks",
-        "operationId": "triageDataLocks",
+        "summary": "Triage data locks for the specified apprenticeship",
         "parameters": [
           {
             "name": "apprenticeshipId",
@@ -165,7 +139,7 @@
               "type": "integer",
               "format": "int64"
             },
-            "description": "The ID of the apprenticeship."
+            "description": "The ID of the apprenticeship"
           }
         ],
         "requestBody": {
@@ -180,14 +154,9 @@
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Data locks triaged successfully"
           }
-        },
-        "security": [
-          {
-            "Authorization": []
-          }
-        ]
+        }
       }
     }
   },
@@ -199,8 +168,7 @@
           "dataLocks": {
             "type": "array",
             "items": {
-              "type": "object",
-              "properties": {}
+              "$ref": "#/components/schemas/DataLockStatus"
             }
           }
         }
@@ -208,11 +176,10 @@
       "GetDataLockSummariesResponse": {
         "type": "object",
         "properties": {
-          "summaries": {
+          "dataLockSummaries": {
             "type": "array",
             "items": {
-              "type": "object",
-              "properties": {}
+              "$ref": "#/components/schemas/DataLockStatusSummary"
             }
           }
         }
@@ -266,7 +233,73 @@
             "type": "string"
           },
           "userEmail": {
+            "type": "string",
+            "format": "email"
+          }
+        }
+      },
+      "DataLockStatus": {
+        "type": "object",
+        "properties": {
+          "dataLockEventId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "dataLockEventDatetime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "priceEpisodeIdentifier": {
             "type": "string"
+          },
+          "apprenticeshipId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "ilrTrainingCourseCode": {
+            "type": "string"
+          },
+          "ilrActualStartDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "ilrEffectiveFromDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "ilrPriceEffectiveToDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "ilrTotalCost": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "status": {
+            "$ref": "#/components/schemas/Status"
+          },
+          "triageStatus": {
+            "$ref": "#/components/schemas/TriageStatus"
+          },
+          "errorCode": {
+            "$ref": "#/components/schemas/DataLockErrorCode"
+          },
+          "eventStatus": {
+            "$ref": "#/components/schemas/EventStatus"
+          }
+        }
+      },
+      "DataLockStatusSummary": {
+        "type": "object",
+        "properties": {
+          "triageStatus": {
+            "$ref": "#/components/schemas/TriageStatus"
+          },
+          "errorCode": {
+            "$ref": "#/components/schemas/DataLockErrorCode"
+          },
+          "isResolved": {
+            "type": "boolean"
           }
         }
       },
@@ -278,13 +311,39 @@
           "Restart",
           "FixIlr"
         ]
-      }
-    },
-    "securitySchemes": {
-      "Authorization": {
-        "type": "http",
-        "scheme": "bearer",
-        "description": "Bearer token for authorization"
+      },
+      "Status": {
+        "type": "string",
+        "enum": [
+          "Unknown",
+          "Pass",
+          "Fail"
+        ]
+      },
+      "DataLockErrorCode": {
+        "type": "string",
+        "enum": [
+          "None",
+          "Dlock01",
+          "Dlock02",
+          "Dlock03",
+          "Dlock04",
+          "Dlock05",
+          "Dlock06",
+          "Dlock07",
+          "Dlock08",
+          "Dlock09",
+          "Dlock10"
+        ]
+      },
+      "EventStatus": {
+        "type": "string",
+        "enum": [
+          "None",
+          "New",
+          "Updated",
+          "Removed"
+        ]
       }
     }
   }

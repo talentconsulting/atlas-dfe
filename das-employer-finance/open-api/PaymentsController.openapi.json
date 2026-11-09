@@ -1,14 +1,14 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Employer Finance Payments API",
+    "title": "Employer Finance API",
     "version": "1.0.0"
   },
   "paths": {
     "/api/payments/staging": {
       "post": {
-        "operationId": "BulkPaymentsIngest",
-        "summary": "Ingest bulk payments into staging.",
+        "operationId": "bulkPaymentsIngest",
+        "summary": "Ingest multiple staged payments.",
         "requestBody": {
           "required": true,
           "content": {
@@ -20,55 +20,19 @@
           }
         },
         "responses": {
-          "201": {
-            "description": "Payments staged successfully.",
+          "400": {
+            "description": "Bad Request. Payments payload is required or validation errors occurred.",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "properties": {
-                    "insertedCount": {
-                      "type": "integer",
-                      "format": "int32",
-                      "description": "Number of payments inserted."
-                    },
-                    "paymentIds": {
-                      "type": "array",
-                      "items": {
-                        "type": "string",
-                        "format": "uuid",
-                        "description": "IDs of inserted payments."
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad request - validation errors.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "oneOf": [
-                    {
-                      "type": "string",
-                      "description": "Error message for missing payments payload."
-                    },
-                    {
-                      "type": "array",
-                      "items": {
-                        "type": "string",
-                        "description": "Validation error messages."
-                      }
-                    }
-                  ]
+                  "additionalProperties": true
                 }
               }
             }
           },
           "409": {
-            "description": "Conflict - conflicting payment IDs.",
+            "description": "Conflict. Payments could not be ingested due to conflicts.",
             "content": {
               "application/json": {
                 "schema": {
@@ -77,9 +41,7 @@
                     "paymentIds": {
                       "type": "array",
                       "items": {
-                        "type": "string",
-                        "format": "uuid",
-                        "description": "IDs of conflicting payments."
+                        "type": "string"
                       }
                     }
                   }
@@ -88,12 +50,161 @@
             }
           },
           "500": {
-            "description": "Unexpected error staging payments.",
+            "description": "Internal Server Error. Unexpected error staging payments."
+          },
+          "201": {
+            "description": "Created. Payments successfully staged.",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "string",
-                  "description": "Error message."
+                  "type": "object",
+                  "properties": {
+                    "insertedCount": {
+                      "type": "integer"
+                    },
+                    "paymentIds": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/payments/account/{accountId}/apprenticeship/{apprenticeshipId}": {
+      "get": {
+        "operationId": "getPaymentDetails",
+        "summary": "Get payment details for an apprenticeship under an account.",
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "apprenticeshipId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Payment details retrieved successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PaymentResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/payments/account/{accountId}/collection-period/{year}/{month}": {
+      "get": {
+        "operationId": "getCollectionPeriodPayments",
+        "summary": "Get payments for a specific collection period under an employer account.",
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "year",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "month",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "minimum": 1,
+              "maximum": 12
+            }
+          }
+        ],
+        "security": [
+          {
+            "ApiRoles": [
+              "ReadAllEmployerAccountBalances"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Payments for the collection period retrieved successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CollectionPeriodPaymentsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/payments/account/{accountId}/funds-out": {
+      "get": {
+        "operationId": "getPaymentFundsOut",
+        "summary": "Get funds-out transactions for an employer account across calendar periods.",
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "security": [
+          {
+            "ApiRoles": [
+              "ReadAllEmployerAccountBalances"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Funds-out transactions retrieved successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CalendarPeriodAmount"
+                  }
                 }
               }
             }
@@ -111,111 +222,190 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/PaymentStagingModel"
-            },
-            "description": "List of payment staging models."
+            }
           }
-        },
-        "required": [
-          "Payments"
-        ]
+        }
       },
       "PaymentStagingModel": {
         "type": "object",
         "properties": {
           "PaymentId": {
             "type": "string",
-            "format": "uuid",
-            "description": "Unique identifier for the payment."
+            "format": "uuid"
           },
           "AccountId": {
             "type": "integer",
-            "format": "int64",
-            "description": "Identifier for the employer account."
+            "format": "int64"
           },
           "Ukprn": {
             "type": "integer",
-            "format": "int64",
-            "description": "UK Provider Reference Number."
+            "format": "int64"
           },
           "Uln": {
             "type": "integer",
-            "format": "int64",
-            "description": "Unique Learner Number."
+            "format": "int64"
           },
           "ApprenticeshipId": {
             "type": "integer",
-            "format": "int64",
-            "description": "Identifier for the apprenticeship."
+            "format": "int64"
           },
           "CollectionPeriodId": {
-            "type": "string",
-            "description": "Identifier for the collection period."
+            "type": "string"
           },
           "DeliveryPeriodMonth": {
             "type": "integer",
-            "format": "int32",
-            "description": "Delivery period month."
+            "format": "int32"
           },
           "DeliveryPeriodYear": {
             "type": "integer",
-            "format": "int32",
-            "description": "Delivery period year."
+            "format": "int32"
           },
           "CollectionPeriodMonth": {
             "type": "integer",
-            "format": "int32",
-            "description": "Collection period month."
+            "format": "int32"
           },
           "CollectionPeriodYear": {
             "type": "integer",
-            "format": "int32",
-            "description": "Collection period year."
+            "format": "int32"
           },
           "FundingSource": {
-            "type": "string",
-            "description": "Source of funding."
+            "type": "string"
           },
           "TransactionType": {
-            "type": "string",
-            "description": "Type of transaction."
+            "type": "string"
           },
           "Amount": {
             "type": "number",
-            "format": "decimal",
-            "description": "Amount of the payment."
+            "format": "decimal"
           },
           "EvidenceSubmittedOn": {
             "type": "string",
-            "format": "date-time",
-            "description": "Date when evidence was submitted."
+            "format": "date-time"
           },
           "EmployerAccountVersion": {
-            "type": "string",
-            "description": "Version of the employer account."
+            "type": "string"
           },
           "ApprenticeshipVersion": {
-            "type": "string",
-            "description": "Version of the apprenticeship."
+            "type": "string"
           }
-        },
-        "required": [
-          "PaymentId",
-          "AccountId",
-          "Ukprn",
-          "Uln",
-          "ApprenticeshipId",
-          "CollectionPeriodId",
-          "DeliveryPeriodMonth",
-          "DeliveryPeriodYear",
-          "CollectionPeriodMonth",
-          "CollectionPeriodYear",
-          "FundingSource",
-          "TransactionType",
-          "Amount",
-          "EvidenceSubmittedOn",
-          "EmployerAccountVersion",
-          "ApprenticeshipVersion"
-        ]
+        }
+      },
+      "PaymentResponse": {
+        "type": "object",
+        "properties": {
+          "Id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "Ukprn": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "Uln": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "EmployerAccountId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "ApprenticeshipId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "DeliveryPeriodMonth": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "DeliveryPeriodYear": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "CollectionPeriodMonth": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "CollectionPeriodYear": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "FundingSource": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "TransactionType": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Amount": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "LastUpdatedDate": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "CollectionPeriodPaymentsResponse": {
+        "type": "object",
+        "properties": {
+          "PeriodEndCompleted": {
+            "type": "boolean"
+          },
+          "Payments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CollectionPeriodPaymentTotalResponse"
+            }
+          }
+        }
+      },
+      "CollectionPeriodPaymentTotalResponse": {
+        "type": "object",
+        "properties": {
+          "FundingSource": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "TransactionType": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Amount": {
+            "type": "number",
+            "format": "decimal"
+          }
+        }
+      },
+      "CalendarPeriodAmount": {
+        "type": "object",
+        "properties": {
+          "Year": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Month": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Amount": {
+            "type": "number",
+            "format": "decimal"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "ApiRoles": {
+        "type": "oauth2",
+        "flows": {
+          "clientCredentials": {
+            "scopes": {
+              "ReadAllEmployerAccountBalances": "Allows reading balances for all employer accounts."
+            }
+          }
+        }
       }
     }
   }

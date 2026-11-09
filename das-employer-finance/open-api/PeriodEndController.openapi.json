@@ -1,23 +1,28 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Employer Finance API",
+    "title": "Employer Finance Period End API",
     "version": "1.0.0"
   },
   "paths": {
     "/api/period-ends": {
       "get": {
-        "summary": "Get all period ends",
+        "summary": "Get All Period Ends",
         "description": "Retrieves all period ends.",
         "operationId": "getAllPeriodEnds",
+        "tags": [
+          "PeriodEnds"
+        ],
         "security": [
           {
-            "ApiRoles_ReadAllEmployerAccountBalances": []
+            "ApiRolesOAuth2": [
+              "ReadAllEmployerAccountBalances"
+            ]
           }
         ],
         "responses": {
           "200": {
-            "description": "Successful operation.",
+            "description": "Successful response with the list of period ends.",
             "content": {
               "application/json": {
                 "schema": {
@@ -35,15 +40,21 @@
         }
       },
       "post": {
-        "summary": "Create a period end",
-        "description": "Creates a new period end from the request body.",
+        "summary": "Create a Period End",
+        "description": "Creates a new period end.",
         "operationId": "createPeriodEnd",
+        "tags": [
+          "PeriodEnds"
+        ],
         "security": [
           {
-            "ApiRoles_ReadAllEmployerAccountBalances": []
+            "ApiRolesOAuth2": [
+              "ReadAllEmployerAccountBalances"
+            ]
           }
         ],
         "requestBody": {
+          "description": "Details of the period end to create.",
           "required": true,
           "content": {
             "application/json": {
@@ -55,7 +66,7 @@
         },
         "responses": {
           "200": {
-            "description": "Period end created successfully.",
+            "description": "Successful response with the created period end.",
             "content": {
               "application/json": {
                 "schema": {
@@ -65,22 +76,27 @@
             }
           },
           "400": {
-            "description": "Invalid request body."
+            "description": "The request was invalid."
           },
           "500": {
-            "description": "Internal server error. Could not create period end."
+            "description": "An error occurred while creating the period end."
           }
         }
       }
     },
     "/api/period-ends/{periodEndId}": {
       "get": {
-        "summary": "Get a period end by ID",
+        "summary": "Get Period End by ID",
         "description": "Retrieves a specific period end by its ID.",
         "operationId": "getPeriodEndById",
+        "tags": [
+          "PeriodEnds"
+        ],
         "security": [
           {
-            "ApiRoles_ReadAllEmployerAccountBalances": []
+            "ApiRolesOAuth2": [
+              "ReadAllEmployerAccountBalances"
+            ]
           }
         ],
         "parameters": [
@@ -88,7 +104,7 @@
             "name": "periodEndId",
             "in": "path",
             "required": true,
-            "description": "The ID of the period end to retrieve.",
+            "description": "The ID of the period end.",
             "schema": {
               "type": "string"
             }
@@ -96,7 +112,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful operation.",
+            "description": "Successful response with the period end data.",
             "content": {
               "application/json": {
                 "schema": {
@@ -113,46 +129,61 @@
     }
   },
   "components": {
-    "securitySchemes": {
-      "ApiRoles_ReadAllEmployerAccountBalances": {
-        "type": "apiKey",
-        "name": "Authorization",
-        "in": "header",
-        "description": "API key required to access this endpoint with the role ReadAllEmployerAccountBalances."
-      }
-    },
     "schemas": {
       "PeriodEnd": {
         "type": "object",
         "properties": {
           "PeriodEndId": {
-            "type": "string"
+            "type": "string",
+            "description": "The unique identifier for the period end."
           },
           "CalendarPeriodMonth": {
             "type": "integer",
-            "format": "int32"
+            "description": "The month of the calendar period."
           },
           "CalendarPeriodYear": {
             "type": "integer",
-            "format": "int32"
+            "description": "The year of the calendar period."
           },
           "AccountDataValidAt": {
             "type": "string",
             "format": "date-time",
-            "nullable": true
+            "description": "The date and time when the account data is valid."
           },
           "CommitmentDataValidAt": {
             "type": "string",
             "format": "date-time",
-            "nullable": true
+            "description": "The date and time when the commitment data is valid."
           },
           "CompletionDateTime": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "description": "The date and time when the period end is completed."
           },
           "PaymentsForPeriod": {
             "type": "string",
-            "nullable": true
+            "description": "The payments associated with the period."
+          }
+        },
+        "required": [
+          "PeriodEndId",
+          "CalendarPeriodMonth",
+          "CalendarPeriodYear",
+          "CompletionDateTime",
+          "PaymentsForPeriod"
+        ]
+      }
+    },
+    "securitySchemes": {
+      "ApiRolesOAuth2": {
+        "type": "oauth2",
+        "flows": {
+          "implicit": {
+            "authorizationUrl": "https://example.com/oauth/authorize",
+            "scopes": {
+              "ReadUserAccounts": "Grants read access to user accounts.",
+              "ReadAllEmployerAccountBalances": "Grants access to read all employer account balances."
+            }
           }
         }
       }

@@ -2,16 +2,13 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Aodp Applications Review API",
-    "version": "1.0.0",
-    "description": "API for handling applications review processes."
+    "version": "1.0.0"
   },
   "paths": {
     "/api/application-reviews": {
       "post": {
-        "summary": "Get application reviews",
-        "operationId": "GetApplicationReviews",
+        "summary": "Retrieve application reviews",
         "requestBody": {
-          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -22,7 +19,7 @@
         },
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Successful response",
             "content": {
               "application/json": {
                 "schema": {
@@ -32,7 +29,7 @@
             }
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Internal server error"
           }
         }
       }
@@ -40,7 +37,6 @@
     "/api/application-reviews/{applicationReviewId}/share": {
       "put": {
         "summary": "Update application review sharing",
-        "operationId": "UpdateApplicationReviewSharing",
         "parameters": [
           {
             "name": "applicationReviewId",
@@ -53,7 +49,6 @@
           }
         ],
         "requestBody": {
-          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -64,7 +59,7 @@
         },
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Successful response",
             "content": {
               "application/json": {
                 "schema": {
@@ -74,15 +69,14 @@
             }
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Internal server error"
           }
         }
       }
     },
     "/api/application-reviews/{applicationReviewId}": {
       "get": {
-        "summary": "Get application review details by ID",
-        "operationId": "GetApplicationForReviewById",
+        "summary": "Get application review by ID",
         "parameters": [
           {
             "name": "applicationReviewId",
@@ -96,7 +90,7 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Successful response",
             "content": {
               "application/json": {
                 "schema": {
@@ -106,15 +100,14 @@
             }
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Internal server error"
           }
         }
       }
     },
     "/api/application-reviews/{applicationReviewId}/share-status": {
       "get": {
-        "summary": "Get application review sharing status by ID",
-        "operationId": "GetApplicationReviewSharingStatusById",
+        "summary": "Get sharing status by ID",
         "parameters": [
           {
             "name": "applicationReviewId",
@@ -128,7 +121,7 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Successful response",
             "content": {
               "application/json": {
                 "schema": {
@@ -138,15 +131,14 @@
             }
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Internal server error"
           }
         }
       }
     },
     "/api/application-reviews/{applicationReviewId}/feedback/{userType}": {
       "get": {
-        "summary": "Get feedback for an application review by ID",
-        "operationId": "GetFeedbackForApplicationReviewById",
+        "summary": "Get feedback for application review by ID",
         "parameters": [
           {
             "name": "applicationReviewId",
@@ -168,7 +160,7 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Successful response",
             "content": {
               "application/json": {
                 "schema": {
@@ -178,15 +170,14 @@
             }
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Internal server error"
           }
         }
       }
     },
     "/api/application-reviews/{applicationReviewId}/qfau-feedback-review": {
       "get": {
-        "summary": "Get QFAU feedback review confirmation details",
-        "operationId": "GetQfauFeedbackForApplicationReviewConfirmationById",
+        "summary": "Get Qfau feedback review confirmation",
         "parameters": [
           {
             "name": "applicationReviewId",
@@ -200,7 +191,7 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Successful response",
             "content": {
               "application/json": {
                 "schema": {
@@ -210,7 +201,167 @@
             }
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/application-reviews/{applicationReviewId}/qfau-outcome": {
+      "put": {
+        "summary": "Save Qfau funding review outcome",
+        "parameters": [
+          {
+            "name": "applicationReviewId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SaveQfauFundingReviewOutcomeCommand"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmptyResult"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/application-reviews/{applicationReviewId}/qfau-offers": {
+      "put": {
+        "summary": "Save Qfau funding offers",
+        "parameters": [
+          {
+            "name": "applicationReviewId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SaveQfauFundingReviewOffersCommand"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmptyResult"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/application-reviews/{applicationReviewId}/qfau-offer-details": {
+      "put": {
+        "summary": "Save Qfau funding offer details",
+        "parameters": [
+          {
+            "name": "applicationReviewId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SaveQfauFundingReviewOffersDetailsCommand"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmptyResult"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/application-reviews/{applicationReviewId}/ofqual-outcome": {
+      "put": {
+        "summary": "Save Ofqual review outcome",
+        "parameters": [
+          {
+            "name": "applicationReviewId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SaveOfqualReviewOutcomeCommand"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmptyResult"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
           }
         }
       }
@@ -218,7 +369,6 @@
     "/api/application-reviews/{applicationReviewId}/form-answers": {
       "get": {
         "summary": "Get application form answers by review ID",
-        "operationId": "GetApplicationFormDetailsByIdAsync",
         "parameters": [
           {
             "name": "applicationReviewId",
@@ -232,7 +382,7 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Successful response",
             "content": {
               "application/json": {
                 "schema": {
@@ -242,49 +392,17 @@
             }
           },
           "404": {
-            "description": "Not Found"
+            "description": "Resource not found"
           },
           "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      }
-    },
-    "/api/application-reviews/bulk-action": {
-      "put": {
-        "summary": "Perform a bulk application action",
-        "operationId": "BulkApplicationAction",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/BulkApplicationActionCommand"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BulkApplicationActionCommandResponse"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error"
+            "description": "Internal server error"
           }
         }
       }
     },
     "/api/application-reviews/{applicationReviewId}/export-data": {
       "get": {
-        "summary": "Get application export data by ID",
-        "operationId": "GetApplicationExportData",
+        "summary": "Export application review data",
         "parameters": [
           {
             "name": "applicationReviewId",
@@ -298,7 +416,7 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Successful response",
             "content": {
               "application/json": {
                 "schema": {
@@ -308,10 +426,10 @@
             }
           },
           "404": {
-            "description": "Not Found"
+            "description": "Resource not found"
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Internal server error"
           }
         }
       }
@@ -360,55 +478,45 @@
           "applications": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/Application"
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "applicationReviewId": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "lastUpdated": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              }
             }
           },
           "availableReviewers": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/Reviewer"
+              "type": "object",
+              "properties": {
+                "email": {
+                  "type": "string"
+                },
+                "firstName": {
+                  "type": "string"
+                },
+                "lastName": {
+                  "type": "string"
+                }
+              }
             }
           },
           "totalRecordsCount": {
             "type": "integer"
-          }
-        }
-      },
-      "Application": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "applicationReviewId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "name": {
-            "type": "string"
-          },
-          "lastUpdated": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "reference": {
-            "type": "integer"
-          }
-        }
-      },
-      "Reviewer": {
-        "type": "object",
-        "properties": {
-          "email": {
-            "type": "string",
-            "format": "email"
-          },
-          "firstName": {
-            "type": "string"
-          },
-          "lastName": {
-            "type": "string"
           }
         }
       },
@@ -424,6 +532,15 @@
           "applicationReviewId": {
             "type": "string",
             "format": "uuid"
+          },
+          "userType": {
+            "type": "string"
+          },
+          "sentByName": {
+            "type": "string"
+          },
+          "sentByEmail": {
+            "type": "string"
           }
         }
       },
@@ -443,72 +560,13 @@
           },
           "name": {
             "type": "string"
-          }
-        }
-      },
-      "GetApplicationReviewSharingStatusByIdQueryHandler": {
-        "type": "object"
-      },
-      "GetFeedbackForApplicationReviewByIdQueryResponse": {
-        "type": "object",
-        "properties": {
-          "owner": {
-            "type": "string"
           },
-          "status": {
-            "type": "string"
-          }
-        }
-      },
-      "GetQfauFeedbackForApplicationReviewConfirmationQueryResponse": {
-        "type": "object"
-      },
-      "BulkApplicationActionCommand": {
-        "type": "object",
-        "properties": {
-          "applicationReviewIds": {
-            "type": "array",
-            "items": {
-              "type": "string",
-              "format": "uuid"
-            }
-          },
-          "actionType": {
-            "type": "string"
-          },
-          "userType": {
-            "type": "string"
-          }
-        }
-      },
-      "BulkApplicationActionCommandResponse": {
-        "type": "object",
-        "properties": {
-          "requestedCount": {
-            "type": "integer"
-          },
-          "updatedCount": {
-            "type": "integer"
-          },
-          "errorCount": {
-            "type": "integer"
-          }
-        }
-      },
-      "GetApplicationFormAnswersByReviewIdQueryResponse": {
-        "type": "object",
-        "properties": {
-          "applicationId": {
+          "lastUpdated": {
             "type": "string",
-            "format": "uuid"
-          }
-        }
-      },
-      "GetApplicationExportDataQueryResponse": {
-        "type": "object",
-        "properties": {
-          "applicationFormStructure": {
-            "type": "object"
+            "format": "date-time"
+          },
+          "reference": {
+            "type": "integer"
           }
         }
       }

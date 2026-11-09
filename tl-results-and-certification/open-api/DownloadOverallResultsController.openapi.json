@@ -7,22 +7,39 @@
   "paths": {
     "/download-tlevel-results": {
       "get": {
-        "summary": "Download Overall Results Page",
         "operationId": "DownloadOverallResults",
+        "summary": "Renders the overall results page.",
         "responses": {
           "200": {
-            "description": "Returns the HTML content for the overall results page."
+            "description": "Success",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "IsOverallResultsAvailable": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
           }
-        }
+        },
+        "security": [
+          {
+            "learnerRecordsEditor": []
+          }
+        ]
       }
     },
     "/download-tlevel-results-file": {
       "get": {
-        "summary": "Download Overall Results File",
         "operationId": "DownloadOverallResultsFileAsync",
+        "summary": "Downloads the overall results file.",
         "responses": {
           "200": {
-            "description": "Returns the overall results CSV file.",
+            "description": "CSV file containing the overall results.",
             "content": {
               "text/csv": {
                 "schema": {
@@ -35,16 +52,21 @@
           "404": {
             "description": "File not found."
           }
-        }
+        },
+        "security": [
+          {
+            "learnerRecordsEditor": []
+          }
+        ]
       }
     },
     "/download-tlevel-result-slips-file": {
       "get": {
-        "summary": "Download Overall Result Slips File",
         "operationId": "DownloadOverallResultSlipsFileAsync",
+        "summary": "Downloads the overall result slips as a PDF.",
         "responses": {
           "200": {
-            "description": "Returns the result slips PDF file.",
+            "description": "PDF file containing overall result slips.",
             "content": {
               "application/pdf": {
                 "schema": {
@@ -57,27 +79,31 @@
           "404": {
             "description": "File not found."
           }
-        }
+        },
+        "security": [
+          {
+            "learnerRecordsEditor": []
+          }
+        ]
       }
     },
     "/download-learner-tlevel-result-slips-file/{profileId}": {
       "get": {
-        "summary": "Download Learner Overall Result Slips File",
         "operationId": "DownloadLearnerOverallResultSlipsFileAsync",
+        "summary": "Downloads the result slips for a specific learner profile.",
         "parameters": [
           {
             "name": "profileId",
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int32"
+              "type": "integer"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Returns the learner result slips PDF file.",
+            "description": "PDF file containing the result slips for the learner.",
             "content": {
               "application/pdf": {
                 "schema": {
@@ -90,11 +116,29 @@
           "404": {
             "description": "File not found."
           }
-        }
+        },
+        "security": [
+          {
+            "learnerRecordsEditor": []
+          }
+        ]
       }
     }
   },
   "components": {
-    "schemas": {}
+    "schemas": {},
+    "securitySchemes": {
+      "learnerRecordsEditor": {
+        "type": "oauth2",
+        "description": "Requires Learner Records Editor access.",
+        "flows": {
+          "authorizationCode": {
+            "authorizationUrl": "https://example.com/auth",
+            "tokenUrl": "https://example.com/token",
+            "scopes": {}
+          }
+        }
+      }
+    }
   }
 }

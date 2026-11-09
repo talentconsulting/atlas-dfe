@@ -8,12 +8,7 @@
     "/api/payments/{paymentId}/metadata/staging": {
       "put": {
         "summary": "Update Payment Metadata Staging",
-        "operationId": "updatePaymentMetaDataStaging",
-        "security": [
-          {
-            "BearerAuth": []
-          }
-        ],
+        "description": "Updates payment metadata and stores it in staging.",
         "parameters": [
           {
             "name": "paymentId",
@@ -37,18 +32,20 @@
         },
         "responses": {
           "200": {
-            "description": "Successful operation",
+            "description": "Payment metadata updated successfully.",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
                   "properties": {
                     "upserted": {
-                      "type": "boolean"
+                      "type": "boolean",
+                      "description": "Indicates if the metadata was created or updated."
                     },
                     "metadataId": {
                       "type": "string",
-                      "format": "uuid"
+                      "format": "uuid",
+                      "description": "The ID of the metadata record."
                     }
                   }
                 }
@@ -56,23 +53,30 @@
             }
           },
           "400": {
-            "description": "Bad Request",
+            "description": "Bad Request - Invalid input.",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "additionalProperties": true
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 }
               }
             }
           },
           "404": {
-            "description": "Not Found"
+            "description": "Not Found - Payment not found."
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Internal Server Error - Could not update Payment Metadata Staging."
           }
-        }
+        },
+        "security": [
+          {
+            "OAuth2": []
+          }
+        ]
       }
     }
   },
@@ -156,14 +160,28 @@
         "required": [
           "Id",
           "ProviderName",
+          "PathwayName",
+          "ApprenticeshipCourseName",
+          "ApprenticeName",
+          "ApprenticeNINumber",
+          "IsHistoricProviderName",
+          "LearningType",
+          "CourseCode",
+          "CreatedBy",
           "PaymentId"
         ]
       }
     },
     "securitySchemes": {
-      "BearerAuth": {
-        "type": "http",
-        "scheme": "bearer"
+      "OAuth2": {
+        "type": "oauth2",
+        "flows": {
+          "authorizationCode": {
+            "authorizationUrl": "https://example.com/oauth/authorize",
+            "tokenUrl": "https://example.com/oauth/token",
+            "scopes": {}
+          }
+        }
       }
     }
   }

@@ -1,18 +1,18 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Results and Certification Timeout API",
-    "description": "API for managing timeout functionality for the Results and Certification system.",
-    "version": "1.0.0"
+    "title": "TimeoutController API",
+    "version": "1.0.0",
+    "description": "API for managing user session activities and timeouts."
   },
   "paths": {
     "/active-duration": {
       "get": {
-        "operationId": "GetActiveDuration",
-        "description": "Retrieves the remaining active duration for the current user session.",
+        "summary": "Get active session duration",
+        "operationId": "getActiveDuration",
         "responses": {
           "200": {
-            "description": "Returns the remaining active duration in minutes and seconds.",
+            "description": "Returns the remaining active session duration in minutes and seconds.",
             "content": {
               "application/json": {
                 "schema": {
@@ -26,11 +26,11 @@
     },
     "/renew-activity": {
       "get": {
-        "operationId": "RenewSessionActivity",
-        "description": "Renews the session activity for the user by resetting the timeout.",
+        "summary": "Renew user session activity",
+        "operationId": "renewSessionActivity",
         "responses": {
           "200": {
-            "description": "Returns the renewed session activity duration.",
+            "description": "Returns the renewed session time in minutes and seconds.",
             "content": {
               "application/json": {
                 "schema": {
@@ -44,22 +44,30 @@
     },
     "/activity-timeout": {
       "get": {
-        "operationId": "ActivityTimeout",
-        "description": "Logs out the user and clears the session activity.",
+        "summary": "Handle user session timeout",
+        "operationId": "activityTimeout",
         "responses": {
           "204": {
-            "description": "Successfully logged out and session cleared."
+            "description": "Successfully handled session timeout with no response body."
           }
         }
       }
     },
     "/timeout": {
       "get": {
-        "operationId": "TimeoutConfirmation",
-        "description": "Displays a confirmation page indicating the user has been timed out.",
+        "summary": "Timeout confirmation view",
+        "operationId": "timeoutConfirmation",
         "responses": {
           "200": {
-            "description": "Returns the timeout confirmation view."
+            "description": "Displays the timeout confirmation view.",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string",
+                  "example": "Timeout confirmation page."
+                }
+              }
+            }
           }
         }
       }
@@ -72,11 +80,13 @@
         "properties": {
           "Minutes": {
             "type": "integer",
-            "description": "Remaining minutes of active duration."
+            "example": 5,
+            "description": "Number of minutes remaining in the session activity."
           },
           "Seconds": {
             "type": "integer",
-            "description": "Remaining seconds of active duration."
+            "example": 30,
+            "description": "Number of seconds remaining in the session activity."
           }
         },
         "required": [

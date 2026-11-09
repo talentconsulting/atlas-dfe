@@ -1,0 +1,304 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Financial Applications API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/Financial/Open": {
+      "get": {
+        "summary": "Retrieve open financial applications",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Open financial applications successfully retrieved",
+            "content": {
+              "text/html": {
+                "description": "HTML view of the applications"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Financial/Rejected": {
+      "get": {
+        "summary": "Retrieve rejected financial applications",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Rejected financial applications successfully retrieved",
+            "content": {
+              "text/html": {
+                "description": "HTML view of the applications"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Financial/Closed": {
+      "get": {
+        "summary": "Retrieve closed financial applications",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Closed financial applications successfully retrieved",
+            "content": {
+              "text/html": {
+                "description": "HTML view of the applications"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Financial/{Id}": {
+      "get": {
+        "summary": "View a financial application",
+        "parameters": [
+          {
+            "name": "Id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Financial application successfully retrieved",
+            "content": {
+              "text/html": {
+                "description": "HTML view of the application"
+              }
+            }
+          },
+          "302": {
+            "description": "Redirected to open applications when the application does not exist"
+          }
+        }
+      }
+    },
+    "/Financial/{Id}/Graded": {
+      "get": {
+        "summary": "View a graded financial application",
+        "parameters": [
+          {
+            "name": "Id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Graded financial application successfully retrieved",
+            "content": {
+              "text/html": {
+                "description": "HTML view of the graded application"
+              }
+            }
+          },
+          "302": {
+            "description": "Redirected to open applications when the application does not exist"
+          }
+        }
+      }
+    },
+    "/Financial/Download/Organisation/{OrgId}/Application/{ApplicationId}": {
+      "get": {
+        "summary": "Download financial application files",
+        "parameters": [
+          {
+            "name": "OrgId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "ApplicationId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Financial application files successfully downloaded",
+            "content": {
+              "application/zip": {
+                "description": "ZIP file containing the financial documents"
+              }
+            }
+          },
+          "404": {
+            "description": "Not found when the organisation or application does not exist"
+          }
+        }
+      }
+    },
+    "/Financial": {
+      "post": {
+        "summary": "Grade a financial application",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FinancialApplicationViewModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "302": {
+            "description": "Redirected to evaluated application or the view showing validation errors"
+          }
+        }
+      }
+    },
+    "/Financial/{Id}/Evaluated": {
+      "get": {
+        "summary": "View an evaluated financial application",
+        "parameters": [
+          {
+            "name": "Id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Evaluated application successfully retrieved",
+            "content": {
+              "text/html": {
+                "description": "HTML view of the evaluated application"
+              }
+            }
+          },
+          "302": {
+            "description": "Redirected to open applications when the application is not evaluated"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "FinancialApplicationViewModel": {
+        "type": "object",
+        "properties": {
+          "ApplicationReference": {
+            "type": "string"
+          },
+          "LegalName": {
+            "type": "string"
+          },
+          "TradingName": {
+            "type": "string"
+          },
+          "ProviderName": {
+            "type": "string"
+          },
+          "Ukprn": {
+            "type": "integer"
+          },
+          "CompanyNumber": {
+            "type": "string"
+          },
+          "Grade": {
+            "type": "object"
+          },
+          "ApplicationId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "Id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "OrgId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "OutstandingFinancialDueDate": {
+            "$ref": "#/components/schemas/FinancialDueDate"
+          },
+          "GoodFinancialDueDate": {
+            "$ref": "#/components/schemas/FinancialDueDate"
+          },
+          "SatisfactoryFinancialDueDate": {
+            "$ref": "#/components/schemas/FinancialDueDate"
+          },
+          "MonitoringFinancialDueDate": {
+            "$ref": "#/components/schemas/FinancialDueDate"
+          }
+        },
+        "required": [
+          "ApplicationId",
+          "Id"
+        ]
+      },
+      "FinancialDueDate": {
+        "type": "object",
+        "properties": {
+          "Day": {
+            "type": "string"
+          },
+          "Month": {
+            "type": "string"
+          },
+          "Year": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

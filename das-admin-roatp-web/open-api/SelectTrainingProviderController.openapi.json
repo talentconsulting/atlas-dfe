@@ -7,35 +7,37 @@
   "paths": {
     "/providers": {
       "get": {
-        "summary": "Render Select Training Provider page",
+        "tags": [
+          "SelectTrainingProvider"
+        ],
+        "summary": "Renders the view for selecting a training provider",
         "operationId": "getSelectTrainingProvider",
         "responses": {
           "200": {
-            "description": "Successful response with the SelectTrainingProviderViewModel data",
+            "description": "Successful response",
             "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SelectTrainingProviderViewModel"
-                }
+              "text/html": {
+                "example": "<html>...</html>"
               }
             }
           }
         },
         "security": [
           {
-            "roles": [
-              "RoatpAdminTeam"
-            ]
+            "RoatpAdminTeam": []
           }
         ]
       },
       "post": {
-        "summary": "Submit Select Training Provider data",
+        "tags": [
+          "SelectTrainingProvider"
+        ],
+        "summary": "Validates input and redirects to provider summary",
         "operationId": "postSelectTrainingProvider",
         "requestBody": {
           "required": true,
           "content": {
-            "application/x-www-form-urlencoded": {
+            "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/SelectTrainingProviderViewModel"
               }
@@ -44,23 +46,39 @@
         },
         "responses": {
           "302": {
-            "description": "Redirect to provider summary if validation passes"
+            "description": "Redirects to provider summary based on the provided UKPRN"
           },
           "400": {
-            "description": "Invalid input"
+            "description": "Validation errors encountered",
+            "content": {
+              "application/json": {
+                "example": {
+                  "errors": [
+                    {
+                      "field": "Ukprn",
+                      "message": "UKPRN is invalid"
+                    }
+                  ]
+                }
+              }
+            }
           }
         },
         "security": [
           {
-            "roles": [
-              "RoatpAdminTeam"
-            ]
+            "RoatpAdminTeam": []
           }
         ]
       }
     }
   },
   "components": {
+    "securitySchemes": {
+      "RoatpAdminTeam": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    },
     "schemas": {
       "SelectTrainingProviderViewModel": {
         "type": "object",
@@ -68,26 +86,19 @@
           "SearchTerm": {
             "type": "string",
             "nullable": true,
-            "description": "A derived property combining LegalName and Ukprn."
+            "description": "Search term combining LegalName and UKPRN."
           },
           "LegalName": {
             "type": "string",
             "nullable": true,
-            "description": "The legal name of the training provider."
+            "description": "Legal Name of the training provider."
           },
           "Ukprn": {
             "type": "string",
             "nullable": true,
-            "description": "The unique provider reference number of the training provider."
+            "description": "Unique Identifier for the training provider."
           }
         }
-      }
-    },
-    "securitySchemes": {
-      "roles": {
-        "type": "http",
-        "scheme": "bearer",
-        "description": "Authorization based on user roles. Requires role 'RoatpAdminTeam'."
       }
     }
   }

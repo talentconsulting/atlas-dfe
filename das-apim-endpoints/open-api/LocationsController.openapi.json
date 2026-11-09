@@ -1,31 +1,36 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "AdminAan Locations API",
-    "version": "1.0.0"
+    "title": "Locations API",
+    "version": "1.0.0",
+    "description": "API for managing locations and addresses."
   },
   "paths": {
     "/locations": {
       "get": {
-        "operationId": "getAddresses",
         "summary": "Get addresses by query",
+        "operationId": "GetAddresses",
         "parameters": [
           {
             "name": "query",
             "in": "query",
-            "required": false,
+            "required": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "The search query for addresses."
           }
         ],
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "Successful response with list of addresses",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetAddressesQueryResponse"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GetAddressesQueryResponse"
+                  }
                 }
               }
             }
@@ -35,25 +40,29 @@
     },
     "/locations/search": {
       "get": {
-        "operationId": "getLocationsBySearch",
         "summary": "Search locations by query",
+        "operationId": "GetLocationsBySearch",
         "parameters": [
           {
             "name": "query",
             "in": "query",
-            "required": false,
+            "required": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "The search query for locations."
           }
         ],
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "Successful response with list of locations",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetLocationsBySearchQueryResponse"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GetLocationsBySearchQueryResponse"
+                  }
                 }
               }
             }
@@ -65,10 +74,12 @@
   "components": {
     "schemas": {
       "GetAddressesQueryResponse": {
-        "type": "object"
+        "type": "object",
+        "additionalProperties": true
       },
       "GetLocationsBySearchQueryResponse": {
-        "type": "object"
+        "type": "object",
+        "additionalProperties": true
       }
     }
   }

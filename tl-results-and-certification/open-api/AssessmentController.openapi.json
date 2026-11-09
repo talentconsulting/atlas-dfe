@@ -1,255 +1,276 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Assessment API",
-    "version": "1.0.0",
-    "description": "API for managing assessments and associated entities within the Results and Certification system."
+    "title": "Assessment Management API",
+    "version": "1.0.0"
   },
   "paths": {
-    "/api/Assessment/ProcessBulkAssessments": {
+    "/assessment-entries": {
+      "get": {
+        "operationId": "getAssessmentDashboard",
+        "summary": "Retrieve the assessment dashboard view",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/upload-assessment-entries-file/{requestErrorTypeId}": {
+      "get": {
+        "operationId": "getUploadAssessmentsFile",
+        "summary": "Shows the upload assessments file page",
+        "parameters": [
+          {
+            "name": "requestErrorTypeId",
+            "in": "path",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/upload-assessment-entries-file": {
       "post": {
-        "operationId": "ProcessBulkAssessmentsAsync",
-        "summary": "Processes bulk assessment entries.",
+        "operationId": "postUploadAssessmentsFile",
+        "summary": "Processes the uploaded assessment file",
         "requestBody": {
-          "description": "Bulk process request data",
           "required": true,
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
-                "$ref": "#/components/schemas/BulkProcessRequest"
+                "$ref": "#/components/schemas/UploadAssessmentsRequestViewModel"
               }
             }
           }
         },
         "responses": {
-          "200": {
-            "description": "Bulk assessment processing has been completed.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BulkAssessmentResponse"
-                }
-              }
-            }
+          "303": {
+            "description": "Redirect to a status page",
+            "content": {}
           }
         }
       }
     },
-    "/api/Assessment/GetAvailableAssessmentSeries/{aoUkprn}/{profileId}/{componentType}/{componentIds}": {
+    "/assessment-entries-upload-confirmation": {
       "get": {
-        "operationId": "GetAvailableAssessmentSeriesAsync",
-        "summary": "Retrieves available assessment series.",
+        "operationId": "getAssessmentUploadSuccessful",
+        "summary": "Retrieve the successful upload confirmation",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {}
+          },
+          "404": {
+            "description": "Not found"
+          }
+        }
+      }
+    },
+    "/assessment-entries-upload-unsuccessful": {
+      "get": {
+        "operationId": "getAssessmentUploadUnsuccessful",
+        "summary": "Retrieve the unsuccessful upload view",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {}
+          },
+          "404": {
+            "description": "Not found"
+          }
+        }
+      }
+    },
+    "/assessment-entries-file-upload-service-problem": {
+      "get": {
+        "operationId": "getProblemWithAssessmentsUpload",
+        "summary": "View for service issues during upload",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/download-assessment-errors": {
+      "get": {
+        "operationId": "downloadAssessmentErrors",
+        "summary": "Fetches assessment error files",
         "parameters": [
           {
-            "name": "aoUkprn",
-            "in": "path",
+            "name": "id",
+            "in": "query",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "text/csv": {}
             }
           },
+          "404": {
+            "description": "Not found"
+          }
+        }
+      }
+    },
+    "/assessment-entries-learner-withdrawn/{profileId}": {
+      "get": {
+        "operationId": "getAssessmentWithdrawnDetails",
+        "summary": "Fetches details for a withdrawn learner assessment",
+        "parameters": [
           {
             "name": "profileId",
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "componentType",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/ComponentType"
-            }
-          },
-          {
-            "name": "componentIds",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
+              "type": "integer"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Available assessment series retrieved successfully.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AvailableAssessmentSeries"
-                }
-              }
-            }
+            "description": "Successful response",
+            "content": {}
+          },
+          "404": {
+            "description": "Not found"
           }
         }
       }
     },
-    "/api/Assessment/AddAssessmentEntry": {
+    "/assessment-entry-learner-details/{profileId}": {
+      "get": {
+        "operationId": "getAssessmentDetails",
+        "summary": "Fetches assessment details for a learner",
+        "parameters": [
+          {
+            "name": "profileId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {}
+          },
+          "404": {
+            "description": "Not found"
+          }
+        }
+      }
+    },
+    "/assessment-entry-add-core/{profileId}": {
+      "get": {
+        "operationId": "getAddCoreAssessmentEntry",
+        "summary": "Shows view for adding core assessment entry",
+        "parameters": [
+          {
+            "name": "profileId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {}
+          },
+          "404": {
+            "description": "Not found"
+          }
+        }
+      },
       "post": {
-        "operationId": "AddAssessmentEntryAsync",
-        "summary": "Adds a new assessment entry.",
+        "operationId": "postAddCoreAssessmentEntry",
+        "summary": "Adds a core assessment entry",
         "requestBody": {
-          "description": "AddAssessmentEntry request data",
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/AddAssessmentEntryRequest"
+                "$ref": "#/components/schemas/AddAssessmentEntryViewModel"
               }
             }
           }
         },
         "responses": {
-          "200": {
-            "description": "Assessment entry added successfully.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AddAssessmentEntryResponse"
-                }
-              }
-            }
+          "303": {
+            "description": "Redirect to learner assessment details"
+          },
+          "500": {
+            "description": "Internal server error"
           }
         }
       }
     },
-    "/api/Assessment/GetActiveAssessmentEntryDetails/{aoUkprn}/{assessmentId}/{componentType}": {
+    "/assessment-entry-remove-core/{assessmentId}": {
       "get": {
-        "operationId": "GetActiveAssessmentEntryDetailsAsync",
-        "summary": "Retrieves active assessment entry details.",
+        "operationId": "getRemoveCoreAssessmentEntry",
+        "summary": "Shows view to remove core assessment entry",
         "parameters": [
-          {
-            "name": "aoUkprn",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
           {
             "name": "assessmentId",
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "componentType",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/ComponentType"
+              "type": "integer"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Active assessment entry details retrieved successfully.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AssessmentEntryDetails"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/Assessment/GetActiveSpecialismAssessmentEntries/{aoUkprn}/{specialismAssessmentIds}": {
-      "get": {
-        "operationId": "GetActiveSpecialismAssessmentEntriesAsync",
-        "summary": "Retrieves active specialism assessment entries.",
-        "parameters": [
-          {
-            "name": "aoUkprn",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
+            "description": "Successful response",
+            "content": {}
           },
-          {
-            "name": "specialismAssessmentIds",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Active specialism assessment entries retrieved successfully.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/AssessmentEntryDetails"
-                  }
-                }
-              }
-            }
+          "404": {
+            "description": "Not found"
           }
         }
-      }
-    },
-    "/api/Assessment/RemoveAssessmentEntry": {
-      "put": {
-        "operationId": "RemoveAssessmentEntryAsync",
-        "summary": "Removes an assessment entry.",
+      },
+      "post": {
+        "operationId": "postRemoveCoreAssessmentEntry",
+        "summary": "Removes a core assessment entry",
         "requestBody": {
-          "description": "Remove assessment entry request",
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/RemoveAssessmentEntryRequest"
+                "$ref": "#/components/schemas/AssessmentEntryDetailsViewModel"
               }
             }
           }
         },
         "responses": {
-          "200": {
-            "description": "Assessment entry removed successfully.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "boolean"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/Assessment/GetAssessmentSeries": {
-      "get": {
-        "operationId": "GetAssessmentSeriesAsync",
-        "summary": "Retrieves all assessment series details.",
-        "responses": {
-          "200": {
-            "description": "Assessment series details retrieved successfully.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/AssessmentSeriesDetails"
-                  }
-                }
-              }
-            }
+          "303": {
+            "description": "Redirect to learner assessment details"
+          },
+          "500": {
+            "description": "Internal server error"
           }
         }
       }
@@ -257,227 +278,67 @@
   },
   "components": {
     "schemas": {
-      "BulkProcessRequest": {
+      "UploadAssessmentsRequestViewModel": {
         "type": "object",
         "properties": {
-          "aoUkprn": {
-            "type": "integer",
-            "format": "int64"
+          "AoUkprn": {
+            "type": "integer"
           },
-          "blobFileName": {
-            "type": "string"
-          },
-          "blobUniqueReference": {
+          "File": {
             "type": "string",
-            "format": "uuid"
+            "format": "binary"
           },
-          "fileType": {
-            "$ref": "#/components/schemas/FileType"
-          },
-          "documentType": {
-            "$ref": "#/components/schemas/DocumentType"
-          },
-          "loginUserType": {
-            "$ref": "#/components/schemas/LoginUserType"
-          },
-          "performedBy": {
-            "type": "string"
+          "RequestErrorTypeId": {
+            "type": "integer"
           }
         }
       },
-      "BulkAssessmentResponse": {
+      "AddAssessmentEntryViewModel": {
         "type": "object",
-        "description": "Response for bulk assessment processing.",
         "properties": {
-          "isSuccess": {
+          "AssessmentSeriesId": {
+            "type": "integer"
+          },
+          "AssessmentSeriesName": {
+            "type": "string"
+          },
+          "IsOpted": {
             "type": "boolean"
-          }
-        }
-      },
-      "AvailableAssessmentSeries": {
-        "type": "object",
-        "properties": {
-          "profileId": {
-            "type": "integer",
-            "format": "int32"
           },
-          "assessmentSeriesId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "assessmentSeriesName": {
-            "type": "string"
-          }
-        }
-      },
-      "AddAssessmentEntryRequest": {
-        "type": "object",
-        "properties": {
-          "aoUkprn": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "profileId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "assessmentSeriesId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "specialismIds": {
-            "type": "array",
-            "items": {
-              "type": "integer"
-            }
-          },
-          "componentType": {
+          "ComponentType": {
             "$ref": "#/components/schemas/ComponentType"
           },
-          "performedBy": {
+          "PathwayDisplayName": {
             "type": "string"
           }
         }
       },
-      "AddAssessmentEntryResponse": {
+      "AssessmentEntryDetailsViewModel": {
         "type": "object",
         "properties": {
-          "uln": {
-            "type": "integer",
-            "format": "int64"
+          "AssessmentId": {
+            "type": "integer"
           },
-          "isSuccess": {
+          "AssessmentSeriesName": {
+            "type": "string"
+          },
+          "CanRemoveAssessmentEntry": {
             "type": "boolean"
-          }
-        }
-      },
-      "AssessmentEntryDetails": {
-        "type": "object",
-        "properties": {
-          "profileId": {
-            "type": "integer",
-            "format": "int32"
           },
-          "uln": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "assessmentId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "assessmentSeriesId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "assessmentSeriesName": {
-            "type": "string"
-          }
-        }
-      },
-      "RemoveAssessmentEntryRequest": {
-        "type": "object",
-        "properties": {
-          "assessmentId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "aoUkprn": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "specialismAssessmentIds": {
-            "type": "array",
-            "items": {
-              "type": "integer"
-            }
-          },
-          "componentType": {
+          "ComponentType": {
             "$ref": "#/components/schemas/ComponentType"
           },
-          "performedBy": {
+          "PathwayDisplayName": {
             "type": "string"
           }
         }
-      },
-      "AssessmentSeriesDetails": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "componentType": {
-            "$ref": "#/components/schemas/ComponentType"
-          },
-          "name": {
-            "type": "string"
-          },
-          "description": {
-            "type": "string"
-          },
-          "year": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "startDate": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "endDate": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "appealEndDate": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "resultPublishDate": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "resultCalculationYear": {
-            "type": "integer",
-            "format": "int32"
-          }
-        }
-      },
-      "FileType": {
-        "type": "string",
-        "enum": [
-          "Csv",
-          "Xlsx",
-          "Pdf"
-        ]
-      },
-      "DocumentType": {
-        "type": "string",
-        "enum": [
-          "Registrations",
-          "Assessments",
-          "Results",
-          "Documents",
-          "Ucas",
-          "DataExports",
-          "OverallResults",
-          "IndustryPlacements"
-        ]
-      },
-      "LoginUserType": {
-        "type": "string",
-        "enum": [
-          "NotSpecified",
-          "AwardingOrganisation",
-          "TrainingProvider",
-          "Admin"
-        ]
       },
       "ComponentType": {
         "type": "string",
         "enum": [
-          "NotSpecified",
           "Core",
-          "Specialism"
+          "Specialism",
+          "NotSpecified"
         ]
       }
     }

@@ -7,8 +7,8 @@
   "paths": {
     "/{employerAccountId}/notifications-manage": {
       "get": {
-        "operationId": "getManageNotifications",
-        "summary": "View and manage notification preferences.",
+        "summary": "Retrieve notification settings",
+        "operationId": "ManageNotifications_Get",
         "parameters": [
           {
             "name": "employerAccountId",
@@ -16,27 +16,37 @@
             "required": true,
             "schema": {
               "type": "string"
-            },
-            "description": "The unique identifier of the employer account."
+            }
           },
           {
             "name": "updated",
             "in": "query",
+            "required": false,
             "schema": {
-              "type": "string"
-            },
-            "description": "Indicates whether the preferences were recently updated."
+              "type": "string",
+              "nullable": true
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "HTML view showing notification preferences."
+            "description": "Success"
           }
         }
       },
       "post": {
-        "operationId": "postManageNotifications",
-        "summary": "Update notification preferences.",
+        "summary": "Update notification preferences",
+        "operationId": "ManageNotifications_Post",
+        "parameters": [
+          {
+            "name": "employerAccountId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -49,10 +59,10 @@
         },
         "responses": {
           "302": {
-            "description": "Redirects to the notification preferences page after successful update."
+            "description": "Redirect on success"
           },
-          "200": {
-            "description": "HTML view displaying validation errors."
+          "400": {
+            "description": "Validation errors"
           }
         }
       }
@@ -60,52 +70,63 @@
   },
   "components": {
     "schemas": {
-      "ManageNotificationsEditModelEx": {
+      "ManageNotificationsRouteModel": {
         "type": "object",
         "properties": {
           "EmployerAccountId": {
-            "type": "string",
-            "description": "The unique identifier of the employer account."
-          },
-          "IsVacancyRejectedSelected": {
-            "type": "boolean",
-            "description": "Whether notifications for rejected vacancies are enabled."
-          },
-          "IsVacancySentForEmployerReviewSelected": {
-            "type": "boolean",
-            "description": "Whether notifications for vacancies sent for employer review are enabled."
-          },
-          "IsVacancyClosingSoonSelected": {
-            "type": "boolean",
-            "description": "Whether notifications for vacancies closing soon are enabled."
-          },
-          "IsApplicationSubmittedSelected": {
-            "type": "boolean",
-            "description": "Whether notifications for submitted applications are enabled."
-          },
-          "NotificationFrequency": {
-            "$ref": "#/components/schemas/NotificationFrequency",
-            "description": "Frequency of notifications."
-          },
-          "NotificationScope": {
-            "$ref": "#/components/schemas/NotificationScope",
-            "description": "Scope of notifications."
-          },
-          "VacancyApprovedOrRejectedValue": {
-            "type": "string",
-            "description": "Value indicating preferences for vacancy approval or rejection notifications."
-          },
-          "ApplicationSubmittedValue": {
-            "type": "string",
-            "description": "Value indicating preferences for application submission notifications."
-          },
-          "ApplicationSubmittedFrequencyValue": {
-            "type": "string",
-            "description": "Value indicating preferences for frequency of application submission notifications."
+            "type": "string"
           }
         },
         "required": [
           "EmployerAccountId"
+        ]
+      },
+      "ManageNotificationsEditModel": {
+        "type": "object",
+        "properties": {
+          "IsVacancyRejectedSelected": {
+            "type": "boolean"
+          },
+          "IsVacancySentForEmployerReviewSelected": {
+            "type": "boolean"
+          },
+          "IsVacancyClosingSoonSelected": {
+            "type": "boolean"
+          },
+          "IsApplicationSubmittedSelected": {
+            "type": "boolean"
+          },
+          "NotificationFrequency": {
+            "$ref": "#/components/schemas/NotificationFrequency"
+          },
+          "NotificationScope": {
+            "$ref": "#/components/schemas/NotificationScope"
+          },
+          "HasAnySubscription": {
+            "type": "boolean",
+            "readOnly": true
+          }
+        }
+      },
+      "ManageNotificationsEditModelEx": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ManageNotificationsEditModel"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "VacancyApprovedOrRejectedValue": {
+                "type": "string"
+              },
+              "ApplicationSubmittedValue": {
+                "type": "string"
+              },
+              "ApplicationSubmittedFrequencyValue": {
+                "type": "string"
+              }
+            }
+          }
         ]
       },
       "NotificationFrequency": {
@@ -114,16 +135,14 @@
           "Immediately",
           "Daily",
           "Weekly"
-        ],
-        "description": "Defines how frequently notifications are sent."
+        ]
       },
       "NotificationScope": {
         "type": "string",
         "enum": [
           "UserSubmittedVacancies",
           "OrganisationVacancies"
-        ],
-        "description": "Defines the scope of notifications."
+        ]
       }
     }
   }

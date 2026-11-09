@@ -1,13 +1,14 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Employer Vacancy Archive API",
-    "version": "1.0.0"
+    "title": "Archive Vacancy API",
+    "version": "1.0.0",
+    "description": "API for archiving vacancies in the recruitment system."
   },
   "paths": {
     "/{EmployerAccountId}/vacancies/{VacancyId}/archive": {
       "get": {
-        "operationId": "ArchiveVacancy_Get",
+        "operationId": "getArchiveVacancyConfirmation",
         "summary": "Get archive vacancy confirmation view",
         "parameters": [
           {
@@ -30,20 +31,13 @@
         ],
         "responses": {
           "200": {
-            "description": "Archive vacancy confirmation view",
-            "content": {
-              "text/html": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
+            "description": "Archive vacancy confirmation view returned."
           }
         }
       },
       "post": {
-        "operationId": "ArchiveVacancy_Post",
-        "summary": "Archive vacancy",
+        "operationId": "archiveVacancy",
+        "summary": "Archive a vacancy",
         "parameters": [
           {
             "name": "EmployerAccountId",
@@ -74,18 +68,11 @@
           }
         },
         "responses": {
-          "302": {
-            "description": "Redirect to vacancies view with updated status or confirmation message",
-            "content": {
-              "text/html": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
+          "200": {
+            "description": "Vacancy archived successfully."
           },
           "400": {
-            "description": "Invalid model state"
+            "description": "Request invalid."
           }
         }
       }
@@ -95,22 +82,10 @@
     "schemas": {
       "ArchiveEditModel": {
         "type": "object",
-        "required": [
-          "EmployerAccountId",
-          "VacancyId",
-          "ConfirmArchive"
-        ],
         "properties": {
-          "EmployerAccountId": {
-            "type": "string"
-          },
-          "VacancyId": {
-            "type": "string",
-            "format": "uuid"
-          },
           "ConfirmArchive": {
             "type": "boolean",
-            "nullable": true
+            "description": "User confirmation for archiving the vacancy."
           },
           "Status": {
             "type": "string",
@@ -124,25 +99,24 @@
               "Closed",
               "Approved",
               "Archived"
-            ]
-          }
-        }
-      },
-      "VacancyRouteModel": {
-        "type": "object",
-        "required": [
-          "EmployerAccountId",
-          "VacancyId"
-        ],
-        "properties": {
+            ],
+            "description": "The status of the vacancy."
+          },
           "EmployerAccountId": {
-            "type": "string"
+            "type": "string",
+            "description": "Employer account ID associated with the vacancy."
           },
           "VacancyId": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "description": "Unique identifier for the vacancy."
           }
-        }
+        },
+        "required": [
+          "ConfirmArchive",
+          "EmployerAccountId",
+          "VacancyId"
+        ]
       }
     }
   }

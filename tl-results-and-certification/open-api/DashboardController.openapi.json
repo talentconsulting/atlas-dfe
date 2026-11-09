@@ -1,21 +1,33 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Results and Certification Dashboard API",
+    "title": "Dashboard API",
+    "description": "API for managing dashboard operations",
     "version": "1.0.0"
   },
   "paths": {
     "/home": {
       "get": {
+        "operationId": "getDashboardViewData",
         "tags": [
           "Dashboard"
         ],
-        "summary": "Retrieves the dashboard view model",
-        "operationId": "GetDashboardIndex",
-        "parameters": [],
+        "summary": "Retrieve dashboard view model data",
+        "description": "Fetches and returns data for the dashboard view model",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "JWT token for authentication",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
-            "description": "The dashboard view model",
+            "description": "Successful retrieval of dashboard view model data",
             "content": {
               "application/json": {
                 "schema": {
@@ -25,7 +37,16 @@
             }
           },
           "302": {
-            "description": "Redirect to service access denied route"
+            "description": "User access denied and redirected to another route",
+            "headers": {
+              "Location": {
+                "description": "Redirect location URL",
+                "schema": {
+                  "type": "string",
+                  "format": "uri"
+                }
+              }
+            }
           }
         }
       }
@@ -38,12 +59,9 @@
         "properties": {
           "hasAccessToService": {
             "type": "boolean",
-            "description": "Indicates whether the user has access to the service."
+            "description": "Indicates if the user has access to the service"
           }
-        },
-        "required": [
-          "hasAccessToService"
-        ]
+        }
       }
     }
   }

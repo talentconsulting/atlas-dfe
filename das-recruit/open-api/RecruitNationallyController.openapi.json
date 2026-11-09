@@ -5,9 +5,10 @@
     "version": "1.0.0"
   },
   "paths": {
-    "/{EmployerAccountId}/{VacancyId}/location-information": {
+    "/{EmployerAccountId}/vacancies/{VacancyId}/location-information": {
       "get": {
         "operationId": "RecruitNationally_Get",
+        "summary": "Get recruiting nationally location information for a vacancy.",
         "parameters": [
           {
             "name": "EmployerAccountId",
@@ -38,22 +39,26 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "Success",
             "content": {
-              "text/html": {}
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecruitNationallyViewModel"
+                }
+              }
             }
           },
           "400": {
-            "description": "Bad Request - Binding Errors",
-            "content": {
-              "application/json": {}
-            }
+            "description": "Invalid input or binding errors"
+          },
+          "404": {
+            "description": "Vacancy not found or unauthorized access"
           }
-        },
-        "security": []
+        }
       },
       "post": {
         "operationId": "RecruitNationally_Post",
+        "summary": "Update recruiting nationally location information for a vacancy.",
         "parameters": [
           {
             "name": "EmployerAccountId",
@@ -94,24 +99,60 @@
         },
         "responses": {
           "302": {
-            "description": "Redirect to another route",
-            "content": {
-              "application/json": {}
+            "description": "Redirects to the next step in the wizard or the check-your-answers screen",
+            "headers": {
+              "Location": {
+                "description": "Redirect URL",
+                "schema": {
+                  "type": "string",
+                  "format": "uri"
+                }
+              }
             }
           },
           "400": {
-            "description": "Bad Request - Validation Errors",
+            "description": "Validation error occurred",
             "content": {
-              "application/json": {}
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EntityValidationResult"
+                }
+              }
             }
+          },
+          "404": {
+            "description": "Vacancy not found or unauthorized access"
           }
-        },
-        "security": []
+        }
       }
     }
   },
   "components": {
     "schemas": {
+      "RecruitNationallyViewModel": {
+        "type": "object",
+        "properties": {
+          "ApprenticeshipTitle": {
+            "type": "string"
+          },
+          "EmployerAccountId": {
+            "type": "string"
+          },
+          "AdditionalInformation": {
+            "type": "string"
+          },
+          "PageInfo": {
+            "$ref": "#/components/schemas/PartOnePageInfoViewModel"
+          },
+          "VacancyId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "Review": {
+            "$ref": "#/components/schemas/ReviewSummaryViewModel"
+          }
+        }
+      },
       "RecruitNationallyEditModel": {
         "type": "object",
         "properties": {
@@ -131,6 +172,79 @@
           "VacancyId",
           "AdditionalInformation"
         ]
+      },
+      "PartOnePageInfoViewModel": {
+        "type": "object",
+        "properties": {
+          "HasCompletedPartOne": {
+            "type": "boolean"
+          },
+          "HasStartedPartTwo": {
+            "type": "boolean"
+          },
+          "IsWizard": {
+            "type": "boolean"
+          },
+          "SubmitButtonText": {
+            "type": "string"
+          }
+        }
+      },
+      "ReviewSummaryViewModel": {
+        "type": "object",
+        "properties": {
+          "HasBeenReviewed": {
+            "type": "boolean"
+          },
+          "ReviewerComments": {
+            "type": "string"
+          },
+          "FieldIndicators": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ReviewFieldIndicatorViewModel"
+            }
+          }
+        }
+      },
+      "ReviewFieldIndicatorViewModel": {
+        "type": "object",
+        "properties": {
+          "FieldIdentifier": {
+            "type": "string"
+          },
+          "IsChangeRequested": {
+            "type": "boolean"
+          }
+        }
+      },
+      "EntityValidationResult": {
+        "type": "object",
+        "properties": {
+          "HasErrors": {
+            "type": "boolean"
+          },
+          "Errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EntityValidationError"
+            }
+          }
+        }
+      },
+      "EntityValidationError": {
+        "type": "object",
+        "properties": {
+          "Code": {
+            "type": "string"
+          },
+          "FieldName": {
+            "type": "string"
+          },
+          "Message": {
+            "type": "string"
+          }
+        }
       }
     }
   }

@@ -1,0 +1,121 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Certificate Send To API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/SendTo/{certificateId}": {
+      "get": {
+        "operationId": "getSendTo",
+        "parameters": [
+          {
+            "name": "certificateId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/html": {}
+            }
+          }
+        }
+      }
+    },
+    "/SendTo": {
+      "post": {
+        "operationId": "postSendTo",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CertificateSendToViewModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "302": {
+            "description": "Redirect",
+            "headers": {
+              "Location": {
+                "description": "URL of the redirection",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CertificateSendToViewModel": {
+        "type": "object",
+        "properties": {
+          "SendTo": {
+            "$ref": "#/components/schemas/CertificateSendTo"
+          },
+          "Id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "FamilyName": {
+            "type": "string"
+          },
+          "GivenNames": {
+            "type": "string"
+          },
+          "Standard": {
+            "type": "string"
+          },
+          "FullName": {
+            "type": "string"
+          },
+          "Level": {
+            "type": "integer"
+          },
+          "Version": {
+            "type": "string"
+          },
+          "StandardUId": {
+            "type": "string"
+          },
+          "StandardCode": {
+            "type": "integer"
+          },
+          "IsPrivatelyFunded": {
+            "type": "boolean"
+          },
+          "BackToCheckPage": {
+            "type": "boolean"
+          },
+          "ReasonForChange": {
+            "type": "string"
+          },
+          "RequiresReasonForChange": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "SendTo",
+          "Id"
+        ]
+      },
+      "CertificateSendTo": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    }
+  }
+}

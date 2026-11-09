@@ -7,8 +7,8 @@
   "paths": {
     "/accounts/{accountId}/dismiss-outage-message": {
       "post": {
-        "operationId": "DismissOutageMessage",
-        "summary": "Dismiss the outage message.",
+        "operationId": "dismissOutageMessage",
+        "description": "Dismiss the outage message by setting a cookie and redirecting to the provided URL.",
         "parameters": [
           {
             "name": "accountId",
@@ -16,40 +16,30 @@
             "required": true,
             "schema": {
               "type": "string",
-              "pattern": "^[A-Z0-9]{6}$"
+              "description": "Unique account identifier."
+            }
+          },
+          {
+            "name": "returnUrl",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "The URL to redirect to after dismissing the message."
             }
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/x-www-form-urlencoded": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "returnUrl": {
-                    "type": "string",
-                    "format": "uri-reference"
-                  }
-                },
-                "required": [
-                  "returnUrl"
-                ]
-              }
-            }
-          }
-        },
         "responses": {
           "302": {
-            "description": "Redirects to the returnUrl or vacancies route."
+            "description": "Redirect to the specified return URL or fallback route."
           }
         }
       }
     },
     "/accounts/{accountId}/dismiss-cloning-method-changing-message": {
       "post": {
-        "operationId": "DismissCloningMethodChangingMessage",
-        "summary": "Dismiss the cloning method changing message.",
+        "operationId": "dismissCloningMethodChangingMessage",
+        "description": "Dismiss the cloning method changing message by setting a cookie and redirecting to the provided URL.",
         "parameters": [
           {
             "name": "accountId",
@@ -57,32 +47,22 @@
             "required": true,
             "schema": {
               "type": "string",
-              "pattern": "^[A-Z0-9]{6}$"
+              "description": "Unique account identifier."
+            }
+          },
+          {
+            "name": "returnUrl",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "The URL to redirect to after dismissing the message."
             }
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/x-www-form-urlencoded": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "returnUrl": {
-                    "type": "string",
-                    "format": "uri-reference"
-                  }
-                },
-                "required": [
-                  "returnUrl"
-                ]
-              }
-            }
-          }
-        },
         "responses": {
           "302": {
-            "description": "Redirects to the returnUrl or vacancies route."
+            "description": "Redirect to the specified return URL or fallback route."
           }
         }
       }
@@ -90,9 +70,22 @@
   },
   "components": {
     "schemas": {
-      "ReturnUrl": {
-        "type": "string",
-        "format": "uri-reference"
+      "dismissMessageInput": {
+        "type": "object",
+        "properties": {
+          "accountId": {
+            "type": "string",
+            "description": "Unique account identifier."
+          },
+          "returnUrl": {
+            "type": "string",
+            "description": "The URL to redirect to."
+          }
+        },
+        "required": [
+          "accountId",
+          "returnUrl"
+        ]
       }
     }
   }

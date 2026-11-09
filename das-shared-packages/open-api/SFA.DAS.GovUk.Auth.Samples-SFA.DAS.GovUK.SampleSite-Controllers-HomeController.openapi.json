@@ -1,140 +1,122 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "HomeController API",
+    "title": "SFA.DAS.GovUK.SampleSite API",
     "version": "1.0.0"
   },
   "paths": {
     "/": {
       "get": {
-        "operationId": "Index",
-        "summary": "Get the index view.",
+        "operationId": "GetIndex",
+        "summary": "Redirects to home when authenticated or shows the index view.",
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Index view displayed."
           },
           "302": {
-            "description": "Redirect to the home route if authenticated."
+            "description": "Redirect to home."
           }
         }
       }
     },
     "/start": {
       "post": {
-        "operationId": "Start",
-        "summary": "Submit the start form.",
-        "parameters": [
-          {
-            "name": "suspend",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "boolean"
+        "operationId": "PostStart",
+        "summary": "Starts the session and redirects to home.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "suspend": {
+                    "type": "boolean",
+                    "default": false
+                  }
+                }
+              }
             }
           }
-        ],
+        },
         "responses": {
           "302": {
-            "description": "Redirect to the home route."
+            "description": "Redirect to home."
           }
         }
       }
     },
     "/home": {
       "get": {
-        "operationId": "Home",
-        "summary": "Get the home view.",
+        "operationId": "GetHome",
+        "summary": "Displays the home view.",
         "security": [
           {
-            "Authorization": [
-              "IsActiveAccount"
-            ]
+            "IsActiveAccount": []
           }
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Home view displayed."
           }
         }
       }
     },
     "/account-details": {
       "get": {
-        "operationId": "AccountDetails",
-        "summary": "Get account details.",
+        "operationId": "GetAccountDetails",
+        "summary": "Displays account details.",
         "security": [
           {
-            "Authorization": [
-              "IsActiveAccount"
-            ]
+            "IsActiveAccount": []
           }
         ],
         "responses": {
           "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AccountDetails"
-                }
-              }
-            }
+            "description": "Account details view displayed."
           }
         }
       }
     },
     "/active": {
       "get": {
-        "operationId": "ActiveStatus",
-        "summary": "Get active status.",
+        "operationId": "GetActiveStatus",
+        "summary": "Displays the active status view.",
         "security": [
           {
-            "Authorization": [
-              "IsAuthenticated"
-            ]
+            "IsAuthenticated": []
           }
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Active status view displayed."
           }
         }
       }
     },
     "/verified-account-details": {
       "get": {
-        "operationId": "VerifiedAccountDetails",
-        "summary": "Get verified account details.",
+        "operationId": "GetVerifiedAccountDetails",
+        "summary": "Displays verified account details.",
         "security": [
           {
-            "Authorization": [
-              "IsVerified"
-            ]
+            "IsVerified": []
           }
         ],
         "responses": {
           "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AccountDetails"
-                }
-              }
-            }
+            "description": "Verified account details view displayed."
           }
         }
       }
     },
     "/explain-verify": {
       "get": {
-        "operationId": "ExplainVerify",
-        "summary": "Get explanation for identity verification.",
+        "operationId": "GetExplainVerify",
+        "summary": "Displays an explanation view for verify identity.",
         "security": [
           {
-            "Authorization": [
-              "IsActiveAccount"
-            ]
+            "IsActiveAccount": []
           }
         ],
         "parameters": [
@@ -144,35 +126,22 @@
             "required": false,
             "schema": {
               "type": "string",
-              "example": "/"
+              "default": "/"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Explain verify view displayed."
           }
         }
       },
       "post": {
-        "operationId": "ExplainVerifyContinue",
-        "summary": "Continue from explanation of identity verification.",
+        "operationId": "PostExplainVerifyContinue",
+        "summary": "Redirects to the verify identity service.",
         "security": [
           {
-            "Authorization": [
-              "IsActiveAccount"
-            ]
-          }
-        ],
-        "parameters": [
-          {
-            "name": "returnUrl",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "example": "/"
-            }
+            "IsActiveAccount": []
           }
         ],
         "requestBody": {
@@ -181,66 +150,75 @@
             "application/x-www-form-urlencoded": {
               "schema": {
                 "type": "object",
-                "properties": {}
+                "properties": {
+                  "returnUrl": {
+                    "type": "string",
+                    "default": "/"
+                  }
+                }
               }
             }
           }
         },
         "responses": {
           "302": {
-            "description": "Redirect to verify identity route."
+            "description": "Redirect to verify identity service."
           }
         }
       }
     },
     "/sign-out": {
       "get": {
-        "operationId": "SigningOut",
-        "summary": "Sign out user.",
-        "security": [],
+        "operationId": "GetSigningOut",
+        "summary": "Signs out the user and redirects to signed out view.",
         "responses": {
           "302": {
-            "description": "Redirect to signed-out route."
+            "description": "Redirect to signed out view."
           }
         }
       }
     },
     "/user-signed-out": {
       "get": {
-        "operationId": "UserSignedOut",
-        "summary": "Get the signed-out view.",
-        "security": [],
+        "operationId": "GetUserSignedOut",
+        "summary": "Displays the signed out view.",
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Signed out view displayed."
           }
         }
       }
     },
     "/user-suspended": {
       "get": {
-        "operationId": "UserSuspended",
-        "summary": "Get the suspended user view.",
+        "operationId": "GetUserSuspended",
+        "summary": "Displays the suspended view.",
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Suspended view displayed."
           }
         }
       }
     }
   },
   "components": {
-    "schemas": {
-      "AccountDetails": {
-        "type": "object",
-        "properties": {}
+    "securitySchemes": {
+      "IsAuthenticated": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "Required for endpoints protected by IsAuthenticated policy."
+      },
+      "IsActiveAccount": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "Required for endpoints protected by IsActiveAccount policy."
+      },
+      "IsVerified": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "Required for endpoints protected by IsVerified policy."
       }
     },
-    "securitySchemes": {
-      "Authorization": {
-        "type": "http",
-        "scheme": "bearer"
-      }
-    }
+    "schemas": {}
   }
 }

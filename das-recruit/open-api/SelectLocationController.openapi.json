@@ -3,7 +3,7 @@
   "info": {
     "title": "Select Location API",
     "version": "1.0.0",
-    "description": "API for selecting and saving employer addresses during the Add Location journey."
+    "description": "API for selecting and managing location data related to vacancies."
   },
   "paths": {
     "/{EmployerAccountId}/vacancies/{VacancyId}/select-location": {
@@ -11,8 +11,8 @@
         "tags": [
           "Select Location"
         ],
+        "summary": "Retrieve the location selection options for a vacancy.",
         "operationId": "getSelectLocation",
-        "summary": "Render the select location view",
         "parameters": [
           {
             "name": "EmployerAccountId",
@@ -20,8 +20,7 @@
             "required": true,
             "schema": {
               "type": "string"
-            },
-            "description": "The employer's account ID (case-insensitive)"
+            }
           },
           {
             "name": "VacancyId",
@@ -30,8 +29,7 @@
             "schema": {
               "type": "string",
               "format": "uuid"
-            },
-            "description": "The ID of the vacancy"
+            }
           },
           {
             "name": "Origin",
@@ -39,8 +37,7 @@
             "required": false,
             "schema": {
               "$ref": "#/components/schemas/MultipleLocationsJourneyOrigin"
-            },
-            "description": "Flow origin for multiple locations journey"
+            }
           },
           {
             "name": "Wizard",
@@ -49,21 +46,32 @@
             "schema": {
               "type": "boolean",
               "default": true
-            },
-            "description": "Indicates if wizard mode is enabled"
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "Successful retrieval of the locations.",
             "content": {
-              "text/html": {
-                "example": "<html>Rendered select location view</html>"
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SelectLocationViewModel"
+                }
               }
             }
           },
           "302": {
-            "description": "Redirect response"
+            "description": "Redirect to the Add Location screen if postcode is missing."
+          },
+          "400": {
+            "description": "Bad Request - Validation Errors",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EntityValidationResult"
+                }
+              }
+            }
           }
         }
       },
@@ -71,8 +79,8 @@
         "tags": [
           "Select Location"
         ],
+        "summary": "Submit a selected location for a vacancy.",
         "operationId": "postSelectLocation",
-        "summary": "Save selected address or return view with errors",
         "parameters": [
           {
             "name": "EmployerAccountId",
@@ -80,8 +88,7 @@
             "required": true,
             "schema": {
               "type": "string"
-            },
-            "description": "The employer's account ID (case-insensitive)"
+            }
           },
           {
             "name": "VacancyId",
@@ -90,27 +97,7 @@
             "schema": {
               "type": "string",
               "format": "uuid"
-            },
-            "description": "The ID of the vacancy"
-          },
-          {
-            "name": "Origin",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/MultipleLocationsJourneyOrigin"
-            },
-            "description": "Flow origin for multiple locations journey"
-          },
-          {
-            "name": "Wizard",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "boolean",
-              "default": true
-            },
-            "description": "Indicates if wizard mode is enabled"
+            }
           }
         ],
         "requestBody": {
@@ -124,24 +111,26 @@
           }
         },
         "responses": {
+          "200": {
+            "description": "Successfully added the selected address to the vacancy's list of locations.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SelectLocationViewModel"
+                }
+              }
+            }
+          },
           "302": {
-            "description": "Redirect response"
+            "description": "Redirect to the Add Location screen if postcode is missing."
           },
           "400": {
-            "description": "Validation error occurred",
+            "description": "Bad Request - Validation Errors",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/EntityValidationResult"
                 }
-              }
-            }
-          },
-          "200": {
-            "description": "Successfully handled response and rendered view",
-            "content": {
-              "text/html": {
-                "example": "<html>Rendered select location view with errors</html>"
               }
             }
           }
@@ -155,13 +144,11 @@
         "type": "object",
         "properties": {
           "EmployerAccountId": {
-            "type": "string",
-            "description": "The employer's account ID"
+            "type": "string"
           },
           "VacancyId": {
             "type": "string",
-            "format": "uuid",
-            "description": "The ID of the vacancy"
+            "format": "uuid"
           }
         },
         "required": [
@@ -170,42 +157,73 @@
         ]
       },
       "AddLocationJourneyModel": {
-        "type": "object",
         "allOf": [
           {
             "$ref": "#/components/schemas/VacancyRouteModel"
-          }
-        ],
-        "properties": {
-          "Origin": {
-            "$ref": "#/components/schemas/MultipleLocationsJourneyOrigin"
           },
-          "Wizard": {
-            "type": "boolean",
-            "default": true
+          {
+            "type": "object",
+            "properties": {
+              "Origin": {
+                "$ref": "#/components/schemas/MultipleLocationsJourneyOrigin"
+              },
+              "Wizard": {
+                "type": "boolean",
+                "default": true
+              }
+            }
           }
-        },
-        "required": [
-          "Origin"
         ]
       },
       "SelectLocationEditModel": {
-        "type": "object",
         "allOf": [
           {
             "$ref": "#/components/schemas/AddLocationJourneyModel"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "SelectedLocation": {
+                "type": "string",
+                "description": "The selected address.",
+                "nullable": true
+              }
+            },
+            "required": [
+              "SelectedLocation"
+            ]
           }
-        ],
-        "properties": {
-          "SelectedLocation": {
-            "type": "string",
-            "description": "Selected address location",
-            "minLength": 1
-          }
-        },
-        "required": [
-          "SelectedLocation"
         ]
+      },
+      "SelectLocationViewModel": {
+        "type": "object",
+        "properties": {
+          "ApprenticeshipTitle": {
+            "type": "string"
+          },
+          "EmployerAccountId": {
+            "type": "string"
+          },
+          "Locations": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "Origin": {
+            "$ref": "#/components/schemas/MultipleLocationsJourneyOrigin"
+          },
+          "PageInfo": {
+            "type": "object"
+          },
+          "Postcode": {
+            "type": "string"
+          },
+          "VacancyId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
       },
       "MultipleLocationsJourneyOrigin": {
         "type": "string",
@@ -218,8 +236,7 @@
         "type": "object",
         "properties": {
           "HasErrors": {
-            "type": "boolean",
-            "description": "Indicates if validation errors exist"
+            "type": "boolean"
           },
           "Errors": {
             "type": "array",
@@ -233,60 +250,16 @@
         "type": "object",
         "properties": {
           "RuleId": {
-            "type": "integer",
-            "format": "int64",
-            "description": "ID of the validation rule"
+            "type": "integer"
           },
           "PropertyName": {
-            "type": "string",
-            "description": "Name of the property causing the error"
+            "type": "string"
           },
           "ErrorMessage": {
-            "type": "string",
-            "description": "Error message"
+            "type": "string"
           },
           "ErrorCode": {
-            "type": "string",
-            "description": "Error code for the validation failure"
-          }
-        }
-      },
-      "Address": {
-        "type": "object",
-        "properties": {
-          "AddressLine1": {
-            "type": "string",
-            "description": "First line of the address"
-          },
-          "AddressLine2": {
-            "type": "string",
-            "description": "Second line of the address"
-          },
-          "AddressLine3": {
-            "type": "string",
-            "description": "Third line of the address"
-          },
-          "AddressLine4": {
-            "type": "string",
-            "description": "Fourth line of the address"
-          },
-          "Postcode": {
-            "type": "string",
-            "description": "Postcode of the address"
-          },
-          "Country": {
-            "type": "string",
-            "description": "Country of the address"
-          },
-          "Latitude": {
-            "type": "number",
-            "format": "float",
-            "description": "Latitude coordinates of the address"
-          },
-          "Longitude": {
-            "type": "number",
-            "format": "float",
-            "description": "Longitude coordinates of the address"
+            "type": "string"
           }
         }
       }

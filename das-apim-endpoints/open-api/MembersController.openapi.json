@@ -1,14 +1,25 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "AdminAan API",
+    "title": "Members API",
     "version": "1.0.0"
   },
   "paths": {
     "/Members": {
       "get": {
-        "summary": "Get Members",
+        "summary": "Get members",
         "operationId": "GetMembers",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "description": "Query string parameters",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "Successful response",
@@ -25,12 +36,13 @@
     },
     "/Members/{memberId}/profile": {
       "get": {
-        "summary": "Get Member Profile",
+        "summary": "Get member profile",
         "operationId": "GetMemberProfile",
         "parameters": [
           {
             "name": "memberId",
             "in": "path",
+            "description": "Member ID",
             "required": true,
             "schema": {
               "type": "string",
@@ -40,6 +52,7 @@
           {
             "name": "X-RequestedByMemberId",
             "in": "header",
+            "description": "Requested by member ID",
             "required": true,
             "schema": {
               "type": "string",
@@ -63,12 +76,13 @@
     },
     "/Members/{memberId}/leaving": {
       "post": {
-        "summary": "Post Member Leaving",
+        "summary": "Post member leaving",
         "operationId": "PostMemberLeaving",
         "parameters": [
           {
             "name": "memberId",
             "in": "path",
+            "description": "Member ID",
             "required": true,
             "schema": {
               "type": "string",
@@ -78,6 +92,7 @@
           {
             "name": "X-RequestedByMemberId",
             "in": "header",
+            "description": "Requested by member ID",
             "required": true,
             "schema": {
               "type": "string",
@@ -86,6 +101,7 @@
           }
         ],
         "requestBody": {
+          "description": "Request body for posting member status",
           "required": true,
           "content": {
             "application/json": {
@@ -137,7 +153,14 @@
       },
       "MemberSummary": {
         "type": "object",
-        "properties": {}
+        "properties": {
+          "FullName": {
+            "type": "string"
+          },
+          "Email": {
+            "type": "string"
+          }
+        }
       },
       "GetMemberProfileQueryResult": {
         "type": "object",
@@ -166,7 +189,12 @@
             "type": "string"
           },
           "UserType": {
-            "$ref": "#/components/schemas/MemberUserType"
+            "type": "string",
+            "enum": [
+              "Apprentice",
+              "Employer",
+              "Admin"
+            ]
           },
           "IsRegionalChair": {
             "type": "boolean"
@@ -191,40 +219,6 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/MemberPreference"
-            }
-          }
-        }
-      },
-      "MemberUserType": {
-        "type": "string",
-        "enum": [
-          "Apprentice",
-          "Employer",
-          "Admin"
-        ]
-      },
-      "Apprenticeship": {
-        "type": "object",
-        "properties": {
-          "Sector": {
-            "type": "string",
-            "nullable": true
-          },
-          "Programme": {
-            "type": "string",
-            "nullable": true
-          },
-          "Level": {
-            "type": "string",
-            "nullable": true
-          },
-          "ActiveApprenticesCount": {
-            "type": "integer"
-          },
-          "Sectors": {
-            "type": "array",
-            "items": {
-              "type": "string"
             }
           }
         }
@@ -320,7 +314,33 @@
       },
       "PostMemberStatusModel": {
         "type": "object",
-        "properties": {}
+        "additionalProperties": true
+      },
+      "Apprenticeship": {
+        "type": "object",
+        "properties": {
+          "Sector": {
+            "type": "string",
+            "nullable": true
+          },
+          "Programme": {
+            "type": "string",
+            "nullable": true
+          },
+          "Level": {
+            "type": "string",
+            "nullable": true
+          },
+          "ActiveApprenticesCount": {
+            "type": "integer"
+          },
+          "Sectors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
       }
     }
   }

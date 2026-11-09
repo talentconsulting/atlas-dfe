@@ -3,13 +3,13 @@
   "info": {
     "title": "Delete Vacancy API",
     "version": "1.0.0",
-    "description": "API for deleting vacancies in the employer recruitment system."
+    "description": "API for managing the deletion of vacancies in the Employer Web application."
   },
   "paths": {
     "/{EmployerAccountId}/{VacancyId}/delete": {
       "get": {
-        "operationId": "GetDeleteVacancyConfirmationView",
-        "summary": "Get vacancy deletion confirmation view",
+        "operationId": "getDeleteVacancyConfirmationView",
+        "summary": "Retrieve delete confirmation view.",
         "parameters": [
           {
             "name": "EmployerAccountId",
@@ -17,8 +17,7 @@
             "required": true,
             "schema": {
               "type": "string"
-            },
-            "description": "ID of the employer's account"
+            }
           },
           {
             "name": "VacancyId",
@@ -27,22 +26,25 @@
             "schema": {
               "type": "string",
               "format": "uuid"
-            },
-            "description": "ID of the vacancy to be deleted"
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Delete vacancy confirmation page returned.",
+            "description": "Successful response.",
             "content": {
-              "text/html": {}
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
             }
           }
         }
       },
       "post": {
-        "operationId": "DeleteVacancy",
-        "summary": "Delete a vacancy",
+        "operationId": "deleteVacancy",
+        "summary": "Delete the vacancy based on confirmation inputs.",
         "parameters": [
           {
             "name": "EmployerAccountId",
@@ -50,8 +52,7 @@
             "required": true,
             "schema": {
               "type": "string"
-            },
-            "description": "ID of the employer's account"
+            }
           },
           {
             "name": "VacancyId",
@@ -60,8 +61,7 @@
             "schema": {
               "type": "string",
               "format": "uuid"
-            },
-            "description": "ID of the vacancy to be deleted"
+            }
           }
         ],
         "requestBody": {
@@ -75,17 +75,6 @@
           }
         },
         "responses": {
-          "200": {
-            "description": "Vacancy deletion successful.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "additionalProperties": false
-                }
-              }
-            }
-          },
           "400": {
             "description": "Validation failed.",
             "content": {
@@ -95,6 +84,12 @@
                 }
               }
             }
+          },
+          "302": {
+            "description": "Redirection based on deletion settings."
+          },
+          "200": {
+            "description": "Vacancy successfully deleted."
           }
         }
       }
@@ -102,39 +97,25 @@
   },
   "components": {
     "schemas": {
-      "VacancyRouteModel": {
-        "type": "object",
-        "properties": {
-          "EmployerAccountId": {
-            "type": "string"
-          },
-          "VacancyId": {
-            "type": "string",
-            "format": "uuid"
-          }
-        },
-        "required": [
-          "EmployerAccountId",
-          "VacancyId"
-        ]
-      },
       "DeleteEditModel": {
         "type": "object",
         "properties": {
           "EmployerAccountId": {
-            "type": "string"
+            "type": "string",
+            "description": "ID of the employer's account."
           },
           "VacancyId": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "description": "ID of the vacancy."
           },
           "ConfirmDeletion": {
             "type": "boolean",
-            "nullable": true,
-            "description": "Confirmation flag for deletion"
+            "description": "Indicates whether deletion is confirmed."
           },
           "Status": {
             "type": "string",
+            "description": "Current status of the vacancy.",
             "enum": [
               "Draft",
               "Review",
@@ -145,13 +126,13 @@
               "Closed",
               "Approved",
               "Archived"
-            ],
-            "description": "Current status of the vacancy"
+            ]
           }
         },
         "required": [
           "EmployerAccountId",
-          "VacancyId"
+          "VacancyId",
+          "ConfirmDeletion"
         ]
       }
     }

@@ -5,9 +5,8 @@
     "version": "1.0.0"
   },
   "paths": {
-    "/{EmployerAccountId}/{VacancyId}/legal-entity-agreement": {
+    "/accounts/{EmployerAccountId}/vacancies/{VacancyId}/legal-entity-agreement": {
       "get": {
-        "summary": "Legal Entity Agreement Soft Stop",
         "operationId": "LegalEntityAgreementSoftStop",
         "parameters": [
           {
@@ -37,21 +36,20 @@
           }
         ],
         "responses": {
-          "302": {
-            "description": "Redirect based on legal entity agreement status"
-          },
           "200": {
-            "description": "Soft stop page rendered",
+            "description": "Successful response with the view model.",
             "content": {
-              "text/html": {}
+              "application/json": {}
             }
+          },
+          "302": {
+            "description": "Redirect response to another route."
           }
         }
       }
     },
-    "/{EmployerAccountId}/{VacancyId}/legal-entity-agreement-stop": {
+    "/accounts/{EmployerAccountId}/vacancies/{VacancyId}/legal-entity-agreement-stop": {
       "get": {
-        "summary": "Legal Entity Agreement Hard Stop",
         "operationId": "LegalEntityAgreementHardStop",
         "parameters": [
           {
@@ -81,14 +79,14 @@
           }
         ],
         "responses": {
-          "302": {
-            "description": "Redirect to dashboard or render hard stop page"
-          },
           "200": {
-            "description": "Hard stop page rendered",
+            "description": "Successful response with the view model.",
             "content": {
-              "text/html": {}
+              "application/json": {}
             }
+          },
+          "302": {
+            "description": "Redirect response to another route."
           }
         }
       }
@@ -100,8 +98,7 @@
         "type": "object",
         "properties": {
           "wizard": {
-            "type": "boolean",
-            "description": "Indicates if the user is in task list mode"
+            "type": "boolean"
           }
         }
       },
@@ -109,15 +106,17 @@
         "type": "object",
         "properties": {
           "EmployerAccountId": {
-            "type": "string",
-            "description": "Employer's account identifier"
+            "type": "string"
           },
           "VacancyId": {
             "type": "string",
-            "format": "uuid",
-            "description": "Vacancy identifier"
+            "format": "uuid"
           }
-        }
+        },
+        "required": [
+          "EmployerAccountId",
+          "VacancyId"
+        ]
       }
     }
   }

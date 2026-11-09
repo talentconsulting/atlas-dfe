@@ -1,0 +1,124 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "BatchSearch API",
+    "version": "1.0.0",
+    "description": "API for batch searching within the Admin Service."
+  },
+  "paths": {
+    "/BatchSearch": {
+      "get": {
+        "operationId": "GetBatchLogs",
+        "summary": "Retrieve batch logs",
+        "parameters": [
+          {
+            "name": "batchNumber",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "nullable": true
+            },
+            "description": "Optional batch number to filter batch logs."
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1
+            },
+            "description": "Page number for pagination."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Batch logs retrieved successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BatchSearchViewModel_StaffBatchLogResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/BatchSearch/Results": {
+      "get": {
+        "operationId": "GetBatchSearchResults",
+        "summary": "Retrieve batch search results",
+        "parameters": [
+          {
+            "name": "batchNumber",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Batch number used for the search."
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1
+            },
+            "description": "Page number for pagination."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Batch search results retrieved successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BatchSearchViewModel_StaffBatchSearchResultViewModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "BatchSearchViewModel_StaffBatchLogResult": {
+        "type": "object",
+        "properties": {
+          "PaginatedList": {
+            "type": "object",
+            "description": "Paginated list of batch logs. Structure unknown."
+          },
+          "BatchNumber": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Batch number filter applied."
+          },
+          "Page": {
+            "type": "integer",
+            "description": "Current page number."
+          }
+        }
+      },
+      "BatchSearchViewModel_StaffBatchSearchResultViewModel": {
+        "type": "object",
+        "properties": {
+          "Page": {
+            "type": "integer",
+            "description": "Current page number."
+          },
+          "BatchNumber": {
+            "type": "integer",
+            "description": "The batch number used for searching."
+          }
+        }
+      }
+    }
+  }
+}

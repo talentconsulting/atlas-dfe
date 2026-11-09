@@ -1,14 +1,14 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Employer Web API",
+    "title": "Dashboard API",
     "version": "1.0.0"
   },
   "paths": {
-    "/{employerAccountId}": {
+    "/accounts/{employerAccountId}": {
       "get": {
-        "operationId": "Dashboard_Get",
-        "summary": "Retrieve the dashboard view for an employer account",
+        "operationId": "getDashboard",
+        "summary": "Retrieve dashboard information for a specific employer account.",
         "parameters": [
           {
             "name": "employerAccountId",
@@ -17,16 +17,16 @@
             "schema": {
               "type": "string"
             },
-            "description": "The unique identifier for the employer's account"
+            "description": "Unique identifier for the employer account."
           }
         ],
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "Successful operation.",
             "content": {
-              "text/html": {
+              "application/json": {
                 "schema": {
-                  "type": "string"
+                  "$ref": "#/components/schemas/DashboardViewModel"
                 }
               }
             }
@@ -36,6 +36,16 @@
     }
   },
   "components": {
-    "schemas": {}
+    "schemas": {
+      "DashboardViewModel": {
+        "type": "object",
+        "properties": {
+          "fromMaHome": {
+            "type": "boolean",
+            "description": "Indicates if the user was referred from the MA home back link."
+          }
+        }
+      }
+    }
   }
 }

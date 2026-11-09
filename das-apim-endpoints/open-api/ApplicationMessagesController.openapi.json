@@ -2,13 +2,12 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Application Messages API",
-    "version": "1.0.0",
-    "description": "API for managing application messages."
+    "version": "1.0.0"
   },
   "paths": {
     "/api/applications/{applicationId}/messages": {
       "get": {
-        "summary": "Get messages by application ID",
+        "summary": "Get Application Messages by Application ID",
         "operationId": "GetApplicationMessagesByIdAsync",
         "parameters": [
           {
@@ -41,15 +40,15 @@
             }
           },
           "404": {
-            "description": "Not found"
+            "description": "Not Found"
           },
           "500": {
-            "description": "Internal server error"
+            "description": "Internal Server Error"
           }
         }
       },
       "post": {
-        "summary": "Create a new application message",
+        "summary": "Create Application Message",
         "operationId": "CreateApplicationMessageAsync",
         "parameters": [
           {
@@ -84,14 +83,14 @@
             }
           },
           "500": {
-            "description": "Internal server error"
+            "description": "Internal Server Error"
           }
         }
       }
     },
     "/api/applications/messages/{messageId}": {
       "get": {
-        "summary": "Get message by ID",
+        "summary": "Get Application Message by Message ID",
         "operationId": "GetMessageByIdAsync",
         "parameters": [
           {
@@ -116,17 +115,17 @@
             }
           },
           "404": {
-            "description": "Not found"
+            "description": "Not Found"
           },
           "500": {
-            "description": "Internal server error"
+            "description": "Internal Server Error"
           }
         }
       }
     },
     "/api/applications/{applicationId}/messages/read": {
       "put": {
-        "summary": "Mark all messages as read",
+        "summary": "Mark All Messages as Read",
         "operationId": "MarkAllMessagesAsRead",
         "parameters": [
           {
@@ -161,7 +160,7 @@
             }
           },
           "500": {
-            "description": "Internal server error"
+            "description": "Internal Server Error"
           }
         }
       }
@@ -178,7 +177,10 @@
               "$ref": "#/components/schemas/ApplicationMessage"
             }
           }
-        }
+        },
+        "required": [
+          "messages"
+        ]
       },
       "ApplicationMessage": {
         "type": "object",
@@ -222,7 +224,16 @@
             "type": "string",
             "format": "date-time"
           }
-        }
+        },
+        "required": [
+          "messageId",
+          "applicationId",
+          "messageText",
+          "messageType",
+          "sentByName",
+          "sentByEmail",
+          "sentAt"
+        ]
       },
       "GetApplicationMessageByIdQueryResponse": {
         "type": "object",
@@ -266,16 +277,19 @@
             "type": "string",
             "format": "date-time"
           }
-        }
-      },
-      "CreateApplicationMessageCommand": {
-        "type": "object",
+        },
         "required": [
+          "messageId",
           "applicationId",
           "messageText",
           "messageType",
-          "userType"
-        ],
+          "sentByName",
+          "sentByEmail",
+          "sentAt"
+        ]
+      },
+      "CreateApplicationMessageCommand": {
+        "type": "object",
         "properties": {
           "applicationId": {
             "type": "string",
@@ -296,7 +310,15 @@
           "sentByEmail": {
             "type": "string"
           }
-        }
+        },
+        "required": [
+          "applicationId",
+          "messageText",
+          "messageType",
+          "userType",
+          "sentByName",
+          "sentByEmail"
+        ]
       },
       "CreateApplicationMessageCommandResponse": {
         "type": "object",
@@ -314,14 +336,15 @@
           "emailSent": {
             "type": "boolean"
           }
-        }
+        },
+        "required": [
+          "id",
+          "notifications",
+          "emailSent"
+        ]
       },
       "MarkAllMessagesAsReadCommand": {
         "type": "object",
-        "required": [
-          "applicationId",
-          "userType"
-        ],
         "properties": {
           "applicationId": {
             "type": "string",
@@ -330,11 +353,15 @@
           "userType": {
             "type": "string"
           }
-        }
+        },
+        "required": [
+          "applicationId",
+          "userType"
+        ]
       },
       "EmptyResponse": {
         "type": "object",
-        "additionalProperties": false
+        "description": "Empty response body"
       },
       "NotificationDefinition": {
         "type": "object",
@@ -353,9 +380,13 @@
           },
           "emailAddress": {
             "type": "string",
-            "nullable": true
+            "format": "email"
           }
-        }
+        },
+        "required": [
+          "templateName",
+          "recipientKind"
+        ]
       }
     }
   }

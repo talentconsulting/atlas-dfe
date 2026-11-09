@@ -1,15 +1,16 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "SFA.DAS.GovUK.Auth API",
-    "version": "1.0.0"
+    "title": "Verify Identity API",
+    "version": "1.0.0",
+    "description": "API for verifying user identity via authentication services."
   },
   "paths": {
     "/service/verify-identity": {
       "get": {
-        "operationId": "VerifyIdentityController_Index",
-        "summary": "Verify Identity",
-        "description": "Starts a challenge with GovUK Verify service to verify identity.",
+        "operationId": "verifyIdentity",
+        "summary": "Verify user identity",
+        "description": "Initiates a request to verify the user's identity.",
         "parameters": [
           {
             "name": "returnUrl",
@@ -19,22 +20,26 @@
               "type": "string",
               "default": "/"
             },
-            "description": "URL to redirect to after verification."
+            "description": "The URL to redirect to after verification."
           }
         ],
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "The request to verify identity was successful.",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "string"
+                  "type": "object",
+                  "additionalProperties": true
                 }
               }
             }
           },
           "302": {
-            "description": "Redirect response"
+            "description": "Redirect to the identity provider or target URL."
+          },
+          "default": {
+            "description": "Unexpected error."
           }
         }
       }

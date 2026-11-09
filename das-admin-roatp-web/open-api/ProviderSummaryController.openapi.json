@@ -2,29 +2,28 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Provider Summary API",
-    "description": "API for managing and viewing provider summaries in the RoATP system.",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "description": "API for managing provider summaries in the RoATP system."
   },
   "paths": {
     "/providers/{ukprn}": {
       "get": {
-        "summary": "Get Provider Summary",
-        "description": "Fetches the summary of a provider given their UKPRN.",
-        "operationId": "getProviderSummary",
+        "operationId": "ProviderSummary_Index",
+        "summary": "Retrieve provider summary information",
         "parameters": [
           {
             "name": "ukprn",
             "in": "path",
             "required": true,
-            "description": "UK Provider Reference Number of the provider",
             "schema": {
               "type": "integer"
-            }
+            },
+            "description": "The unique identifier for the provider."
           }
         ],
         "responses": {
           "200": {
-            "description": "Successful response with provider summary",
+            "description": "Successful response with provider summary details.",
             "content": {
               "application/json": {
                 "schema": {
@@ -34,14 +33,12 @@
             }
           },
           "302": {
-            "description": "Redirection to the home route."
+            "description": "Redirect to the home route if the organisation cannot be found."
           }
         },
         "security": [
           {
-            "RoleBasedAuth": [
-              "RoatpAdminTeam"
-            ]
+            "RoatpAdmin": []
           }
         ]
       }
@@ -54,31 +51,31 @@
         "properties": {
           "SearchProviderUrl": {
             "type": "string",
-            "description": "URL for searching a provider."
+            "description": "URL for searching providers."
           },
           "StatusChangeLink": {
             "type": "string",
-            "description": "URL for changing the provider's status."
+            "description": "URL for changing provider status."
           },
           "ProviderTypeChangeLink": {
             "type": "string",
-            "description": "URL for changing the provider's type."
+            "description": "URL for changing provider type."
           },
           "OrganisationTypeChangeLink": {
             "type": "string",
-            "description": "URL for changing the provider's organisation type."
+            "description": "URL for changing organisation type."
           },
           "OffersApprenticeshipUnitsChangeLink": {
             "type": "string",
-            "description": "URL for changing whether the provider offers apprenticeship units."
+            "description": "URL for changing apprenticeship units offered by the provider."
           },
           "ManageRestrictedCoursesUrl": {
             "type": "string",
-            "description": "URL for managing restricted apprenticeship courses."
+            "description": "URL for managing restricted courses offered by the provider."
           },
           "ManageApprovedCoursesUrl": {
             "type": "string",
-            "description": "URL for managing approved courses for the provider."
+            "description": "URL for managing approved courses offered by the provider."
           },
           "ChangeHowWeManageThisProviderUrl": {
             "type": "string",
@@ -86,27 +83,17 @@
           },
           "ManageApprovedUnitsUrl": {
             "type": "string",
-            "description": "URL for managing the provider's approved units."
+            "description": "URL for managing approved apprenticeship units offered by the provider."
           }
         },
-        "required": [
-          "SearchProviderUrl",
-          "StatusChangeLink",
-          "ProviderTypeChangeLink",
-          "OrganisationTypeChangeLink",
-          "OffersApprenticeshipUnitsChangeLink",
-          "ManageRestrictedCoursesUrl",
-          "ManageApprovedCoursesUrl",
-          "ChangeHowWeManageThisProviderUrl",
-          "ManageApprovedUnitsUrl"
-        ]
+        "description": "View model for provider summary details."
       }
     },
     "securitySchemes": {
-      "RoleBasedAuth": {
+      "RoatpAdmin": {
         "type": "http",
         "scheme": "bearer",
-        "description": "Role-based authorization using the 'RoatpAdminTeam' role."
+        "description": "Bearer token required for Roatp admin access."
       }
     }
   }

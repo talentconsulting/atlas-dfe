@@ -1,0 +1,183 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Certificate Address API",
+    "version": "1.0.0",
+    "description": "API for managing certificate addresses."
+  },
+  "paths": {
+    "/certificate/address/{certificateId}": {
+      "get": {
+        "summary": "Get Certificate Address",
+        "operationId": "GetCertificateAddress",
+        "parameters": [
+          {
+            "name": "certificateId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "editForm",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": true
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CertificateAddressViewModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/certificate/address": {
+      "post": {
+        "summary": "Update Certificate Address",
+        "operationId": "UpdateCertificateAddress",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CertificateAddressViewModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "302": {
+            "description": "Redirect to Check page",
+            "headers": {
+              "Location": {
+                "description": "The URL to the Check page.",
+                "schema": {
+                  "type": "string",
+                  "format": "uri"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request body."
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CertificateAddressViewModel": {
+        "type": "object",
+        "properties": {
+          "SendTo": {
+            "$ref": "#/components/schemas/CertificateSendTo"
+          },
+          "Name": {
+            "type": "string"
+          },
+          "Dept": {
+            "type": "string"
+          },
+          "Employer": {
+            "type": "string"
+          },
+          "AddressLine1": {
+            "type": "string"
+          },
+          "AddressLine2": {
+            "type": "string"
+          },
+          "AddressLine3": {
+            "type": "string"
+          },
+          "City": {
+            "type": "string"
+          },
+          "Postcode": {
+            "type": "string"
+          },
+          "EditForm": {
+            "type": "boolean"
+          },
+          "PrivatelyFundedStatus": {
+            "type": "string"
+          },
+          "Id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "FamilyName": {
+            "type": "string"
+          },
+          "GivenNames": {
+            "type": "string"
+          },
+          "Standard": {
+            "type": "string"
+          },
+          "Username": {
+            "type": "string"
+          },
+          "FullName": {
+            "type": "string"
+          },
+          "Level": {
+            "type": "integer"
+          },
+          "Version": {
+            "type": "string"
+          },
+          "StandardUId": {
+            "type": "string"
+          },
+          "StandardCode": {
+            "type": "integer"
+          },
+          "IsPrivatelyFunded": {
+            "type": "boolean"
+          },
+          "BackToCheckPage": {
+            "type": "boolean"
+          },
+          "ReasonForChange": {
+            "type": "string"
+          },
+          "RequiresReasonForChange": {
+            "type": "boolean",
+            "default": true
+          }
+        },
+        "required": [
+          "Id",
+          "EditForm"
+        ]
+      },
+      "CertificateSendTo": {
+        "type": "object",
+        "properties": {
+          "Id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "Name": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

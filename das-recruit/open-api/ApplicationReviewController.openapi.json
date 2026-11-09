@@ -1,14 +1,14 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Application Review API",
+    "title": "ApplicationReview",
     "version": "1.0.0"
   },
   "paths": {
-    "/account/{EmployerAccountId}/vacancy/{VacancyId}/application/{ApplicationReviewId}": {
+    "/{EmployerAccountId}/{VacancyId}/{ApplicationReviewId}": {
       "get": {
-        "operationId": "ApplicationReview_Get",
-        "summary": "Gets the application review view.",
+        "operationId": "getApplicationReview",
+        "summary": "Retrieve application review details.",
         "parameters": [
           {
             "name": "EmployerAccountId",
@@ -39,7 +39,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "Details of the application review",
             "content": {
               "application/json": {
                 "schema": {
@@ -51,8 +51,8 @@
         }
       },
       "post": {
-        "operationId": "ApplicationReview_Post",
-        "summary": "Submits the application review.",
+        "operationId": "postApplicationReview",
+        "summary": "Submit changes to application review.",
         "parameters": [
           {
             "name": "EmployerAccountId",
@@ -92,23 +92,16 @@
           }
         },
         "responses": {
-          "200": {
-            "description": "Successful operation",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApplicationReview"
-                }
-              }
-            }
+          "204": {
+            "description": "Changes successfully saved"
           }
         }
       }
     },
-    "/account/{EmployerAccountId}/vacancy/{VacancyId}/application/{ApplicationReviewId}/feedback": {
+    "/{EmployerAccountId}/{VacancyId}/{ApplicationReviewId}/feedback": {
       "get": {
-        "operationId": "ApplicationReviewFeedback_Get",
-        "summary": "Gets feedback view for application review.",
+        "operationId": "getApplicationReviewFeedback",
+        "summary": "Retrieve feedback for an application review.",
         "parameters": [
           {
             "name": "EmployerAccountId",
@@ -139,7 +132,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Feedback view retrieved successfully",
+            "description": "Feedback details",
             "content": {
               "application/json": {
                 "schema": {
@@ -151,8 +144,8 @@
         }
       },
       "post": {
-        "operationId": "ApplicationReviewFeedback_Post",
-        "summary": "Submits feedback for application review.",
+        "operationId": "postApplicationReviewFeedback",
+        "summary": "Update feedback for an application review.",
         "parameters": [
           {
             "name": "EmployerAccountId",
@@ -192,23 +185,16 @@
           }
         },
         "responses": {
-          "200": {
-            "description": "Feedback submitted successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApplicationReviewFeedbackViewModel"
-                }
-              }
-            }
+          "204": {
+            "description": "Feedback successfully saved"
           }
         }
       }
     },
-    "/account/{EmployerAccountId}/vacancy/{VacancyId}/application/{ApplicationReviewId}/status": {
+    "/{EmployerAccountId}/{VacancyId}/{ApplicationReviewId}/status": {
       "get": {
-        "operationId": "ApplicationReviewConfirmation_Get",
-        "summary": "Gets application review status confirmation.",
+        "operationId": "getApplicationReviewStatusConfirmation",
+        "summary": "Get confirmation details for changing application review status.",
         "parameters": [
           {
             "name": "EmployerAccountId",
@@ -239,7 +225,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Confirmation view retrieved successfully",
+            "description": "Status confirmation",
             "content": {
               "application/json": {
                 "schema": {
@@ -251,8 +237,8 @@
         }
       },
       "post": {
-        "operationId": "ApplicationReviewConfirmation_Post",
-        "summary": "Submits application review status confirmation.",
+        "operationId": "postApplicationReviewStatusConfirmation",
+        "summary": "Confirm and save changes to application review status.",
         "parameters": [
           {
             "name": "EmployerAccountId",
@@ -292,15 +278,8 @@
           }
         },
         "responses": {
-          "200": {
-            "description": "Confirmation submitted successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApplicationReviewStatusConfirmationEditModel"
-                }
-              }
-            }
+          "204": {
+            "description": "Status changes successfully saved"
           }
         }
       }
@@ -311,25 +290,35 @@
       "ApplicationReview": {
         "type": "object",
         "properties": {
-          "Id": {
+          "id": {
             "type": "string",
             "format": "uuid"
           },
-          "CandidateId": {
+          "candidateId": {
             "type": "string",
             "format": "uuid"
           },
-          "VacancyReference": {
+          "vacancyReference": {
             "type": "integer",
             "format": "int64"
           },
-          "Status": {
-            "type": "string"
+          "status": {
+            "type": "string",
+            "enum": [
+              "New",
+              "Successful",
+              "Unsuccessful",
+              "Shared",
+              "InReview",
+              "Interviewing",
+              "EmployerInterviewing",
+              "EmployerUnsuccessful",
+              "PendingShared",
+              "PendingToMakeUnsuccessful",
+              "AllShared"
+            ]
           },
-          "CandidateFeedback": {
-            "type": "string"
-          },
-          "EmployerFeedback": {
+          "candidateFeedback": {
             "type": "string"
           }
         }
@@ -337,78 +326,87 @@
       "ApplicationReviewEditModel": {
         "type": "object",
         "properties": {
-          "Outcome": {
-            "type": "string"
+          "outcome": {
+            "type": "string",
+            "enum": [
+              "New",
+              "Successful",
+              "Unsuccessful",
+              "Shared",
+              "InReview",
+              "Interviewing",
+              "EmployerInterviewing",
+              "EmployerUnsuccessful",
+              "PendingShared",
+              "PendingToMakeUnsuccessful",
+              "AllShared"
+            ],
+            "nullable": true
           },
-          "CandidateFeedback": {
-            "type": "string"
+          "candidateFeedback": {
+            "type": "string",
+            "nullable": true
           },
-          "IsApplicationSharedByProvider": {
+          "isApplicationSharedByProvider": {
             "type": "boolean"
-          },
-          "EmployerAccountId": {
-            "type": "string"
-          },
-          "VacancyId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "ApplicationReviewId": {
-            "type": "string",
-            "format": "uuid"
           }
         }
       },
       "ApplicationReviewFeedbackViewModel": {
         "type": "object",
         "properties": {
-          "Outcome": {
+          "name": {
             "type": "string"
           },
-          "CandidateFeedback": {
+          "friendlyId": {
             "type": "string"
           },
-          "Name": {
-            "type": "string"
-          },
-          "FriendlyId": {
-            "type": "string"
-          },
-          "EmployerAccountId": {
-            "type": "string"
-          },
-          "VacancyId": {
+          "outcome": {
             "type": "string",
-            "format": "uuid"
-          },
-          "ApplicationReviewId": {
-            "type": "string",
-            "format": "uuid"
+            "enum": [
+              "New",
+              "Successful",
+              "Unsuccessful",
+              "Shared",
+              "InReview",
+              "Interviewing",
+              "EmployerInterviewing",
+              "EmployerUnsuccessful",
+              "PendingShared",
+              "PendingToMakeUnsuccessful",
+              "AllShared"
+            ],
+            "nullable": true
           }
         }
       },
       "ApplicationReviewStatusConfirmationEditModel": {
         "type": "object",
         "properties": {
-          "NotifyCandidate": {
-            "type": "boolean"
+          "notifyCandidate": {
+            "type": "boolean",
+            "nullable": true
           },
-          "Outcome": {
-            "type": "string"
-          },
-          "CandidateFeedback": {
-            "type": "string"
-          },
-          "EmployerAccountId": {
-            "type": "string"
-          },
-          "VacancyId": {
+          "outcome": {
             "type": "string",
-            "format": "uuid"
+            "enum": [
+              "New",
+              "Successful",
+              "Unsuccessful",
+              "Shared",
+              "InReview",
+              "Interviewing",
+              "EmployerInterviewing",
+              "EmployerUnsuccessful",
+              "PendingShared",
+              "PendingToMakeUnsuccessful",
+              "AllShared"
+            ],
+            "nullable": true
           },
-          "ApplicationReviewId": {
+          "candidateFeedback": {
             "type": "string",
-            "format": "uuid"
+            "nullable": true
           }
         }
       }

@@ -1,17 +1,15 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "SFA DAS Admin API",
-    "description": "API for managing user-related operations in SFA DAS Admin.",
-    "version": "1.0.0"
+    "title": "Admin API",
+    "version": "1.0.0",
+    "description": "API for Admin functionality, including user management."
   },
   "paths": {
     "/users/{userId}/unlock": {
       "post": {
-        "tags": [
-          "Users"
-        ],
         "summary": "Unlock a user account",
+        "operationId": "unlockUser",
         "parameters": [
           {
             "name": "userId",
@@ -36,13 +34,13 @@
         },
         "responses": {
           "204": {
-            "description": "No Content - The user was successfully unlocked."
+            "description": "User unlocked successfully"
           },
           "400": {
-            "description": "Bad Request - The request data was invalid."
+            "description": "Invalid input or user unlock process failed"
           },
           "500": {
-            "description": "Internal Server Error - An error occurred while unlocking the user."
+            "description": "Internal server error"
           }
         }
       }
@@ -52,21 +50,21 @@
     "schemas": {
       "UnlockUserRequest": {
         "type": "object",
-        "required": [
-          "Username",
-          "UserActionId"
-        ],
         "properties": {
           "Username": {
             "type": "string",
-            "description": "The username of the user to unlock."
+            "description": "The username of the user to be unlocked"
           },
           "UserActionId": {
             "type": "integer",
             "format": "int64",
-            "description": "The identifier for the user action triggering the unlock."
+            "description": "The ID of the user action for unlocking"
           }
-        }
+        },
+        "required": [
+          "Username",
+          "UserActionId"
+        ]
       }
     }
   }

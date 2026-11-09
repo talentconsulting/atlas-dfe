@@ -1,0 +1,352 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Merge Organisations API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/merge-organisations": {
+      "get": {
+        "operationId": "Index",
+        "summary": "Resets the paging state and redirects to the merge log view.",
+        "responses": {
+          "302": {
+            "description": "Redirect to merge log."
+          }
+        }
+      }
+    },
+    "/merge-organisations/log": {
+      "get": {
+        "operationId": "GetMergeLog",
+        "summary": "Returns the view for the merge log.",
+        "responses": {
+          "200": {
+            "description": "Merge log view."
+          }
+        }
+      }
+    },
+    "/merge-organisations/log/change-entries-per-page": {
+      "get": {
+        "operationId": "ChangeMergeEntriesPerPage",
+        "summary": "Changes the number of entries shown per page in the merge log.",
+        "parameters": [
+          {
+            "name": "itemsPerPage",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Updated merge log view."
+          }
+        }
+      }
+    },
+    "/merge-organisations/log/change-page": {
+      "get": {
+        "operationId": "ChangeMergeLogEntriesPageIndex",
+        "summary": "Changes the page index in the merge log view.",
+        "parameters": [
+          {
+            "name": "pageIndex",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Updated merge log view."
+          }
+        }
+      }
+    },
+    "/merge-organisations/log/{logId}": {
+      "get": {
+        "operationId": "GetCompletedMergeOverview",
+        "summary": "Gets overview of a completed merge using its log ID.",
+        "parameters": [
+          {
+            "name": "logId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Completed merge overview.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CompletedMergeOverviewViewModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/merge-organisations/start": {
+      "get": {
+        "operationId": "StartMergeProcess",
+        "summary": "Initiates the merge process and shows the start view.",
+        "responses": {
+          "200": {
+            "description": "Start merge view."
+          }
+        }
+      },
+      "post": {
+        "operationId": "StartNewMergeRequest",
+        "summary": "Starts a new merge request.",
+        "responses": {
+          "302": {
+            "description": "Redirect to merge overview."
+          }
+        }
+      }
+    },
+    "/merge-organisations/overview": {
+      "get": {
+        "operationId": "GetMergeOverview",
+        "summary": "Displays the merge overview.",
+        "responses": {
+          "200": {
+            "description": "Merge overview."
+          }
+        }
+      },
+      "post": {
+        "operationId": "PostMergeOverview",
+        "summary": "Handles input for merge overview and redirects to confirmation.",
+        "responses": {
+          "302": {
+            "description": "Redirect to confirm and complete."
+          }
+        }
+      }
+    },
+    "/merge-organisations/search/{mergeOrganisationType}": {
+      "get": {
+        "operationId": "SearchEpao",
+        "summary": "Searches End Point Assessor Organisations based on type and query string.",
+        "parameters": [
+          {
+            "name": "mergeOrganisationType",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "primary",
+                "secondary"
+              ]
+            }
+          },
+          {
+            "name": "searchString",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Search results view."
+          }
+        }
+      }
+    },
+    "/merge-organisations/results/{mergeOrganisationType}": {
+      "get": {
+        "operationId": "GetEpaoSearchResults",
+        "summary": "Retrieves results for EPAO search.",
+        "parameters": [
+          {
+            "name": "mergeOrganisationType",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "primary",
+                "secondary"
+              ]
+            }
+          },
+          {
+            "name": "back",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "searchString",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Search results view."
+          }
+        }
+      }
+    },
+    "/merge-organisations/confirm/{mergeOrganisationType}/{epaoId}": {
+      "get": {
+        "operationId": "GetConfirmEpao",
+        "summary": "Displays confirmation view for a selected EPAO.",
+        "parameters": [
+          {
+            "name": "mergeOrganisationType",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "primary",
+                "secondary"
+              ]
+            }
+          },
+          {
+            "name": "epaoId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "searchString",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Confirmation view."
+          }
+        }
+      },
+      "post": {
+        "operationId": "PostConfirmEpao",
+        "summary": "Confirms selected EPAO and updates the merge request.",
+        "responses": {
+          "302": {
+            "description": "Redirect to merge overview."
+          }
+        }
+      }
+    },
+    "/merge-organisations/set-effective-to": {
+      "get": {
+        "operationId": "GetSetSecondaryEffectiveToDate",
+        "summary": "Displays the view to set the effective-to date for secondary EPAO.",
+        "responses": {
+          "200": {
+            "description": "Effective-to date view."
+          }
+        }
+      },
+      "post": {
+        "operationId": "PostSetSecondaryEffectiveToDate",
+        "summary": "Sets the effective-to date for secondary EPAO.",
+        "responses": {
+          "302": {
+            "description": "Redirect to merge overview."
+          }
+        }
+      }
+    },
+    "/merge-organisations/confirm-and-complete": {
+      "get": {
+        "operationId": "GetConfirmAndComplete",
+        "summary": "Displays the confirmation and completion view.",
+        "responses": {
+          "200": {
+            "description": "Confirm and complete view."
+          }
+        }
+      },
+      "post": {
+        "operationId": "PostConfirmAndComplete",
+        "summary": "Confirms and completes the merge process.",
+        "responses": {
+          "302": {
+            "description": "Redirect to merge complete."
+          }
+        }
+      }
+    },
+    "/merge-organisations/complete": {
+      "get": {
+        "operationId": "GetMergeComplete",
+        "summary": "Displays the merge completion view.",
+        "responses": {
+          "200": {
+            "description": "Merge complete view."
+          }
+        }
+      }
+    },
+    "/merge-organisations/error": {
+      "get": {
+        "operationId": "GetMergeError",
+        "summary": "Displays the error view.",
+        "responses": {
+          "200": {
+            "description": "Error view."
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CompletedMergeOverviewViewModel": {
+        "type": "object",
+        "properties": {
+          "PrimaryEpaoName": {
+            "type": "string"
+          },
+          "SecondaryEpaoName": {
+            "type": "string"
+          },
+          "SecondaryEpaoEffectiveToDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "CompletionDate": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    }
+  }
+}

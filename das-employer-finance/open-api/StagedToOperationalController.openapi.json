@@ -8,7 +8,8 @@
   "paths": {
     "/api/staging/staged-to-operational": {
       "post": {
-        "summary": "Transfers staged data to operational state.",
+        "summary": "Transfer staged data to operational data",
+        "description": "Transfers data from staging to operational using the provided payload.",
         "operationId": "transferStagedToOperational",
         "security": [
           {
@@ -23,23 +24,48 @@
                 "$ref": "#/components/schemas/TransferStagedToOperationalRequest"
               }
             }
-          },
-          "description": "The payload for transferring staged data to operational state."
+          }
         },
         "responses": {
-          "400": {
-            "description": "Bad request - validation errors or missing payload.",
+          "201": {
+            "description": "Created",
             "content": {
               "application/json": {
-                "examples": {
-                  "missingPayload": {
-                    "value": "Transfer staged-to-operational payload is required."
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "isSuccess": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "processedCount": {
+                      "type": "integer",
+                      "format": "int32"
+                    }
                   },
-                  "validationErrors": {
-                    "value": {
-                      "errors": [
-                        "Example validation error."
-                      ]
+                  "required": [
+                    "isSuccess",
+                    "message",
+                    "processedCount"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "validationErrors": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
                     }
                   }
                 }
@@ -47,33 +73,28 @@
             }
           },
           "500": {
-            "description": "Internal server error when the operation fails.",
+            "description": "Internal Server Error",
             "content": {
               "application/json": {
-                "examples": {
-                  "operationFailure": {
-                    "value": {
-                      "isSuccess": false,
-                      "message": "Failure message example.",
-                      "processedCount": 0
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "isSuccess": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "processedCount": {
+                      "type": "integer",
+                      "format": "int32"
                     }
-                  }
-                }
-              }
-            }
-          },
-          "201": {
-            "description": "Successful transfer to operational state.",
-            "content": {
-              "application/json": {
-                "examples": {
-                  "success": {
-                    "value": {
-                      "isSuccess": true,
-                      "message": "Success message example.",
-                      "processedCount": 1
-                    }
-                  }
+                  },
+                  "required": [
+                    "isSuccess",
+                    "message",
+                    "processedCount"
+                  ]
                 }
               }
             }
@@ -89,16 +110,13 @@
         "properties": {
           "AccountId": {
             "type": "integer",
-            "format": "int64",
-            "description": "The ID of the employer account to transfer."
+            "format": "int64"
           },
           "PeriodEnd": {
-            "type": "string",
-            "description": "The period end identifier for the staged data."
+            "type": "string"
           },
           "CorrelationId": {
-            "type": "string",
-            "description": "A unique identifier for correlating requests."
+            "type": "string"
           }
         },
         "required": [
@@ -110,10 +128,8 @@
     },
     "securitySchemes": {
       "ApiRoles.ReadAllEmployerAccountBalances": {
-        "type": "apiKey",
-        "name": "Authorization",
-        "in": "header",
-        "description": "Role-based authorization scheme requiring 'ReadAllEmployerAccountBalances' API role."
+        "type": "http",
+        "scheme": "bearer"
       }
     }
   }

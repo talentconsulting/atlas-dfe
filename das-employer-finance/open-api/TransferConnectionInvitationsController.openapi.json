@@ -1,14 +1,17 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Transfer Connection Invitations API",
-    "version": "1.0.0",
-    "description": "API for managing transfer connection invitations between employer accounts."
+    "title": "Employer Finance Transfer Connection Invitations API",
+    "description": "API for managing employer transfer connection invitations",
+    "version": "1.0.0"
   },
   "paths": {
     "/accounts/{hashedAccountId}/transfers/connections/requests": {
       "get": {
-        "summary": "Get transfer connection invitations overview",
+        "summary": "Retrieve transfer connection requests",
+        "tags": [
+          "Transfer Connection Invitations"
+        ],
         "parameters": [
           {
             "name": "hashedAccountId",
@@ -21,14 +24,17 @@
         ],
         "responses": {
           "200": {
-            "description": "HTML view of transfer connection invitations overview"
+            "description": "Success"
           }
         }
       }
     },
     "/accounts/{hashedAccountId}/transfers/connections/requests/start": {
       "get": {
-        "summary": "Start creating a transfer connection invitation",
+        "summary": "Start a transfer connection invitation",
+        "tags": [
+          "Transfer Connection Invitations"
+        ],
         "parameters": [
           {
             "name": "hashedAccountId",
@@ -41,12 +47,15 @@
         ],
         "responses": {
           "200": {
-            "description": "HTML view to start creating a transfer connection invitation"
+            "description": "Success"
           }
         }
       },
       "post": {
         "summary": "Submit a transfer connection invitation",
+        "tags": [
+          "Transfer Connection Invitations"
+        ],
         "parameters": [
           {
             "name": "hashedAccountId",
@@ -68,15 +77,18 @@
           }
         },
         "responses": {
-          "302": {
-            "description": "Redirect to /send or /start after processing"
+          "200": {
+            "description": "Success"
           }
         }
       }
     },
     "/accounts/{hashedAccountId}/transfers/connections/requests/send": {
       "get": {
-        "summary": "Get transfer connection invitation details for sending",
+        "summary": "View send invitation details",
+        "tags": [
+          "Transfer Connection Invitations"
+        ],
         "parameters": [
           {
             "name": "hashedAccountId",
@@ -89,12 +101,15 @@
         ],
         "responses": {
           "200": {
-            "description": "HTML view of transfer connection invitation details for sending"
+            "description": "Success"
           }
         }
       },
       "post": {
-        "summary": "Submit choice actions for transfer connection sending",
+        "summary": "Submit send invitation confirmation",
+        "tags": [
+          "Transfer Connection Invitations"
+        ],
         "parameters": [
           {
             "name": "hashedAccountId",
@@ -116,15 +131,18 @@
           }
         },
         "responses": {
-          "302": {
-            "description": "Redirect based on user choice"
+          "200": {
+            "description": "Success"
           }
         }
       }
     },
     "/accounts/{hashedAccountId}/transfers/connections/requests/{transferConnectionInvitationId}/sent": {
       "get": {
-        "summary": "Retrieve sent transfer connection invitation details",
+        "summary": "View sent transfer connection invitation details",
+        "tags": [
+          "Transfer Connection Invitations"
+        ],
         "parameters": [
           {
             "name": "hashedAccountId",
@@ -145,12 +163,15 @@
         ],
         "responses": {
           "200": {
-            "description": "HTML view of sent transfer connection invitation details"
+            "description": "Success"
           }
         }
       },
       "post": {
-        "summary": "Perform actions when viewing sent invitation details",
+        "summary": "Confirm choices for sent transfer connection invitation",
+        "tags": [
+          "Transfer Connection Invitations"
+        ],
         "parameters": [
           {
             "name": "hashedAccountId",
@@ -180,15 +201,18 @@
           }
         },
         "responses": {
-          "302": {
-            "description": "Redirect based on user choice"
+          "200": {
+            "description": "Success"
           }
         }
       }
     },
     "/accounts/{hashedAccountId}/transfers/connections/requests/{transferConnectionInvitationId}/receive": {
       "get": {
-        "summary": "Retrieve received transfer connection invitation details",
+        "summary": "View received transfer connection invitation details",
+        "tags": [
+          "Transfer Connection Invitations"
+        ],
         "parameters": [
           {
             "name": "hashedAccountId",
@@ -209,12 +233,15 @@
         ],
         "responses": {
           "200": {
-            "description": "HTML view of received transfer connection invitation details"
+            "description": "Success"
           }
         }
       },
       "post": {
-        "summary": "Perform actions on received invitation",
+        "summary": "Approve or reject a received transfer connection invitation",
+        "tags": [
+          "Transfer Connection Invitations"
+        ],
         "parameters": [
           {
             "name": "hashedAccountId",
@@ -244,15 +271,18 @@
           }
         },
         "responses": {
-          "302": {
-            "description": "Redirect based on user choice"
+          "200": {
+            "description": "Success"
           }
         }
       }
     },
-    "/accounts/{hashedAccountId}/transfers/connections/requests/{transferConnectionInvitationId}/rejected": {
+    "/accounts/{hashedAccountId}/transfers/connections/requests/{transferConnectionInvitationId}/approved": {
       "get": {
-        "summary": "Retrieve rejected transfer connection invitation details",
+        "summary": "View approved transfer connection invitation details",
+        "tags": [
+          "Transfer Connection Invitations"
+        ],
         "parameters": [
           {
             "name": "hashedAccountId",
@@ -273,12 +303,85 @@
         ],
         "responses": {
           "200": {
-            "description": "HTML view of rejected transfer connection invitation details"
+            "description": "Success"
           }
         }
       },
       "post": {
-        "summary": "Perform actions on rejected invitation",
+        "summary": "Confirm choices for approved transfer connection invitation",
+        "tags": [
+          "Transfer Connection Invitations"
+        ],
+        "parameters": [
+          {
+            "name": "hashedAccountId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "transferConnectionInvitationId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApprovedTransferConnectionInvitationViewModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/accounts/{hashedAccountId}/transfers/connections/requests/{transferConnectionInvitationId}/rejected": {
+      "get": {
+        "summary": "View rejected transfer connection invitation details",
+        "tags": [
+          "Transfer Connection Invitations"
+        ],
+        "parameters": [
+          {
+            "name": "hashedAccountId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "transferConnectionInvitationId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "post": {
+        "summary": "Confirm choices for rejected transfer connection invitation",
+        "tags": [
+          "Transfer Connection Invitations"
+        ],
         "parameters": [
           {
             "name": "hashedAccountId",
@@ -308,15 +411,18 @@
           }
         },
         "responses": {
-          "302": {
-            "description": "Redirect based on user choice"
+          "200": {
+            "description": "Success"
           }
         }
       }
     },
-    "/accounts/{hashedAccountId}/transfers/connections/requests/{transferConnectionInvitationId}/deleted": {
+    "/accounts/{hashedAccountId}/transfers/connections/requests/{transferConnectionInvitationId}/details": {
       "get": {
-        "summary": "Retrieve details of deleted transfer connection invitation",
+        "summary": "View transfer connection invitation details",
+        "tags": [
+          "Transfer Connection Invitations"
+        ],
         "parameters": [
           {
             "name": "hashedAccountId",
@@ -337,12 +443,85 @@
         ],
         "responses": {
           "200": {
-            "description": "HTML view of deleted transfer connection invitation details"
+            "description": "Success"
           }
         }
       },
       "post": {
-        "summary": "Perform actions after viewing deleted invitation",
+        "summary": "Confirm actions for transfer connection invitation details",
+        "tags": [
+          "Transfer Connection Invitations"
+        ],
+        "parameters": [
+          {
+            "name": "hashedAccountId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "transferConnectionInvitationId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TransferConnectionInvitationViewModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/accounts/{hashedAccountId}/transfers/connections/requests/{transferConnectionInvitationId}/deleted": {
+      "get": {
+        "summary": "View deleted transfer connection invitation details",
+        "tags": [
+          "Transfer Connection Invitations"
+        ],
+        "parameters": [
+          {
+            "name": "hashedAccountId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "transferConnectionInvitationId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "post": {
+        "summary": "Confirm choices for deleted transfer connection invitation",
+        "tags": [
+          "Transfer Connection Invitations"
+        ],
         "parameters": [
           {
             "name": "hashedAccountId",
@@ -372,15 +551,18 @@
           }
         },
         "responses": {
-          "302": {
-            "description": "Redirect based on user choice"
+          "200": {
+            "description": "Success"
           }
         }
       }
     },
     "/accounts/{hashedAccountId}/transfers/connections/requests/outstanding": {
       "get": {
-        "summary": "Process outstanding transfer connection invitations",
+        "summary": "View latest pending transfer connection invitation",
+        "tags": [
+          "Transfer Connection Invitations"
+        ],
         "parameters": [
           {
             "name": "hashedAccountId",
@@ -392,8 +574,8 @@
           }
         ],
         "responses": {
-          "302": {
-            "description": "Redirect to corresponding view if there are outstanding invitations"
+          "200": {
+            "description": "Success"
           }
         }
       }
@@ -409,20 +591,16 @@
             "enum": [
               "GoToApprenticesPage",
               "GoToHomepage"
-            ],
-            "description": "User's choice after viewing approved transfer connection invitation"
+            ]
           },
           "hashedAccountId": {
-            "type": "string",
-            "description": "Hashed account ID"
+            "type": "string"
           },
           "hashedTransferConnectionInvitationId": {
-            "type": "string",
-            "description": "Hashed ID of the transfer connection invitation"
+            "type": "string"
           },
           "senderAccountName": {
-            "type": "string",
-            "description": "Name of the sender account"
+            "type": "string"
           }
         }
       },
@@ -434,16 +612,13 @@
             "enum": [
               "GoToTransfersPage",
               "GoToHomepage"
-            ],
-            "description": "User's choice after viewing deleted transfer connection invitation"
+            ]
           },
           "hashedAccountId": {
-            "type": "string",
-            "description": "Hashed account ID"
+            "type": "string"
           },
           "hashedTransferConnectionInvitationId": {
-            "type": "string",
-            "description": "Hashed ID of the transfer connection invitation"
+            "type": "string"
           }
         }
       },
@@ -451,33 +626,30 @@
         "type": "object",
         "properties": {
           "transferConnectionInvitationId": {
-            "type": "string",
-            "description": "ID of the transfer connection invitation"
+            "type": "string"
           },
           "choice": {
             "type": "string",
             "enum": [
               "Approve",
               "Reject"
-            ],
-            "description": "User's choice of action"
+            ]
           },
           "hashedAccountId": {
-            "type": "string",
-            "description": "Hashed account ID"
+            "type": "string"
+          },
+          "notHashedTransferConnectionInvitationId": {
+            "type": "integer"
           },
           "senderAccountName": {
-            "type": "string",
-            "description": "Name of the sender account"
+            "type": "string"
           },
           "pendingChangeUserFullName": {
-            "type": "string",
-            "description": "Full name of the user who initiated the pending change"
+            "type": "string"
           },
           "pendingChangeCreatedDate": {
             "type": "string",
-            "format": "date-time",
-            "description": "Date when the pending change was created"
+            "format": "date-time"
           }
         }
       },
@@ -489,41 +661,32 @@
             "enum": [
               "Confirm",
               "GoToTransfersPage"
-            ],
-            "description": "User's choice for rejected transfer connection invitation"
+            ]
           },
           "hashedAccountId": {
-            "type": "string",
-            "description": "Hashed account ID"
+            "type": "string"
           },
           "hashedTransferConnectionInvitationId": {
-            "type": "string",
-            "description": "Hashed ID of the transfer connection invitation"
+            "type": "string"
           },
           "status": {
-            "type": "string",
-            "description": "Status of the transfer connection invitation"
+            "type": "string"
           },
           "senderAccountName": {
-            "type": "string",
-            "description": "Name of the sender account"
+            "type": "string"
           },
           "pendingUserName": {
-            "type": "string",
-            "description": "Full name of the user who initiated the pending change"
+            "type": "string"
           },
           "pendingChangeCreatedDate": {
             "type": "string",
-            "format": "date-time",
-            "description": "Date when the pending change was created"
+            "format": "date-time"
           },
           "receiverAccountName": {
-            "type": "string",
-            "description": "Name of the receiver account"
+            "type": "string"
           },
           "receiverAccountPublicHashedId": {
-            "type": "string",
-            "description": "Public hashed ID of the receiver account"
+            "type": "string"
           }
         }
       },
@@ -535,25 +698,20 @@
             "enum": [
               "Confirm",
               "ReEnterAccountId"
-            ],
-            "description": "User's choice for sending a transfer connection invitation"
+            ]
           },
           "receiverAccountPublicHashedId": {
             "type": "string",
-            "pattern": "^[A-Za-z\\d]{6,6}$",
-            "description": "Receiver account public hashed ID"
+            "pattern": "^[A-Za-z\\d]{6,6}$"
           },
           "hashedAccountId": {
-            "type": "string",
-            "description": "Hashed account ID"
+            "type": "string"
           },
           "senderAccountName": {
-            "type": "string",
-            "description": "Name of the sender account"
+            "type": "string"
           },
           "receiverAccountName": {
-            "type": "string",
-            "description": "Name of the receiver account"
+            "type": "string"
           }
         }
       },
@@ -565,28 +723,22 @@
             "enum": [
               "GoToTransfersPage",
               "GoToHomepage"
-            ],
-            "description": "User's choice when viewing sent invitation details"
+            ]
           },
           "receiverAccountName": {
-            "type": "string",
-            "description": "Name of the receiver account"
+            "type": "string"
           },
           "senderAccountName": {
-            "type": "string",
-            "description": "Name of the sender account"
+            "type": "string"
           },
           "receiverPublicHashedId": {
-            "type": "string",
-            "description": "Public hashed ID of the receiver account"
+            "type": "string"
           },
           "hashedAccountId": {
-            "type": "string",
-            "description": "Hashed account ID"
+            "type": "string"
           },
           "hashedTransferConnectionInvitationId": {
-            "type": "string",
-            "description": "Hashed ID of the transfer connection invitation"
+            "type": "string"
           }
         }
       },
@@ -594,18 +746,15 @@
         "type": "object",
         "properties": {
           "hashedAccountId": {
-            "type": "string",
-            "description": "Hashed account ID"
+            "type": "string"
           },
           "userRef": {
             "type": "string",
-            "format": "uuid",
-            "description": "Reference of the user initiating the transfer"
+            "format": "uuid"
           },
           "receiverAccountPublicHashedId": {
             "type": "string",
-            "pattern": "^[A-Za-z\\d]{6,6}$",
-            "description": "Receiver account public hashed ID"
+            "pattern": "^[A-Za-z\\d]{6,6}$"
           }
         }
       },
@@ -617,25 +766,19 @@
             "enum": [
               "Confirm",
               "GoToTransfersPage"
-            ],
-            "description": "User's choice when viewing invitation details"
+            ]
           },
           "id": {
-            "type": "integer",
-            "description": "ID of the transfer connection invitation"
+            "type": "integer"
           },
           "transferConnectionInvitation": {
-            "type": "object",
-            "description": "Details of the transfer connection invitation",
             "$ref": "#/components/schemas/TransferConnectionInvitationDto"
           },
           "hashedAccountId": {
-            "type": "string",
-            "description": "Hashed account ID"
+            "type": "string"
           },
           "hashedTransferConnectionInvitationId": {
-            "type": "string",
-            "description": "Hashed ID of the transfer connection invitation"
+            "type": "string"
           }
         }
       },
@@ -643,20 +786,17 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "integer",
-            "description": "ID of the transfer connection invitation"
+            "type": "integer"
           },
           "changes": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/TransferConnectionInvitationChangeDto"
-            },
-            "description": "List of changes associated with the invitation"
+            }
           },
           "createdDate": {
             "type": "string",
-            "format": "date-time",
-            "description": "Date when the invitation was created"
+            "format": "date-time"
           },
           "receiverAccount": {
             "$ref": "#/components/schemas/AccountDto"
@@ -670,12 +810,10 @@
               "Pending",
               "Approved",
               "Rejected"
-            ],
-            "description": "Status of the invitation"
+            ]
           },
           "hashedId": {
-            "type": "string",
-            "description": "Hashed ID of the invitation"
+            "type": "string"
           }
         }
       },
@@ -683,13 +821,11 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "integer",
-            "description": "ID of the change"
+            "type": "integer"
           },
           "createdDate": {
             "type": "string",
-            "format": "date-time",
-            "description": "Date when the change was created"
+            "format": "date-time"
           },
           "status": {
             "type": "string",
@@ -697,8 +833,7 @@
               "Pending",
               "Approved",
               "Rejected"
-            ],
-            "description": "Status of the change"
+            ]
           },
           "user": {
             "$ref": "#/components/schemas/UserDto"
@@ -709,20 +844,16 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "integer",
-            "description": "ID of the account"
+            "type": "integer"
           },
           "hashedId": {
-            "type": "string",
-            "description": "Hashed ID of the account"
+            "type": "string"
           },
           "name": {
-            "type": "string",
-            "description": "Name of the account"
+            "type": "string"
           },
           "publicHashedId": {
-            "type": "string",
-            "description": "Public hashed ID of the account"
+            "type": "string"
           }
         }
       },
@@ -730,30 +861,24 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "integer",
-            "description": "ID of the user"
+            "type": "integer"
           },
           "ref": {
             "type": "string",
-            "format": "uuid",
-            "description": "Reference of the user"
+            "format": "uuid"
           },
           "email": {
             "type": "string",
-            "format": "email",
-            "description": "Email of the user"
+            "format": "email"
           },
           "firstName": {
-            "type": "string",
-            "description": "First name of the user"
+            "type": "string"
           },
           "lastName": {
-            "type": "string",
-            "description": "Last name of the user"
+            "type": "string"
           },
           "fullName": {
-            "type": "string",
-            "description": "Full name of the user"
+            "type": "string"
           }
         }
       }

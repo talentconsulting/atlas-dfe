@@ -1,77 +1,15 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Title Management API",
-    "version": "1.0.0",
-    "description": "API for managing vacancy titles within the employer web application."
+    "title": "Employer Recruitment API",
+    "version": "1.0.0"
   },
   "paths": {
-    "/accounts/{employerAccountId}/create-vacancy": {
+    "/vacancies/{vacancyId}/title": {
       "get": {
-        "operationId": "CreateVacancy_Get",
-        "summary": "Get the details for creating a new vacancy.",
-        "parameters": [
-          {
-            "name": "employerAccountId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Returns the view for creating a vacancy."
-          }
-        }
-      },
-      "post": {
-        "operationId": "CreateVacancy_Post",
-        "summary": "Submit details for creating a new vacancy.",
-        "parameters": [
-          {
-            "name": "wizard",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "boolean"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/TitleEditModel"
-              }
-            }
-          }
-        },
-        "responses": {
-          "302": {
-            "description": "Redirects to the next step based on the wizard state and success status."
-          },
-          "400": {
-            "description": "Validation errors occurred."
-          }
-        }
-      }
-    },
-    "/accounts/{employerAccountId}/vacancies/{vacancyId}/title": {
-      "get": {
+        "summary": "Get Vacancy Title",
         "operationId": "Title_Get",
-        "summary": "Get the title for a specific vacancy.",
         "parameters": [
-          {
-            "name": "employerAccountId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
           {
             "name": "vacancyId",
             "in": "path",
@@ -84,31 +22,37 @@
           {
             "name": "wizard",
             "in": "query",
-            "required": false,
             "schema": {
               "type": "string",
               "enum": [
                 "true",
                 "false"
-              ],
-              "default": "true"
+              ]
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Returns the view for editing the vacancy title."
+            "description": "Title view returned."
           }
         }
       },
       "post": {
+        "summary": "Post Vacancy Title",
         "operationId": "Title_Post",
-        "summary": "Submit changes to the vacancy title.",
         "parameters": [
+          {
+            "name": "vacancyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
           {
             "name": "wizard",
             "in": "query",
-            "required": false,
             "schema": {
               "type": "boolean"
             }
@@ -125,11 +69,55 @@
           }
         },
         "responses": {
-          "302": {
-            "description": "Redirects to the next step based on wizard state and success status."
+          "200": {
+            "description": "Vacancy title successfully posted."
           },
           "400": {
-            "description": "Validation errors occurred."
+            "description": "Validation error."
+          }
+        }
+      }
+    },
+    "/create-vacancy": {
+      "get": {
+        "summary": "Create Vacancy Wizard",
+        "operationId": "CreateVacancy_Get",
+        "parameters": [
+          {
+            "name": "employerAccountId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Create vacancy wizard view returned."
+          }
+        }
+      },
+      "post": {
+        "summary": "Post Create Vacancy",
+        "operationId": "CreateVacancy_Post",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TitleEditModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Vacancy creation successful."
+          },
+          "400": {
+            "description": "Validation error."
           }
         }
       }
@@ -145,47 +133,21 @@
           },
           "VacancyId": {
             "type": "string",
-            "format": "uuid",
-            "nullable": true
+            "format": "uuid"
           },
           "Title": {
             "type": "string"
           },
           "ReferredUkprn": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "ReferredFromMa": {
             "type": "boolean"
           },
           "ReferredProgrammeId": {
-            "type": "string",
-            "nullable": true
-          },
-          "ReferredFromSavedFavourites": {
-            "type": "boolean",
-            "readOnly": true
-          }
-        },
-        "required": [
-          "EmployerAccountId"
-        ]
-      },
-      "VacancyRouteModel": {
-        "type": "object",
-        "properties": {
-          "EmployerAccountId": {
             "type": "string"
-          },
-          "VacancyId": {
-            "type": "string",
-            "format": "uuid"
           }
-        },
-        "required": [
-          "EmployerAccountId",
-          "VacancyId"
-        ]
+        }
       }
     }
   }

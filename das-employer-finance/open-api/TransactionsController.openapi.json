@@ -7,8 +7,12 @@
   "paths": {
     "/api/transaction-lines/staging": {
       "post": {
-        "operationId": "bulkTransactionLineStagingIngest",
-        "summary": "Bulk ingest transaction line staging data.",
+        "operationId": "BulkTransactionLineStagingIngest",
+        "summary": "Bulk Transaction Line Staging Ingest",
+        "description": "Ingest transaction lines for staging.",
+        "tags": [
+          "Transactions"
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -27,10 +31,10 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "isSuccess": {
+                    "IsSuccess": {
                       "type": "boolean"
                     },
-                    "message": {
+                    "Message": {
                       "type": "string"
                     },
                     "validationErrors": {
@@ -38,6 +42,18 @@
                       "items": {
                         "type": "string"
                       }
+                    }
+                  }
+                },
+                "examples": {
+                  "Validation Error": {
+                    "value": {
+                      "IsSuccess": false,
+                      "Message": "Validation errors occurred.",
+                      "validationErrors": [
+                        "Example error 1",
+                        "Example error 2"
+                      ]
                     }
                   }
                 }
@@ -51,14 +67,24 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "isSuccess": {
+                    "IsSuccess": {
                       "type": "boolean"
                     },
-                    "message": {
+                    "Message": {
                       "type": "string"
                     },
                     "insertedCount": {
-                      "type": "integer"
+                      "type": "integer",
+                      "format": "int64"
+                    }
+                  }
+                },
+                "examples": {
+                  "Success": {
+                    "value": {
+                      "IsSuccess": true,
+                      "Message": "Transaction lines inserted successfully.",
+                      "insertedCount": 100
                     }
                   }
                 }
@@ -72,11 +98,19 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "isSuccess": {
+                    "IsSuccess": {
                       "type": "boolean"
                     },
-                    "message": {
+                    "Message": {
                       "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "Failure": {
+                    "value": {
+                      "IsSuccess": false,
+                      "Message": "An unexpected error occurred."
                     }
                   }
                 }
