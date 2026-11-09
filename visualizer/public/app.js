@@ -632,6 +632,15 @@ function usesServiceBus(dependency) {
   return /^(azure\s+|microsoft\s+)?service\s*bus$|^nservicebus$/i.test((dependency.name || '').trim());
 }
 
+// Configuration stores, telemetry and identity providers: nearly every service has one of each, so
+// they are shown on a repository's own dependency view but kept off the system-wide landscape, where
+// they would become hubs joined to every system.
+const PLATFORM_KINDS = new Set(['configuration-store', 'telemetry', 'identity-provider']);
+
+function isPlatformDependency(dependency) {
+  return PLATFORM_KINDS.has(dependency?.kind);
+}
+
 function orgName(repository) {
   return (repository || '').split('/')[0] || 'System';
 }
@@ -799,6 +808,7 @@ function buildLandscape(sources, dependencySets, { proxy = false } = {}) {
   for (const { source, dependencies } of dependencySets) {
     const ownTokens = systemTokenMap.get(source.id);
     for (const [dependencyIndex, dependency] of dependencies.entries()) {
+      if (isPlatformDependency(dependency)) continue;
       const matchedFlag = INFRA_FLAGS.find((flag) => flag.test(dependency) || infraTargetIds.get(flag.key).get(source.id)?.has(dependency.targetId));
       if (matchedFlag) { infraSourceIds.get(matchedFlag.key).add(source.id); continue; }
       // Pinned by an overlay (e.g. dfe-overlay/resolve-dependencies.mjs); beats name matching.
@@ -1074,8 +1084,9 @@ function renderDependencies(resetToolbar = true) {
   const internalCount = dependencies.filter((dependency) => dependency.classification === 'internal').length;
   const messageCount = dependencies.filter((dependency) => dependency.kind === 'message').length;
   const redisCount = dependencies.filter(usesRedis).length;
+  const platformCount = dependencies.filter(isPlatformDependency).length;
   if (resetToolbar) {
-    toolbar.innerHTML = `${searchControl('Filter dependencies')}${hasDiagramSource ? depViewToggleHtml() : ''}${diagramControlsHtml()}<span class="spacer"></span><span class="toolbar-meta">${dependencies.length} dependencies · ${internalCount} internal · ${dependencies.length - internalCount} external · ${messageCount} message-based${redisCount ? ` · ${redisCount} using Redis` : ''} · ${operations} operations</span>`;
+    toolbar.innerHTML = `${searchControl('Filter dependencies')}${hasDiagramSource ? depViewToggleHtml() : ''}${diagramControlsHtml()}<span class="spacer"></span><span class="toolbar-meta">${dependencies.length} dependencies · ${internalCount} internal · ${dependencies.length - internalCount} external · ${messageCount} message-based${redisCount ? ` · ${redisCount} using Redis` : ''}${platformCount ? ` · ${platformCount} platform` : ''} · ${operations} operations</span>`;
     if (hasDiagramSource) wireDepViewToggle();
   }
   const filtered = dependencies.filter((dependency) => `${dependency.name} ${dependency.kind} ${dependency.classification} ${dependency.direction} ${dependency.client} ${dependency.technology}`.toLowerCase().includes(state.filter));
@@ -1180,8 +1191,8 @@ function renderDependencies(resetToolbar = true) {
           const typeLabel = data.isSystem ? 'Software System' : `Container${data.containerType ? ` · ${escapeHtml(titleCase(data.containerType))}` : ''}`;
           return `<div class="cy-node service-node" data-node-id="${escapeHtml(data.id)}"><span class="c4-type">${typeLabel}</span><strong>${escapeHtml(data.label)}</strong></div>`;
         }
-        const nodeClass = data.isRedis ? 'cache' : (data.kind === 'message' ? 'message' : (data.classification === 'internal' ? 'internal' : 'external'));
-        const typeLabel = data.classification === 'internal' ? 'Container' : 'External System';
+        const nodeClass = data.isRedis ? 'cache' : (data.kind === 'message' ? 'message' : (PLATFORM_KINDS.has(data.kind) ? 'platform' : (data.classification === 'internal' ? 'internal' : 'external')));
+        const typeLabel = PLATFORM_KINDS.has(data.kind) ? 'Platform' : (data.classification === 'internal' ? 'Container' : 'External System');
         const alreadyMentionsRedis = (data.technology || '').toLowerCase().includes('redis');
         return `<div class="cy-node ${nodeClass}" data-node-id="${escapeHtml(data.id)}"><span class="c4-type">${escapeHtml(typeLabel)}</span><strong>${escapeHtml(splitPascalCase(data.name))}</strong><span class="c4-meta">${escapeHtml(data.technology || data.kind || 'service')} · ${data.opsCount} op${data.opsCount === 1 ? '' : 's'}${data.isRedis && !alreadyMentionsRedis ? ' · Redis' : ''}</span></div>`;
       }
