@@ -356,7 +356,7 @@ function renderDatabase(resetToolbar = true) {
     toolbar.innerHTML = `${searchControl('Filter tables or columns')}<div class="segmented" role="group" aria-label="Schema view"><button data-db-view="diagram" aria-pressed="${state.dbView === 'diagram'}">Diagram</button><button data-db-view="grid" aria-pressed="${state.dbView === 'grid'}">Grid</button></div>${state.dbView === 'diagram' ? diagramControlsHtml() : ''}<span class="spacer"></span><span class="toolbar-meta">${tables.length} tables · ${columnCount} columns · ${relations} relationships</span>`;
     document.querySelectorAll('[data-db-view]').forEach((button) => { button.onclick = () => { state.dbView = button.dataset.dbView; state.filter = ''; state.selected = null; renderDatabase(true); }; });
   }
-  const filtered = tables.filter((table) => `${table.schema} ${table.name} ${table.columns?.map((column) => column.name).join(' ')}`.toLowerCase().includes(state.filter));
+  const filtered = tables.filter((table) => `${table.schema || ''} ${table.name} ${table.columns?.map((column) => column.name).join(' ')}`.toLowerCase().includes(state.filter));
   if (state.dbView === 'diagram') {
     const { edges, connectedTables, isolatedCount } = databaseGraph(tables);
     renderDatabaseDiagram(connectedTables.filter((table) => filtered.includes(table)), edges, isolatedCount);
@@ -368,10 +368,10 @@ function renderDatabase(resetToolbar = true) {
 }
 
 function renderDatabaseGrid(filtered, tables) {
-  content.innerHTML = `<div class="schema-grid">${alphabetical(filtered, (table) => `${table.schema}.${table.name}`).map((table) => {
+  content.innerHTML = `<div class="schema-grid">${alphabetical(filtered, tableLabel).map((table) => {
     const outbound = table.relationships || [];
     return `<button class="schema-card" type="button" data-table="${escapeHtml(table.name)}">
-      <h2>${escapeHtml(table.schema)}.${escapeHtml(table.name)}</h2>
+      <h2>${escapeHtml(tableLabel(table))}</h2>
       <p>${table.columns?.length || 0} columns · ${table.indexes?.length || 0} indexes</p>
       <ul class="relation-list">${outbound.slice(0, 3).map((rel) => `<li>→ <strong>${escapeHtml(rel.targetTable)}</strong> via ${escapeHtml(rel.fromColumns?.join(', '))}</li>`).join('')}${outbound.length > 3 ? `<li>+ ${outbound.length - 3} more</li>` : ''}</ul>
     </button>`;
@@ -514,7 +514,7 @@ function renderDatabaseDiagram(filtered, allEdges, isolatedCount) {
       query: 'node[?isLeaf]',
       halign: 'center', valign: 'center', halignBox: 'center', valignBox: 'center',
       tpl: (data) => `<div class="cy-er-node" data-node-id="${escapeHtml(data.id)}">
-        <span class="er-table"><span>${escapeHtml(data.schema)}</span>${escapeHtml(data.name)}</span>
+        <span class="er-table">${data.schema ? `<span>${escapeHtml(data.schema)}</span>` : ''}${escapeHtml(data.name)}</span>
         <span class="er-columns">${(data.columns || []).map((column) => `<span class="er-column"><b>${escapeHtml(column.flag)}</b><code>${escapeHtml(column.name)}</code><em>${escapeHtml(column.type)}</em></span>`).join('') || '<span class="er-column muted">No columns recorded</span>'}</span>
       </div>`
     }],
@@ -557,7 +557,7 @@ function tableDetailBody(table) {
   };
   const active = TABLE_TABS.includes(state.tableTab) ? state.tableTab : 'columns';
   const id = (key) => `table-${key}`;
-  return `<p class="eyebrow">${escapeHtml(table.schema)} schema</p><h2>${escapeHtml(table.name)}</h2>
+  return `${table.schema ? `<p class="eyebrow">${escapeHtml(table.schema)} schema</p>` : ''}<h2>${escapeHtml(table.name)}</h2>
     <div class="table-tabs" role="tablist" aria-label="Table details">${TABLE_TABS.map((key) => `<button class="tab" type="button" role="tab" id="${id(key)}-tab" aria-controls="${id(key)}-panel" aria-selected="${key === active}" tabindex="${key === active ? 0 : -1}" data-table-tab="${key}">${sections[key].label}<span class="count">${sections[key].count}</span></button>`).join('')}</div>
     ${TABLE_TABS.map((key) => `<section class="table-tab-panel" role="tabpanel" id="${id(key)}-panel" aria-labelledby="${id(key)}-tab"${key === active ? '' : ' hidden'}>${sections[key].html}</section>`).join('')}`;
 }
