@@ -1,15 +1,14 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Employer Name Management API",
-    "version": "1.0.0",
-    "description": "API for managing employer names."
+    "title": "Employer Name API",
+    "version": "1.0.0"
   },
   "paths": {
-    "/{EmployerAccountId}/{VacancyId}/employer-name": {
+    "/{EmployerAccountId}/vacancies/{VacancyId}/employer-name": {
       "get": {
-        "operationId": "getEmployerName",
-        "summary": "Retrieve employer name details",
+        "operationId": "EmployerName_Get",
+        "summary": "Retrieve Employer Name page data.",
         "parameters": [
           {
             "name": "EmployerAccountId",
@@ -34,28 +33,47 @@
             "required": false,
             "schema": {
               "type": "boolean"
-            },
-            "description": "Indicates whether the task list wizard is being used."
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Employer name details retrieved successfully",
+            "description": "Employer Name page data.",
             "content": {
-              "text/html": {}
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmployerNameViewModel"
+                }
+              }
             }
           },
           "302": {
-            "description": "Redirect to another route if employer info is unavailable.",
-            "content": {
-              "text/html": {}
-            }
+            "description": "Redirects to the Employer endpoint if necessary."
           }
         }
       },
       "post": {
-        "operationId": "postEmployerName",
-        "summary": "Submit employer name changes",
+        "operationId": "EmployerName_Post",
+        "summary": "Submit changes to Employer Name.",
+        "parameters": [
+          {
+            "name": "EmployerAccountId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "VacancyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -66,45 +84,27 @@
             }
           }
         },
-        "parameters": [
-          {
-            "name": "EmployerAccountId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "VacancyId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
         "responses": {
           "302": {
-            "description": "Redirect to the next step after successful submission.",
-            "content": {
-              "text/html": {}
-            }
+            "description": "Redirects to the About Employer endpoint with possible continuation."
           },
           "400": {
-            "description": "Validation errors occurred. Returns the view model.",
+            "description": "Validation errors occurred.",
             "content": {
-              "text/html": {}
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmployerNameViewModel"
+                }
+              }
             }
           }
         }
       }
     },
-    "/{EmployerAccountId}/{VacancyId}/employer-name-cancel": {
+    "/{EmployerAccountId}/vacancies/{VacancyId}/employer-name-cancel": {
       "get": {
-        "operationId": "cancelEmployerName",
-        "summary": "Cancel changes to employer name",
+        "operationId": "EmployerName_Cancel",
+        "summary": "Cancel Employer Name changes and redirect.",
         "parameters": [
           {
             "name": "EmployerAccountId",
@@ -129,16 +129,12 @@
             "required": false,
             "schema": {
               "type": "boolean"
-            },
-            "description": "Indicates whether the task list wizard is being used."
+            }
           }
         ],
         "responses": {
           "302": {
-            "description": "Redirects to another route upon cancellation.",
-            "content": {
-              "text/html": {}
-            }
+            "description": "Redirects to the appropriate endpoint."
           }
         }
       }
@@ -150,7 +146,14 @@
         "type": "object",
         "properties": {
           "SelectedEmployerIdentityOption": {
-            "$ref": "#/components/schemas/EmployerIdentityOption"
+            "type": "string",
+            "enum": [
+              "RegisteredName",
+              "ExistingTradingName",
+              "NewTradingName",
+              "Anonymous"
+            ],
+            "nullable": true
           },
           "NewTradingName": {
             "type": "string",
@@ -164,27 +167,48 @@
             "type": "string",
             "nullable": true
           },
-          "EmployerAccountId": {
-            "type": "string"
-          },
           "VacancyId": {
             "type": "string",
             "format": "uuid"
           },
-          "wizard": {
-            "type": "boolean",
+          "EmployerAccountId": {
+            "type": "string"
+          },
+          "IsTaskList": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "VacancyId",
+          "EmployerAccountId"
+        ]
+      },
+      "EmployerNameViewModel": {
+        "type": "object",
+        "properties": {
+          "NewTradingName": {
+            "type": "string",
+            "nullable": true
+          },
+          "SelectedEmployerIdentityOption": {
+            "type": "string",
+            "enum": [
+              "RegisteredName",
+              "ExistingTradingName",
+              "NewTradingName",
+              "Anonymous"
+            ],
+            "nullable": true
+          },
+          "AnonymousName": {
+            "type": "string",
+            "nullable": true
+          },
+          "AnonymousReason": {
+            "type": "string",
             "nullable": true
           }
         }
-      },
-      "EmployerIdentityOption": {
-        "type": "string",
-        "enum": [
-          "RegisteredName",
-          "ExistingTradingName",
-          "NewTradingName",
-          "Anonymous"
-        ]
       }
     }
   }

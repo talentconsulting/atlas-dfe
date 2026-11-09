@@ -1,24 +1,23 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Employer Finance Health Check API",
+    "title": "Employer Finance API",
     "version": "1.0.0"
   },
   "paths": {
     "/healthcheck": {
       "get": {
-        "summary": "Get Health Check Info",
-        "description": "Retrieves health check information.",
         "operationId": "getHealthCheck",
-        "parameters": [],
+        "summary": "Gets a health check status.",
         "security": [
           {
-            "PolicyNames.HasEmployerViewerTransactorOwnerAccount": []
+            "HasEmployerViewerTransactorOwnerAccount": []
           }
         ],
+        "parameters": [],
         "responses": {
           "200": {
-            "description": "Health check data retrieved successfully.",
+            "description": "Successful response.",
             "content": {
               "application/json": {
                 "schema": {
@@ -30,9 +29,13 @@
         }
       },
       "post": {
-        "summary": "Run Health Check",
-        "description": "Runs a health check command.",
         "operationId": "runHealthCheck",
+        "summary": "Runs a health check.",
+        "security": [
+          {
+            "HasEmployerViewerTransactorOwnerAccount": []
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -43,34 +46,20 @@
             }
           }
         },
-        "security": [
-          {
-            "PolicyNames.HasEmployerViewerTransactorOwnerAccount": []
-          }
-        ],
         "responses": {
           "302": {
-            "description": "Redirects to the health check results after execution."
+            "description": "Redirect to the Index page."
           }
         }
       }
     },
     "/Content/lib/govuk-frontend/dist/assets/images/favicon.ico": {
       "get": {
-        "summary": "Favicon File Check",
-        "description": "Checks for the availability of the favicon file.",
         "operationId": "fileCheck",
+        "summary": "Checks if the favicon file exists.",
         "responses": {
           "200": {
-            "description": "File exists and is accessible.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string",
-                  "example": "OK"
-                }
-              }
-            }
+            "description": "File exists."
           }
         }
       }
@@ -92,7 +81,7 @@
           "UserRef": {
             "type": "string",
             "format": "uuid",
-            "nullable": false
+            "nullable": true
           }
         },
         "required": [
@@ -104,7 +93,7 @@
         "properties": {
           "Id": {
             "type": "integer",
-            "example": 123
+            "format": "int32"
           },
           "SentRequest": {
             "type": "string",
@@ -123,6 +112,18 @@
             "type": "string",
             "format": "date-time",
             "nullable": true
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "HasEmployerViewerTransactorOwnerAccount": {
+        "type": "oauth2",
+        "flows": {
+          "authorizationCode": {
+            "authorizationUrl": "https://example.com/auth",
+            "tokenUrl": "https://example.com/token",
+            "scopes": {}
           }
         }
       }

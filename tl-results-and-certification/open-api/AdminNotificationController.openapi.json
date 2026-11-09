@@ -5,160 +5,214 @@
     "version": "1.0.0"
   },
   "paths": {
-    "/api/AdminNotification/SearchNotifications": {
-      "post": {
-        "operationId": "SearchNotifications",
-        "summary": "Search for notifications.",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AdminSearchNotificationRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Paged response of notification details.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "totalRecords": {
-                      "type": "integer"
-                    },
-                    "records": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/SearchNotificationDetail"
-                      }
-                    },
-                    "pagerInfo": {
-                      "type": "object"
-                    }
-                  },
-                  "required": [
-                    "totalRecords",
-                    "records"
-                  ]
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/AdminNotification/GetNotification/{notificationId}": {
+    "/admin/find-notification-clear": {
       "get": {
-        "operationId": "GetNotification",
-        "summary": "Get a specific notification by ID.",
-        "parameters": [
-          {
-            "name": "notificationId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer"
-            }
-          }
-        ],
+        "operationId": "AdminFindNotificationClear",
+        "summary": "Clears cached notification data.",
         "responses": {
-          "200": {
-            "description": "Details of the notification.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetNotificationResponse"
-                }
-              }
-            }
+          "302": {
+            "description": "Redirect to the AdminFindNotification route."
           }
         }
       }
     },
-    "/api/AdminNotification/AddNotification": {
+    "/admin/find-notification/{pageNumber}": {
+      "get": {
+        "operationId": "AdminFindNotification",
+        "summary": "Finds notifications based on page number and filters.",
+        "parameters": [
+          {
+            "name": "pageNumber",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "description": "Page number of notifications to fetch."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success, returns notification data."
+          }
+        }
+      }
+    },
+    "/admin/find-notification-apply-filters": {
       "post": {
-        "operationId": "AddNotification",
-        "summary": "Add a new notification.",
+        "operationId": "AdminFindNotificationApplyFilters",
+        "summary": "Applies filters to notification search.",
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/AddNotificationRequest"
+                "$ref": "#/components/schemas/AdminFindNotificationCriteriaViewModel"
               }
             }
           }
         },
         "responses": {
-          "200": {
-            "description": "Response for adding a notification.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AddNotificationResponse"
-                }
-              }
-            }
+          "302": {
+            "description": "Redirects to the AdminFindNotification route."
           }
         }
       }
     },
-    "/api/AdminNotification/UpdateNotification": {
-      "put": {
-        "operationId": "UpdateNotification",
-        "summary": "Update an existing notification.",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateNotificationRequest"
-              }
-            }
-          }
-        },
+    "/admin/find-notification-clear-filters": {
+      "post": {
+        "operationId": "AdminFindNotificationClearFilters",
+        "summary": "Clears applied filters for notification search.",
         "responses": {
-          "200": {
-            "description": "Whether the notification update was successful.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "boolean"
-                }
-              }
-            }
+          "302": {
+            "description": "Redirects to the AdminFindNotification route."
           }
         }
       }
     },
-    "/api/AdminNotification/DeleteNotification/{notificationId}": {
-      "delete": {
-        "operationId": "DeleteNotification",
-        "summary": "Delete a notification by ID.",
+    "/admin/notification-details/{notificationId}": {
+      "get": {
+        "operationId": "AdminNotificationDetails",
+        "summary": "Gets details for a specific notification.",
         "parameters": [
           {
             "name": "notificationId",
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer"
-            }
+              "type": "integer",
+              "format": "int32"
+            },
+            "description": "The ID of the notification."
           }
         ],
         "responses": {
           "200": {
-            "description": "Response for deleting a notification.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DeleteNotificationResponse"
-                }
+            "description": "Returns the details of the notification."
+          },
+          "302": {
+            "description": "Redirects to the ProblemWithService route if notification is not found."
+          }
+        }
+      }
+    },
+    "/admin/edit-notification": {
+      "get": {
+        "operationId": "AdminEditNotificationGet",
+        "summary": "Fetches details for editing a notification.",
+        "parameters": [
+          {
+            "name": "notificationId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "description": "The ID of the notification to edit."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns the notification details for editing."
+          },
+          "302": {
+            "description": "Redirects to the ProblemWithService route if notification is not found."
+          }
+        }
+      },
+      "post": {
+        "operationId": "AdminEditNotificationPost",
+        "summary": "Updates an existing notification.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdminEditNotificationViewModel"
               }
             }
+          }
+        },
+        "responses": {
+          "302": {
+            "description": "Redirects based on success or failure (ProblemWithService or AdminNotificationDetails routes)."
+          }
+        }
+      }
+    },
+    "/admin/add-notification": {
+      "get": {
+        "operationId": "AdminAddNotificationGet",
+        "summary": "Displays the add notification view.",
+        "responses": {
+          "200": {
+            "description": "Returns the add notification view."
+          }
+        }
+      },
+      "post": {
+        "operationId": "AdminAddNotificationPost",
+        "summary": "Adds a new notification.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdminAddNotificationViewModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "302": {
+            "description": "Redirects based on success or failure (ProblemWithService or AdminNotificationDetails route)."
+          }
+        }
+      }
+    },
+    "/admin/delete-notification/{notificationId}": {
+      "get": {
+        "operationId": "AdminDeleteNotificationGet",
+        "summary": "Displays the delete notification view.",
+        "parameters": [
+          {
+            "name": "notificationId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "description": "The ID of the notification to delete."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns the delete notification view."
+          },
+          "302": {
+            "description": "Redirects to ProblemWithService if notification not found."
+          }
+        }
+      },
+      "post": {
+        "operationId": "AdminDeleteNotificationPost",
+        "summary": "Deletes a notification.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdminDeleteNotificationViewModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "302": {
+            "description": "Redirects based on success or failure (ProblemWithService or AdminFindNotification route)."
           }
         }
       }
@@ -166,193 +220,125 @@
   },
   "components": {
     "schemas": {
-      "AdminSearchNotificationRequest": {
+      "AdminAddNotificationViewModel": {
         "type": "object",
         "properties": {
-          "selectedActive": {
+          "Title": {
+            "type": "string"
+          },
+          "Content": {
+            "type": "string"
+          },
+          "Target": {
+            "type": "string",
+            "enum": [
+              "AwardingOrganisation",
+              "Provider",
+              "Both"
+            ]
+          },
+          "StartDay": {
+            "type": "string"
+          },
+          "StartMonth": {
+            "type": "string"
+          },
+          "StartYear": {
+            "type": "string"
+          },
+          "EndDay": {
+            "type": "string"
+          },
+          "EndMonth": {
+            "type": "string"
+          },
+          "EndYear": {
+            "type": "string"
+          }
+        }
+      },
+      "AdminEditNotificationViewModel": {
+        "type": "object",
+        "properties": {
+          "NotificationId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Title": {
+            "type": "string"
+          },
+          "Content": {
+            "type": "string"
+          },
+          "Target": {
+            "type": "string",
+            "enum": [
+              "AwardingOrganisation",
+              "Provider",
+              "Both"
+            ]
+          },
+          "StartDay": {
+            "type": "string"
+          },
+          "StartMonth": {
+            "type": "string"
+          },
+          "StartYear": {
+            "type": "string"
+          },
+          "EndDay": {
+            "type": "string"
+          },
+          "EndMonth": {
+            "type": "string"
+          },
+          "EndYear": {
+            "type": "string"
+          }
+        }
+      },
+      "AdminFindNotificationCriteriaViewModel": {
+        "type": "object",
+        "properties": {
+          "ActiveFilters": {
             "type": "array",
             "items": {
-              "type": "integer"
+              "$ref": "#/components/schemas/FilterLookupData"
             }
           },
-          "pageNumber": {
+          "PageNumber": {
             "type": "integer",
-            "nullable": true
+            "format": "int32"
           }
-        },
-        "required": [
-          "selectedActive"
-        ]
+        }
       },
-      "SearchNotificationDetail": {
+      "AdminDeleteNotificationViewModel": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "integer"
+          "NotificationId": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "FilterLookupData": {
+        "type": "object",
+        "properties": {
+          "Id": {
+            "type": "integer",
+            "format": "int32"
           },
-          "title": {
+          "Name": {
             "type": "string"
           },
-          "target": {
-            "$ref": "#/components/schemas/NotificationTarget"
+          "CoreCode": {
+            "type": "string"
           },
-          "end": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "isActive": {
+          "IsSelected": {
             "type": "boolean"
           }
-        },
-        "required": [
-          "id",
-          "title",
-          "target",
-          "end",
-          "isActive"
-        ]
-      },
-      "GetNotificationResponse": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer"
-          },
-          "title": {
-            "type": "string"
-          },
-          "content": {
-            "type": "string"
-          },
-          "target": {
-            "$ref": "#/components/schemas/NotificationTarget"
-          },
-          "start": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "end": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "isActive": {
-            "type": "boolean"
-          }
-        },
-        "required": [
-          "id",
-          "title",
-          "content",
-          "target",
-          "start",
-          "end",
-          "isActive"
-        ]
-      },
-      "AddNotificationRequest": {
-        "type": "object",
-        "properties": {
-          "title": {
-            "type": "string"
-          },
-          "content": {
-            "type": "string"
-          },
-          "target": {
-            "$ref": "#/components/schemas/NotificationTarget"
-          },
-          "start": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "end": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "createdBy": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "title",
-          "content",
-          "target",
-          "start",
-          "end",
-          "createdBy"
-        ]
-      },
-      "AddNotificationResponse": {
-        "type": "object",
-        "properties": {
-          "notificationId": {
-            "type": "integer"
-          },
-          "success": {
-            "type": "boolean"
-          }
-        },
-        "required": [
-          "notificationId",
-          "success"
-        ]
-      },
-      "UpdateNotificationRequest": {
-        "type": "object",
-        "properties": {
-          "notificationId": {
-            "type": "integer"
-          },
-          "title": {
-            "type": "string"
-          },
-          "content": {
-            "type": "string"
-          },
-          "target": {
-            "$ref": "#/components/schemas/NotificationTarget"
-          },
-          "start": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "end": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "modifiedBy": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "notificationId",
-          "title",
-          "content",
-          "target",
-          "start",
-          "end",
-          "modifiedBy"
-        ]
-      },
-      "DeleteNotificationResponse": {
-        "type": "object",
-        "properties": {
-          "success": {
-            "type": "boolean"
-          }
-        },
-        "required": [
-          "success"
-        ]
-      },
-      "NotificationTarget": {
-        "type": "string",
-        "enum": [
-          "NotSpecified",
-          "AwardingOrganisation",
-          "Provider",
-          "Both"
-        ]
+        }
       }
     }
   }

@@ -1,41 +1,39 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Provider Restricted Course Search API",
-    "version": "1.0.0",
-    "description": "API for managing restricted courses for providers."
+    "title": "Manage Unrestricted Provider API",
+    "version": "1.0.0"
   },
   "paths": {
     "/providers/{ukprn}/restricted-courses/add": {
       "get": {
-        "summary": "Display the restricted course search page.",
-        "operationId": "getRestrictedCourseSearch",
+        "tags": [
+          "Provider Restricted Course"
+        ],
+        "summary": "Retrieves list of not restricted apprenticeship courses for a provider.",
         "parameters": [
           {
             "name": "ukprn",
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer",
-              "description": "Unique identifier for the provider."
+              "type": "integer"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Successful response displaying the restricted course search page.",
+            "description": "Success",
             "content": {
-              "text/html": {
-                "examples": {
-                  "example": {
-                    "description": "HTML view displayed."
-                  }
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProviderRestrictedCourseSearchViewModel"
                 }
               }
             }
           },
           "404": {
-            "description": "Provider not found or no courses available."
+            "description": "Not Found - No courses or provider."
           }
         },
         "security": [
@@ -47,48 +45,36 @@
         ]
       },
       "post": {
-        "summary": "Submit selected course for restriction.",
-        "operationId": "postRestrictedCourseSearch",
+        "tags": [
+          "Provider Restricted Course"
+        ],
+        "summary": "Submits a selected apprenticeship course to restrict for a provider.",
         "parameters": [
           {
             "name": "ukprn",
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer",
-              "description": "Unique identifier for the provider."
+              "type": "integer"
             }
           }
         ],
         "requestBody": {
-          "description": "Submit model for restricted course search.",
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/ProviderRestrictedCourseSearchSubmitModel"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "302": {
-            "description": "Redirects based on whether the provider-course relationship exists."
+            "description": "Redirects based on the provider course existence."
           },
           "404": {
-            "description": "Selected course or provider not found."
-          },
-          "400": {
-            "description": "Validation errors occurred.",
-            "content": {
-              "application/json": {
-                "examples": {
-                  "example": {
-                    "description": "Validation failed for the given input."
-                  }
-                }
-              }
-            }
+            "description": "Not Found - Either selected course or provider not found."
           }
         },
         "security": [
@@ -108,8 +94,49 @@
         "properties": {
           "SelectedLarsCode": {
             "type": "string",
-            "nullable": true,
-            "description": "LARS code for the selected course."
+            "nullable": true
+          }
+        }
+      },
+      "ProviderRestrictedCourseSearchViewModel": {
+        "type": "object",
+        "properties": {
+          "Ukprn": {
+            "type": "integer"
+          },
+          "SelectedLarsCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "Courses": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "Text": {
+                  "type": "string"
+                },
+                "Value": {
+                  "type": "string"
+                },
+                "Selected": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "roles": {
+        "type": "oauth2",
+        "flows": {
+          "implicit": {
+            "authorizationUrl": "https://example.com/oauth/authorize",
+            "scopes": {
+              "RoatpAdminTeam": "Access for ROATP admin team"
+            }
           }
         }
       }

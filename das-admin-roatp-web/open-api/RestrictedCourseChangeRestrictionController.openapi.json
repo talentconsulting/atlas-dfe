@@ -2,18 +2,20 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Restricted Course Change Restriction API",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "description": "API for managing restricted course change restrictions for providers."
   },
   "paths": {
     "/providers/{ukprn}/restricted-courses/{larsCode}/change-restriction": {
       "get": {
-        "summary": "Get the restricted course change restriction view",
-        "operationId": "getRestrictedCourseChangeRestriction",
+        "summary": "Retrieve restricted course details for a provider",
+        "operationId": "getRestrictedCourseDetails",
         "parameters": [
           {
             "name": "ukprn",
             "in": "path",
             "required": true,
+            "description": "The unique provider registration number",
             "schema": {
               "type": "integer"
             }
@@ -22,6 +24,7 @@
             "name": "larsCode",
             "in": "path",
             "required": true,
+            "description": "The Learning Aim Reference Service code for the course",
             "schema": {
               "type": "string"
             }
@@ -29,13 +32,13 @@
         ],
         "responses": {
           "302": {
-            "description": "Redirects to another route due to a missing apprenticeship or session issue"
+            "description": "Redirects to ProviderRestrictedApprenticeships route if the course is not found."
           },
           "404": {
-            "description": "Provider name could not be found"
+            "description": "Returns 404 if the provider name is not found."
           },
           "200": {
-            "description": "Success",
+            "description": "Returns the view for managing restriction changes for the course.",
             "content": {
               "text/html": {}
             }
@@ -43,20 +46,19 @@
         },
         "security": [
           {
-            "roles": [
-              "RoatpAdminTeam"
-            ]
+            "rolesAuth": []
           }
         ]
       },
       "post": {
-        "summary": "Submit a change for the restricted course restriction",
-        "operationId": "postRestrictedCourseChangeRestriction",
+        "summary": "Submit changes to restricted course settings",
+        "operationId": "postRestrictedCourseChangeSettings",
         "parameters": [
           {
             "name": "ukprn",
             "in": "path",
             "required": true,
+            "description": "The unique provider registration number",
             "schema": {
               "type": "integer"
             }
@@ -65,14 +67,15 @@
             "name": "larsCode",
             "in": "path",
             "required": true,
+            "description": "The Learning Aim Reference Service code for the course",
             "schema": {
               "type": "string"
             }
           }
         ],
         "requestBody": {
-          "description": "Payload to submit restricted course change restriction",
           "required": true,
+          "description": "Submit model containing user selection for restriction change",
           "content": {
             "application/json": {
               "schema": {
@@ -83,10 +86,10 @@
         },
         "responses": {
           "302": {
-            "description": "Redirect to another route based on the selected option or a session issue"
+            "description": "Redirects to appropriate route based on selected option or if session data is invalid."
           },
-          "200": {
-            "description": "Validation errors occurred",
+          "400": {
+            "description": "Returns validation errors and re-displays the view with error messages.",
             "content": {
               "text/html": {}
             }
@@ -94,9 +97,7 @@
         },
         "security": [
           {
-            "roles": [
-              "RoatpAdminTeam"
-            ]
+            "rolesAuth": []
           }
         ]
       }
@@ -109,9 +110,17 @@
         "properties": {
           "SelectedOption": {
             "type": "string",
-            "nullable": true
+            "description": "Option selected for changing the course restriction. Expected values: AddOrChange, RemoveRestriction."
           }
-        }
+        },
+        "additionalProperties": false
+      }
+    },
+    "securitySchemes": {
+      "rolesAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "Access restricted to users with the `RoatpAdminTeam` role."
       }
     }
   }

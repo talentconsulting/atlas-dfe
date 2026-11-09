@@ -5,55 +5,97 @@
     "version": "1.0.0"
   },
   "paths": {
-    "/api/ProviderRegistrations/GetAvailableStartYears": {
+    "/download-registrations-data": {
       "get": {
-        "tags": [
-          "ProviderRegistrations"
+        "summary": "Download registrations data overview",
+        "operationId": "DownloadRegistrationsDataAsync",
+        "security": [
+          {
+            "RolesExtensions.RequireLearnerRecordsEditorAccess": []
+          }
         ],
-        "operationId": "GetAvailableStartYears",
         "responses": {
           "200": {
-            "description": "List of available start years",
+            "description": "Returns the view for selecting start years for registration data download.",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "integer"
-                  }
+                  "$ref": "#/components/schemas/DownloadRegistrationsDataViewModel"
                 }
               }
             }
+          },
+          "302": {
+            "description": "Redirects to a problem service route if the start years are unavailable."
           }
         }
       }
     },
-    "/api/ProviderRegistrations/GetRegistrations": {
-      "post": {
-        "tags": [
-          "ProviderRegistrations"
-        ],
-        "operationId": "GetRegistrations",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/GetProviderRegistrationsRequest"
-              }
+    "/download-registrations-data-for": {
+      "get": {
+        "summary": "Download registrations data for a specific year",
+        "operationId": "DownloadRegistrationsDataForAsync",
+        "parameters": [
+          {
+            "name": "startYear",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer"
             }
           }
-        },
+        ],
+        "security": [
+          {
+            "RolesExtensions.RequireLearnerRecordsEditorAccess": []
+          }
+        ],
         "responses": {
           "200": {
-            "description": "Provider registrations data export response",
+            "description": "Returns the view for downloading registrations for a specific start year.",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/DataExportResponse"
+                  "$ref": "#/components/schemas/DownloadRegistrationsDataForViewModel"
                 }
               }
             }
+          },
+          "302": {
+            "description": "Redirects to different routes based on the availability of data."
+          }
+        }
+      }
+    },
+    "/download-registrations-data-for/{id}": {
+      "get": {
+        "summary": "Generate and download the registration file by ID",
+        "operationId": "DownloadRegistrationsDataForLinkAsync",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "security": [
+          {
+            "RolesExtensions.RequireLearnerRecordsEditorAccess": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns the binary content of the registration data file.",
+            "content": {
+              "application/octet-stream": {}
+            }
+          },
+          "302": {
+            "description": "Redirects to an error route for invalid GUID."
           }
         }
       }
@@ -61,58 +103,42 @@
   },
   "components": {
     "schemas": {
-      "GetProviderRegistrationsRequest": {
+      "AvailableStartYearViewModel": {
         "type": "object",
         "properties": {
-          "ProviderUkprn": {
-            "type": "integer",
-            "example": 12345678,
-            "description": "UKPRN of the provider"
-          },
-          "StartYear": {
-            "type": "integer",
-            "example": 2024,
-            "description": "Start year for the provider registration"
-          },
-          "RequestedBy": {
-            "type": "string",
-            "example": "John Doe",
-            "description": "Identifier of the requestor"
-          }
-        },
-        "required": [
-          "ProviderUkprn",
-          "StartYear",
-          "RequestedBy"
-        ]
-      },
-      "DataExportResponse": {
-        "type": "object",
-        "properties": {
-          "IsDataFound": {
-            "type": "boolean",
-            "description": "Status indicating if the data is found"
-          },
-          "BlobUniqueReference": {
-            "type": "string",
-            "format": "uuid",
-            "description": "Unique reference for the exported file"
-          },
-          "FileSize": {
-            "type": "number",
-            "description": "Size of the exported file"
-          },
-          "ComponentType": {
-            "type": "integer",
-            "description": "Type of the component",
-            "enum": [
-              0,
-              1,
-              2
-            ],
-            "example": 1
+          "year": {
+            "type": "integer"
           }
         }
+      },
+      "DownloadRegistrationsDataViewModel": {
+        "type": "object",
+        "properties": {
+          "availableStartYearViewModels": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AvailableStartYearViewModel"
+            }
+          }
+        }
+      },
+      "DownloadRegistrationsDataForViewModel": {
+        "type": "object",
+        "properties": {
+          "downloadUrl": {
+            "type": "string",
+            "format": "url"
+          },
+          "startYear": {
+            "type": "integer"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "RolesExtensions.RequireLearnerRecordsEditorAccess": {
+        "type": "http",
+        "scheme": "bearer"
       }
     }
   }

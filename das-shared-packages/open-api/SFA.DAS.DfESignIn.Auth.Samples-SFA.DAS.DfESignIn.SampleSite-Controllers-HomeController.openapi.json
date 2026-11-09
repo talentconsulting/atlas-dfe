@@ -1,25 +1,28 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "HomeController API",
+    "title": "SFA.DAS.DfESignIn.SampleSite API",
     "version": "1.0.0"
   },
   "paths": {
     "/": {
       "get": {
-        "operationId": "HomeController_Index",
-        "summary": "Index",
+        "operationId": "Home_Index",
+        "summary": "Get the home page view.",
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "Successful response.",
+            "content": {
+              "text/html": {}
+            }
           }
         }
       }
     },
     "/authenticated": {
       "get": {
-        "operationId": "HomeController_Authenticated",
-        "summary": "Authenticated",
+        "operationId": "Home_Authenticated",
+        "summary": "Get an authenticated view.",
         "security": [
           {
             "oauth2": []
@@ -27,15 +30,21 @@
         ],
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "Authenticated view successfully retrieved.",
+            "content": {
+              "text/html": {}
+            }
+          },
+          "401": {
+            "description": "Unauthorized. Requires authentication."
           }
         }
       }
     },
     "/signed-out": {
       "get": {
-        "operationId": "HomeController_SigningOut",
-        "summary": "Signing Out",
+        "operationId": "Home_SigningOut",
+        "summary": "Sign out the user and redirect.",
         "security": [
           {
             "oauth2": []
@@ -43,39 +52,27 @@
         ],
         "responses": {
           "302": {
-            "description": "Redirect on sign-out",
-            "headers": {
-              "Location": {
-                "description": "The URL to redirect to",
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
+            "description": "Redirect after sign-out."
+          },
+          "401": {
+            "description": "Unauthorized. Requires authentication."
           }
         }
       }
     },
     "/dashboard": {
       "get": {
-        "operationId": "HomeController_RedirectToDashboard",
-        "summary": "Redirect to Dashboard",
+        "operationId": "Home_RedirectToDashboard",
+        "summary": "Redirect to the dashboard view.",
         "responses": {
           "301": {
-            "description": "Permanent Redirect",
-            "headers": {
-              "Location": {
-                "description": "The URL to redirect to",
-                "schema": {
-                  "type": "string",
-                  "example": "https://test-pas.apprenticeships.education.gov.uk/"
-                }
-              }
-            }
+            "description": "Permanent redirect to the dashboard URL."
           }
         }
       }
     }
   },
-  "components": {}
+  "components": {
+    "schemas": {}
+  }
 }

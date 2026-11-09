@@ -1,99 +1,234 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "IndustryPlacement API",
-    "version": "1.0.0"
+    "title": "Industry Placement API",
+    "version": "1.0.0",
+    "description": "API for managing industry placement records."
   },
   "paths": {
-    "/api/IndustryPlacement/ProcessBulkIndustryPlacements": {
-      "post": {
-        "summary": "Process bulk industry placements.",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/BulkProcessRequest"
-              }
+    "/add-industry-placement/{profileId}": {
+      "get": {
+        "operationId": "addIndustryPlacement",
+        "summary": "Add or Change Industry Placement",
+        "description": "Redirects to either the add or change journey for industry placement based on route.",
+        "parameters": [
+          {
+            "name": "profileId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
             }
           }
-        },
+        ],
         "responses": {
-          "200": {
-            "description": "Bulk industry placements processed successfully.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BulkIndustryPlacementResponse"
-                }
-              }
-            }
+          "302": {
+            "description": "Redirect to another endpoint."
           }
         }
       }
     },
-    "/api/IndustryPlacement/GetIpLookupData/{ipLookupType}/{pathwayId}": {
+    "/industry-placement-completion/{profileId}/{isChangeMode}": {
       "get": {
-        "summary": "Retrieve industry placement lookup data.",
+        "operationId": "getIpCompletion",
+        "summary": "Industry Placement Completion Details",
+        "description": "Displays completion details for the industry placement.",
         "parameters": [
           {
-            "name": "ipLookupType",
+            "name": "profileId",
             "in": "path",
             "required": true,
             "schema": {
-              "$ref": "#/components/schemas/IpLookupType"
+              "type": "integer"
             }
           },
           {
-            "name": "pathwayId",
+            "name": "isChangeMode",
             "in": "path",
-            "required": true,
+            "required": false,
             "schema": {
-              "type": "integer",
-              "nullable": true
+              "type": "boolean",
+              "default": false
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Industry placement lookup data retrieved successfully.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/IpLookupData"
-                  }
-                }
-              }
-            }
+            "description": "Completion details displayed."
+          },
+          "404": {
+            "description": "Not found."
           }
         }
-      }
-    },
-    "/api/IndustryPlacement/ProcessIndustryPlacementDetails": {
+      },
       "post": {
-        "summary": "Process detailed industry placement information.",
+        "operationId": "submitIpCompletion",
+        "summary": "Submit Industry Placement Completion",
+        "description": "Submits industry placement completion details.",
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/IndustryPlacementRequest"
+                "$ref": "#/components/schemas/IpCompletionViewModel"
               }
             }
           }
         },
         "responses": {
+          "302": {
+            "description": "Redirect to another endpoint."
+          },
+          "400": {
+            "description": "Bad request due to validation errors."
+          }
+        }
+      }
+    },
+    "/industry-placement-special-consideration-hours/{isChangeMode}": {
+      "get": {
+        "operationId": "getIpSpecialConsiderationHours",
+        "summary": "Special Consideration Hours",
+        "description": "Displays special consideration hours for industry placement.",
+        "parameters": [
+          {
+            "name": "isChangeMode",
+            "in": "path",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        ],
+        "responses": {
           "200": {
-            "description": "Industry placement details processed successfully.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "boolean"
-                }
+            "description": "Special consideration hours displayed."
+          },
+          "404": {
+            "description": "Not found."
+          }
+        }
+      },
+      "post": {
+        "operationId": "submitIpSpecialConsiderationHours",
+        "summary": "Submit Special Consideration Hours",
+        "description": "Submits special consideration hours for industry placement.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SpecialConsiderationHoursViewModel"
               }
             }
+          }
+        },
+        "responses": {
+          "302": {
+            "description": "Redirect to another endpoint."
+          },
+          "400": {
+            "description": "Bad request due to validation errors."
+          }
+        }
+      }
+    },
+    "/industry-placement-special-consideration-reasons/{isChangeMode}": {
+      "get": {
+        "operationId": "getIpSpecialConsiderationReasons",
+        "summary": "Special Consideration Reasons",
+        "description": "Displays reasons for special consideration.",
+        "parameters": [
+          {
+            "name": "isChangeMode",
+            "in": "path",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Special consideration reasons displayed."
+          },
+          "404": {
+            "description": "Not found."
+          }
+        }
+      },
+      "post": {
+        "operationId": "submitIpSpecialConsiderationReasons",
+        "summary": "Submit Special Consideration Reasons",
+        "description": "Submits reasons for special consideration in industry placement.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SpecialConsiderationReasonsViewModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "302": {
+            "description": "Redirect to another endpoint."
+          },
+          "400": {
+            "description": "Bad request due to validation errors."
+          }
+        }
+      }
+    },
+    "/industry-placement-check-your-answers": {
+      "get": {
+        "operationId": "getIpCheckAndSubmit",
+        "summary": "Check Your Answers",
+        "description": "Displays a summary for review and confirmation of submission.",
+        "responses": {
+          "200": {
+            "description": "Check your answers page displayed."
+          },
+          "404": {
+            "description": "Not Found."
+          }
+        }
+      },
+      "post": {
+        "operationId": "submitIpCheckAndSubmit",
+        "summary": "Submit Check and Submit",
+        "description": "Finalizes and submits the check and submit workflow.",
+        "responses": {
+          "302": {
+            "description": "Redirect to another endpoint."
+          },
+          "400": {
+            "description": "Bad request due to errors during processing."
+          }
+        }
+      }
+    },
+    "/industry-placement-check-your-answers-cancel/{profileId}": {
+      "get": {
+        "operationId": "cancelIpCheckAndSubmit",
+        "summary": "Cancel Check and Submit",
+        "description": "Cancels the check and submit workflow.",
+        "parameters": [
+          {
+            "name": "profileId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "302": {
+            "description": "Redirect to another endpoint."
           }
         }
       }
@@ -101,193 +236,48 @@
   },
   "components": {
     "schemas": {
-      "BulkProcessRequest": {
+      "IpCompletionViewModel": {
         "type": "object",
         "properties": {
-          "AoUkprn": {
+          "profileId": {
             "type": "integer"
           },
-          "BlobFileName": {
-            "type": "string"
-          },
-          "BlobUniqueReference": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "FileType": {
-            "$ref": "#/components/schemas/FileType"
-          },
-          "DocumentType": {
-            "$ref": "#/components/schemas/DocumentType"
-          },
-          "LoginUserType": {
-            "$ref": "#/components/schemas/LoginUserType"
-          },
-          "PerformedBy": {
-            "type": "string"
-          }
-        }
-      },
-      "BulkIndustryPlacementResponse": {
-        "type": "object",
-        "properties": {
-          "IsSuccess": {
-            "type": "boolean"
-          },
-          "BlobUniqueReference": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "ErrorFileSize": {
-            "type": "number"
-          },
-          "Stats": {
-            "$ref": "#/components/schemas/BulkUploadStats"
-          }
-        }
-      },
-      "IpLookupType": {
-        "type": "integer",
-        "enum": [
-          0,
-          1,
-          2,
-          3
-        ]
-      },
-      "IpLookupData": {
-        "type": "object",
-        "properties": {
-          "Id": {
-            "type": "integer"
-          },
-          "Name": {
-            "type": "string"
-          },
-          "StartDate": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "EndDate": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "ShowOption": {
-            "type": "boolean",
-            "nullable": true
-          }
-        }
-      },
-      "IndustryPlacementRequest": {
-        "type": "object",
-        "properties": {
-          "ProviderUkprn": {
-            "type": "integer"
-          },
-          "ProfileId": {
-            "type": "integer"
-          },
-          "RegistrationPathwayId": {
-            "type": "integer"
-          },
-          "PathwayId": {
-            "type": "integer"
-          },
-          "IndustryPlacementStatus": {
-            "$ref": "#/components/schemas/IndustryPlacementStatus"
-          },
-          "IndustryPlacementDetails": {
-            "$ref": "#/components/schemas/IndustryPlacementDetails"
-          },
-          "PerformedBy": {
-            "type": "string"
-          }
-        }
-      },
-      "IndustryPlacementDetails": {
-        "type": "object",
-        "properties": {
-          "IndustryPlacementStatus": {
-            "type": "string"
-          },
-          "HoursSpentOnPlacement": {
+          "industryPlacementStatus": {
             "type": "integer",
-            "nullable": true
+            "description": "The status of the industry placement."
           },
-          "SpecialConsiderationReasons": {
+          "isChangeMode": {
+            "type": "boolean"
+          }
+        }
+      },
+      "SpecialConsiderationHoursViewModel": {
+        "type": "object",
+        "properties": {
+          "profileId": {
+            "type": "integer"
+          },
+          "hours": {
+            "type": "integer",
+            "description": "Number of hours completed."
+          },
+          "isChangeMode": {
+            "type": "boolean"
+          }
+        }
+      },
+      "SpecialConsiderationReasonsViewModel": {
+        "type": "object",
+        "properties": {
+          "reasonsList": {
             "type": "array",
             "items": {
-              "type": "integer",
-              "nullable": true
-            }
-          }
-        }
-      },
-      "IndustryPlacementStatus": {
-        "type": "integer",
-        "enum": [
-          0,
-          1,
-          2,
-          3,
-          4
-        ]
-      },
-      "FileType": {
-        "type": "integer",
-        "enum": [
-          1,
-          2,
-          3
-        ]
-      },
-      "DocumentType": {
-        "type": "integer",
-        "enum": [
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          7,
-          8,
-          9,
-          10,
-          11,
-          12,
-          13,
-          14,
-          15,
-          16,
-          17,
-          18
-        ]
-      },
-      "LoginUserType": {
-        "type": "integer",
-        "enum": [
-          0,
-          1,
-          2,
-          3
-        ]
-      },
-      "BulkUploadStats": {
-        "type": "object",
-        "properties": {
-          "TotalRecordsCount": {
-            "type": "integer"
+              "type": "object"
+            },
+            "description": "List of reasons for special consideration."
           },
-          "NewRecordsCount": {
-            "type": "integer"
-          },
-          "AmendedRecordsCount": {
-            "type": "integer"
-          },
-          "UnchangedRecordsCount": {
-            "type": "integer"
+          "isChangeMode": {
+            "type": "boolean"
           }
         }
       }

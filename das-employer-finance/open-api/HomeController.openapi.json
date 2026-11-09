@@ -1,26 +1,38 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "HomeController API",
-    "version": "1.0.0",
-    "description": "API for managing service-related actions in the HomeController."
+    "title": "Employer Finance Service API",
+    "version": "1.0.0"
   },
   "paths": {
     "/service": {
       "get": {
         "operationId": "Index",
-        "summary": "Redirect to LegacyEAS Action",
         "responses": {
           "302": {
-            "description": "Redirect to LegacyEAS."
+            "description": "Redirects to the legacy EAS action."
+          }
+        }
+      }
+    },
+    "/service/signedIn": {
+      "get": {
+        "operationId": "SignedIn",
+        "security": [
+          {
+            "OauthPolicy": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Displays the signed-in view."
           }
         }
       }
     },
     "/service/{HashedAccountId}/privacy": {
       "get": {
-        "operationId": "PrivacyWithAccountId",
-        "summary": "Display Privacy policy for a specific account",
+        "operationId": "PrivacyWithHashedAccountId",
         "parameters": [
           {
             "name": "HashedAccountId",
@@ -33,7 +45,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Display Privacy policy."
+            "description": "Displays the privacy view."
           }
         }
       }
@@ -41,18 +53,16 @@
     "/service/privacy": {
       "get": {
         "operationId": "Privacy",
-        "summary": "Display Privacy policy",
         "responses": {
           "200": {
-            "description": "Display Privacy policy."
+            "description": "Displays the privacy view without HashedAccountId."
           }
         }
       }
     },
     "/service/{HashedAccountId}/cookieConsent": {
       "get": {
-        "operationId": "CookieConsentWithAccountId",
-        "summary": "Redirect to cookie consent for a specific account",
+        "operationId": "CookieConsentWithHashedAccountId",
         "parameters": [
           {
             "name": "HashedAccountId",
@@ -65,7 +75,7 @@
         ],
         "responses": {
           "302": {
-            "description": "Redirect to cookie consent."
+            "description": "Redirects to the Employer Accounts cookie consent."
           }
         }
       }
@@ -73,10 +83,9 @@
     "/service/cookieConsent": {
       "get": {
         "operationId": "CookieConsent",
-        "summary": "Redirect to cookie consent",
         "responses": {
           "302": {
-            "description": "Redirect to cookie consent."
+            "description": "Redirects to the Employer Accounts cookie consent without HashedAccountId."
           }
         }
       }
@@ -84,10 +93,9 @@
     "/service/signOut": {
       "post": {
         "operationId": "SignOutUser",
-        "summary": "Sign out the user",
         "responses": {
           "302": {
-            "description": "User signed out."
+            "description": "Signs the user out and redirects."
           }
         }
       }
@@ -95,10 +103,9 @@
     "/service/SignOutCleanup": {
       "post": {
         "operationId": "SignOutCleanup",
-        "summary": "Sign out cleanup",
         "responses": {
-          "200": {
-            "description": "User sign-out cleanup completed."
+          "204": {
+            "description": "Cleans up the user's session and performs sign-out."
           }
         }
       }
@@ -106,10 +113,9 @@
     "/service/help": {
       "get": {
         "operationId": "Help",
-        "summary": "Redirect to Help Centre",
         "responses": {
           "301": {
-            "description": "Redirect to Help Centre."
+            "description": "Redirects permanently to the help center URL."
           }
         }
       }
@@ -117,30 +123,32 @@
     "/service/signIn": {
       "get": {
         "operationId": "SignIn",
-        "summary": "Redirect to sign-in action",
+        "security": [
+          {
+            "OauthPolicy": []
+          }
+        ],
         "responses": {
           "302": {
-            "description": "Redirect to sign-in."
+            "description": "Redirects the user to the sign-in action."
           }
         }
       }
     },
     "/service/SignIn-Stub": {
       "get": {
-        "operationId": "SigninStubView",
-        "summary": "Display Sign-In Stub View",
+        "operationId": "SigninStub",
         "responses": {
           "200": {
-            "description": "Stub sign-in view rendered."
+            "description": "Displays the stub sign-in view."
           }
         }
       },
       "post": {
         "operationId": "SigninStubPost",
-        "summary": "Submit stub sign-in",
         "responses": {
           "302": {
-            "description": "Redirect to signed-in stub."
+            "description": "Performs stub sign-in and redirects to the stub signed-in route."
           }
         }
       }
@@ -148,16 +156,33 @@
     "/service/signed-in-stub": {
       "get": {
         "operationId": "SignedInStub",
-        "summary": "Display stub signed-in view",
+        "security": [
+          {
+            "OauthPolicy": []
+          }
+        ],
         "responses": {
           "200": {
-            "description": "Stub signed-in view rendered."
+            "description": "Displays the stub signed-in view."
           }
         }
       }
     }
   },
   "components": {
-    "schemas": {}
+    "schemas": {},
+    "securitySchemes": {
+      "OauthPolicy": {
+        "type": "oauth2",
+        "description": "Requires OAuth2 authentication for specified operations.",
+        "flows": {
+          "authorizationCode": {
+            "authorizationUrl": "https://example.com/oauth/authorize",
+            "tokenUrl": "https://example.com/oauth/token",
+            "scopes": {}
+          }
+        }
+      }
+    }
   }
 }

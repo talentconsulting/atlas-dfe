@@ -5,10 +5,9 @@
     "version": "1.0.0"
   },
   "paths": {
-    "/{EmployerAccountId}/{VacancyId}/enter-location": {
+    "/{EmployerAccountId}/vacancies/{VacancyId}/enter-location": {
       "get": {
         "operationId": "EnterLocationManually_Get",
-        "summary": "Handles manual entry of a location.",
         "parameters": [
           {
             "name": "EmployerAccountId",
@@ -30,13 +29,9 @@
           {
             "name": "Origin",
             "in": "query",
-            "required": true,
+            "required": false,
             "schema": {
-              "type": "string",
-              "enum": [
-                "One",
-                "Many"
-              ]
+              "$ref": "#/components/schemas/MultipleLocationsJourneyOrigin"
             }
           },
           {
@@ -44,25 +39,25 @@
             "in": "query",
             "required": false,
             "schema": {
-              "type": "boolean"
+              "type": "boolean",
+              "default": true
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "HTML content for the location input form.",
+            "description": "Render the view with location form",
             "content": {
-              "text/html": {}
+              "application/json": {}
             }
           },
           "400": {
-            "description": "Validation error, bad input from the user."
+            "description": "Invalid model state or parameters"
           }
         }
       },
       "post": {
         "operationId": "EnterLocationManually_Post",
-        "summary": "Submits entered location data.",
         "parameters": [
           {
             "name": "EmployerAccountId",
@@ -94,13 +89,10 @@
         },
         "responses": {
           "302": {
-            "description": "Redirection based on origin."
+            "description": "Redirect to appropriate route for location handling"
           },
           "400": {
-            "description": "Validation error, bad input from the user."
-          },
-          "500": {
-            "description": "Error when the provided postcode is not within England."
+            "description": "Validation errors or invalid postcode"
           }
         }
       }
@@ -108,46 +100,32 @@
   },
   "components": {
     "schemas": {
-      "Address": {
+      "AddLocationJourneyModel": {
         "type": "object",
         "properties": {
-          "AddressLine1": {
-            "type": "string"
+          "Origin": {
+            "$ref": "#/components/schemas/MultipleLocationsJourneyOrigin"
           },
-          "AddressLine2": {
-            "type": "string"
+          "Wizard": {
+            "type": "boolean"
           },
-          "AddressLine3": {
-            "type": "string"
-          },
-          "Postcode": {
-            "type": "string"
-          },
-          "Country": {
-            "type": "string"
-          }
-        }
-      },
-      "EnterLocationManuallyEditModel": {
-        "type": "object",
-        "properties": {
           "EmployerAccountId": {
             "type": "string"
           },
           "VacancyId": {
             "type": "string",
             "format": "uuid"
-          },
-          "Origin": {
-            "type": "string",
-            "enum": [
-              "One",
-              "Many"
-            ]
-          },
-          "Wizard": {
-            "type": "boolean"
-          },
+          }
+        }
+      },
+      "EnterLocationManuallyEditModel": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AddLocationJourneyModel"
+          }
+        ],
+        "properties": {
           "AddressLine1": {
             "type": "string"
           },
@@ -160,14 +138,13 @@
           "Postcode": {
             "type": "string"
           }
-        },
-        "required": [
-          "EmployerAccountId",
-          "VacancyId",
-          "Origin",
-          "AddressLine1",
-          "City",
-          "Postcode"
+        }
+      },
+      "MultipleLocationsJourneyOrigin": {
+        "type": "string",
+        "enum": [
+          "One",
+          "Many"
         ]
       }
     }

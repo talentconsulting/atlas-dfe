@@ -1,14 +1,15 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Training API",
+    "title": "Training Controller API",
+    "description": "API endpoints for managing training courses related to vacancies.",
     "version": "1.0.0"
   },
   "paths": {
-    "/{EmployerAccountId}/{VacancyId}/training": {
+    "/account/{EmployerAccountId}/vacancy/{VacancyId}/training": {
       "get": {
-        "operationId": "Training_Get",
-        "summary": "View training course selection",
+        "operationId": "getTraining",
+        "summary": "Retrieve training details for a vacancy.",
         "parameters": [
           {
             "name": "EmployerAccountId",
@@ -63,25 +64,27 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "Successful retrieval of training details.",
             "content": {
-              "text/html": {
-                "schema": {
-                  "type": "string"
-                }
-              }
+              "application/json": {}
             }
+          },
+          "302": {
+            "description": "Redirection to first-time training setup."
+          },
+          "404": {
+            "description": "Training course not found."
           }
         }
       },
       "post": {
-        "operationId": "Training_Post",
-        "summary": "Set training course",
+        "operationId": "postTraining",
+        "summary": "Submit training details for a vacancy.",
         "parameters": [
           {
             "name": "wizard",
             "in": "query",
-            "required": true,
+            "required": false,
             "schema": {
               "type": "boolean"
             }
@@ -99,22 +102,21 @@
         },
         "responses": {
           "200": {
-            "description": "Redirect to confirmation or error view",
+            "description": "Training successfully updated.",
             "content": {
-              "text/html": {
-                "schema": {
-                  "type": "string"
-                }
-              }
+              "application/json": {}
             }
+          },
+          "404": {
+            "description": "Training programme not found."
           }
         }
       }
     },
-    "/{EmployerAccountId}/{VacancyId}/training-first-vacancy": {
+    "/account/{EmployerAccountId}/vacancy/{VacancyId}/training-first-vacancy": {
       "get": {
-        "operationId": "Training_First_Time_Get",
-        "summary": "View training course selection for first vacancy",
+        "operationId": "getTrainingFirstVacancy",
+        "summary": "Retrieve guidance for setting up training for the first vacancy.",
         "parameters": [
           {
             "name": "EmployerAccountId",
@@ -136,20 +138,16 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "Successful retrieval of guidance.",
             "content": {
-              "text/html": {
-                "schema": {
-                  "type": "string"
-                }
-              }
+              "application/json": {}
             }
           }
         }
       },
       "post": {
-        "operationId": "Training_First_Time_Post",
-        "summary": "Confirm training course selection process for first vacancy",
+        "operationId": "postTrainingFirstVacancy",
+        "summary": "Submit training details for the first vacancy setup.",
         "requestBody": {
           "required": true,
           "content": {
@@ -162,22 +160,54 @@
         },
         "responses": {
           "200": {
-            "description": "Redirect based on training selection outcome",
+            "description": "Training details successfully submitted.",
             "content": {
-              "text/html": {
-                "schema": {
-                  "type": "string"
-                }
-              }
+              "application/json": {}
+            }
+          },
+          "302": {
+            "description": "Redirects based on selection of training."
+          }
+        }
+      }
+    },
+    "/account/{EmployerAccountId}/vacancy/{VacancyId}/training-help": {
+      "get": {
+        "operationId": "getTrainingHelp",
+        "summary": "Provide help for choosing training courses.",
+        "parameters": [
+          {
+            "name": "EmployerAccountId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "VacancyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful retrieval of training help.",
+            "content": {
+              "application/json": {}
             }
           }
         }
       }
     },
-    "/{EmployerAccountId}/{VacancyId}/training-confirm": {
+    "/account/{EmployerAccountId}/vacancy/{VacancyId}/training-confirm": {
       "get": {
-        "operationId": "Training_Confirm_Get",
-        "summary": "View confirm training course selection",
+        "operationId": "getTrainingConfirm",
+        "summary": "Get confirmation of selected training programme.",
         "parameters": [
           {
             "name": "EmployerAccountId",
@@ -215,20 +245,29 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "Successful retrieval of confirmation details.",
             "content": {
-              "text/html": {
-                "schema": {
-                  "type": "string"
-                }
-              }
+              "application/json": {}
             }
+          },
+          "404": {
+            "description": "Training programme not found."
           }
         }
       },
       "post": {
-        "operationId": "Training_Confirm_Post",
-        "summary": "Confirm and finalize training course selection",
+        "operationId": "postTrainingConfirm",
+        "summary": "Confirm training programme selection.",
+        "parameters": [
+          {
+            "name": "wizard",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -241,51 +280,13 @@
         },
         "responses": {
           "200": {
-            "description": "Redirect based on confirmation outcome",
+            "description": "Training programme successfully confirmed.",
             "content": {
-              "text/html": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/{EmployerAccountId}/{VacancyId}/training-help": {
-      "get": {
-        "operationId": "Training_Help_Get",
-        "summary": "View help for training course selection",
-        "parameters": [
-          {
-            "name": "EmployerAccountId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
+              "application/json": {}
             }
           },
-          {
-            "name": "VacancyId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful response",
-            "content": {
-              "text/html": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
+          "400": {
+            "description": "Validation errors occurred."
           }
         }
       }
@@ -297,13 +298,11 @@
         "type": "object",
         "properties": {
           "EmployerAccountId": {
-            "type": "string",
-            "description": "ID of the employer account"
+            "type": "string"
           },
           "VacancyId": {
             "type": "string",
-            "format": "uuid",
-            "description": "ID of the vacancy"
+            "format": "uuid"
           }
         },
         "required": [
@@ -315,17 +314,14 @@
         "type": "object",
         "properties": {
           "EmployerAccountId": {
-            "type": "string",
-            "description": "ID of the employer account"
+            "type": "string"
           },
           "VacancyId": {
             "type": "string",
-            "format": "uuid",
-            "description": "ID of the vacancy"
+            "format": "uuid"
           },
           "SelectedProgrammeId": {
-            "type": "string",
-            "description": "ID of the selected training programme"
+            "type": "string"
           }
         },
         "required": [
@@ -338,17 +334,15 @@
         "type": "object",
         "properties": {
           "EmployerAccountId": {
-            "type": "string",
-            "description": "ID of the employer account"
+            "type": "string"
           },
           "VacancyId": {
             "type": "string",
-            "format": "uuid",
-            "description": "ID of the vacancy"
+            "format": "uuid"
           },
           "HasFoundTraining": {
             "type": "boolean",
-            "description": "Indicates if training has been found"
+            "nullable": true
           }
         },
         "required": [
@@ -361,17 +355,14 @@
         "type": "object",
         "properties": {
           "EmployerAccountId": {
-            "type": "string",
-            "description": "ID of the employer account"
+            "type": "string"
           },
           "VacancyId": {
             "type": "string",
-            "format": "uuid",
-            "description": "ID of the vacancy"
+            "format": "uuid"
           },
           "ProgrammeId": {
-            "type": "string",
-            "description": "ID of the confirmed training programme"
+            "type": "string"
           }
         },
         "required": [

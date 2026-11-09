@@ -1,29 +1,40 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Content Policy Report API",
-    "version": "1.0.0"
+    "title": "Content Security Policy Reporting API",
+    "version": "1.0.0",
+    "description": "API for handling Content Security Policy violation reports from end-user browsers."
   },
   "paths": {
     "/contentpolicyreport/report": {
       "post": {
-        "summary": "Report a Content Security Policy (CSP) violation",
-        "description": "Endpoint to report a CSP violation. Allows anonymous access.",
         "operationId": "ReportCspViolation",
+        "summary": "Report a CSP violation",
+        "description": "Allows reporting of Content Security Policy (CSP) violations.",
+        "tags": [
+          "CSP"
+        ],
+        "security": [],
         "requestBody": {
-          "description": "CSP report data",
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/CspReportRequest"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
-            "description": "CSP violation report received successfully"
+            "description": "The CSP violation report was logged successfully.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "CSP violation reported successfully."
+                }
+              }
+            }
           }
         }
       }
@@ -44,34 +55,39 @@
         "properties": {
           "document-uri": {
             "type": "string",
-            "description": "The URI of the document in which the violation occurred."
+            "description": "The URI of the document where the violation occurred."
           },
           "referrer": {
             "type": "string",
-            "description": "The referrer of the document in which the violation occurred."
+            "description": "The referrer of the document where the violation occurred."
           },
           "violated-directive": {
             "type": "string",
-            "description": "The specific directive that was violated."
+            "description": "The directive that was violated."
           },
           "effective-directive": {
             "type": "string",
-            "description": "The directive that the user agent enforced that led to the violation."
+            "description": "The effective directive that the browser applied."
           },
           "original-policy": {
             "type": "string",
-            "description": "The original Content Security Policy."
+            "description": "The original policy as received by the user agent."
           },
           "blocked-uri": {
             "type": "string",
-            "description": "The URI that was blocked due to the violation."
+            "description": "The URI that was blocked by the browser."
           },
           "status-code": {
             "type": "integer",
-            "description": "The HTTP status code of the violation."
+            "description": "The HTTP status code of the document causing the violation."
           }
         },
-        "additionalProperties": false
+        "required": [
+          "document-uri",
+          "violated-directive",
+          "blocked-uri",
+          "status-code"
+        ]
       }
     }
   }

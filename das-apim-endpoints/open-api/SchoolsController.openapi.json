@@ -2,13 +2,12 @@
   "openapi": "3.1.0",
   "info": {
     "title": "AdminAan API",
-    "version": "1.0.0",
-    "description": "API for managing schools data."
+    "version": "1.0.0"
   },
   "paths": {
-    "/schools/find/{searchTerm}": {
+    "/Schools/find/{searchTerm}": {
       "get": {
-        "summary": "Search for schools",
+        "summary": "Find schools by search term",
         "operationId": "GetSchools",
         "parameters": [
           {
@@ -18,16 +17,16 @@
             "schema": {
               "type": "string"
             },
-            "description": "The term to search for schools."
+            "description": "Term used to search schools"
           }
         ],
         "responses": {
           "200": {
-            "description": "A list of schools matching the search term",
+            "description": "List of schools matching the search term",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/School"
+                  "$ref": "#/components/schemas/GetSchoolsQueryResult"
                 }
               }
             }
@@ -38,16 +37,27 @@
   },
   "components": {
     "schemas": {
+      "GetSchoolsQueryResult": {
+        "type": "object",
+        "properties": {
+          "Schools": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/School"
+            }
+          }
+        }
+      },
       "School": {
         "type": "object",
         "properties": {
           "Name": {
             "type": "string",
-            "description": "Name of the school."
+            "description": "Name of the school"
           },
           "Urn": {
             "type": "string",
-            "description": "Unique reference number of the school."
+            "description": "Unique Reference Number of the school"
           }
         },
         "required": [

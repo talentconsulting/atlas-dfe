@@ -5,10 +5,9 @@
     "version": "1.0.0"
   },
   "paths": {
-    "/{EmployerAccountId}/{VacancyId}/unsuccessful": {
+    "/accounts/{EmployerAccountId}/vacancies/{VacancyId}/unsuccessful": {
       "get": {
-        "operationId": "getApplicationReviewsToUnsuccessful",
-        "summary": "Retrieve unsuccessful application reviews",
+        "operationId": "GetApplicationReviewsToUnsuccessful",
         "parameters": [
           {
             "name": "EmployerAccountId",
@@ -30,7 +29,6 @@
           {
             "name": "sortColumn",
             "in": "query",
-            "required": false,
             "schema": {
               "$ref": "#/components/schemas/SortColumn"
             }
@@ -38,7 +36,6 @@
           {
             "name": "sortOrder",
             "in": "query",
-            "required": false,
             "schema": {
               "$ref": "#/components/schemas/SortOrder"
             }
@@ -46,7 +43,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful retrieval",
+            "description": "Successful retrieval of application reviews to unsuccessful view model.",
             "content": {
               "application/json": {
                 "schema": {
@@ -58,8 +55,7 @@
         }
       },
       "post": {
-        "operationId": "postApplicationReviewsToUnsuccessful",
-        "summary": "Submit updates to application reviews status",
+        "operationId": "PostApplicationReviewsToUnsuccessful",
         "requestBody": {
           "required": true,
           "content": {
@@ -72,15 +68,17 @@
         },
         "responses": {
           "302": {
-            "description": "Redirect to feedback page"
+            "description": "Redirect to feedback page."
+          },
+          "400": {
+            "description": "Validation error."
           }
         }
       }
     },
-    "/{EmployerAccountId}/{VacancyId}/unsuccessful-feedback": {
+    "/accounts/{EmployerAccountId}/vacancies/{VacancyId}/unsuccessful-feedback": {
       "get": {
-        "operationId": "getApplicationReviewsFeedback",
-        "summary": "Retrieve feedback for application reviews",
+        "operationId": "GetApplicationReviewsFeedback",
         "parameters": [
           {
             "name": "EmployerAccountId",
@@ -102,7 +100,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful retrieval",
+            "description": "Successful retrieval of application reviews feedback data.",
             "content": {
               "application/json": {
                 "schema": {
@@ -114,8 +112,7 @@
         }
       },
       "post": {
-        "operationId": "postApplicationReviewsFeedback",
-        "summary": "Submit feedback for application reviews",
+        "operationId": "PostApplicationReviewsFeedback",
         "requestBody": {
           "required": true,
           "content": {
@@ -128,7 +125,10 @@
         },
         "responses": {
           "302": {
-            "description": "Redirect based on review outcomes"
+            "description": "Redirect to vacancy management or archive vacancy page."
+          },
+          "400": {
+            "description": "Validation error."
           }
         }
       }
@@ -136,93 +136,6 @@
   },
   "components": {
     "schemas": {
-      "ApplicationReviewsToUnsuccessfulViewModel": {
-        "type": "object",
-        "properties": {
-          "VacancyReference": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "VacancyApplications": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/VacancyApplication"
-            }
-          },
-          "PositionsFilledBannerHeader": {
-            "type": "string"
-          },
-          "PositionsFilledBannerBody": {
-            "type": "string"
-          },
-          "ApplicationsToUnsuccessful": {
-            "type": "array",
-            "items": {
-              "type": "string",
-              "format": "uuid"
-            }
-          },
-          "EmployerAccountId": {
-            "type": "string"
-          },
-          "VacancyId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "IsMultipleApplications": {
-            "type": "boolean"
-          },
-          "SortColumn": {
-            "$ref": "#/components/schemas/SortColumn"
-          },
-          "SortOrder": {
-            "$ref": "#/components/schemas/SortOrder"
-          }
-        }
-      },
-      "ApplicationReviewsFeedbackViewModel": {
-        "type": "object",
-        "properties": {
-          "CandidateFeedback": {
-            "type": "string"
-          },
-          "ApplicationsToUnsuccessful": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/VacancyApplication"
-            }
-          },
-          "EmployerAccountId": {
-            "type": "string"
-          },
-          "VacancyId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "Outcome": {
-            "$ref": "#/components/schemas/ApplicationReviewStatus"
-          },
-          "IsMultipleApplications": {
-            "type": "boolean"
-          }
-        }
-      },
-      "ApplicationReviewStatus": {
-        "type": "string",
-        "enum": [
-          "New",
-          "Successful",
-          "Unsuccessful",
-          "Shared",
-          "InReview",
-          "Interviewing",
-          "EmployerInterviewing",
-          "EmployerUnsuccessful",
-          "PendingShared",
-          "PendingToMakeUnsuccessful",
-          "AllShared"
-        ]
-      },
       "SortColumn": {
         "type": "string",
         "enum": [
@@ -244,6 +157,74 @@
           "Ascending",
           "Descending"
         ]
+      },
+      "ApplicationReviewsToUnsuccessfulViewModel": {
+        "type": "object",
+        "properties": {
+          "EmployerAccountId": {
+            "type": "string"
+          },
+          "VacancyId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "SortColumn": {
+            "$ref": "#/components/schemas/SortColumn"
+          },
+          "SortOrder": {
+            "$ref": "#/components/schemas/SortOrder"
+          },
+          "VacancyReference": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "ApplicationsToUnsuccessful": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "VacancyApplications": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VacancyApplication"
+            }
+          },
+          "PositionsFilledBannerHeader": {
+            "type": "string"
+          },
+          "PositionsFilledBannerBody": {
+            "type": "string"
+          },
+          "CanShowPositionsFilledBanner": {
+            "type": "boolean"
+          },
+          "CanShowCandidateAppliedLocations": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ApplicationReviewsFeedbackViewModel": {
+        "type": "object",
+        "properties": {
+          "EmployerAccountId": {
+            "type": "string"
+          },
+          "VacancyId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "CandidateFeedback": {
+            "type": "string"
+          },
+          "ApplicationsToUnsuccessful": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VacancyApplication"
+            }
+          }
+        }
       },
       "VacancyApplication": {
         "type": "object",
@@ -274,13 +255,7 @@
             "format": "uuid"
           },
           "DisabilityStatus": {
-            "type": "string",
-            "enum": [
-              "Unknown",
-              "No",
-              "PreferNotToSay",
-              "Yes"
-            ]
+            "$ref": "#/components/schemas/ApplicationReviewDisabilityStatus"
           },
           "IsWithdrawn": {
             "type": "boolean"
@@ -293,16 +268,12 @@
             "type": "string",
             "format": "date-time"
           },
-          "VacancyReference": {
-            "type": "integer",
-            "format": "int64"
-          },
           "CandidateFeedback": {
             "type": "string"
           },
-          "ApplicationId": {
-            "type": "string",
-            "format": "uuid"
+          "VacancyReference": {
+            "type": "integer",
+            "format": "int64"
           },
           "CandidateAppliedLocations": {
             "type": "array",
@@ -311,6 +282,31 @@
             }
           }
         }
+      },
+      "ApplicationReviewStatus": {
+        "type": "string",
+        "enum": [
+          "New",
+          "Successful",
+          "Unsuccessful",
+          "Shared",
+          "InReview",
+          "Interviewing",
+          "EmployerInterviewing",
+          "EmployerUnsuccessful",
+          "PendingShared",
+          "PendingToMakeUnsuccessful",
+          "AllShared"
+        ]
+      },
+      "ApplicationReviewDisabilityStatus": {
+        "type": "string",
+        "enum": [
+          "Unknown",
+          "No",
+          "PreferNotToSay",
+          "Yes"
+        ]
       }
     }
   }

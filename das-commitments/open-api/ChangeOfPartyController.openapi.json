@@ -2,28 +2,26 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Change of Party API",
-    "description": "API for managing changes of party requests related to apprenticeships.",
     "version": "1.0.0"
   },
   "paths": {
     "/api/apprenticeships/{apprenticeshipId}/change-of-party-requests": {
       "get": {
-        "summary": "Get all change of party requests",
-        "operationId": "getAllChangeOfPartyRequests",
+        "summary": "Get all change of party requests for an apprenticeship",
         "parameters": [
           {
             "name": "apprenticeshipId",
             "in": "path",
             "required": true,
-            "description": "The ID of the apprenticeship",
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "format": "int64"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "Success",
             "content": {
               "application/json": {
                 "schema": {
@@ -35,16 +33,15 @@
         }
       },
       "post": {
-        "summary": "Create change of party request",
-        "operationId": "createChangeOfPartyRequest",
+        "summary": "Create a new change of party request for an apprenticeship",
         "parameters": [
           {
             "name": "apprenticeshipId",
             "in": "path",
             "required": true,
-            "description": "The ID of the apprenticeship",
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "format": "int64"
             }
           }
         ],
@@ -60,29 +57,28 @@
         },
         "responses": {
           "200": {
-            "description": "Request created successfully"
+            "description": "Success"
           }
         }
       }
     },
     "/api/apprenticeships/{apprenticeshipId}/change-of-provider-chain": {
       "get": {
-        "summary": "Get change of provider chain",
-        "operationId": "getChangeOfProviderChain",
+        "summary": "Get change of provider chain for an apprenticeship",
         "parameters": [
           {
             "name": "apprenticeshipId",
             "in": "path",
             "required": true,
-            "description": "The ID of the apprenticeship",
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "format": "int64"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "Success",
             "content": {
               "application/json": {
                 "schema": {
@@ -96,22 +92,21 @@
     },
     "/api/apprenticeships/{apprenticeshipId}/change-of-employer-chain": {
       "get": {
-        "summary": "Get change of employer chain",
-        "operationId": "getChangeOfEmployerChain",
+        "summary": "Get change of employer chain for an apprenticeship",
         "parameters": [
           {
             "name": "apprenticeshipId",
             "in": "path",
             "required": true,
-            "description": "The ID of the apprenticeship",
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "format": "int64"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "Success",
             "content": {
               "application/json": {
                 "schema": {
@@ -133,10 +128,12 @@
             "$ref": "#/components/schemas/ChangeOfPartyRequestType"
           },
           "NewPartyId": {
-            "type": "integer"
+            "type": "integer",
+            "format": "int64"
           },
           "NewPrice": {
             "type": "integer",
+            "format": "int32",
             "nullable": true
           },
           "NewStartDate": {
@@ -156,11 +153,11 @@
           },
           "NewEmploymentPrice": {
             "type": "integer",
+            "format": "int32",
             "nullable": true
           },
           "DeliveryModel": {
-            "$ref": "#/components/schemas/DeliveryModel",
-            "nullable": true
+            "$ref": "#/components/schemas/DeliveryModel"
           },
           "HasOverlappingTrainingDates": {
             "type": "boolean",
@@ -196,22 +193,42 @@
             "type": "string"
           },
           "UserEmail": {
-            "type": "string",
-            "format": "email"
+            "type": "string"
           }
         }
       },
       "GetChangeOfPartyRequestsResponse": {
         "type": "object",
-        "additionalProperties": false
+        "properties": {
+          "Requests": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          }
+        }
       },
       "GetChangeOfProviderChainResponse": {
         "type": "object",
-        "additionalProperties": false
+        "properties": {
+          "Chain": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          }
+        }
       },
       "GetChangeOfEmployerChainResponse": {
         "type": "object",
-        "additionalProperties": false
+        "properties": {
+          "Chain": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          }
+        }
       }
     }
   }

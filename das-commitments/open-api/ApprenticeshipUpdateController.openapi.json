@@ -2,17 +2,20 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Apprenticeship Updates API",
+    "description": "API for managing apprenticeship updates.",
     "version": "1.0.0"
   },
   "paths": {
     "/api/apprenticeships/{apprenticeshipId}/updates": {
       "get": {
-        "summary": "Get Apprenticeship Updates",
+        "summary": "Retrieve apprenticeship updates",
+        "operationId": "getApprenticeshipUpdates",
         "parameters": [
           {
             "name": "apprenticeshipId",
             "in": "path",
             "required": true,
+            "description": "The ID of the apprenticeship",
             "schema": {
               "type": "integer",
               "format": "int64"
@@ -22,6 +25,7 @@
             "name": "status",
             "in": "query",
             "required": false,
+            "description": "Filter by update status",
             "schema": {
               "$ref": "#/components/schemas/ApprenticeshipUpdateStatus"
             }
@@ -41,19 +45,21 @@
         },
         "security": [
           {
-            "BearerAuth": []
+            "bearerAuth": []
           }
         ]
       }
     },
     "/api/apprenticeships/{apprenticeshipId}/updates/accept-apprenticeship-update": {
       "post": {
-        "summary": "Accept Apprenticeship Updates",
+        "summary": "Accept apprenticeship updates",
+        "operationId": "acceptApprenticeshipUpdates",
         "parameters": [
           {
             "name": "apprenticeshipId",
             "in": "path",
             "required": true,
+            "description": "The ID of the apprenticeship",
             "schema": {
               "type": "integer",
               "format": "int64"
@@ -72,24 +78,26 @@
         },
         "responses": {
           "200": {
-            "description": "Successful response"
+            "description": "Success Response"
           }
         },
         "security": [
           {
-            "BearerAuth": []
+            "bearerAuth": []
           }
         ]
       }
     },
     "/api/apprenticeships/{apprenticeshipId}/updates/reject-apprenticeship-update": {
       "post": {
-        "summary": "Reject Apprenticeship Updates",
+        "summary": "Reject apprenticeship updates",
+        "operationId": "rejectApprenticeshipUpdates",
         "parameters": [
           {
             "name": "apprenticeshipId",
             "in": "path",
             "required": true,
+            "description": "The ID of the apprenticeship",
             "schema": {
               "type": "integer",
               "format": "int64"
@@ -108,24 +116,26 @@
         },
         "responses": {
           "200": {
-            "description": "Successful response"
+            "description": "Success Response"
           }
         },
         "security": [
           {
-            "BearerAuth": []
+            "bearerAuth": []
           }
         ]
       }
     },
     "/api/apprenticeships/{apprenticeshipId}/updates/undo-apprenticeship-update": {
       "post": {
-        "summary": "Undo Apprenticeship Updates",
+        "summary": "Undo apprenticeship updates",
+        "operationId": "undoApprenticeshipUpdates",
         "parameters": [
           {
             "name": "apprenticeshipId",
             "in": "path",
             "required": true,
+            "description": "The ID of the apprenticeship",
             "schema": {
               "type": "integer",
               "format": "int64"
@@ -144,12 +154,12 @@
         },
         "responses": {
           "200": {
-            "description": "Successful response"
+            "description": "Success Response"
           }
         },
         "security": [
           {
-            "BearerAuth": []
+            "bearerAuth": []
           }
         ]
       }
@@ -168,17 +178,78 @@
           "Expired"
         ]
       },
-      "UserInfo": {
+      "GetApprenticeshipUpdatesResponse": {
         "type": "object",
         "properties": {
-          "userId": {
-            "type": "string"
-          },
-          "userDisplayName": {
-            "type": "string"
-          },
-          "userEmail": {
-            "type": "string"
+          "apprenticeshipUpdates": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer",
+                  "format": "int64"
+                },
+                "apprenticeshipId": {
+                  "type": "integer",
+                  "format": "int64"
+                },
+                "originatingParty": {
+                  "$ref": "#/components/schemas/Party"
+                },
+                "firstName": {
+                  "type": "string"
+                },
+                "lastName": {
+                  "type": "string"
+                },
+                "email": {
+                  "type": "string",
+                  "format": "email"
+                },
+                "deliveryModel": {
+                  "$ref": "#/components/schemas/DeliveryModel"
+                },
+                "employmentEndDate": {
+                  "type": "string",
+                  "format": "date"
+                },
+                "employmentPrice": {
+                  "type": "integer"
+                },
+                "trainingType": {
+                  "$ref": "#/components/schemas/ProgrammeType"
+                },
+                "trainingCode": {
+                  "type": "string"
+                },
+                "version": {
+                  "type": "string"
+                },
+                "option": {
+                  "type": "string"
+                },
+                "trainingName": {
+                  "type": "string"
+                },
+                "cost": {
+                  "type": "number",
+                  "format": "float"
+                },
+                "startDate": {
+                  "type": "string",
+                  "format": "date"
+                },
+                "endDate": {
+                  "type": "string",
+                  "format": "date"
+                },
+                "dateOfBirth": {
+                  "type": "string",
+                  "format": "date"
+                }
+              }
+            }
           }
         }
       },
@@ -242,80 +313,29 @@
           }
         }
       },
-      "GetApprenticeshipUpdatesResponse": {
+      "UserInfo": {
         "type": "object",
         "properties": {
-          "apprenticeshipUpdates": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "id": {
-                  "type": "integer",
-                  "format": "int64"
-                },
-                "apprenticeshipId": {
-                  "type": "integer",
-                  "format": "int64"
-                },
-                "originatingParty": {
-                  "type": "string"
-                },
-                "firstName": {
-                  "type": "string"
-                },
-                "lastName": {
-                  "type": "string"
-                },
-                "email": {
-                  "type": "string"
-                },
-                "deliveryModel": {
-                  "$ref": "#/components/schemas/DeliveryModel"
-                },
-                "employmentEndDate": {
-                  "type": "string",
-                  "format": "date-time"
-                },
-                "employmentPrice": {
-                  "type": "integer",
-                  "format": "int32"
-                },
-                "trainingType": {
-                  "$ref": "#/components/schemas/ProgrammeType"
-                },
-                "trainingCode": {
-                  "type": "string"
-                },
-                "version": {
-                  "type": "string"
-                },
-                "option": {
-                  "type": "string"
-                },
-                "trainingName": {
-                  "type": "string"
-                },
-                "cost": {
-                  "type": "number",
-                  "format": "decimal"
-                },
-                "startDate": {
-                  "type": "string",
-                  "format": "date-time"
-                },
-                "endDate": {
-                  "type": "string",
-                  "format": "date-time"
-                },
-                "dateOfBirth": {
-                  "type": "string",
-                  "format": "date-time"
-                }
-              }
-            }
+          "userId": {
+            "type": "string"
+          },
+          "userDisplayName": {
+            "type": "string"
+          },
+          "userEmail": {
+            "type": "string",
+            "format": "email"
           }
         }
+      },
+      "Party": {
+        "type": "string",
+        "enum": [
+          "Employer",
+          "Provider",
+          "TransferSender",
+          "None"
+        ]
       },
       "DeliveryModel": {
         "type": "string",
@@ -334,10 +354,9 @@
       }
     },
     "securitySchemes": {
-      "BearerAuth": {
+      "bearerAuth": {
         "type": "http",
-        "scheme": "bearer",
-        "bearerFormat": "JWT"
+        "scheme": "bearer"
       }
     }
   }

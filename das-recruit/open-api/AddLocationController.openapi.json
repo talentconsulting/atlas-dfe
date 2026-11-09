@@ -1,14 +1,15 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "AddLocation API",
-    "version": "1.0.0"
+    "title": "Employer Web API",
+    "version": "1.0.0",
+    "description": "API for managing employer vacancies and locations."
   },
   "paths": {
-    "/account/{EmployerAccountId}/vacancy/{VacancyId}/add-location": {
+    "/{EmployerAccountId}/{VacancyId}/add-location": {
       "get": {
-        "operationId": "getAddLocation",
-        "summary": "Retrieve the Add Location page.",
+        "operationId": "AddLocation_Get",
+        "summary": "Retrieve the 'Add Location' page for a vacancy.",
         "parameters": [
           {
             "name": "EmployerAccountId",
@@ -16,7 +17,8 @@
             "required": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Employer account identifier."
           },
           {
             "name": "VacancyId",
@@ -25,19 +27,17 @@
             "schema": {
               "type": "string",
               "format": "uuid"
-            }
+            },
+            "description": "Vacancy identifier."
           },
           {
             "name": "Origin",
             "in": "query",
             "required": false,
             "schema": {
-              "type": "string",
-              "enum": [
-                "One",
-                "Many"
-              ]
-            }
+              "$ref": "#/components/schemas/MultipleLocationsJourneyOrigin"
+            },
+            "description": "Origin of the journey, e.g., One or Many."
           },
           {
             "name": "Wizard",
@@ -46,21 +46,26 @@
             "schema": {
               "type": "boolean",
               "default": true
-            }
+            },
+            "description": "Indicates whether wizard mode is enabled."
           }
         ],
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "Successfully retrieved the 'Add Location' page.",
             "content": {
-              "text/html": {}
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AddLocationViewModel"
+                }
+              }
             }
           }
         }
       },
       "post": {
-        "operationId": "postAddLocation",
-        "summary": "Submit data to add a location.",
+        "operationId": "AddLocation_Post",
+        "summary": "Submit a location to be added to a vacancy.",
         "parameters": [
           {
             "name": "EmployerAccountId",
@@ -68,7 +73,8 @@
             "required": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Employer account identifier."
           },
           {
             "name": "VacancyId",
@@ -77,7 +83,8 @@
             "schema": {
               "type": "string",
               "format": "uuid"
-            }
+            },
+            "description": "Vacancy identifier."
           }
         ],
         "requestBody": {
@@ -92,13 +99,10 @@
         },
         "responses": {
           "302": {
-            "description": "Redirect to another route upon successful processing."
+            "description": "Successfully added the location. Redirected to the 'Select an Address' page."
           },
           "400": {
-            "description": "Invalid request or validation errors.",
-            "content": {
-              "text/html": {}
-            }
+            "description": "Validation errors occurred."
           }
         }
       }
@@ -106,34 +110,63 @@
   },
   "components": {
     "schemas": {
-      "AddLocationEditModel": {
+      "AddLocationJourneyModel": {
         "type": "object",
         "properties": {
-          "Postcode": {
-            "type": "string"
-          },
           "Origin": {
-            "type": "string",
-            "enum": [
-              "One",
-              "Many"
-            ]
+            "$ref": "#/components/schemas/MultipleLocationsJourneyOrigin"
           },
           "Wizard": {
             "type": "boolean"
+          }
+        }
+      },
+      "AddLocationEditModel": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AddLocationJourneyModel"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "Postcode": {
+                "type": "string",
+                "nullable": false
+              }
+            }
+          }
+        ]
+      },
+      "AddLocationViewModel": {
+        "type": "object",
+        "properties": {
+          "ApprenticeshipTitle": {
+            "type": "string"
           },
           "EmployerAccountId": {
+            "type": "string"
+          },
+          "Origin": {
+            "$ref": "#/components/schemas/MultipleLocationsJourneyOrigin"
+          },
+          "PageInfo": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "Postcode": {
             "type": "string"
           },
           "VacancyId": {
             "type": "string",
             "format": "uuid"
           }
-        },
-        "required": [
-          "Postcode",
-          "EmployerAccountId",
-          "VacancyId"
+        }
+      },
+      "MultipleLocationsJourneyOrigin": {
+        "type": "string",
+        "enum": [
+          "One",
+          "Many"
         ]
       }
     }

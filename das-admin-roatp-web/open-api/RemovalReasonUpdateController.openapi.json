@@ -1,30 +1,28 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Providers Removal Reason Update API",
-    "version": "1.0.0",
-    "description": "API for updating providers' removal reasons."
+    "title": "Removal Reason Update API",
+    "version": "1.0.0"
   },
   "paths": {
     "/providers/{ukprn}/removal-reason": {
       "get": {
-        "operationId": "GetRemovalReasonUpdate",
-        "summary": "Get removal reasons for a provider",
+        "summary": "Get removal reason details for a provider.",
+        "operationId": "GetRemovalReasonDetails",
         "parameters": [
           {
             "name": "ukprn",
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int32"
+              "type": "integer"
             },
-            "description": "Unique provider reference number"
+            "description": "The UKPRN of the provider."
           }
         ],
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Removal reason details retrieved successfully.",
             "content": {
               "application/json": {
                 "schema": {
@@ -34,37 +32,35 @@
             }
           },
           "302": {
-            "description": "Redirect to home route"
+            "description": "Redirect to home if unable to retrieve organisation details."
           }
         },
         "security": [
           {
-            "oauth2": []
+            "roles": [
+              "RoatpAdminTeam"
+            ]
           }
-        ],
-        "tags": [
-          "RemovalReasonUpdate"
         ]
       },
       "post": {
+        "summary": "Update removal reason for a provider.",
         "operationId": "UpdateRemovalReason",
-        "summary": "Update the removal reason for a provider",
         "parameters": [
           {
             "name": "ukprn",
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int32"
+              "type": "integer"
             },
-            "description": "Unique provider reference number"
+            "description": "The UKPRN of the provider."
           }
         ],
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": {
+            "application/x-www-form-urlencoded": {
               "schema": {
                 "$ref": "#/components/schemas/RemovalReasonUpdateViewModel"
               }
@@ -73,16 +69,15 @@
         },
         "responses": {
           "302": {
-            "description": "Redirect to appropriate route depending on update result"
+            "description": "Redirect based on patching status."
           }
         },
         "security": [
           {
-            "oauth2": []
+            "roles": [
+              "RoatpAdminTeam"
+            ]
           }
-        ],
-        "tags": [
-          "RemovalReasonUpdate"
         ]
       }
     }
@@ -96,12 +91,13 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/RemovalReasonModel"
-            }
+            },
+            "description": "List of removal reasons available for the provider."
           },
           "RemovalReasonId": {
             "type": "integer",
             "nullable": true,
-            "example": 1
+            "description": "The ID of the selected removal reason."
           }
         },
         "required": [
@@ -113,33 +109,27 @@
         "properties": {
           "Id": {
             "type": "integer",
-            "example": 1
+            "description": "The unique identifier of the removal reason."
           },
           "Description": {
             "type": "string",
-            "example": "Reason description"
+            "description": "The description of the removal reason."
           },
           "IsSelected": {
             "type": "boolean",
-            "example": true
+            "description": "Indicates whether this removal reason is selected."
           }
         },
         "required": [
           "Id",
-          "Description",
-          "IsSelected"
+          "Description"
         ]
       }
     },
     "securitySchemes": {
-      "oauth2": {
-        "type": "oauth2",
-        "flows": {
-          "implicit": {
-            "authorizationUrl": "https://example.com/oauth/authorize",
-            "scopes": {}
-          }
-        }
+      "roles": {
+        "type": "openIdConnect",
+        "description": "Role-based authentication for RoATP Admin Team."
       }
     }
   }

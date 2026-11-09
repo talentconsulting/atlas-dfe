@@ -1,0 +1,276 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Register User API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/register/view-user/{contactId}": {
+      "get": {
+        "operationId": "RegisterUser_Details",
+        "summary": "View details of a user.",
+        "parameters": [
+          {
+            "name": "contactId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "HTML view of the user details."
+          }
+        },
+        "security": [
+          {
+            "roles": [
+              "EPC",
+              "EPA",
+              "EPV"
+            ]
+          }
+        ]
+      }
+    },
+    "/register/{contactId}/user-permissions": {
+      "get": {
+        "operationId": "RegisterUser_EditPermissionsGet",
+        "summary": "Edit user permissions (view).",
+        "parameters": [
+          {
+            "name": "contactId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "HTML view to edit user permissions."
+          }
+        },
+        "security": [
+          {
+            "roles": [
+              "EPC",
+              "EPA"
+            ]
+          }
+        ]
+      },
+      "post": {
+        "operationId": "RegisterUser_EditPermissionsPost",
+        "summary": "Update user permissions.",
+        "parameters": [
+          {
+            "name": "contactId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EditPrivilegesViewModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "302": {
+            "description": "Redirect to details page or another endpoint based on action result."
+          }
+        },
+        "security": [
+          {
+            "roles": [
+              "EPC",
+              "EPA"
+            ]
+          }
+        ]
+      }
+    },
+    "/register/{contactId}/remove": {
+      "get": {
+        "operationId": "RegisterUser_RemoveGet",
+        "summary": "Confirm user removal.",
+        "parameters": [
+          {
+            "name": "contactId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "HTML view for user removal confirmation."
+          }
+        },
+        "security": [
+          {
+            "roles": [
+              "EPC",
+              "EPA"
+            ]
+          }
+        ]
+      },
+      "post": {
+        "operationId": "RegisterUser_RemovePost",
+        "summary": "Remove a user.",
+        "parameters": [
+          {
+            "name": "contactId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "302": {
+            "description": "Redirect after successful removal."
+          }
+        },
+        "security": [
+          {
+            "roles": [
+              "EPC",
+              "EPA"
+            ]
+          }
+        ]
+      }
+    },
+    "/register/{contactId}/removedFrom/{organisationId}": {
+      "get": {
+        "operationId": "RegisterUser_Removed",
+        "summary": "Inform user removed status.",
+        "parameters": [
+          {
+            "name": "contactId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "organisationId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "HTML view for user removal confirmation.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserRemovedViewModel"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "roles": [
+              "EPC",
+              "EPA"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "EditPrivilegesViewModel": {
+        "type": "object",
+        "properties": {
+          "ContactId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "EndPointAssessorOrganisationId": {
+            "type": "string"
+          },
+          "PrivilegeViewModels": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PrivilegeViewModel"
+            }
+          },
+          "Button": {
+            "type": "string"
+          }
+        }
+      },
+      "PrivilegeViewModel": {
+        "type": "object",
+        "properties": {
+          "Privilege": {
+            "$ref": "#/components/schemas/Privilege"
+          },
+          "Selected": {
+            "type": "boolean"
+          }
+        }
+      },
+      "Privilege": {
+        "type": "object",
+        "properties": {
+          "Id": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      },
+      "UserRemovedViewModel": {
+        "type": "object",
+        "properties": {
+          "ContactEmail": {
+            "type": "string"
+          },
+          "OrganisationName": {
+            "type": "string"
+          },
+          "EndPointAssessorOrganisationId": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "roles": {
+        "type": "openIdConnect",
+        "description": "Roles-based authorization."
+      }
+    }
+  }
+}

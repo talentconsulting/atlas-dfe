@@ -7,13 +7,14 @@
   "paths": {
     "/api/employer-agreements/{AccountLegalEntityId}/signed": {
       "get": {
-        "summary": "Check if Agreement is Signed for Features",
         "operationId": "IsAgreementSignedForFeature",
+        "summary": "Check if agreement is signed for a specific feature.",
         "parameters": [
           {
             "name": "AccountLegalEntityId",
             "in": "path",
             "required": true,
+            "description": "The ID of the AccountLegalEntity.",
             "schema": {
               "type": "integer",
               "format": "int64"
@@ -22,7 +23,8 @@
           {
             "name": "agreementFeatures",
             "in": "query",
-            "required": false,
+            "description": "Array of agreement features to check.",
+            "required": true,
             "schema": {
               "type": "array",
               "items": {
@@ -33,11 +35,21 @@
         ],
         "responses": {
           "200": {
-            "description": "Agreement signed status for the requested features",
+            "description": "Indicates whether the agreement is signed for the specified feature(s).",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "boolean"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
                 }
               }
             }
@@ -47,13 +59,14 @@
     },
     "/api/employer-agreements/{AccountLegalEntityId}/latest-id": {
       "get": {
-        "summary": "Get Latest Agreement ID",
         "operationId": "GetLatestAgreementId",
+        "summary": "Retrieve the latest agreement ID for a specific Account Legal Entity.",
         "parameters": [
           {
             "name": "AccountLegalEntityId",
             "in": "path",
             "required": true,
+            "description": "The ID of the AccountLegalEntity.",
             "schema": {
               "type": "integer",
               "format": "int64"
@@ -62,12 +75,22 @@
         ],
         "responses": {
           "200": {
-            "description": "Latest agreement ID for the requested account legal entity",
+            "description": "The ID of the latest agreement.",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "integer",
                   "format": "int64"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
                 }
               }
             }

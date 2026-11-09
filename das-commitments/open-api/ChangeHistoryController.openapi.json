@@ -7,25 +7,22 @@
   "paths": {
     "/api/change-history/{apprenticeshipId}": {
       "get": {
-        "tags": [
-          "ChangeHistory"
-        ],
         "summary": "Get change history for a specific apprenticeship.",
         "parameters": [
           {
             "name": "apprenticeshipId",
             "in": "path",
             "required": true,
-            "description": "The ID of the apprenticeship.",
             "schema": {
               "type": "integer",
               "format": "int64"
-            }
+            },
+            "description": "The ID of the apprenticeship."
           }
         ],
         "responses": {
           "200": {
-            "description": "Successfully retrieved change history for an apprenticeship.",
+            "description": "Successful response.",
             "content": {
               "application/json": {
                 "schema": {
@@ -35,37 +32,34 @@
             }
           },
           "400": {
-            "description": "Invalid request or missing parameters."
+            "description": "Invalid request."
           }
         },
         "security": [
           {
-            "oauth2": []
+            "authorize": []
           }
         ]
       }
     },
     "/api/change-history/{providerId}/Get-all-change-history": {
       "get": {
-        "tags": [
-          "ChangeHistory"
-        ],
-        "summary": "Get change history for all learners of a provider.",
+        "summary": "Get change history for all learners under a specific provider.",
         "parameters": [
           {
             "name": "providerId",
             "in": "path",
             "required": true,
-            "description": "The ID of the provider.",
             "schema": {
               "type": "integer",
               "format": "int64"
-            }
+            },
+            "description": "The ID of the provider."
           }
         ],
         "responses": {
           "200": {
-            "description": "Successfully retrieved change history for all learners of a provider.",
+            "description": "Successful response.",
             "content": {
               "application/json": {
                 "schema": {
@@ -75,37 +69,34 @@
             }
           },
           "400": {
-            "description": "Invalid request or missing parameters."
+            "description": "Invalid request."
           }
         },
         "security": [
           {
-            "oauth2": []
+            "authorize": []
           }
         ]
       }
     },
     "/api/change-history/employer/{accountId}/change-history": {
       "get": {
-        "tags": [
-          "ChangeHistory"
-        ],
-        "summary": "Get change history for all learners of an employer.",
+        "summary": "Get change history for all learners under a specific employer account.",
         "parameters": [
           {
             "name": "accountId",
             "in": "path",
             "required": true,
-            "description": "The ID of the employer account.",
             "schema": {
               "type": "integer",
               "format": "int64"
-            }
+            },
+            "description": "The account ID of the employer."
           }
         ],
         "responses": {
           "200": {
-            "description": "Successfully retrieved change history for all learners of an employer.",
+            "description": "Successful response.",
             "content": {
               "application/json": {
                 "schema": {
@@ -115,12 +106,12 @@
             }
           },
           "400": {
-            "description": "Invalid request or missing parameters."
+            "description": "Invalid request."
           }
         },
         "security": [
           {
-            "oauth2": []
+            "authorize": []
           }
         ]
       }
@@ -128,6 +119,39 @@
   },
   "components": {
     "schemas": {
+      "GetChangeHistoryResponse": {
+        "type": "object",
+        "properties": {
+          "ChangeHistory": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ChangeHistory"
+            }
+          }
+        }
+      },
+      "GetAllChangeHistoryForProviderQueryResponse": {
+        "type": "object",
+        "properties": {
+          "ChangeHistory": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ChangeHistory"
+            }
+          }
+        }
+      },
+      "GetChangeHistoryForEmployerResponse": {
+        "type": "object",
+        "properties": {
+          "ChangeHistory": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ChangeHistory"
+            }
+          }
+        }
+      },
       "ChangeHistory": {
         "type": "object",
         "properties": {
@@ -162,47 +186,6 @@
           },
           "ProviderName": {
             "type": "string"
-          }
-        },
-        "required": [
-          "Id",
-          "ChangeType",
-          "Description",
-          "ApprenticeshipId",
-          "AppliedDate",
-          "Created"
-        ]
-      },
-      "GetChangeHistoryResponse": {
-        "type": "object",
-        "properties": {
-          "ChangeHistory": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ChangeHistory"
-            }
-          }
-        }
-      },
-      "GetChangeHistoryForEmployerResponse": {
-        "type": "object",
-        "properties": {
-          "ChangeHistory": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ChangeHistory"
-            }
-          }
-        }
-      },
-      "GetAllChangeHistoryForProviderQueryResponse": {
-        "type": "object",
-        "properties": {
-          "ChangeHistory": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ChangeHistory"
-            }
           }
         }
       }

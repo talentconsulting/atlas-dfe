@@ -1,14 +1,14 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "BulkUpload API",
+    "title": "Bulk Upload API",
     "version": "1.0.0"
   },
   "paths": {
     "/api/{providerId}/bulkupload": {
       "post": {
-        "summary": "Add Draft Apprenticeships",
-        "description": "Adds draft apprenticeships for a provider.",
+        "operationId": "AddDraftApprenticeships",
+        "summary": "Add draft apprenticeships via bulk upload",
         "parameters": [
           {
             "name": "providerId",
@@ -32,11 +32,12 @@
         },
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Draft apprenticeships added successfully",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "type": "object",
+                  "additionalProperties": true
                 }
               }
             }
@@ -46,16 +47,13 @@
           {
             "BearerAuth": []
           }
-        ],
-        "tags": [
-          "BulkUpload"
         ]
       }
     },
     "/api/{providerId}/bulkupload/addandapprove": {
       "post": {
-        "summary": "Add and Approve Draft Apprenticeships",
-        "description": "Adds and approves draft apprenticeships for a provider.",
+        "operationId": "AddAndApproveDraftApprenticeships",
+        "summary": "Add and approve draft apprenticeships via bulk upload",
         "parameters": [
           {
             "name": "providerId",
@@ -79,11 +77,12 @@
         },
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Draft apprenticeships added and approved successfully",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "type": "object",
+                  "additionalProperties": true
                 }
               }
             }
@@ -93,16 +92,13 @@
           {
             "BearerAuth": []
           }
-        ],
-        "tags": [
-          "BulkUpload"
         ]
       }
     },
     "/api/{providerId}/bulkupload/validate": {
       "post": {
-        "summary": "Validate Bulk Upload",
-        "description": "Validates bulk upload data for a provider.",
+        "operationId": "ValidateBulkUpload",
+        "summary": "Validate bulk upload request",
         "parameters": [
           {
             "name": "providerId",
@@ -126,11 +122,12 @@
         },
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Validation completed successfully",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "type": "object",
+                  "additionalProperties": true
                 }
               }
             }
@@ -140,16 +137,13 @@
           {
             "BearerAuth": []
           }
-        ],
-        "tags": [
-          "BulkUpload"
         ]
       }
     },
     "/api/{providerId}/bulkupload/logs": {
       "post": {
-        "summary": "Add File Upload Log",
-        "description": "Adds a log entry for a file upload.",
+        "operationId": "AddFileUploadLog",
+        "summary": "Add file upload log entry",
         "parameters": [
           {
             "name": "providerId",
@@ -173,11 +167,12 @@
         },
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "File upload log entry added successfully",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "type": "object",
+                  "additionalProperties": true
                 }
               }
             }
@@ -187,16 +182,13 @@
           {
             "BearerAuth": []
           }
-        ],
-        "tags": [
-          "BulkUpload"
         ]
       }
     },
     "/api/{providerId}/bulkupload/logs/{logId}/error": {
       "put": {
-        "summary": "Update Log Error Content",
-        "description": "Updates log error content for a specific log ID.",
+        "operationId": "UpdateLogErrorContent",
+        "summary": "Update log error content for a specific log",
         "parameters": [
           {
             "name": "providerId",
@@ -229,22 +221,48 @@
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Error content updated successfully"
           }
         },
         "security": [
           {
             "BearerAuth": []
           }
-        ],
-        "tags": [
-          "BulkUpload"
         ]
       }
     }
   },
   "components": {
     "schemas": {
+      "AddFileUploadLogRequest": {
+        "type": "object",
+        "properties": {
+          "ProviderId": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "FileName": {
+            "type": "string"
+          },
+          "RplCount": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "RowCount": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "FileContent": {
+            "type": "string"
+          },
+          "UserInfo": {
+            "$ref": "#/components/schemas/UserInfo"
+          }
+        }
+      },
       "BulkUploadAddDraftApprenticeshipsRequest": {
         "type": "object",
         "properties": {
@@ -298,8 +316,7 @@
             "type": "string"
           },
           "EndDateAsString": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "OriginatorReference": {
             "type": "string"
@@ -316,8 +333,7 @@
             "type": "string"
           },
           "Email": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "DateOfBirthAsString": {
             "type": "string"
@@ -329,53 +345,51 @@
             "type": "string"
           },
           "RowNumber": {
-            "type": "integer"
+            "type": "integer",
+            "format": "int32"
           },
           "CostAsString": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "EPAOrgId": {
             "type": "string"
           },
           "RecognisePriorLearningAsString": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "DurationReducedByAsString": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "PriceReducedByAsString": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "TrainingTotalHoursAsString": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "TrainingHoursReductionAsString": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "IsDurationReducedByRPLAsString": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "MinimumAgeAtApprenticeshipStart": {
             "type": "integer",
+            "format": "int32",
             "nullable": true
           },
           "MaximumAgeAtApprenticeshipStart": {
             "type": "integer",
+            "format": "int32",
             "nullable": true
           },
           "TrainingPrice": {
             "type": "integer",
+            "format": "int32",
             "nullable": true
           },
           "EndPointAssessmentPrice": {
             "type": "integer",
+            "format": "int32",
             "nullable": true
           },
           "ActualStartDate": {
@@ -424,15 +438,7 @@
             }
           },
           "BulkReservationValidationResults": {
-            "type": "object",
-            "properties": {
-              "ValidationErrors": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/BulkReservationValidation"
-                }
-              }
-            }
+            "$ref": "#/components/schemas/BulkReservationValidationResults"
           },
           "ProviderStandardsData": {
             "$ref": "#/components/schemas/ProviderStandardResults"
@@ -440,10 +446,19 @@
           "OtjTrainingHours": {
             "type": "object",
             "additionalProperties": {
-              "type": [
-                "integer",
-                "null"
-              ]
+              "type": "integer",
+              "nullable": true
+            }
+          }
+        }
+      },
+      "BulkReservationValidationResults": {
+        "type": "object",
+        "properties": {
+          "ValidationErrors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BulkReservationValidation"
             }
           }
         }
@@ -455,7 +470,8 @@
             "type": "string"
           },
           "RowNumber": {
-            "type": "integer"
+            "type": "integer",
+            "format": "int32"
           }
         }
       },
@@ -484,34 +500,8 @@
           },
           "Level": {
             "type": "integer",
+            "format": "int32",
             "nullable": true
-          }
-        }
-      },
-      "AddFileUploadLogRequest": {
-        "type": "object",
-        "properties": {
-          "ProviderId": {
-            "type": "integer",
-            "format": "int64",
-            "nullable": true
-          },
-          "FileName": {
-            "type": "string"
-          },
-          "RplCount": {
-            "type": "integer",
-            "nullable": true
-          },
-          "RowCount": {
-            "type": "integer",
-            "nullable": true
-          },
-          "FileContent": {
-            "type": "string"
-          },
-          "UserInfo": {
-            "$ref": "#/components/schemas/UserInfo"
           }
         }
       },

@@ -1,0 +1,177 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Certificate Date Service",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/date/{certificateId}": {
+      "get": {
+        "operationId": "GetCertificateDate",
+        "summary": "Retrieve the certificate date view for a specific certificate.",
+        "parameters": [
+          {
+            "name": "certificateId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "The unique identifier of the certificate."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful retrieval of the certificate date view.",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/date": {
+      "post": {
+        "operationId": "UpdateCertificateDate",
+        "summary": "Update the certificate date and proceed to the next step.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CertificateDateViewModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful update of the certificate date and redirection to the next step.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "redirectUrl": {
+                      "type": "string",
+                      "format": "uri",
+                      "description": "URL to navigate to the next action."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation issues when updating the certificate date.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errorMessage": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CertificateDateViewModel": {
+        "type": "object",
+        "properties": {
+          "Id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique identifier for the certificate."
+          },
+          "Date": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The full achievement date."
+          },
+          "Day": {
+            "type": "string",
+            "description": "Achievement day."
+          },
+          "Month": {
+            "type": "string",
+            "description": "Achievement month."
+          },
+          "Year": {
+            "type": "string",
+            "description": "Achievement year."
+          },
+          "StartDate": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The start date for learning."
+          },
+          "WarningShown": {
+            "type": "string",
+            "description": "Indicates whether a warning has been shown."
+          },
+          "FamilyName": {
+            "type": "string",
+            "description": "Family name of the learner."
+          },
+          "GivenNames": {
+            "type": "string",
+            "description": "Given names of the learner."
+          },
+          "Standard": {
+            "type": "string",
+            "description": "The name of the standard."
+          },
+          "FullName": {
+            "type": "string",
+            "description": "Full name of the learner."
+          },
+          "Level": {
+            "type": "integer",
+            "description": "The level of the standard."
+          },
+          "PrivatelyFundedStatus": {
+            "type": "string",
+            "description": "Status indicating if the certificate is privately funded."
+          },
+          "StandardUId": {
+            "type": "string",
+            "description": "Unique identifier for the standard."
+          },
+          "StandardCode": {
+            "type": "integer",
+            "description": "Code representing the standard."
+          },
+          "IsPrivatelyFunded": {
+            "type": "boolean",
+            "description": "Indicates if the certificate is privately funded."
+          },
+          "BackToCheckPage": {
+            "type": "boolean",
+            "description": "Indicates if navigation returns to the check page."
+          },
+          "ReasonForChange": {
+            "type": "string",
+            "description": "Reason for making a change to the certificate."
+          },
+          "RequiresReasonForChange": {
+            "type": "boolean",
+            "description": "Indicates if the reason for change is required."
+          }
+        }
+      }
+    }
+  }
+}

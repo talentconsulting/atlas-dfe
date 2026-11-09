@@ -5,10 +5,10 @@
     "version": "1.0.0"
   },
   "paths": {
-    "/{EmployerAccountId}/vacancies/{VacancyId}/employer": {
+    "/{EmployerAccountId}/{VacancyId}/employer": {
       "get": {
-        "operationId": "getEmployer",
-        "summary": "Get Employer",
+        "operationId": "Employer_Get",
+        "summary": "Get employer details associated with a vacancy",
         "parameters": [
           {
             "name": "EmployerAccountId",
@@ -49,27 +49,33 @@
             "required": false,
             "schema": {
               "type": "string",
-              "enum": [
-                "true",
-                "false"
-              ]
+              "default": "true"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Employer page rendered."
+            "description": "Success",
+            "content": {
+              "text/html": {
+                "examples": {
+                  "defaultView": {
+                    "description": "Employer view data rendered"
+                  }
+                }
+              }
+            }
           }
         }
       },
       "post": {
-        "operationId": "postEmployer",
-        "summary": "Submit Employer data",
+        "operationId": "Employer_Post",
+        "summary": "Submit employer details for a vacancy",
         "parameters": [
           {
             "name": "wizard",
             "in": "query",
-            "required": false,
+            "required": true,
             "schema": {
               "type": "boolean"
             }
@@ -78,7 +84,7 @@
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": {
+            "application/x-www-form-urlencoded": {
               "schema": {
                 "$ref": "#/components/schemas/EmployerEditModel"
               }
@@ -86,19 +92,16 @@
           }
         },
         "responses": {
-          "200": {
-            "description": "Redirected on successful POST."
-          },
-          "400": {
-            "description": "Validation error when Employer selection data is invalid."
+          "302": {
+            "description": "Redirects to the next step based on the wizard state"
           }
         }
       }
     },
-    "/{EmployerAccountId}/vacancies/{VacancyId}/employer-cancel": {
+    "/{EmployerAccountId}/{VacancyId}/employer-cancel": {
       "get": {
-        "operationId": "cancelEmployer",
-        "summary": "Cancel Employer operation",
+        "operationId": "Employer_Cancel",
+        "summary": "Cancel creation of employer details for a vacancy",
         "parameters": [
           {
             "name": "EmployerAccountId",
@@ -127,8 +130,8 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "Employer operation canceled successfully and redirected."
+          "302": {
+            "description": "Redirects to another route after cancelling"
           }
         }
       }
@@ -138,27 +141,34 @@
     "schemas": {
       "EmployerEditModel": {
         "type": "object",
-        "required": [
-          "SelectedOrganisationId"
-        ],
         "properties": {
+          "SelectedOrganisationId": {
+            "type": "string",
+            "description": "The ID of the selected organisation"
+          },
+          "SearchTerm": {
+            "type": "string",
+            "description": "The search term used for filtering organisations"
+          },
+          "Page": {
+            "type": "integer",
+            "description": "The current page number for pagination"
+          },
           "EmployerAccountId": {
-            "type": "string"
+            "type": "string",
+            "description": "The ID of the employer account"
           },
           "VacancyId": {
             "type": "string",
-            "format": "uuid"
-          },
-          "SelectedOrganisationId": {
-            "type": "string"
-          },
-          "SearchTerm": {
-            "type": "string"
-          },
-          "Page": {
-            "type": "integer"
+            "format": "uuid",
+            "description": "The ID of the vacancy"
           }
-        }
+        },
+        "required": [
+          "SelectedOrganisationId",
+          "EmployerAccountId",
+          "VacancyId"
+        ]
       }
     }
   }

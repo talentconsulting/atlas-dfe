@@ -1,169 +1,122 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Post Results Service API",
+    "title": "Post Results Service",
     "version": "1.0.0",
-    "description": "API for managing post-results services in T Level results and certification."
+    "description": "API for managing post results services such as reviews, appeals, and grade changes."
   },
   "paths": {
-    "/api/PostResultsService/FindPrsLearnerRecord/{aoUkprn}/{uln}": {
+    "/post-results-reviews-appeals-and-grade-changes": {
       "get": {
-        "summary": "Find PRS learner record by Unique Learner Number (ULN)",
-        "parameters": [
-          {
-            "name": "aoUkprn",
-            "in": "path",
-            "description": "Awarding Organization UKPRN",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "uln",
-            "in": "path",
-            "description": "Unique Learner Number",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          }
-        ],
+        "operationId": "StartReviewsAndAppealsAsync",
+        "summary": "Start reviews and appeals",
         "responses": {
           "200": {
-            "description": "Successfully retrieved PRS learner record.",
+            "description": "Returns the StartReviewsAndAppeals page",
             "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FindPrsLearnerRecord"
-                }
-              }
+              "application/json": {}
             }
           }
         }
       }
     },
-    "/api/PostResultsService/FindPrsLearnerRecordByProfileId/{aoUkprn}/{profileId}": {
+    "/results-reviews-appeals-and-grade-changes": {
       "get": {
-        "summary": "Find PRS learner record by Profile ID",
-        "parameters": [
-          {
-            "name": "aoUkprn",
-            "in": "path",
-            "description": "Awarding Organization UKPRN",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
+        "operationId": "ResultReviewsAndAppealsAsync",
+        "summary": "Result reviews and appeals",
+        "responses": {
+          "200": {
+            "description": "Returns the ResultReviewsAndAppeals page",
+            "content": {
+              "application/json": {}
             }
-          },
+          }
+        }
+      }
+    },
+    "/post-results-learner-withdrawn/{profileId}": {
+      "get": {
+        "operationId": "PrsUlnWithdrawnAsync",
+        "summary": "Handles learner with withdrawn status",
+        "parameters": [
           {
             "name": "profileId",
             "in": "path",
-            "description": "Profile ID of the learner",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int32"
+              "type": "integer"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Successfully retrieved PRS learner record.",
+            "description": "Returns learner withdrawn details",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FindPrsLearnerRecord"
-                }
+                "schema": {}
               }
             }
+          },
+          "404": {
+            "description": "Learner record not found"
           }
         }
       }
     },
-    "/api/PostResultsService/PrsActivity": {
-      "post": {
-        "summary": "Perform PRS activity",
-        "requestBody": {
-          "description": "Details about the PRS activity request",
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/PrsActivityRequest"
-              }
+    "/post-results-no-results/{profileId}": {
+      "get": {
+        "operationId": "PrsNoResultsAsync",
+        "summary": "Handles learner with no results",
+        "parameters": [
+          {
+            "name": "profileId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
             }
           }
-        },
+        ],
         "responses": {
           "200": {
-            "description": "Successfully performed PRS activity.",
+            "description": "Returns no results page",
             "content": {
               "application/json": {
-                "schema": {
-                  "type": "boolean"
-                }
+                "schema": {}
               }
             }
+          },
+          "404": {
+            "description": "Learner record not found"
           }
         }
       }
     },
-    "/api/PostResultsService/PrsGradeChangeRequest": {
-      "post": {
-        "summary": "Request PRS grade change",
-        "requestBody": {
-          "description": "Details about the PRS grade change request",
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/PrsGradeChangeRequest"
-              }
+    "/post-results-learners-grades/{profileId}": {
+      "get": {
+        "operationId": "PrsLearnerDetailsAsync",
+        "summary": "Fetch learner details and grades",
+        "parameters": [
+          {
+            "name": "profileId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
             }
           }
-        },
+        ],
         "responses": {
           "200": {
-            "description": "Successfully requested PRS grade change.",
+            "description": "Returns learner dashboard with grades",
             "content": {
               "application/json": {
-                "schema": {
-                  "type": "boolean"
-                }
+                "schema": {}
               }
             }
-          }
-        }
-      }
-    },
-    "/api/PostResultsService/ProcessBulkRomms": {
-      "post": {
-        "summary": "Process bulk ROMM requests",
-        "requestBody": {
-          "description": "Bulk ROMM process request details",
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/BulkProcessRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successfully processed bulk ROMM requests.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BulkProcessResponse"
-                }
-              }
-            }
+          },
+          "404": {
+            "description": "Learner record not found"
           }
         }
       }
@@ -171,276 +124,21 @@
   },
   "components": {
     "schemas": {
-      "FindPrsLearnerRecord": {
+      "PrsLearnerRecord": {
         "type": "object",
-        "properties": {
-          "ProfileId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "Uln": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "Firstname": {
-            "type": "string"
-          },
-          "Lastname": {
-            "type": "string"
-          },
-          "DateofBirth": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "ProviderUkprn": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "ProviderName": {
-            "type": "string"
-          },
-          "TlevelTitle": {
-            "type": "string"
-          },
-          "TlevelCode": {
-            "type": "string"
-          },
-          "Status": {
-            "$ref": "#/components/schemas/RegistrationPathwayStatus"
-          },
-          "PathwayAssessments": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/PrsAssessment"
-            }
-          },
-          "SpecialismAssessments": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/PrsAssessment"
-            }
-          }
-        }
+        "properties": {}
       },
-      "PrsActivityRequest": {
+      "PrsUlnWithdrawnViewModel": {
         "type": "object",
-        "properties": {
-          "AoUkprn": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "ProfileId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "AssessentId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "ResultId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "ResultLookupId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "ComponentType": {
-            "$ref": "#/components/schemas/ComponentType"
-          },
-          "PrsStatus": {
-            "$ref": "#/components/schemas/PrsStatus"
-          },
-          "PerformedBy": {
-            "type": "string"
-          }
-        }
+        "properties": {}
       },
-      "PrsGradeChangeRequest": {
+      "PrsNoResultsViewModel": {
         "type": "object",
-        "properties": {
-          "LearnerName": {
-            "type": "string"
-          },
-          "Uln": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "ProviderUkprn": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "ComponentType": {
-            "$ref": "#/components/schemas/ComponentType"
-          },
-          "ComponentName": {
-            "type": "string"
-          },
-          "ExamPeriod": {
-            "type": "string"
-          },
-          "Grade": {
-            "type": "string"
-          },
-          "RequestedMessage": {
-            "type": "string"
-          },
-          "RequestedUserEmailAddress": {
-            "type": "string",
-            "format": "email"
-          }
-        }
+        "properties": {}
       },
-      "BulkProcessRequest": {
+      "PrsLearnerDetailsViewModel": {
         "type": "object",
-        "properties": {
-          "AoUkprn": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "BlobFileName": {
-            "type": "string"
-          },
-          "BlobUniqueReference": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "FileType": {
-            "$ref": "#/components/schemas/FileType"
-          },
-          "DocumentType": {
-            "$ref": "#/components/schemas/DocumentType"
-          },
-          "LoginUserType": {
-            "$ref": "#/components/schemas/LoginUserType"
-          },
-          "PerformedBy": {
-            "type": "string"
-          }
-        }
-      },
-      "BulkProcessResponse": {
-        "type": "object",
-        "properties": {
-          "IsSuccess": {
-            "type": "boolean"
-          },
-          "BlobUniqueReference": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "ErrorFileSize": {
-            "type": "number"
-          },
-          "Stats": {
-            "$ref": "#/components/schemas/BulkUploadStats"
-          }
-        }
-      },
-      "PrsAssessment": {
-        "type": "object",
-        "properties": {
-          "AssessmentId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "SeriesName": {
-            "type": "string"
-          },
-          "HasResult": {
-            "type": "boolean"
-          }
-        }
-      },
-      "RegistrationPathwayStatus": {
-        "type": "string",
-        "enum": [
-          "NotSpecified",
-          "Active",
-          "InActive",
-          "Transferred",
-          "Withdrawn"
-        ]
-      },
-      "ComponentType": {
-        "type": "string",
-        "enum": [
-          "NotSpecified",
-          "Core",
-          "Specialism"
-        ]
-      },
-      "PrsStatus": {
-        "type": "string",
-        "enum": [
-          "NotSpecified",
-          "UnderReview",
-          "Reviewed",
-          "BeingAppealed",
-          "Final",
-          "Withdraw"
-        ]
-      },
-      "FileType": {
-        "type": "string",
-        "enum": [
-          "Csv",
-          "Xlsx",
-          "Pdf"
-        ]
-      },
-      "DocumentType": {
-        "type": "string",
-        "enum": [
-          "Registrations",
-          "Assessments",
-          "Results",
-          "Documents",
-          "Ucas",
-          "DataExports",
-          "OverallResults",
-          "IndustryPlacements",
-          "AnalystOverallResults",
-          "AnalystCoreResults",
-          "CoreRomm",
-          "SpecialismRomm",
-          "ProviderAddressess",
-          "CertificateTracking",
-          "Withdrawals",
-          "ResultSlips",
-          "Romms",
-          "Aspose"
-        ]
-      },
-      "LoginUserType": {
-        "type": "string",
-        "enum": [
-          "NotSpecified",
-          "AwardingOrganisation",
-          "TrainingProvider",
-          "Admin"
-        ]
-      },
-      "BulkUploadStats": {
-        "type": "object",
-        "properties": {
-          "TotalRecordsCount": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "NewRecordsCount": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "AmendedRecordsCount": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "UnchangedRecordsCount": {
-            "type": "integer",
-            "format": "int32"
-          }
-        }
+        "properties": {}
       }
     }
   }

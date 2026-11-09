@@ -2,14 +2,13 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Authorization API",
-    "version": "1.0.0",
-    "description": "API for checking authorization related to cohorts, apprenticeships, and features."
+    "version": "1.0.0"
   },
   "paths": {
     "/api/authorization/access-cohort": {
       "get": {
-        "summary": "Check access to cohort",
         "operationId": "CanAccessCohort",
+        "summary": "Check access to cohort",
         "parameters": [
           {
             "name": "CohortId",
@@ -40,13 +39,9 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "Access check result",
             "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                }
-              }
+              "application/json": {}
             }
           }
         }
@@ -54,8 +49,8 @@
     },
     "/api/authorization/access-apprenticeship": {
       "get": {
-        "summary": "Check access to apprenticeship",
         "operationId": "CanAccessApprenticeship",
+        "summary": "Check access to apprenticeship",
         "parameters": [
           {
             "name": "ApprenticeshipId",
@@ -86,13 +81,9 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "Access check result",
             "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                }
-              }
+              "application/json": {}
             }
           }
         }
@@ -100,8 +91,8 @@
     },
     "/api/authorization/features/providers/{providerId}/apprentice-email-required": {
       "get": {
-        "summary": "Check if apprentice email is required for provider",
         "operationId": "ApprenticeEmailRequired",
+        "summary": "Check if apprentice email feature is required for a provider",
         "parameters": [
           {
             "name": "providerId",
@@ -115,25 +106,21 @@
         ],
         "responses": {
           "200": {
-            "description": "Feature is enabled for provider",
+            "description": "Email is required for provider",
             "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                }
-              }
+              "application/json": {}
             }
           },
           "404": {
-            "description": "Feature is disabled for provider"
+            "description": "Email is not required for provider"
           }
         }
       }
     },
     "/api/authorization/email-optional": {
       "get": {
-        "summary": "Check email optional for employer and provider",
         "operationId": "OptionalEmail",
+        "summary": "Check if email is optional for employer and provider pair",
         "parameters": [
           {
             "name": "employerid",
@@ -156,17 +143,13 @@
         ],
         "responses": {
           "200": {
-            "description": "Email is optional for employer and provider",
+            "description": "Email is optional",
             "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                }
-              }
+              "application/json": {}
             }
           },
           "404": {
-            "description": "Email is not optional for employer and provider"
+            "description": "Email is not optional"
           }
         }
       }
@@ -175,14 +158,14 @@
   "components": {
     "schemas": {
       "Party": {
-        "type": "integer",
-        "description": "Party identifier",
+        "type": "string",
         "enum": [
-          0,
-          1,
-          2,
-          4
-        ]
+          "None",
+          "Employer",
+          "Provider",
+          "TransferSender"
+        ],
+        "description": "Party involved in the request."
       }
     }
   }

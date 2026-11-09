@@ -7,8 +7,7 @@
   "paths": {
     "/accounts/create": {
       "get": {
-        "operationId": "GetCreateAccountView",
-        "summary": "Renders the account creation page.",
+        "summary": "Create Account Page",
         "parameters": [
           {
             "name": "Username",
@@ -16,19 +15,24 @@
             "required": true,
             "schema": {
               "type": "string"
-            },
-            "description": "Username for the account."
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Account creation view rendered successfully."
+            "description": "Account creation page",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
           }
         }
       },
       "post": {
-        "operationId": "PostCreateAccount",
-        "summary": "Submits an account creation request.",
+        "summary": "Create Account",
         "requestBody": {
           "required": true,
           "content": {
@@ -41,18 +45,32 @@
         },
         "responses": {
           "302": {
-            "description": "Redirected to the account created confirmation page."
+            "description": "Redirected to Created page",
+            "headers": {
+              "Location": {
+                "description": "URL of the Created page",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
           }
         }
       }
     },
     "/accounts/created": {
       "get": {
-        "operationId": "GetAccountCreatedView",
-        "summary": "Renders the account created confirmation page.",
+        "summary": "Account Created Page",
         "responses": {
           "200": {
-            "description": "Account created confirmation page rendered successfully."
+            "description": "Account successfully created",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
           }
         }
       }
@@ -64,9 +82,7 @@
         "type": "object",
         "properties": {
           "Username": {
-            "type": "string",
-            "description": "Username for the account.",
-            "nullable": false
+            "type": "string"
           }
         },
         "required": [

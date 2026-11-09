@@ -1,24 +1,24 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "EditVacancyDates API",
+    "title": "Edit Vacancy Dates",
     "version": "1.0.0",
-    "description": "API for managing vacancy dates."
+    "description": "API for managing the editing of vacancy dates in the Employer module."
   },
   "paths": {
     "/{EmployerAccountId}/{VacancyId}/edit-dates": {
       "get": {
         "operationId": "getEditVacancyDates",
-        "summary": "Retrieve vacancy dates for editing.",
+        "summary": "Get Edit Vacancy Dates",
         "parameters": [
           {
             "name": "EmployerAccountId",
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
-            },
-            "description": "Employer account ID."
+              "type": "string",
+              "description": "The employer's account ID."
+            }
           },
           {
             "name": "VacancyId",
@@ -26,39 +26,40 @@
             "required": true,
             "schema": {
               "type": "string",
-              "format": "uuid"
-            },
-            "description": "Vacancy identifier."
+              "format": "uuid",
+              "description": "The ID of the vacancy."
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Successful response with vacancy dates view model.",
+            "description": "Successful response with the vacancy dates data.",
             "content": {
-              "application/json": {
+              "text/html": {
                 "schema": {
-                  "$ref": "#/components/schemas/EditVacancyDatesViewModel"
+                  "type": "string",
+                  "description": "HTML content for the edit dates view."
                 }
               }
             }
           },
           "400": {
-            "description": "Bad request due to validation errors."
+            "description": "Bad request, possibly due to invalid inputs."
           }
         }
       },
       "post": {
         "operationId": "postEditVacancyDates",
-        "summary": "Submit edited vacancy dates.",
+        "summary": "Submit Edited Vacancy Dates",
         "parameters": [
           {
             "name": "EmployerAccountId",
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
-            },
-            "description": "Employer account ID."
+              "type": "string",
+              "description": "The employer's account ID."
+            }
           },
           {
             "name": "VacancyId",
@@ -66,9 +67,9 @@
             "required": true,
             "schema": {
               "type": "string",
-              "format": "uuid"
-            },
-            "description": "Vacancy identifier."
+              "format": "uuid",
+              "description": "The ID of the vacancy."
+            }
           }
         ],
         "requestBody": {
@@ -82,11 +83,20 @@
           }
         },
         "responses": {
-          "204": {
-            "description": "Successfully updated vacancy dates."
+          "302": {
+            "description": "Redirect response upon successful submission.",
+            "headers": {
+              "Location": {
+                "schema": {
+                  "type": "string",
+                  "format": "uri",
+                  "description": "URL to redirect the user after successful submission."
+                }
+              }
+            }
           },
           "400": {
-            "description": "Bad request due to invalid input."
+            "description": "Bad request, possibly due to invalid inputs."
           }
         }
       }
@@ -99,21 +109,22 @@
         "properties": {
           "EmployerAccountId": {
             "type": "string",
-            "description": "Employer account ID."
+            "description": "The employer's account ID."
           },
           "VacancyId": {
             "type": "string",
             "format": "uuid",
-            "description": "Identifier for the vacancy."
+            "description": "The ID of the vacancy."
           }
-        },
-        "required": [
-          "EmployerAccountId",
-          "VacancyId"
-        ]
+        }
       },
       "EditVacancyDatesEditModel": {
         "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/VacancyRouteModel"
+          }
+        ],
         "properties": {
           "ClosingDay": {
             "type": "string",
@@ -129,7 +140,8 @@
           },
           "ClosingDate": {
             "type": "string",
-            "description": "Formatted closing date."
+            "nullable": true,
+            "description": "The closing date formatted as dd/mm/yyyy."
           },
           "StartDay": {
             "type": "string",
@@ -145,18 +157,14 @@
           },
           "StartDate": {
             "type": "string",
-            "description": "Formatted start date."
+            "nullable": true,
+            "description": "The start date formatted as dd/mm/yyyy."
           },
           "Title": {
             "type": "string",
-            "description": "Title of the vacancy."
+            "description": "The title of the vacancy."
           }
         }
-      },
-      "EditVacancyDatesViewModel": {
-        "type": "object",
-        "description": "View model for vacancy date editing.",
-        "properties": {}
       }
     }
   }

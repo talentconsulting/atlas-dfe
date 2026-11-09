@@ -1,0 +1,282 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "RoATP Allowed Providers API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/Roatp/AllowedProviders": {
+      "get": {
+        "summary": "Get list of allowed providers",
+        "operationId": "getAllowedProviders",
+        "parameters": [
+          {
+            "name": "sortColumn",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortOrder",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "Ascending",
+                "Descending"
+              ]
+            }
+          },
+          {
+            "name": "startDate",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "endDate",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AddUkprnToAllowedProvidersListViewModel"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "roles": [
+              "RoatpGatewayTeam"
+            ]
+          }
+        ]
+      },
+      "post": {
+        "summary": "Add a UKPRN to the allowed providers list",
+        "operationId": "addAllowedProvider",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddUkprnToAllowedProvidersListViewModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "302": {
+            "description": "Redirects to Index on success"
+          }
+        },
+        "security": [
+          {
+            "roles": [
+              "RoatpGatewayTeam"
+            ]
+          }
+        ]
+      }
+    },
+    "/Roatp/AllowedProviders/{ukprn}/ConfirmRemove": {
+      "get": {
+        "summary": "Confirm removal of a UKPRN from the allowed providers list",
+        "operationId": "confirmRemoveAllowedProvider",
+        "parameters": [
+          {
+            "name": "ukprn",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RemoveUkprnFromAllowedProvidersListViewModel"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "roles": [
+              "RoatpGatewayTeam"
+            ]
+          }
+        ]
+      },
+      "post": {
+        "summary": "Remove a UKPRN from the allowed providers list",
+        "operationId": "removeAllowedProvider",
+        "parameters": [
+          {
+            "name": "ukprn",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RemoveUkprnFromAllowedProvidersListViewModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "302": {
+            "description": "Redirects based on confirmation"
+          }
+        },
+        "security": [
+          {
+            "roles": [
+              "RoatpGatewayTeam"
+            ]
+          }
+        ]
+      }
+    },
+    "/Roatp/AllowedProviders/{ukprn}/Removed": {
+      "get": {
+        "summary": "Show confirmation that a UKPRN was removed",
+        "operationId": "ukprnRemoved",
+        "parameters": [
+          {
+            "name": "ukprn",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UkprnRemovedFromAllowedProvidersListViewModel"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "roles": [
+              "RoatpGatewayTeam"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AddUkprnToAllowedProvidersListViewModel": {
+        "type": "object",
+        "properties": {
+          "ukprn": {
+            "type": "string"
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "allowedProviders": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AllowedProvider"
+            }
+          },
+          "sortColumn": {
+            "type": "string"
+          },
+          "sortOrder": {
+            "type": "string",
+            "enum": [
+              "Ascending",
+              "Descending"
+            ]
+          }
+        }
+      },
+      "RemoveUkprnFromAllowedProvidersListViewModel": {
+        "type": "object",
+        "properties": {
+          "allowedProvider": {
+            "$ref": "#/components/schemas/AllowedProvider"
+          },
+          "confirm": {
+            "type": "boolean"
+          }
+        }
+      },
+      "UkprnRemovedFromAllowedProvidersListViewModel": {
+        "type": "object",
+        "properties": {
+          "ukprn": {
+            "type": "integer"
+          }
+        }
+      },
+      "AllowedProvider": {
+        "type": "object",
+        "properties": {
+          "ukprn": {
+            "type": "integer"
+          },
+          "startDateTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "endDateTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "addedDateTime": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        }
+      }
+    }
+  }
+}

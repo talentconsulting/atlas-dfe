@@ -2,16 +2,14 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Remove Restricted Course Restriction API",
-    "version": "1.0.0",
-    "description": "API for managing the removal of restricted course restrictions for providers."
+    "description": "API for managing the removal of restricted courses restrictions for providers.",
+    "version": "1.0.0"
   },
   "paths": {
     "/providers/{ukprn}/restricted-courses/{larsCode}/change-restriction/remove-restriction": {
       "get": {
-        "tags": [
-          "RemoveRestrictedCourseRestriction"
-        ],
-        "summary": "Get removal of restricted course restriction page.",
+        "summary": "Retrieve the removal restriction view for a course",
+        "operationId": "getRemoveRestrictedCourseRestriction",
         "parameters": [
           {
             "name": "ukprn",
@@ -20,7 +18,7 @@
             "schema": {
               "type": "integer"
             },
-            "description": "UKPRN of the provider."
+            "description": "The unique identifier for the provider."
           },
           {
             "name": "larsCode",
@@ -29,12 +27,12 @@
             "schema": {
               "type": "string"
             },
-            "description": "LARS code of the course."
+            "description": "The LARS code of the restricted course."
           }
         ],
         "responses": {
           "200": {
-            "description": "Successfully retrieved removal page.",
+            "description": "Success view for course removal restriction.",
             "content": {
               "text/html": {
                 "schema": {
@@ -44,25 +42,16 @@
             }
           },
           "302": {
-            "description": "Redirected to ProviderRestrictedApprenticeships route if session data is missing."
+            "description": "Redirected to the provider's restricted apprenticeships view if session does not exist."
           },
           "404": {
-            "description": "Not found if the session data is invalid."
+            "description": "Not found if invalid for restriction removal."
           }
-        },
-        "security": [
-          {
-            "Roles": [
-              "RoatpAdminTeam"
-            ]
-          }
-        ]
+        }
       },
       "post": {
-        "tags": [
-          "RemoveRestrictedCourseRestriction"
-        ],
-        "summary": "Post removal of restricted course restriction.",
+        "summary": "Remove restriction on a restricted course for a provider",
+        "operationId": "postRemoveRestrictedCourseRestriction",
         "parameters": [
           {
             "name": "ukprn",
@@ -71,7 +60,7 @@
             "schema": {
               "type": "integer"
             },
-            "description": "UKPRN of the provider."
+            "description": "The unique identifier for the provider."
           },
           {
             "name": "larsCode",
@@ -80,10 +69,11 @@
             "schema": {
               "type": "string"
             },
-            "description": "LARS code of the course."
+            "description": "The LARS code of the restricted course."
           }
         ],
         "requestBody": {
+          "description": "Details for removing restricted apprenticeship.",
           "required": true,
           "content": {
             "application/json": {
@@ -95,19 +85,12 @@
         },
         "responses": {
           "302": {
-            "description": "Redirected to ProviderRestrictedApprenticeships route after successful removal."
+            "description": "Redirected to the provider's restricted apprenticeships view on success."
           },
           "404": {
-            "description": "Redirected to ProviderRestrictedApprenticeships route if session data is missing."
+            "description": "Not found if session does not exist."
           }
-        },
-        "security": [
-          {
-            "Roles": [
-              "RoatpAdminTeam"
-            ]
-          }
-        ]
+        }
       }
     }
   },
@@ -118,24 +101,17 @@
         "properties": {
           "UserId": {
             "type": "string",
-            "description": "ID of the user removing the restriction."
+            "description": "The unique identifier of the user making the request."
           },
           "UserDisplayName": {
             "type": "string",
-            "description": "Display name of the user removing the restriction."
+            "description": "The display name of the user making the request."
           }
         },
         "required": [
           "UserId",
           "UserDisplayName"
         ]
-      }
-    },
-    "securitySchemes": {
-      "Roles": {
-        "type": "apiKey",
-        "in": "header",
-        "name": "Authorization"
       }
     }
   }

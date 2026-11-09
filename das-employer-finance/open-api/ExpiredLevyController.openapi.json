@@ -1,0 +1,95 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Expired Levy API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/api/expired-levy/{accountId}": {
+      "get": {
+        "summary": "Get expired levy funds for an account",
+        "operationId": "GetExpiredFunds",
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "description": "The account ID to retrieve expired levy funds for."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response containing expired levy funds.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExpiredLevyResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ApiRoles": [
+              "ReadAllEmployerAccountBalances"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ExpiredLevyResponse": {
+        "type": "object",
+        "properties": {
+          "LongTerm": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CalendarPeriodAmount"
+            },
+            "description": "Expired funds with the 24-month expiry."
+          },
+          "ShortTerm": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CalendarPeriodAmount"
+            },
+            "description": "Expired funds with the 12-month expiry."
+          }
+        }
+      },
+      "CalendarPeriodAmount": {
+        "type": "object",
+        "properties": {
+          "Year": {
+            "type": "integer",
+            "description": "The year of the calendar period."
+          },
+          "Month": {
+            "type": "integer",
+            "description": "The month of the calendar period."
+          },
+          "Amount": {
+            "type": "number",
+            "format": "decimal",
+            "description": "The amount for the calendar period."
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "ApiRoles": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "Authorization",
+        "description": "Roles used for fine-grained API access control. Example: 'ReadAllEmployerAccountBalances'."
+      }
+    }
+  }
+}

@@ -7,32 +7,33 @@
   "paths": {
     "/api/paye-schemes/last-submission-date": {
       "get": {
-        "summary": "Get the last submission date for a PAYE scheme",
         "operationId": "GetLastSubmissionDate",
+        "summary": "Retrieve the last submission date for a PAYE scheme.",
         "parameters": [
           {
             "name": "empRef",
             "in": "query",
-            "required": false,
+            "required": true,
             "schema": {
               "type": "string"
             },
-            "description": "The employer PAYE reference (empRef)."
+            "description": "The PAYE scheme reference. Must be provided as a query parameter."
           }
         ],
         "responses": {
           "200": {
-            "description": "Last submission date retrieved successfully.",
+            "description": "Successful response, returns the last submission date for the PAYE scheme.",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "type": "string",
+                  "example": "2023-10-01T00:00:00Z"
                 }
               }
             }
           },
           "400": {
-            "description": "Invalid request due to validation errors.",
+            "description": "Bad request due to validation errors.",
             "content": {
               "application/json": {
                 "schema": {
@@ -44,7 +45,9 @@
         },
         "security": [
           {
-            "ApiRoles_ReadAllEmployerAccountBalances": []
+            "ApiRolesAuth": [
+              "ReadAllEmployerAccountBalances"
+            ]
           }
         ]
       }
@@ -54,26 +57,18 @@
     "schemas": {
       "ValidationError": {
         "type": "object",
-        "properties": {
-          "Validation": {
-            "type": "string",
-            "description": "Validation error message."
-          },
-          "errors": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "string"
-            },
-            "description": "Dictionary of validation errors with field names as keys and error messages as values."
-          }
-        }
+        "additionalProperties": {
+          "type": "string"
+        },
+        "description": "Validation error details keyed by field or context."
       }
     },
     "securitySchemes": {
-      "ApiRoles_ReadAllEmployerAccountBalances": {
-        "type": "http",
-        "scheme": "bearer",
-        "description": "Authorization scheme requiring 'ReadAllEmployerAccountBalances' role."
+      "ApiRolesAuth": {
+        "type": "apiKey",
+        "name": "Authorization",
+        "in": "header",
+        "description": "API key-based authorization using predefined roles."
       }
     }
   }

@@ -2,23 +2,20 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Provider Lookup API",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "description": "API for provider lookup functionality."
   },
   "paths": {
     "/search-provider/{name}": {
       "get": {
-        "tags": [
-          "Provider Lookup"
-        ],
-        "summary": "Retrieve provider lookup data by name",
-        "description": "Search for providers by a partial or full name query.",
-        "operationId": "GetProviderLookupData",
+        "summary": "Get provider lookup data by name",
+        "operationId": "getProviderLookupData",
         "parameters": [
           {
             "name": "name",
             "in": "path",
-            "description": "The name or partial name of the provider to be searched.",
             "required": true,
+            "description": "Name of the provider. Minimum length is 3 characters.",
             "schema": {
               "type": "string",
               "minLength": 3
@@ -27,59 +24,35 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful response containing provider lookup data.",
+            "description": "Provider lookup data retrieved successfully.",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ProviderData"
-                  }
+                  "$ref": "#/components/schemas/ProviderLookupData"
                 }
               }
             }
           },
           "400": {
-            "description": "Bad request due to insufficient query length or missing name parameter."
+            "description": "Bad Request: Invalid or missing provider name.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
           }
-        },
-        "security": [
-          {
-            "ProviderDashboardAccess": []
-          }
-        ]
+        }
       }
     }
   },
   "components": {
     "schemas": {
-      "ProviderData": {
+      "ProviderLookupData": {
         "type": "object",
-        "properties": {
-          "providerId": {
-            "type": "integer",
-            "description": "Unique identifier for the provider."
-          },
-          "name": {
-            "type": "string",
-            "description": "Name of the provider."
-          },
-          "location": {
-            "type": "string",
-            "description": "Location of the provider."
-          }
-        },
-        "required": [
-          "providerId",
-          "name"
-        ]
-      }
-    },
-    "securitySchemes": {
-      "ProviderDashboardAccess": {
-        "type": "http",
-        "scheme": "bearer",
-        "description": "Provider dashboard requires authorization with a bearer token."
+        "description": "Details about a provider.",
+        "properties": {}
       }
     }
   }

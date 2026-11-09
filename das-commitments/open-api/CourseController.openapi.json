@@ -1,23 +1,19 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Commitments V2 API",
+    "title": "Commitments API",
     "version": "1.0.0",
-    "description": "API documentation for Commitments V2."
+    "description": "API for managing courses and related entities in the Commitments V2 project"
   },
   "paths": {
     "/api/courses": {
       "get": {
-        "summary": "Get All Courses",
         "operationId": "GetAllCourses",
-        "security": [
-          {
-            "BearerAuth": []
-          }
-        ],
+        "summary": "Retrieve all courses",
+        "description": "Fetches all available courses.",
         "responses": {
           "200": {
-            "description": "A list of all courses.",
+            "description": "A list of courses",
             "content": {
               "application/json": {
                 "schema": {
@@ -26,7 +22,15 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "Courses"
+        ]
       }
     }
   },
@@ -35,54 +39,63 @@
       "GetAllCoursesResponse": {
         "type": "object",
         "properties": {
-          "Courses": {
+          "courses": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/Course"
             }
           }
-        }
+        },
+        "required": [
+          "courses"
+        ]
       },
       "Course": {
         "type": "object",
         "properties": {
-          "LarsCode": {
-            "type": "string"
+          "larsCode": {
+            "type": "string",
+            "description": "Unique identifier for the course."
           },
-          "Title": {
-            "type": "string"
+          "title": {
+            "type": "string",
+            "description": "The title of the course."
           },
-          "Level": {
-            "type": "string"
+          "level": {
+            "type": "string",
+            "description": "The level of the course."
           },
-          "LearningType": {
+          "learningType": {
             "type": "string",
             "enum": [
               "Apprenticeship",
               "FoundationApprenticeship",
               "ApprenticeshipUnit"
-            ]
+            ],
+            "description": "The learning type of the course."
           },
-          "MaxFunding": {
+          "maxFunding": {
             "type": "integer",
-            "format": "int32"
+            "description": "The maximum funding available for the course."
           },
-          "EffectiveFrom": {
+          "effectiveFrom": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "description": "The effective start date of the course."
           },
-          "EffectiveTo": {
+          "effectiveTo": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "description": "The effective end date of the course, if applicable."
           }
-        }
-      }
-    },
-    "securitySchemes": {
-      "BearerAuth": {
-        "type": "http",
-        "scheme": "bearer",
-        "bearerFormat": "JWT"
+        },
+        "required": [
+          "larsCode",
+          "title",
+          "level",
+          "learningType",
+          "maxFunding"
+        ]
       }
     }
   }

@@ -2,101 +2,129 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Industry Placement Import API",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "description": "API for industry placement import functionality."
   },
   "paths": {
     "/upload-industry-placements-file/{requestErrorTypeId}": {
       "get": {
-        "summary": "Upload Industry Placements File",
-        "operationId": "UploadIndustryPlacementsFile",
+        "summary": "Upload Industry Placements File (GET)",
+        "operationId": "uploadIndustryPlacementsFileGet",
         "parameters": [
           {
             "name": "requestErrorTypeId",
             "in": "path",
-            "required": false,
+            "required": true,
             "schema": {
               "type": "integer"
-            }
+            },
+            "description": "Optional error code for the request."
           }
         ],
         "responses": {
           "200": {
-            "description": "Load upload industry placements file page",
+            "description": "Returns upload industry placements UI.",
             "content": {
               "text/html": {}
             }
           }
-        }
+        },
+        "security": [
+          {
+            "learnerRecordsEditorAccess": []
+          }
+        ],
+        "tags": [
+          "IndustryPlacementImport"
+        ]
       }
     },
     "/upload-industry-placements-file": {
       "post": {
-        "summary": "Submit Upload Industry Placements File",
-        "operationId": "SubmitUploadIndustryPlacementsFile",
+        "summary": "Upload Industry Placements File (POST)",
+        "operationId": "uploadIndustryPlacementsFilePost",
         "requestBody": {
+          "required": true,
           "content": {
             "multipart/form-data": {
               "schema": {
                 "$ref": "#/components/schemas/UploadIndustryPlacementsRequestViewModel"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "302": {
-            "description": "Redirect based on processing result",
-            "content": {
-              "text/html": {}
-            }
+            "description": "Redirects depending on success or failure of file upload."
+          },
+          "400": {
+            "description": "Validation error due to invalid file input."
           }
-        }
+        },
+        "security": [
+          {
+            "learnerRecordsEditorAccess": []
+          }
+        ],
+        "tags": [
+          "IndustryPlacementImport"
+        ]
       }
     },
     "/upload-ip-file-success": {
       "get": {
-        "summary": "Upload Successful Page",
-        "operationId": "IndustryPlacementsUploadSuccessful",
+        "summary": "Industry Placements Upload Successful",
+        "operationId": "uploadSuccessfulGet",
         "responses": {
           "200": {
-            "description": "Return upload successful response",
+            "description": "Returns successful upload results UI.",
             "content": {
               "text/html": {}
             }
           },
-          "302": {
-            "description": "Redirect to page not found if data missing",
-            "content": {
-              "text/html": {}
-            }
+          "404": {
+            "description": "Successful upload data not found."
           }
-        }
+        },
+        "security": [
+          {
+            "learnerRecordsEditorAccess": []
+          }
+        ],
+        "tags": [
+          "IndustryPlacementImport"
+        ]
       }
     },
     "/ip-upload-unsuccessful": {
       "get": {
-        "summary": "Upload Unsuccessful Page",
-        "operationId": "IndustryPlacementsUploadUnsuccessful",
+        "summary": "Industry Placements Upload Unsuccessful",
+        "operationId": "uploadUnsuccessfulGet",
         "responses": {
           "200": {
-            "description": "Return upload unsuccessful response",
+            "description": "Returns unsuccessful upload results UI.",
             "content": {
               "text/html": {}
             }
           },
-          "302": {
-            "description": "Redirect to page not found if data missing",
-            "content": {
-              "text/html": {}
-            }
+          "404": {
+            "description": "Unsuccessful upload data not found."
           }
-        }
+        },
+        "security": [
+          {
+            "learnerRecordsEditorAccess": []
+          }
+        ],
+        "tags": [
+          "IndustryPlacementImport"
+        ]
       }
     },
     "/download-industry-placement-errors": {
       "get": {
         "summary": "Download Industry Placement Errors",
-        "operationId": "DownloadIndustryPlacementErrors",
+        "operationId": "downloadIndustryPlacementErrorsGet",
         "parameters": [
           {
             "name": "id",
@@ -105,23 +133,34 @@
             "schema": {
               "type": "string",
               "format": "uuid"
-            }
+            },
+            "description": "Unique reference identifier for batch file."
           }
         ],
         "responses": {
           "200": {
-            "description": "Return validation errors file",
+            "description": "Returns CSV file containing errors.",
             "content": {
-              "text/csv": {}
+              "text/csv": {
+                "schema": {}
+              }
             }
           },
-          "302": {
-            "description": "Redirect if file not found or invalid id",
-            "content": {
-              "text/html": {}
-            }
+          "404": {
+            "description": "Validation errors file not found."
+          },
+          "500": {
+            "description": "Internal server error due to invalid id."
           }
-        }
+        },
+        "security": [
+          {
+            "learnerRecordsEditorAccess": []
+          }
+        ],
+        "tags": [
+          "IndustryPlacementImport"
+        ]
       }
     }
   },
@@ -132,21 +171,30 @@
         "properties": {
           "AoUkprn": {
             "type": "integer",
-            "description": "The awarding organization UKPRN"
+            "description": "Awarding Organisation UKPRN (UK Register of Learning Providers Number)."
           },
           "File": {
             "type": "string",
             "format": "binary",
-            "description": "CSV file to upload"
+            "description": "Industry placements CSV file to be uploaded."
           },
           "RequestErrorTypeId": {
             "type": "integer",
-            "description": "Optional error type ID"
+            "nullable": true,
+            "description": "Optional error code for request type."
           }
         },
         "required": [
           "File"
         ]
+      }
+    },
+    "securitySchemes": {
+      "learnerRecordsEditorAccess": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Authorization required for learner records editor access."
       }
     }
   }

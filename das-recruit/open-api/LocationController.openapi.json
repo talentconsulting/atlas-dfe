@@ -1,14 +1,14 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Employer Location API",
+    "title": "Location API",
     "version": "1.0.0"
   },
   "paths": {
-    "/{EmployerAccountId}/{VacancyId}/add-one-location": {
+    "/accounts/{EmployerAccountId}/vacancies/{VacancyId}/add-one-location": {
       "get": {
         "operationId": "AddOneLocation_Get",
-        "summary": "Retrieve the form for adding one location.",
+        "summary": "Retrieve the form for adding a single location to the vacancy",
         "parameters": [
           {
             "name": "EmployerAccountId",
@@ -16,7 +16,8 @@
             "required": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Employer account ID"
           },
           {
             "name": "VacancyId",
@@ -25,7 +26,8 @@
             "schema": {
               "type": "string",
               "format": "uuid"
-            }
+            },
+            "description": "Vacancy ID"
           },
           {
             "name": "wizard",
@@ -33,28 +35,28 @@
             "required": false,
             "schema": {
               "type": "boolean"
-            }
+            },
+            "description": "Indicates whether the wizard mode is active"
           }
         ],
         "responses": {
           "200": {
-            "description": "Form retrieved successfully.",
+            "description": "Form to add a single location",
             "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AddOneLocationViewModel"
-                }
-              }
+              "text/html": {}
             }
           },
           "400": {
-            "description": "Binding errors occurred."
+            "description": "Invalid input"
+          },
+          "500": {
+            "description": "Internal server error"
           }
         }
       },
       "post": {
         "operationId": "AddOneLocation_Post",
-        "summary": "Submit the form for adding one location.",
+        "summary": "Submit the form to add a single location to the vacancy",
         "parameters": [
           {
             "name": "EmployerAccountId",
@@ -62,7 +64,8 @@
             "required": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Employer account ID"
           },
           {
             "name": "VacancyId",
@@ -71,7 +74,8 @@
             "schema": {
               "type": "string",
               "format": "uuid"
-            }
+            },
+            "description": "Vacancy ID"
           },
           {
             "name": "wizard",
@@ -79,12 +83,18 @@
             "required": false,
             "schema": {
               "type": "boolean"
-            }
+            },
+            "description": "Indicates whether the wizard mode is active"
           }
         ],
         "requestBody": {
           "required": true,
           "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/AddOneLocationEditModel"
+              }
+            },
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/AddOneLocationEditModel"
@@ -94,24 +104,16 @@
         },
         "responses": {
           "200": {
-            "description": "Form submission succeeded.",
+            "description": "Form submission completed successfully",
             "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AddOneLocationViewModel"
-                }
-              }
+              "text/html": {}
             }
           },
           "400": {
-            "description": "Validation errors occurred.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationErrorResponse"
-                }
-              }
-            }
+            "description": "Validation errors occurred during input submission"
+          },
+          "500": {
+            "description": "Internal server error"
           }
         }
       }
@@ -119,28 +121,21 @@
   },
   "components": {
     "schemas": {
-      "VacancyRouteModel": {
+      "AddOneLocationEditModel": {
         "type": "object",
         "properties": {
           "EmployerAccountId": {
-            "type": "string"
+            "type": "string",
+            "description": "Employer account ID"
           },
           "VacancyId": {
             "type": "string",
-            "format": "uuid"
-          }
-        }
-      },
-      "AddOneLocationEditModel": {
-        "type": "object",
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/VacancyRouteModel"
-          }
-        ],
-        "properties": {
+            "format": "uuid",
+            "description": "Vacancy ID"
+          },
           "SelectedLocation": {
-            "type": "string"
+            "type": "string",
+            "description": "Address of the selected location"
           },
           "Review": {
             "$ref": "#/components/schemas/ReviewSummaryViewModel"
@@ -152,111 +147,36 @@
           "SelectedLocation"
         ]
       },
-      "AddOneLocationViewModel": {
-        "type": "object",
-        "properties": {
-          "ApprenticeshipTitle": {
-            "type": "string"
-          },
-          "AvailableLocations": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Address"
-            }
-          },
-          "VacancyId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "EmployerAccountId": {
-            "type": "string"
-          },
-          "PageInfo": {
-            "$ref": "#/components/schemas/PartOnePageInfoViewModel"
-          },
-          "SelectedLocation": {
-            "type": "string"
-          },
-          "BannerAddress": {
-            "type": "string"
-          },
-          "Review": {
-            "$ref": "#/components/schemas/ReviewSummaryViewModel"
-          }
-        }
-      },
-      "Address": {
-        "type": "object",
-        "properties": {
-          "AddressLine1": {
-            "type": "string"
-          },
-          "AddressLine2": {
-            "type": "string"
-          },
-          "Postcode": {
-            "type": "string"
-          },
-          "Country": {
-            "type": "string"
-          }
-        }
-      },
       "ReviewSummaryViewModel": {
         "type": "object",
         "properties": {
           "HasBeenReviewed": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Indicates whether the vacancy has been reviewed"
           },
           "ReviewerComments": {
-            "type": "string"
+            "type": "string",
+            "description": "Comments added by the reviewer"
           },
           "FieldIndicators": {
             "type": "array",
             "items": {
-              "type": "object",
-              "properties": {
-                "FieldName": {
-                  "type": "string"
-                },
-                "HasValueChanged": {
-                  "type": "boolean"
-                }
-              }
-            }
+              "$ref": "#/components/schemas/ReviewFieldIndicatorViewModel"
+            },
+            "description": "Field indicators for the review"
           }
         }
       },
-      "ValidationErrorResponse": {
+      "ReviewFieldIndicatorViewModel": {
         "type": "object",
         "properties": {
-          "errors": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "fieldName": {
-                  "type": "string"
-                },
-                "message": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        }
-      },
-      "PartOnePageInfoViewModel": {
-        "type": "object",
-        "properties": {
-          "HasCompletedPartOne": {
-            "type": "boolean"
+          "ReviewFieldIdentifier": {
+            "type": "string",
+            "description": "Unique identifier for the review field"
           },
-          "HasStartedPartTwo": {
-            "type": "boolean"
-          },
-          "IsWizard": {
-            "type": "boolean"
+          "IsChangeRequested": {
+            "type": "boolean",
+            "description": "Indicates whether a change has been requested for this field"
           }
         }
       }

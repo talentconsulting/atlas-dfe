@@ -2,14 +2,13 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Clone Vacancy API",
-    "description": "API for cloning vacancy operations in the Recruit system.",
     "version": "1.0.0"
   },
   "paths": {
     "/{EmployerAccountId}/vacancies/{VacancyId}/clone": {
       "get": {
         "operationId": "CloneVacancy_Get",
-        "summary": "Redirect to appropriate cloning route based on conditions",
+        "summary": "Redirects based on vacancy clone eligibility.",
         "parameters": [
           {
             "name": "EmployerAccountId",
@@ -31,7 +30,7 @@
         ],
         "responses": {
           "302": {
-            "description": "Redirects to either CloneVacancyWithNewDates_Get or CloneVacancyDatesQuestion_Get route."
+            "description": "Redirects to an appropriate route for cloning."
           }
         }
       }
@@ -39,7 +38,7 @@
     "/{EmployerAccountId}/vacancies/{VacancyId}/clone-dates-question": {
       "get": {
         "operationId": "CloneVacancyDatesQuestion_Get",
-        "summary": "Get confirmation for cloning with same dates",
+        "summary": "Displays question to confirm cloning with existing dates.",
         "parameters": [
           {
             "name": "EmployerAccountId",
@@ -61,14 +60,32 @@
         ],
         "responses": {
           "200": {
-            "description": "Returns the view with a question on cloning the vacancy with same dates."
+            "description": "Returns the view for clone vacancy dates question."
           }
         }
       },
       "post": {
         "operationId": "CloneVacancyDatesQuestion_Post",
-        "summary": "Confirm cloning a vacancy with same dates or proceed for new dates.",
-        "parameters": [],
+        "summary": "Processes user's confirmation on cloning with existing dates.",
+        "parameters": [
+          {
+            "name": "EmployerAccountId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "VacancyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -81,10 +98,18 @@
         },
         "responses": {
           "302": {
-            "description": "Redirects based on confirmation to either CloneVacancyWithNewDates_Get or EmployerCheckYourAnswersGet."
+            "description": "Redirects to next step based on user confirmation."
           },
           "400": {
-            "description": "Validation or business logic errors."
+            "description": "Validation errors.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
           }
         }
       }
@@ -92,7 +117,7 @@
     "/{EmployerAccountId}/vacancies/{VacancyId}/clone-with-dates": {
       "get": {
         "operationId": "CloneVacancyWithNewDates_Get",
-        "summary": "Get details for cloning with new dates.",
+        "summary": "Displays form for cloning vacancy with new dates.",
         "parameters": [
           {
             "name": "EmployerAccountId",
@@ -114,14 +139,32 @@
         ],
         "responses": {
           "200": {
-            "description": "Returns the view asking the user to provide new dates for cloning."
+            "description": "Returns the view for cloning with new dates."
           }
         }
       },
       "post": {
         "operationId": "CloneVacancyWithNewDates_Post",
-        "summary": "Save new dates and clone the vacancy.",
-        "parameters": [],
+        "summary": "Processes form submission for cloning vacancy with new dates.",
+        "parameters": [
+          {
+            "name": "EmployerAccountId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "VacancyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -134,10 +177,18 @@
         },
         "responses": {
           "302": {
-            "description": "Redirects to EmployerCheckYourAnswersGet with the newly cloned vacancy details."
+            "description": "Redirects to next step based on successful submission."
           },
           "400": {
-            "description": "Validation or business logic errors."
+            "description": "Validation errors.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
           }
         }
       }
@@ -145,22 +196,15 @@
   },
   "components": {
     "schemas": {
-      "CloneVacancyDatesQuestionEditModel": {
+      "VacancyRouteModel": {
         "type": "object",
         "properties": {
           "EmployerAccountId": {
-            "type": "string",
-            "description": "Account ID of the employer."
+            "type": "string"
           },
           "VacancyId": {
             "type": "string",
-            "format": "uuid",
-            "description": "Unique identifier for the vacancy."
-          },
-          "HasConfirmedClone": {
-            "type": "boolean",
-            "nullable": true,
-            "description": "Indicates whether cloning with the same dates has been confirmed."
+            "format": "uuid"
           }
         },
         "required": [
@@ -168,46 +212,56 @@
           "VacancyId"
         ]
       },
-      "CloneVacancyWithNewDatesEditModel": {
-        "type": "object",
-        "properties": {
-          "EmployerAccountId": {
-            "type": "string",
-            "description": "Account ID of the employer."
+      "CloneVacancyDatesQuestionEditModel": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/VacancyRouteModel"
           },
-          "VacancyId": {
-            "type": "string",
-            "format": "uuid",
-            "description": "Unique identifier for the vacancy."
-          },
-          "ClosingDay": {
-            "type": "string",
-            "description": "Day of the closing date."
-          },
-          "ClosingMonth": {
-            "type": "string",
-            "description": "Month of the closing date."
-          },
-          "ClosingYear": {
-            "type": "string",
-            "description": "Year of the closing date."
-          },
-          "StartDay": {
-            "type": "string",
-            "description": "Day of the start date."
-          },
-          "StartMonth": {
-            "type": "string",
-            "description": "Month of the start date."
-          },
-          "StartYear": {
-            "type": "string",
-            "description": "Year of the start date."
+          {
+            "type": "object",
+            "properties": {
+              "HasConfirmedClone": {
+                "type": "boolean",
+                "nullable": true
+              }
+            }
           }
-        },
-        "required": [
-          "EmployerAccountId",
-          "VacancyId"
+        ]
+      },
+      "CloneVacancyWithNewDatesEditModel": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/VacancyRouteModel"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "ClosingDay": {
+                "type": "string"
+              },
+              "ClosingMonth": {
+                "type": "string"
+              },
+              "ClosingYear": {
+                "type": "string"
+              },
+              "ClosingDate": {
+                "type": "string"
+              },
+              "StartDay": {
+                "type": "string"
+              },
+              "StartMonth": {
+                "type": "string"
+              },
+              "StartYear": {
+                "type": "string"
+              },
+              "StartDate": {
+                "type": "string"
+              }
+            }
+          }
         ]
       }
     }

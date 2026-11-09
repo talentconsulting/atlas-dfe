@@ -1,13 +1,13 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Aodp API - Form Builder Pages",
+    "title": "Pages API",
     "version": "1.0.0"
   },
   "paths": {
     "/api/forms/{formVersionId}/sections/{sectionId}/pages": {
       "get": {
-        "summary": "Get all pages for a section in a form version",
+        "summary": "Get all pages for a section and form version",
         "parameters": [
           {
             "name": "formVersionId",
@@ -30,7 +30,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Successfully retrieved the pages",
+            "description": "Successful response",
             "content": {
               "application/json": {
                 "schema": {
@@ -40,12 +40,12 @@
             }
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Internal server error"
           }
         }
       },
       "post": {
-        "summary": "Create a new page in a section of a form version",
+        "summary": "Create a new page in a section",
         "parameters": [
           {
             "name": "formVersionId",
@@ -67,6 +67,7 @@
           }
         ],
         "requestBody": {
+          "description": "Details of the page to be created",
           "required": true,
           "content": {
             "application/json": {
@@ -78,7 +79,7 @@
         },
         "responses": {
           "200": {
-            "description": "Successfully created the page",
+            "description": "Page created successfully",
             "content": {
               "application/json": {
                 "schema": {
@@ -88,14 +89,14 @@
             }
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Internal server error"
           }
         }
       }
     },
     "/api/forms/{formVersionId}/sections/{sectionId}/pages/{pageId}": {
       "get": {
-        "summary": "Get a specific page by ID in a section of a form",
+        "summary": "Get a page by ID",
         "parameters": [
           {
             "name": "formVersionId",
@@ -127,7 +128,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Successfully retrieved the page",
+            "description": "Successful response",
             "content": {
               "application/json": {
                 "schema": {
@@ -137,12 +138,12 @@
             }
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Internal server error"
           }
         }
       },
       "put": {
-        "summary": "Update a page by ID in a section of a form",
+        "summary": "Update an existing page",
         "parameters": [
           {
             "name": "formVersionId",
@@ -173,6 +174,7 @@
           }
         ],
         "requestBody": {
+          "description": "Details of the page to be updated",
           "required": true,
           "content": {
             "application/json": {
@@ -184,7 +186,7 @@
         },
         "responses": {
           "200": {
-            "description": "Successfully updated the page",
+            "description": "Page updated successfully",
             "content": {
               "application/json": {
                 "schema": {
@@ -194,12 +196,12 @@
             }
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Internal server error"
           }
         }
       },
       "delete": {
-        "summary": "Delete a page by ID in a section of a form",
+        "summary": "Delete a page",
         "parameters": [
           {
             "name": "formVersionId",
@@ -231,7 +233,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Successfully deleted the page",
+            "description": "Page deleted successfully",
             "content": {
               "application/json": {
                 "schema": {
@@ -241,14 +243,14 @@
             }
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Internal server error"
           }
         }
       }
     },
     "/api/forms/{formVersionId}/sections/{sectionId}/pages/{pageId}/preview": {
       "get": {
-        "summary": "Get a preview of a specific page",
+        "summary": "Get a preview of a page by ID",
         "parameters": [
           {
             "name": "formVersionId",
@@ -280,7 +282,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Successfully retrieved the page preview",
+            "description": "Successful response",
             "content": {
               "application/json": {
                 "schema": {
@@ -290,7 +292,7 @@
             }
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Internal server error"
           }
         }
       }
@@ -329,7 +331,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Successfully moved the page up",
+            "description": "Page moved up successfully",
             "content": {
               "application/json": {
                 "schema": {
@@ -339,7 +341,7 @@
             }
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Internal server error"
           }
         }
       }
@@ -378,7 +380,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Successfully moved the page down",
+            "description": "Page moved down successfully",
             "content": {
               "application/json": {
                 "schema": {
@@ -388,7 +390,7 @@
             }
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Internal server error"
           }
         }
       }
@@ -402,15 +404,38 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/GetAllPagesQueryResponse_Page"
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "sectionId": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "title": {
+                  "type": "string"
+                },
+                "key": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "order": {
+                  "type": "integer"
+                }
+              }
             }
           }
         }
       },
-      "GetAllPagesQueryResponse_Page": {
+      "CreatePageCommand": {
         "type": "object",
         "properties": {
-          "id": {
+          "formVersionId": {
             "type": "string",
             "format": "uuid"
           },
@@ -420,16 +445,18 @@
           },
           "title": {
             "type": "string"
-          },
-          "key": {
+          }
+        },
+        "required": [
+          "title"
+        ]
+      },
+      "CreatePageCommandResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
             "type": "string",
             "format": "uuid"
-          },
-          "description": {
-            "type": "string"
-          },
-          "order": {
-            "type": "integer"
           }
         }
       },
@@ -457,7 +484,23 @@
           "questions": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/GetPageByIdQueryResponse_Question"
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "key": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "order": {
+                  "type": "integer"
+                },
+                "title": {
+                  "type": "string"
+                }
+              }
             }
           },
           "editable": {
@@ -465,50 +508,6 @@
           },
           "hasAssociatedRoutes": {
             "type": "boolean"
-          }
-        }
-      },
-      "GetPageByIdQueryResponse_Question": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "key": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "order": {
-            "type": "integer"
-          },
-          "title": {
-            "type": "string"
-          }
-        }
-      },
-      "CreatePageCommand": {
-        "type": "object",
-        "properties": {
-          "formVersionId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "sectionId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "title": {
-            "type": "string"
-          }
-        }
-      },
-      "CreatePageCommandResponse": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
           }
         }
       },
@@ -530,10 +529,14 @@
           "title": {
             "type": "string"
           }
-        }
+        },
+        "required": [
+          "title"
+        ]
       },
       "EmptyResponse": {
-        "type": "object"
+        "type": "object",
+        "description": "An empty response body"
       }
     }
   }

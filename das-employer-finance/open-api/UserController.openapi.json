@@ -1,14 +1,14 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "User API",
+    "title": "Employer Finance API",
     "version": "1.0.0"
   },
   "paths": {
     "/api/user/upsert": {
       "put": {
         "summary": "Upsert a registered user",
-        "operationId": "UpsertRegisteredUser",
+        "description": "Stores or updates a user's registration information.",
         "tags": [
           "User"
         ],
@@ -24,15 +24,15 @@
         },
         "responses": {
           "200": {
-            "description": "User record successfully upserted"
+            "description": "Successfully upserted the user."
           },
           "500": {
-            "description": "Internal server error"
+            "description": "Internal server error."
           }
         },
         "security": [
           {
-            "ApiRoles_ReadUserAccounts": []
+            "OAuth2": []
           }
         ]
       }
@@ -70,10 +70,16 @@
       }
     },
     "securitySchemes": {
-      "ApiRoles_ReadUserAccounts": {
-        "type": "apiKey",
-        "name": "Authorization",
-        "in": "header"
+      "OAuth2": {
+        "type": "oauth2",
+        "flows": {
+          "implicit": {
+            "authorizationUrl": "https://example.com/auth",
+            "scopes": {
+              "ApiRoles.ReadUserAccounts": "Permission to read user accounts"
+            }
+          }
+        }
       }
     }
   }

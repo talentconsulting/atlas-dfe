@@ -2,13 +2,14 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Files API",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "description": "API for file operations"
   },
   "paths": {
     "/api/files/create": {
       "post": {
-        "summary": "Create a File",
         "operationId": "createFile",
+        "summary": "Create File Metadata",
         "requestBody": {
           "required": true,
           "content": {
@@ -21,11 +22,11 @@
         },
         "responses": {
           "200": {
-            "description": "Successful operation",
+            "description": "Successful Response",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/BaseMediatrResponse_EmptyResponse"
+                  "$ref": "#/components/schemas/BaseMediatrResponse_EmptyResponse_"
                 }
               }
             }
@@ -35,8 +36,8 @@
     },
     "/api/files/{fileId}": {
       "delete": {
-        "summary": "Delete a File",
         "operationId": "deleteFile",
+        "summary": "Delete File Metadata",
         "parameters": [
           {
             "name": "fileId",
@@ -45,17 +46,16 @@
             "schema": {
               "type": "string",
               "format": "uuid"
-            },
-            "description": "ID of the file to delete"
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "File deleted successfully",
+            "description": "Successful Response",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/BaseMediatrResponse_EmptyResponse"
+                  "$ref": "#/components/schemas/BaseMediatrResponse_EmptyResponse_"
                 }
               }
             }
@@ -65,8 +65,8 @@
     },
     "/api/files": {
       "post": {
-        "summary": "Get File Metadata",
         "operationId": "getFiles",
+        "summary": "Retrieve File Metadata",
         "requestBody": {
           "required": true,
           "content": {
@@ -79,11 +79,11 @@
         },
         "responses": {
           "200": {
-            "description": "File metadata retrieved successfully",
+            "description": "Successful Response",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/BaseMediatrResponse_GetFileMetadataQueryResponse"
+                  "$ref": "#/components/schemas/BaseMediatrResponse_GetFileMetadataQueryResponse_"
                 }
               }
             }
@@ -94,70 +94,146 @@
   },
   "components": {
     "schemas": {
-      "BaseMediatrResponse_EmptyResponse": {
+      "CreateFileMetadataCommand": {
         "type": "object",
         "properties": {
-          "success": {
+          "Id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "FileCategory": {
+            "$ref": "#/components/schemas/FileCategory"
+          },
+          "ApplicationId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "MessageId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "QuestionId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "FileName": {
+            "type": "string"
+          },
+          "ContentType": {
+            "type": "string"
+          },
+          "BlobContainer": {
+            "type": "string"
+          },
+          "BlobPath": {
+            "type": "string"
+          },
+          "UploadedBy": {
+            "type": "string"
+          }
+        }
+      },
+      "DeleteFileMetadataCommand": {
+        "type": "object",
+        "properties": {
+          "FileId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      },
+      "GetFileMetadataQuery": {
+        "type": "object",
+        "properties": {
+          "FileCategories": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FileCategory"
+            },
+            "nullable": true
+          },
+          "FileId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "ApplicationId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "MessageId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "QuestionId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          }
+        }
+      },
+      "GetFileMetadataQueryResponse": {
+        "type": "object",
+        "properties": {
+          "Files": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FileMetadataDto"
+            }
+          }
+        }
+      },
+      "FileMetadataDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "BaseMediatrResponse_GetFileMetadataQueryResponse_": {
+        "type": "object",
+        "properties": {
+          "Success": {
             "type": "boolean"
           },
-          "errorMessage": {
+          "ErrorMessage": {
             "type": "string",
             "nullable": true
           },
-          "errorCode": {
+          "ErrorCode": {
             "type": "string",
             "nullable": true
           },
-          "value": {
+          "Value": {
+            "$ref": "#/components/schemas/GetFileMetadataQueryResponse"
+          }
+        }
+      },
+      "BaseMediatrResponse_EmptyResponse_": {
+        "type": "object",
+        "properties": {
+          "Success": {
+            "type": "boolean"
+          },
+          "ErrorMessage": {
+            "type": "string",
+            "nullable": true
+          },
+          "ErrorCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "Value": {
             "$ref": "#/components/schemas/EmptyResponse"
           }
         }
       },
       "EmptyResponse": {
-        "type": "object"
-      },
-      "CreateFileMetadataCommand": {
         "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid",
-            "nullable": true
-          },
-          "fileCategory": {
-            "$ref": "#/components/schemas/FileCategory"
-          },
-          "applicationId": {
-            "type": "string",
-            "format": "uuid",
-            "nullable": true
-          },
-          "messageId": {
-            "type": "string",
-            "format": "uuid",
-            "nullable": true
-          },
-          "questionId": {
-            "type": "string",
-            "format": "uuid",
-            "nullable": true
-          },
-          "fileName": {
-            "type": "string"
-          },
-          "contentType": {
-            "type": "string"
-          },
-          "blobContainer": {
-            "type": "string"
-          },
-          "blobPath": {
-            "type": "string"
-          },
-          "uploadedBy": {
-            "type": "string"
-          }
-        }
+        "properties": {}
       },
       "FileCategory": {
         "type": "string",
@@ -173,107 +249,6 @@
           "RolloverCandidateImport",
           "RolloverCandidateSubmitted"
         ]
-      },
-      "DeleteFileMetadataCommand": {
-        "type": "object",
-        "properties": {
-          "fileId": {
-            "type": "string",
-            "format": "uuid"
-          }
-        }
-      }
-    },
-    "GetFileMetadataQuery": {
-      "type": "object",
-      "properties": {
-        "fileCategories": {
-          "type": "array",
-          "items": {
-            "$ref": "#/components/schemas/FileCategory"
-          },
-          "nullable": true
-        },
-        "fileId": {
-          "type": "string",
-          "format": "uuid",
-          "nullable": true
-        },
-        "applicationId": {
-          "type": "string",
-          "format": "uuid",
-          "nullable": true
-        },
-        "messageId": {
-          "type": "string",
-          "format": "uuid",
-          "nullable": true
-        },
-        "questionId": {
-          "type": "string",
-          "format": "uuid",
-          "nullable": true
-        }
-      }
-    },
-    "BaseMediatrResponse_GetFileMetadataQueryResponse": {
-      "type": "object",
-      "properties": {
-        "success": {
-          "type": "boolean"
-        },
-        "errorMessage": {
-          "type": "string",
-          "nullable": true
-        },
-        "errorCode": {
-          "type": "string",
-          "nullable": true
-        },
-        "value": {
-          "$ref": "#/components/schemas/GetFileMetadataQueryResponse"
-        }
-      }
-    },
-    "GetFileMetadataQueryResponse": {
-      "type": "object",
-      "properties": {
-        "files": {
-          "type": "array",
-          "items": {
-            "$ref": "#/components/schemas/FileMetadataDto"
-          }
-        }
-      }
-    },
-    "FileMetadataDto": {
-      "type": "object",
-      "properties": {
-        "fileId": {
-          "type": "string",
-          "format": "uuid"
-        },
-        "fileName": {
-          "type": "string"
-        },
-        "contentType": {
-          "type": "string"
-        },
-        "uploadedBy": {
-          "type": "string"
-        },
-        "applicationId": {
-          "type": "string",
-          "format": "uuid"
-        },
-        "messageId": {
-          "type": "string",
-          "format": "uuid"
-        },
-        "questionId": {
-          "type": "string",
-          "format": "uuid"
-        }
       }
     }
   }

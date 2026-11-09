@@ -1,0 +1,148 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Certificate Grade API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/Grade/{certificateId}": {
+      "get": {
+        "summary": "Get the grade view for a certificate.",
+        "operationId": "GetGrade",
+        "parameters": [
+          {
+            "name": "certificateId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved the grade view."
+          }
+        }
+      },
+      "post": {
+        "summary": "Update the grade for a certificate.",
+        "operationId": "UpdateGrade",
+        "parameters": [
+          {
+            "name": "certificateId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CertificateGradeViewModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully updated the certificate grade."
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CertificateGradeViewModel": {
+        "type": "object",
+        "properties": {
+          "SelectedGrade": {
+            "type": "string",
+            "description": "The selected grade for the certificate.",
+            "enum": [
+              "Pass",
+              "Credit",
+              "Merit",
+              "Distinction",
+              "Pass with excellence",
+              "Outstanding",
+              "No grade awarded"
+            ]
+          },
+          "PrivatelyFundedStatus": {
+            "type": "string",
+            "description": "Status indicating whether the certificate is privately funded."
+          },
+          "Id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique identifier of the certificate."
+          },
+          "FamilyName": {
+            "type": "string",
+            "description": "The family name of the certificate recipient."
+          },
+          "GivenNames": {
+            "type": "string",
+            "description": "The given names of the certificate recipient."
+          },
+          "Standard": {
+            "type": "string",
+            "description": "The name of the standard for the certificate."
+          },
+          "Username": {
+            "type": "string",
+            "description": "The username of the certificate user."
+          },
+          "FullName": {
+            "type": "string",
+            "description": "The full name of the certificate recipient."
+          },
+          "Level": {
+            "type": "integer",
+            "description": "The level of the standard for the certificate."
+          },
+          "Version": {
+            "type": "string",
+            "description": "The version of the certificate standard."
+          },
+          "StandardUId": {
+            "type": "string",
+            "description": "The unique identifier for the certificate standard."
+          },
+          "StandardCode": {
+            "type": "integer",
+            "description": "The code for the certificate standard."
+          },
+          "IsPrivatelyFunded": {
+            "type": "boolean",
+            "description": "Indicates if the certificate is privately funded."
+          },
+          "BackToCheckPage": {
+            "type": "boolean",
+            "description": "Indicates if the view should return to the check page."
+          },
+          "ReasonForChange": {
+            "type": "string",
+            "description": "The reason for changing the certificate."
+          },
+          "RequiresReasonForChange": {
+            "type": "boolean",
+            "description": "Indicates if a reason for change is required."
+          }
+        },
+        "required": [
+          "SelectedGrade",
+          "Id"
+        ]
+      }
+    }
+  }
+}

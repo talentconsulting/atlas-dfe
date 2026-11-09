@@ -7,36 +7,35 @@
   "paths": {
     "/admin/download-learner-results-find-provider-clear": {
       "get": {
-        "summary": "Clear Provider Search Cache",
         "operationId": "AdminDownloadLearnerResultsFindProviderClear",
-        "tags": [
-          "Admin Download Learner Results"
+        "summary": "Clear the provider search cache and redirect to the provider search page.",
+        "security": [
+          {
+            "OAuth2": []
+          }
         ],
         "responses": {
           "302": {
-            "description": "Redirect to AdminDownloadLearnerResultsFindProvider",
-            "headers": {
-              "Location": {
-                "schema": {
-                  "type": "string"
-                },
-                "description": "Redirect URL"
-              }
-            }
+            "description": "Redirects to the provider search page."
+          },
+          "default": {
+            "description": "Error response."
           }
         }
       }
     },
     "/admin/download-learner-results-find-provider": {
       "get": {
-        "summary": "Fetch Cached Provider Search Data or Show Empty ViewModel",
         "operationId": "AdminDownloadLearnerResultsFindProvider",
-        "tags": [
-          "Admin Download Learner Results"
+        "summary": "Retrieve the provider search view model data from the cache.",
+        "security": [
+          {
+            "OAuth2": []
+          }
         ],
         "responses": {
           "200": {
-            "description": "Returns the find provider view",
+            "description": "Provider search view model displayed.",
             "content": {
               "application/json": {
                 "schema": {
@@ -44,14 +43,19 @@
                 }
               }
             }
+          },
+          "default": {
+            "description": "Error response."
           }
         }
       },
       "post": {
-        "summary": "Search for a Provider",
         "operationId": "AdminDownloadLearnerResultsSubmitFindProvider",
-        "tags": [
-          "Admin Download Learner Results"
+        "summary": "Submit the provider search form and redirect to results page.",
+        "security": [
+          {
+            "OAuth2": []
+          }
         ],
         "requestBody": {
           "required": true,
@@ -64,51 +68,41 @@
           }
         },
         "responses": {
-          "200": {
-            "description": "Returns updated provider search view",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AdminDownloadLearnerResultsFindProviderViewModel"
-                }
-              }
-            }
-          },
           "302": {
-            "description": "Redirect to AdminDownloadLearnerResultsByProvider",
-            "headers": {
-              "Location": {
-                "schema": {
-                  "type": "string"
-                },
-                "description": "Redirect URL with provider ID as a path parameter"
-              }
-            }
+            "description": "Redirects to provider results page with providerId."
+          },
+          "400": {
+            "description": "Validation error returned for the form."
+          },
+          "default": {
+            "description": "Error response."
           }
         }
       }
     },
     "/admin/download-learner-results-provider/{providerId}": {
       "get": {
-        "summary": "Get Learner Results by Provider",
         "operationId": "AdminDownloadLearnerResultsByProvider",
-        "tags": [
-          "Admin Download Learner Results"
-        ],
+        "summary": "Retrieve learner results overview for a specific provider.",
         "parameters": [
           {
             "name": "providerId",
             "in": "path",
             "required": true,
-            "description": "ID of the provider",
+            "description": "The ID of the provider.",
             "schema": {
               "type": "integer"
             }
           }
         ],
+        "security": [
+          {
+            "OAuth2": []
+          }
+        ],
         "responses": {
           "200": {
-            "description": "Returns learner results",
+            "description": "View model of learner results overview.",
             "content": {
               "application/json": {
                 "schema": {
@@ -118,42 +112,39 @@
             }
           },
           "302": {
-            "description": "Redirect to a problem page when no provider found",
-            "headers": {
-              "Location": {
-                "schema": {
-                  "type": "string"
-                },
-                "description": "Redirect URL"
-              }
-            }
+            "description": "Redirects to a problem page if the provider is not found."
+          },
+          "default": {
+            "description": "Error response."
           }
         }
       }
     },
     "/admin/download-learner-results-file-csv/{ukprn}": {
       "get": {
-        "summary": "Download Learner Results as CSV File",
         "operationId": "AdminDownloadLearnerResultsCsv",
-        "tags": [
-          "Admin Download Learner Results"
-        ],
+        "summary": "Download learner results data as a CSV file.",
         "parameters": [
           {
             "name": "ukprn",
             "in": "path",
             "required": true,
-            "description": "UK Provider Reference Number",
+            "description": "The UKPRN of the provider.",
             "schema": {
               "type": "integer"
             }
           }
         ],
+        "security": [
+          {
+            "OAuth2": []
+          }
+        ],
         "responses": {
           "200": {
-            "description": "Returns CSV file stream",
+            "description": "CSV file containing learner results data.",
             "content": {
-              "application/octet-stream": {
+              "text/csv": {
                 "schema": {
                   "type": "string",
                   "format": "binary"
@@ -162,40 +153,37 @@
             }
           },
           "302": {
-            "description": "Redirect to a problem page if file is not found",
-            "headers": {
-              "Location": {
-                "schema": {
-                  "type": "string"
-                },
-                "description": "Redirect URL"
-              }
-            }
+            "description": "Redirects to a problem page if the file stream is not found."
+          },
+          "default": {
+            "description": "Error response."
           }
         }
       }
     },
     "/admin/download-learner-results-file-pdf/{ukprn}": {
       "get": {
-        "summary": "Download Learner Results Slips as PDF File",
         "operationId": "AdminDownloadLearnerResultsPdf",
-        "tags": [
-          "Admin Download Learner Results"
-        ],
+        "summary": "Download learner results slips as a PDF.",
         "parameters": [
           {
             "name": "ukprn",
             "in": "path",
             "required": true,
-            "description": "UK Provider Reference Number",
+            "description": "The UKPRN of the provider.",
             "schema": {
               "type": "integer"
             }
           }
         ],
+        "security": [
+          {
+            "OAuth2": []
+          }
+        ],
         "responses": {
           "200": {
-            "description": "Returns PDF file stream",
+            "description": "PDF file containing learner results slips.",
             "content": {
               "application/pdf": {
                 "schema": {
@@ -206,15 +194,10 @@
             }
           },
           "302": {
-            "description": "Redirect to a problem page if file is not found",
-            "headers": {
-              "Location": {
-                "schema": {
-                  "type": "string"
-                },
-                "description": "Redirect URL"
-              }
-            }
+            "description": "Redirects to a problem page if the file stream is not found."
+          },
+          "default": {
+            "description": "Error response."
           }
         }
       }
@@ -227,50 +210,33 @@
         "properties": {
           "search": {
             "type": "string",
-            "description": "Search query for provider name",
-            "nullable": false,
-            "maxLength": 400
-          },
-          "breadcrumb": {
-            "$ref": "#/components/schemas/BreadcrumbModel"
+            "maxLength": 400,
+            "description": "Provider name to search for."
           }
-        }
+        },
+        "required": [
+          "search"
+        ]
       },
       "AdminDownloadLearnerResultsByProviderViewModel": {
         "type": "object",
-        "properties": {}
-      },
-      "BreadcrumbModel": {
-        "type": "object",
+        "description": "Model displaying learner results for a specific provider.",
         "properties": {
-          "breadcrumbItems": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/BreadcrumbItem"
-            },
-            "description": "List of breadcrumb links"
+          "providerId": {
+            "type": "integer",
+            "description": "The ID of the provider."
+          },
+          "downloadFilename": {
+            "type": "string",
+            "description": "Filename for downloaded results file."
           }
         }
-      },
-      "BreadcrumbItem": {
-        "type": "object",
-        "properties": {
-          "displayName": {
-            "type": "string",
-            "description": "The display name of the breadcrumb item"
-          },
-          "routeName": {
-            "type": "string",
-            "description": "The route name of the breadcrumb item"
-          },
-          "routeAttributes": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "string"
-            },
-            "description": "Route attributes for the breadcrumb item"
-          }
-        }
+      }
+    },
+    "securitySchemes": {
+      "OAuth2": {
+        "type": "oauth2",
+        "description": "OAuth2 security scheme for authorization."
       }
     }
   }

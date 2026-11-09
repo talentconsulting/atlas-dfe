@@ -1,14 +1,15 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Providers Allowed List API",
+    "title": "Admin RoATP API",
     "version": "1.0.0"
   },
   "paths": {
     "/providers/allowedlist": {
       "get": {
-        "operationId": "getAllowedList",
-        "summary": "Get allowed list of providers",
+        "summary": "Get Providers Allowed List",
+        "description": "Retrieves the list of allowed providers.",
+        "operationId": "GetProvidersAllowedList",
         "parameters": [
           {
             "name": "sortColumn",
@@ -16,27 +17,20 @@
             "required": false,
             "schema": {
               "type": "string"
-            },
-            "description": "The column to sort the allowed list by"
+            }
           },
           {
             "name": "sortOrder",
             "in": "query",
             "required": false,
             "schema": {
-              "type": "string",
-              "enum": [
-                "Ascending",
-                "Descending"
-              ],
-              "default": "Ascending"
-            },
-            "description": "The sort order for the allowed list"
+              "type": "string"
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Successful response with the list of allowed providers",
+            "description": "List of allowed providers retrieved successfully.",
             "content": {
               "application/json": {
                 "schema": {
@@ -49,7 +43,7 @@
             }
           },
           "400": {
-            "description": "Bad request due to invalid input",
+            "description": "Bad request.",
             "content": {
               "application/json": {
                 "schema": {
@@ -70,37 +64,42 @@
       "GetProvidersAllowedListQueryResponse": {
         "type": "object",
         "properties": {
-          "providers": {
+          "Providers": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/AllowedProvider"
             }
           }
-        }
+        },
+        "required": [
+          "Providers"
+        ]
       },
       "AllowedProvider": {
         "type": "object",
         "properties": {
-          "ukprn": {
-            "type": "integer",
-            "description": "Unique Provider Reference Number"
+          "Ukprn": {
+            "type": "integer"
           },
-          "startDateTime": {
+          "StartDateTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "EndDateTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "AddedDateTime": {
             "type": "string",
             "format": "date-time",
-            "description": "Start date and time for the provider"
-          },
-          "endDateTime": {
-            "type": "string",
-            "format": "date-time",
-            "description": "End date and time for the provider"
-          },
-          "addedDateTime": {
-            "type": "string",
-            "format": "date-time",
-            "description": "The date and time the provider was added (optional)"
+            "nullable": true
           }
-        }
+        },
+        "required": [
+          "Ukprn",
+          "StartDateTime",
+          "EndDateTime"
+        ]
       }
     }
   }
