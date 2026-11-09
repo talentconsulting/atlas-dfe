@@ -5,28 +5,28 @@
   "systemName": "Assessor Functions",
   "containers": [
     {
-      "id": "assessor",
-      "name": "Assessor",
-      "type": "job",
-      "evidence": [
-        {
-          "sourceFile": "src/SFA.DAS.Assessor.Functions/SFA.DAS.Assessor.Functions.csproj",
-          "reason": "Azure Functions project file with AzureFunctionsVersion set to v4, indicating a deployment."
-        },
-        {
-          "sourceFile": "src/SFA.DAS.Assessor.Functions/Program.cs",
-          "reason": "Program class configuring and running an Azure Functions worker application with AddAllServices."
-        }
-      ]
-    },
-    {
       "id": "assessor-functions",
       "name": "Assessor Functions",
       "type": "other",
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.Assessor.Functions/StartupConfiguration/DatabaseExtensions.cs",
-          "reason": "Database registration method evidenced here."
+          "reason": "Extension method AddDatabaseRegistration suggests database registration in a worker or background function process."
+        }
+      ]
+    },
+    {
+      "id": "assessor-functions-2",
+      "name": "Assessor Functions",
+      "type": "job",
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Assessor.Functions/Program.cs",
+          "reason": "Contains entry point for Azure Function worker hosting configuration."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.Assessor.Functions/SFA.DAS.Assessor.Functions.csproj",
+          "reason": "Declares Azure Functions target version and setup for deployment as an independent unit."
         }
       ]
     }
@@ -34,24 +34,24 @@
   "dependencies": [
     {
       "sourceId": "assessor-functions",
-      "name": "Azure SQL Database",
+      "name": "SQL Database",
       "kind": "database",
-      "classification": "third-party",
+      "classification": "internal",
       "direction": "outbound",
-      "client": "SqlConnection",
-      "technology": "SQL Server",
+      "client": "IDbConnection/SqlConnection",
+      "technology": "Microsoft SQL Server",
       "configurationKeys": [
         "FunctionsOptions:SqlConnectionString"
       ],
       "authentication": {
-        "type": "Azure Managed Identity",
+        "type": "managed-identity",
         "configurationKeys": []
       },
       "operations": [],
       "resources": [
         {
-          "type": "database",
-          "name": "FunctionsOptions:SqlConnectionString",
+          "type": "sql-server",
+          "name": "Azure SQL Database",
           "direction": "outbound",
           "sourceFile": "src/SFA.DAS.Assessor.Functions/StartupConfiguration/DatabaseExtensions.cs"
         }
@@ -59,21 +59,21 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.Assessor.Functions/StartupConfiguration/DatabaseExtensions.cs",
-          "reason": "SQL connection with optional managed identity authentication."
+          "reason": "SQL database registration using SqlConnection, potentially leveraging Azure Managed Identity for authentication."
         }
       ],
       "confidence": "high",
-      "targetId": "database-azure-sql-database",
+      "targetId": "database-sql-database",
       "description": "Reads from and writes to"
     },
     {
-      "sourceId": "assessor",
-      "name": "Azure SQL Database",
+      "sourceId": "assessor-functions-2",
+      "name": "SQL Database",
       "kind": "database",
       "classification": "internal",
       "direction": "outbound",
-      "client": "SqlConnection",
-      "technology": "System.Data.SqlClient",
+      "client": "System.Data.SqlClient",
+      "technology": "SQL Server",
       "configurationKeys": [
         "AzureWebJobsStorage"
       ],
@@ -87,17 +87,21 @@
       "resources": [],
       "evidence": [
         {
+          "sourceFile": "src/SFA.DAS.Assessor.Functions/Extensions/AddServicesExtensions.cs",
+          "reason": "Database registration using connection string AzureWebJobsStorage in AddInfrastructureServices."
+        },
+        {
           "sourceFile": "src/SFA.DAS.Assessor.Functions.Infrastructure/SFA.DAS.Assessor.Functions.Infrastructure.csproj",
-          "reason": "References System.Data.SqlClient, suggesting a SQL database dependency."
+          "reason": "References System.Data.SqlClient for SQL Server-based database access."
         }
       ],
-      "confidence": "medium",
-      "targetId": "database-azure-sql-database",
+      "confidence": "high",
+      "targetId": "database-sql-database",
       "description": "Reads from and writes to"
     },
     {
-      "sourceId": "assessor",
-      "name": "Assessor Service",
+      "sourceId": "assessor-functions-2",
+      "name": "HTTP Client Assessor Service",
       "kind": "http-api",
       "classification": "internal",
       "direction": "outbound",
@@ -105,139 +109,55 @@
       "technology": "HttpClient",
       "configurationKeys": [],
       "authentication": {
-        "type": "managed-identity",
-        "configurationKeys": [
-          "AssessorManagedIdentityClientConfiguration"
-        ]
+        "type": "token",
+        "configurationKeys": []
       },
       "operations": [],
       "resources": [],
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.Assessor.Functions/Extensions/AddServicesExtensions.cs",
-          "reason": "HttpClient registered for IAssessorServiceApiClient with AssessorTokenHandler for authentication."
+          "reason": "HttpClient and handler registration for IAssessorServiceApiClient in AddHttpClientsServices method."
         }
       ],
       "confidence": "high",
-      "targetId": "http-api-assessor-service",
+      "targetId": "http-api-http-client-assessor-service",
       "description": "Calls the API of"
     },
     {
-      "sourceId": "assessor",
-      "name": "Data Collection Service",
+      "sourceId": "assessor-functions-2",
+      "name": "HTTP Client Data Collection Service",
       "kind": "http-api",
       "classification": "internal",
       "direction": "outbound",
       "client": "IDataCollectionServiceApiClient",
       "technology": "HttpClient",
-      "configurationKeys": [
-        "DataCollectionApiAuthentication"
-      ],
+      "configurationKeys": [],
       "authentication": {
         "type": "token",
-        "configurationKeys": [
-          "DataCollectionApiAuthentication"
-        ]
+        "configurationKeys": []
       },
       "operations": [],
       "resources": [],
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.Assessor.Functions/Extensions/AddServicesExtensions.cs",
-          "reason": "HttpClient registered for IDataCollectionServiceApiClient, optionally as either a mock or a service client, with token-based authentication."
+          "reason": "HttpClient and handler registration for IDataCollectionServiceApiClient in AddHttpClientsServices method."
         }
       ],
       "confidence": "high",
-      "targetId": "http-api-data-collection-service",
+      "targetId": "http-api-http-client-data-collection-service",
       "description": "Calls the API of"
     },
     {
-      "sourceId": "assessor",
-      "name": "Ofqual Organisations",
-      "kind": "http-api",
-      "classification": "unknown",
-      "direction": "outbound",
-      "client": null,
-      "technology": "HttpClient",
-      "configurationKeys": [
-        "OfqualImportOptions:OrganisationsDataUrl"
-      ],
-      "authentication": {
-        "type": null,
-        "configurationKeys": []
-      },
-      "operations": [
-        {
-          "method": "GET",
-          "methodName": "DownloadData",
-          "path": null,
-          "sourceFile": "src/SFA.DAS.Assessor.Functions/Functions/Ofqual/OrganisationsDownloader.cs"
-        }
-      ],
-      "resources": [],
-      "evidence": [
-        {
-          "sourceFile": "src/SFA.DAS.Assessor.Functions/Extensions/AddServicesExtensions.cs",
-          "reason": "HttpClient with base URL configured using OfqualImportOptions.OrganisationsDataUrl."
-        },
-        {
-          "sourceFile": "src/SFA.DAS.Assessor.Functions/Functions/Ofqual/OrganisationsDownloader.cs",
-          "reason": "OrganisationsDownloader uses HttpClient created for Organisations."
-        }
-      ],
-      "confidence": "high",
-      "targetId": "http-api-ofqual-organisations",
-      "description": "Calls the API of"
-    },
-    {
-      "sourceId": "assessor",
-      "name": "Ofqual Qualifications",
-      "kind": "http-api",
-      "classification": "unknown",
-      "direction": "outbound",
-      "client": null,
-      "technology": "HttpClient",
-      "configurationKeys": [
-        "OfqualImportOptions:QualificationsDataUrl"
-      ],
-      "authentication": {
-        "type": null,
-        "configurationKeys": []
-      },
-      "operations": [
-        {
-          "method": "GET",
-          "methodName": "DownloadData",
-          "path": null,
-          "sourceFile": "src/SFA.DAS.Assessor.Functions/Functions/Ofqual/QualificationsDownloader.cs"
-        }
-      ],
-      "resources": [],
-      "evidence": [
-        {
-          "sourceFile": "src/SFA.DAS.Assessor.Functions/Extensions/AddServicesExtensions.cs",
-          "reason": "HttpClient with base URL configured using OfqualImportOptions.QualificationsDataUrl."
-        },
-        {
-          "sourceFile": "src/SFA.DAS.Assessor.Functions/Functions/Ofqual/QualificationsDownloader.cs",
-          "reason": "QualificationsDownloader uses HttpClient created for Qualifications."
-        }
-      ],
-      "confidence": "high",
-      "targetId": "http-api-ofqual-qualifications",
-      "description": "Calls the API of"
-    },
-    {
-      "sourceId": "assessor",
-      "name": "Outer API",
+      "sourceId": "assessor-functions-2",
+      "name": "HTTP Client Ofqual Organisations Data",
       "kind": "http-api",
       "classification": "internal",
       "direction": "outbound",
-      "client": "IOuterApiClient",
+      "client": "Organisations",
       "technology": "HttpClient",
-      "configurationKeys": [
-        "OuterApi"
-      ],
+      "configurationKeys": [],
       "authentication": {
         "type": null,
         "configurationKeys": []
@@ -247,46 +167,67 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.Assessor.Functions/Extensions/AddServicesExtensions.cs",
-          "reason": "HttpClient registered for IOuterApiClient, with configuration bound to OuterApi settings."
+          "reason": "HttpClient registration for Ofqual Organisations data import with dynamic base address using Ofqual Import options."
         }
       ],
       "confidence": "high",
-      "targetId": "http-api-outer-api",
+      "targetId": "http-api-http-client-ofqual-organisations-data",
       "description": "Calls the API of"
     },
     {
-      "sourceId": "assessor",
-      "name": "Secure Message Service",
+      "sourceId": "assessor-functions-2",
+      "name": "HTTP Client Ofqual Qualifications Data",
+      "kind": "http-api",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "Qualifications",
+      "technology": "HttpClient",
+      "configurationKeys": [],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Assessor.Functions/Extensions/AddServicesExtensions.cs",
+          "reason": "HttpClient registration for Ofqual Qualifications data import with dynamic base address using Ofqual Import options."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "http-api-http-client-ofqual-qualifications-data",
+      "description": "Calls the API of"
+    },
+    {
+      "sourceId": "assessor-functions-2",
+      "name": "HTTP Client Secure Message Service",
       "kind": "http-api",
       "classification": "internal",
       "direction": "outbound",
       "client": "ISecureMessageServiceApiClient",
       "technology": "HttpClient",
-      "configurationKeys": [
-        "SecureMessageApiAuthentication"
-      ],
+      "configurationKeys": [],
       "authentication": {
         "type": "token",
-        "configurationKeys": [
-          "SecureMessageApiAuthentication"
-        ]
+        "configurationKeys": []
       },
       "operations": [],
       "resources": [],
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.Assessor.Functions/Extensions/AddServicesExtensions.cs",
-          "reason": "HttpClient registered for ISecureMessageServiceApiClient, with SecureMessageTokenHandler for authentication."
+          "reason": "HttpClient and handler registration for ISecureMessageServiceApiClient in AddHttpClientsServices method."
         }
       ],
       "confidence": "high",
-      "targetId": "http-api-secure-message-service",
+      "targetId": "http-api-http-client-secure-message-service",
       "description": "Calls the API of"
     }
   ],
   "resolution": {
     "overlay": "dfe-overlay/apim-routing.json",
-    "apimCommit": "7c83d23270959bfc4da9e92d355f95e1f2f4d257",
+    "apimCommit": "cb28ce9d593dcd27df01e56dfe6b143479db94ff",
     "precision": "area"
   }
 }
