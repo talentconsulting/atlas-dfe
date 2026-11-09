@@ -6,29 +6,29 @@ Generated from `master/src`: 23 pages, 3 transitions, 0 journeys. 🔒 means sig
 
 | Page | Route | Sign-in | Purpose |
 | --- | --- | --- | --- |
-| `Article.EmployerProfiles` | `/apprentices/employer-profiles` | Unknown | Shows employer profiles related to apprenticeships. |
-| `Article.GetArticleAsync` | `/{hub}/{slug}` | Unknown | Displays an article or landing page based on the hub and slug in the URL. |
-| `Article.TheRoadToAQualityApprenticeship` | `/employers/the-road-to-a-quality-apprenticeship` | Unknown | Shows information about the pathway to a quality apprenticeship for employers. |
-| `Employer.ApprenticeshipBenefitsAndFunding` | `/employers/understanding-apprenticeship-benefits-and-funding` | Unknown | Lets employers explore apprenticeship benefits and funding options, and calculate potential outcomes by completing a form. |
-| `Employer.FindApprenticeshipTraining` | `/employers/find-apprenticeship-training` | Unknown | Redirects employers to an external apprenticeship training finder. |
-| `Fat.Apprenticeship` | `/employers/find-apprenticeships/apprenticeship` | Unknown | Redirects to an external apprenticeship course details page. |
-| `Fat.Search` | `/employers/find-apprenticeships` | Unknown | Redirects to an external apprenticeship search page. |
-| `FundingAnApprenticeship.Index` | `employers/funding-an-apprenticeship` | Unknown | Lets employers specify whether their pay bill is over £3 million to determine funding information. |
-| `Home.Accessibility` | `accessibility` | Unknown | Provides information about the site's accessibility. |
-| `Home.CookieDetails` | `cookie-details` | Unknown | Displays details about the site's use of cookies. |
-| `Home.Cookies` | `cookies` | Unknown | Lets users set their cookie preferences for the site. |
-| `Home.Index` | `/` | Unknown | Displays the main homepage of the site. |
-| `Home.Privacy` | `privacy` | Unknown | Displays information about privacy. |
-| `Home.SiteMap` | `sitemap.xml` | Unknown | Returns the XML sitemap for the website. |
-| `Home.Sitemap` | `sitemap` | Unknown | Displays the site's sitemap to help users navigate the site. |
-| `Hub.GetHubAsync` | `/{hub}` | Unknown | Shows the specified hub page, or a not-found error if it does not exist. |
-| `RegisterInterest.Index` | `register-interest` | Unknown | Lets users register their interest as an employer by submitting details about their company, industry, location, and contact information. |
-| `RegisterInterest.PreviousThankYouUrl` | `register-interest/employers/thank-you-for-signing-up` | Unknown | Redirects users to the thank you page after signing up as an employer. |
-| `RegisterInterest.PreviousUrl` | `register-interest` | Unknown | Redirects users to the register interest page. |
-| `RegisterInterest.ThankYouForRegistering` | `register-interest` | Unknown | Shows a thank you message after users have registered their interest. |
-| `TrainingProvider.Details` | `/trainingprovider/details` | Unknown | Redirects to detailed information for a selected apprenticeship training provider. |
-| `TrainingProvider.Search` | `/trainingprovider/search` | Unknown | Redirects to a search page for apprenticeship training providers. |
-| `TrainingProvider.ValidatePostcode` | `/trainingprovider/validate-postcode` | Unknown | Validates a postcode and redirects, typically used to check provider coverage. |
+| `Article.EmployerProfiles` | `/apprentices/employer-profiles` | Unknown | Displays employer profiles related to apprentices. |
+| `Article.GetArticleAsync` | `/{hub}/{slug}` | Unknown | Shows a content article or landing page for the specified hub and slug. |
+| `Article.TheRoadToAQualityApprenticeship` | `/employers/the-road-to-a-quality-apprenticeship` | Unknown | Displays information about achieving a quality apprenticeship for employers. |
+| `Employer.ApprenticeshipBenefitsAndFunding` | `/employers/understanding-apprenticeship-benefits-and-funding` | Unknown | Allows employers to view and submit details about apprenticeship benefits, funding, and training. |
+| `Employer.FindApprenticeshipTraining` | `/employers/find-apprenticeship-training` | Unknown | Redirects employers to an external service to find apprenticeship training. |
+| `Fat.Apprenticeship` | `/employers/find-apprenticeships/apprenticeship` | Unknown | Redirects to external details for a specific apprenticeship. |
+| `Fat.Search` | `/employers/find-apprenticeships` | Unknown | Redirects to an external apprenticeship course search. |
+| `FundingAnApprenticeship.Index` | `employers/funding-an-apprenticeship` | Unknown | Lets employers indicate whether their annual pay bill is more than £3 million and view funding information. |
+| `Home.Accessibility` | `accessibility` | Unknown | Displays accessibility information for the website. |
+| `Home.CookieDetails` | `cookie-details` | Unknown | Shows detailed information about the site's cookie usage. |
+| `Home.Cookies` | `cookies` | Unknown | Lets users review and set their cookie preferences. |
+| `Home.Index` | `/` | Unknown | Displays the homepage of the website. |
+| `Home.Privacy` | `privacy` | Unknown | Displays the website's privacy information to the user. |
+| `Home.SiteMap` | `sitemap.xml` | Unknown | Returns an XML sitemap for the website. |
+| `Home.Sitemap` | `sitemap` | Unknown | Displays the website's sitemap page to the user. |
+| `Hub.GetHubAsync` | `/{hub}` | Unknown | Displays the content hub page for the specified hub. |
+| `RegisterInterest.Index` | `register-interest` | Unknown | Lets the user register their interest by completing a form about their company and themselves. |
+| `RegisterInterest.PreviousThankYouUrl` | `register-interest/employers/thank-you-for-signing-up` | Unknown | Redirects the user to the current thank you page after signing up. |
+| `RegisterInterest.PreviousUrl` | `register-interest` | Unknown | Redirects the user to the current register interest page. |
+| `RegisterInterest.ThankYouForRegistering` | `register-interest` | Unknown | Shows a thank you page after the user registers their interest. |
+| `TrainingProvider.Details` | `/trainingprovider/details` | Unknown | Redirects to external training provider details for a selected apprenticeship. |
+| `TrainingProvider.Search` | `/trainingprovider/search` | Unknown | Redirects to external training provider search for apprenticeships. |
+| `TrainingProvider.ValidatePostcode` | `/trainingprovider/validate-postcode` | Unknown | Redirects to an external postcode validation or training provider site. |
 
 ## Form fields
 
