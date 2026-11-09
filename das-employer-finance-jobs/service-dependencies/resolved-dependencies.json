@@ -5,86 +5,71 @@
   "systemName": "Employer Finance Jobs",
   "containers": [
     {
-      "id": "employer-finance-jobs",
-      "name": "Employer Finance Jobs",
-      "type": "job",
-      "evidence": [
-        {
-          "sourceFile": "src/SFA.DAS.Employer.Finance.Jobs.Infrastructure/SFA.DAS.Employer.Finance.Jobs.Infrastructure.csproj",
-          "reason": "Contains the project file for the infrastructure of the service, indicating a job."
-        }
-      ]
-    },
-    {
-      "id": "employer-finance-jobs-expire-funds",
-      "name": "Employer Finance Jobs Expire Funds",
-      "type": "job",
-      "evidence": [
-        {
-          "sourceFile": "src/SFA.DAS.Employer.Finance.Jobs.Functions.ExpireFunds/SFA.DAS.Employer.Finance.Jobs.Functions.ExpireFunds.csproj",
-          "reason": "Azure Functions project file with 'OutputType' set to 'Exe' and 'AzureFunctionsVersion' defined."
-        },
-        {
-          "sourceFile": "src/SFA.DAS.Employer.Finance.Jobs.Functions.ExpireFunds/Program.cs",
-          "reason": "Azure Functions worker entry point for Expire Funds functionality."
-        }
-      ]
-    },
-    {
       "id": "employer-finance-jobs-functions",
       "name": "Employer Finance Jobs Functions",
       "type": "job",
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.Employer.Finance.Jobs.Functions/SFA.DAS.Employer.Finance.Jobs.Functions.csproj",
-          "reason": "Azure Functions project file with 'OutputType' set to 'Exe' and 'AzureFunctionsVersion' defined."
-        },
-        {
-          "sourceFile": "src/SFA.DAS.Employer.Finance.Jobs.Functions/Program.cs",
-          "reason": "Azure Functions worker entry point for general jobs."
+          "reason": "Project file with Azure Functions worker support."
         }
       ]
     },
     {
-      "id": "employer-finance-jobs-funding-projection",
-      "name": "Employer Finance Jobs Funding Projection",
+      "id": "employer-finance-jobs-functions-expire-funds",
+      "name": "Employer Finance Jobs Functions Expire Funds",
       "type": "job",
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.Employer.Finance.Jobs.Functions.FundingProjection/SFA.DAS.Employer.Finance.Jobs.Functions.FundingProjection.csproj",
-          "reason": "Azure Functions project file with 'OutputType' set to 'Exe' and 'AzureFunctionsVersion' defined."
+          "sourceFile": "src/SFA.DAS.Employer.Finance.Jobs.Functions.ExpireFunds/Program.cs",
+          "reason": "Azure Function App setup identified by ConfigureFunctionsWorkerDefaults in HostBuilder."
         },
+        {
+          "sourceFile": "src/SFA.DAS.Employer.Finance.Jobs.Functions.ExpireFunds/SFA.DAS.Employer.Finance.Jobs.Functions.ExpireFunds.csproj",
+          "reason": "Azure Function project SDK and OutputType identified."
+        }
+      ]
+    },
+    {
+      "id": "employer-finance-jobs-functions-funding-projection",
+      "name": "Employer Finance Jobs Functions Funding Projection",
+      "type": "job",
+      "evidence": [
         {
           "sourceFile": "src/SFA.DAS.Employer.Finance.Jobs.Functions.FundingProjection/Program.cs",
-          "reason": "Azure Functions worker entry point for Funding Projection functionality."
+          "reason": "Azure Function App setup identified by ConfigureFunctionsWorkerDefaults in HostBuilder."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.Employer.Finance.Jobs.Functions.FundingProjection/SFA.DAS.Employer.Finance.Jobs.Functions.FundingProjection.csproj",
+          "reason": "Azure Function project SDK and OutputType identified."
         }
       ]
     },
     {
-      "id": "employer-finance-jobs-import-levy",
-      "name": "Employer Finance Jobs Import Levy",
+      "id": "employer-finance-jobs-functions-import-levy",
+      "name": "Employer Finance Jobs Functions Import Levy",
       "type": "job",
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.Employer.Finance.Jobs.Functions.ImportLevy/SFA.DAS.Employer.Finance.Jobs.Functions.ImportLevy.csproj",
-          "reason": "Azure Functions project file with 'OutputType' set to 'Exe' and 'AzureFunctionsVersion' defined."
+          "sourceFile": "src/SFA.DAS.Employer.Finance.Jobs.Functions.ImportLevy/Program.cs",
+          "reason": "Azure Function App setup identified by ConfigureFunctionsWorkerDefaults in HostBuilder."
         },
         {
-          "sourceFile": "src/SFA.DAS.Employer.Finance.Jobs.Functions.ImportLevy/Program.cs",
-          "reason": "Azure Functions worker entry point for Import Levy functionality."
+          "sourceFile": "src/SFA.DAS.Employer.Finance.Jobs.Functions.ImportLevy/SFA.DAS.Employer.Finance.Jobs.Functions.ImportLevy.csproj",
+          "reason": "Azure Function project SDK and OutputType identified."
         }
       ]
     }
   ],
   "dependencies": [
     {
-      "sourceId": "employer-finance-jobs",
-      "name": "StackExchange Redis",
+      "sourceId": "employer-finance-jobs-functions",
+      "name": "Redis Cache",
       "kind": "cache",
       "classification": "third-party",
       "direction": "outbound",
-      "client": "ConnectionMultiplexer",
-      "technology": "StackExchange.Redis",
+      "client": null,
+      "technology": "Redis",
       "configurationKeys": [
         "DataProtectionKeysDatabase",
         "RedisConnectionString"
@@ -98,38 +83,36 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.Employer.Finance.Jobs.Infrastructure/Extensions/DataProtectionExtensions.cs",
-          "reason": "ConnectionMultiplexer.Connect is used to connect to Redis."
+          "reason": "StackExchange.Redis is configured for data protection."
         }
       ],
       "confidence": "high",
-      "targetId": "cache-stackexchange-redis",
+      "targetId": "cache-redis-cache",
       "description": "Caches data in"
     },
     {
-      "sourceId": "employer-finance-jobs-import-levy",
-      "name": "Azure Table Storage configuration",
+      "sourceId": "employer-finance-jobs-functions-expire-funds",
+      "name": "Azure Table Storage Configuration",
       "kind": "configuration-store",
       "classification": "third-party",
       "direction": "outbound",
       "client": null,
       "technology": null,
       "configurationKeys": [
-        "ConfigNames",
-        "ConfigurationStorageConnectionString",
-        "EnvironmentName"
+        "Values:ConfigNames",
+        "Values:ConfigurationStorageConnectionString",
+        "Values:EnvironmentName"
       ],
       "authentication": {
         "type": null,
-        "configurationKeys": [
-          "ConfigurationStorageConnectionString"
-        ]
+        "configurationKeys": []
       },
       "operations": [],
       "resources": [],
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.Employer.Finance.Jobs.Functions.ImportLevy/Extensions/ConfigurationExtensions.cs",
-          "reason": "Configured AddAzureTableStorage for Azure Table Storage configuration store."
+          "reason": "AddAzureTableStorage method detected for configuration store."
         }
       ],
       "confidence": "high",
@@ -137,7 +120,36 @@
       "description": "Reads configuration from"
     },
     {
-      "sourceId": "employer-finance-jobs",
+      "sourceId": "employer-finance-jobs-functions-import-levy",
+      "name": "Azure Table Storage Configuration",
+      "kind": "configuration-store",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "Values:ConfigNames",
+        "Values:ConfigurationStorageConnectionString",
+        "Values:EnvironmentName"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Employer.Finance.Jobs.Functions.ImportLevy/Extensions/ConfigurationExtensions.cs",
+          "reason": "AddAzureTableStorage method detected for configuration store."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "configuration-store-azure-table-storage-configuration",
+      "description": "Reads configuration from"
+    },
+    {
+      "sourceId": "employer-finance-jobs-functions",
       "name": "Azure Table Storage configuration",
       "kind": "configuration-store",
       "classification": "third-party",
@@ -158,7 +170,7 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.Employer.Finance.Jobs.Infrastructure/Extensions/ConfigurationExtensions.cs",
-          "reason": "Configuration loaded using AddAzureTableStorage."
+          "reason": "Azure Table Storage added as a configuration store."
         }
       ],
       "confidence": "high",
@@ -166,75 +178,419 @@
       "description": "Reads configuration from"
     },
     {
-      "sourceId": "employer-finance-jobs",
-      "name": "HMRC API",
+      "sourceId": "employer-finance-jobs-functions",
+      "name": "Apprenticeship Levy",
       "kind": "http-api",
-      "classification": "third-party",
+      "classification": "unknown",
       "direction": "outbound",
-      "client": "HttpClient",
-      "technology": "HTTP",
+      "client": "IApprenticeshipLevyApiClient",
+      "technology": null,
       "configurationKeys": [],
       "authentication": {
-        "type": "client-credentials",
-        "configurationKeys": [
-          "HmrcConfiguration.ClientId",
-          "HmrcConfiguration.ClientSecret",
-          "HmrcConfiguration.Scope"
-        ]
+        "type": null,
+        "configurationKeys": []
       },
-      "operations": [
-        {
-          "method": "POST",
-          "methodName": "GetAccessTokenAsync",
-          "path": "oauth/token",
-          "sourceFile": "src/SFA.DAS.Employer.Finance.Jobs.Infrastructure/Services/HmrcTokenProvider.cs"
-        }
-      ],
+      "operations": [],
       "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.Employer.Finance.Jobs.Infrastructure/Services/HmrcTokenProvider.cs",
-          "reason": "HttpClient is used to post to the HMRC API for token retrieval."
+          "sourceFile": "src/SFA.DAS.Employer.Finance.Jobs.Infrastructure/Extensions/ServiceRegistrationExtensions.cs",
+          "reason": "IApprenticeshipLevyApiClient registered for HTTP calls."
         }
       ],
       "confidence": "high",
-      "targetId": "http-api-hmrc-api",
+      "targetId": "http-api-apprenticeship-levy",
       "description": "Calls the API of"
     },
     {
-      "sourceId": "employer-finance-jobs-funding-projection",
+      "sourceId": "employer-finance-jobs-functions",
+      "name": "Commitments",
+      "kind": "http-api",
+      "classification": "unknown",
+      "direction": "outbound",
+      "client": "ICommitmentsApiClient",
+      "technology": null,
+      "configurationKeys": [],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Employer.Finance.Jobs.Infrastructure/Extensions/ServiceRegistrationExtensions.cs",
+          "reason": "ICommitmentsApiClient registered for HTTP calls."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "http-api-commitments",
+      "description": "Calls the API of",
+      "targetRepo": "das-commitments"
+    },
+    {
+      "sourceId": "employer-finance-jobs-functions",
+      "name": "Courses",
+      "kind": "http-api",
+      "classification": "unknown",
+      "direction": "outbound",
+      "client": "ICoursesApiClient",
+      "technology": null,
+      "configurationKeys": [],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Employer.Finance.Jobs.Infrastructure/Extensions/ServiceRegistrationExtensions.cs",
+          "reason": "ICoursesApiClient registered for HTTP calls."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "http-api-courses",
+      "description": "Calls the API of",
+      "targetRepo": "das-courses-api"
+    },
+    {
+      "sourceId": "employer-finance-jobs-functions",
+      "name": "Funding Projection API",
+      "kind": "http-api",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "IFundingProjectionApiClient",
+      "technology": null,
+      "configurationKeys": [
+        "EmployerFinanceJobsOuterApiConfiguration"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Employer.Finance.Jobs.Infrastructure/Extensions/ServiceRegistrationExtensions.cs",
+          "reason": "IEmployerFinanceJobsOuterApiClient registered for HTTP calls with configuration evidence."
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/EmployerFinanceJobs/SFA.DAS.EmployerFinanceJobs/Commands/ImportLearnersByAccountId/ImportLearnersByAccountIdCommandHandler.cs",
+          "reason": "EmployerFinanceJobs APIM area calls Funding Projection API through IFundingProjectionApiClient"
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/EmployerFinanceJobs/SFA.DAS.EmployerFinanceJobs/Commands/PostJob/PostJobCommandHandler.cs",
+          "reason": "EmployerFinanceJobs APIM area calls Funding Projection API through IFundingProjectionApiClient"
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/EmployerFinanceJobs/SFA.DAS.EmployerFinanceJobs.Api/AppStart/AddServiceRegistrationExtension.cs",
+          "reason": "EmployerFinanceJobs APIM area calls Funding Projection API through IFundingProjectionApiClient"
+        }
+      ],
+      "confidence": "medium",
+      "targetId": "http-api-funding-projection-api",
+      "targetRepo": "das-funding-projection-api",
+      "description": "Calls via APIM (EmployerFinanceJobs)",
+      "via": {
+        "repo": "das-apim-endpoints",
+        "label": "APIM",
+        "area": "EmployerFinanceJobs",
+        "dependencyName": "Employer Finance Jobs Outer",
+        "operations": [],
+        "areas": [
+          "EmployerFinanceJobs"
+        ]
+      }
+    },
+    {
+      "sourceId": "employer-finance-jobs-functions",
+      "name": "Commitments API",
+      "kind": "http-api",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "ICommitmentsV2ApiClient",
+      "technology": null,
+      "configurationKeys": [
+        "EmployerFinanceJobsOuterApiConfiguration"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Employer.Finance.Jobs.Infrastructure/Extensions/ServiceRegistrationExtensions.cs",
+          "reason": "IEmployerFinanceJobsOuterApiClient registered for HTTP calls with configuration evidence."
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/EmployerFinanceJobs/SFA.DAS.EmployerFinanceJobs/Commands/ImportLearnersByAccountId/ImportLearnersByAccountIdCommandHandler.cs",
+          "reason": "EmployerFinanceJobs APIM area calls Commitments API through ICommitmentsV2ApiClient"
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/EmployerFinanceJobs/SFA.DAS.EmployerFinanceJobs.Api/AppStart/AddServiceRegistrationExtension.cs",
+          "reason": "EmployerFinanceJobs APIM area calls Commitments API through ICommitmentsV2ApiClient"
+        }
+      ],
+      "confidence": "medium",
+      "targetId": "http-api-commitments-api",
+      "targetRepo": "das-commitments",
+      "description": "Calls via APIM (EmployerFinanceJobs)",
+      "via": {
+        "repo": "das-apim-endpoints",
+        "label": "APIM",
+        "area": "EmployerFinanceJobs",
+        "dependencyName": "Employer Finance Jobs Outer",
+        "operations": [],
+        "areas": [
+          "EmployerFinanceJobs"
+        ]
+      }
+    },
+    {
+      "sourceId": "employer-finance-jobs-functions",
+      "name": "Employer Finance API",
+      "kind": "http-api",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "IFinanceApiClient",
+      "technology": null,
+      "configurationKeys": [
+        "EmployerFinanceJobsOuterApiConfiguration"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Employer.Finance.Jobs.Infrastructure/Extensions/ServiceRegistrationExtensions.cs",
+          "reason": "IEmployerFinanceJobsOuterApiClient registered for HTTP calls with configuration evidence."
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/EmployerFinanceJobs/SFA.DAS.EmployerFinanceJobs/Commands/ImportLearnersByAccountId/ImportLearnersByAccountIdCommandHandler.cs",
+          "reason": "EmployerFinanceJobs APIM area calls Employer Finance API through IFinanceApiClient"
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/EmployerFinanceJobs/SFA.DAS.EmployerFinanceJobs.Api/AppStart/AddServiceRegistrationExtension.cs",
+          "reason": "EmployerFinanceJobs APIM area calls Employer Finance API through IFinanceApiClient"
+        }
+      ],
+      "confidence": "medium",
+      "targetId": "http-api-employer-finance-api",
+      "targetRepo": "das-employer-finance",
+      "description": "Calls via APIM (EmployerFinanceJobs)",
+      "via": {
+        "repo": "das-apim-endpoints",
+        "label": "APIM",
+        "area": "EmployerFinanceJobs",
+        "dependencyName": "Employer Finance Jobs Outer",
+        "operations": [],
+        "areas": [
+          "EmployerFinanceJobs"
+        ]
+      }
+    },
+    {
+      "sourceId": "employer-finance-jobs-functions-expire-funds",
+      "name": "Finance",
+      "kind": "http-api",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "FinanceApiClient",
+      "technology": null,
+      "configurationKeys": [
+        "FinanceApiConfiguration"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/DAS.Employer.Finance.Jobs/SFA.DAS.Employer.Finance.Jobs.Infrastructure/Services/FinanceApiClient.cs",
+          "reason": "FinanceApiClient registered using FinanceApiConfiguration."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "http-api-finance",
+      "description": "Calls the API of"
+    },
+    {
+      "sourceId": "employer-finance-jobs-functions",
+      "name": "Finance",
+      "kind": "http-api",
+      "classification": "unknown",
+      "direction": "outbound",
+      "client": "IFinanceApiClient",
+      "technology": null,
+      "configurationKeys": [
+        "FinanceApiConfiguration"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Employer.Finance.Jobs.Infrastructure/Extensions/ServiceRegistrationExtensions.cs",
+          "reason": "IFinanceApiClient registered for HTTP calls with configuration evidence."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "http-api-finance",
+      "description": "Calls the API of"
+    },
+    {
+      "sourceId": "employer-finance-jobs-functions",
+      "name": "HMRC",
+      "kind": "http-api",
+      "classification": "unknown",
+      "direction": "outbound",
+      "client": "IHmrcClient",
+      "technology": null,
+      "configurationKeys": [],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Employer.Finance.Jobs.Infrastructure/Extensions/ServiceRegistrationExtensions.cs",
+          "reason": "IHmrcClient registered for HTTP calls."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "http-api-hmrc",
+      "description": "Calls the API of"
+    },
+    {
+      "sourceId": "employer-finance-jobs-functions",
+      "name": "Provider Payment",
+      "kind": "http-api",
+      "classification": "unknown",
+      "direction": "outbound",
+      "client": "IProviderPaymentApiClient",
+      "technology": null,
+      "configurationKeys": [
+        "ProviderEventsApiConfiguration"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Employer.Finance.Jobs.Infrastructure/Extensions/ServiceRegistrationExtensions.cs",
+          "reason": "IProviderPaymentApiClient registered for HTTP calls with configuration evidence."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "http-api-provider-payment",
+      "description": "Calls the API of"
+    },
+    {
+      "sourceId": "employer-finance-jobs-functions",
+      "name": "RoATP",
+      "kind": "http-api",
+      "classification": "unknown",
+      "direction": "outbound",
+      "client": "IRoatpApiClient",
+      "technology": null,
+      "configurationKeys": [],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Employer.Finance.Jobs.Infrastructure/Extensions/ServiceRegistrationExtensions.cs",
+          "reason": "IRoatpApiClient registered for HTTP calls."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "http-api-roatp",
+      "description": "Calls the API of"
+    },
+    {
+      "sourceId": "employer-finance-jobs-functions",
+      "name": "Token Service",
+      "kind": "http-api",
+      "classification": "unknown",
+      "direction": "outbound",
+      "client": "ITokenServiceApiClient",
+      "technology": null,
+      "configurationKeys": [],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Employer.Finance.Jobs.Infrastructure/Extensions/ServiceRegistrationExtensions.cs",
+          "reason": "ITokenServiceApiClient registered for HTTP calls."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "http-api-token-service",
+      "description": "Calls the API of"
+    },
+    {
+      "sourceId": "employer-finance-jobs-functions-funding-projection",
       "name": "Azure Service Bus",
       "kind": "message-broker",
       "classification": "third-party",
-      "direction": "outbound",
+      "direction": "inbound",
       "client": null,
-      "technology": "Azure Service Bus",
+      "technology": "Service Bus",
       "configurationKeys": [
         "ServiceBusConnection"
       ],
       "authentication": {
         "type": null,
-        "configurationKeys": [
-          "ServiceBusConnection"
-        ]
+        "configurationKeys": []
       },
-      "operations": [],
+      "operations": [
+        {
+          "method": "RECEIVE",
+          "methodName": "Run",
+          "path": "funding-projection-requests",
+          "sourceFile": "src/SFA.DAS.Employer.Finance.Jobs.Functions.FundingProjection/Functions/ServiceBusTriggers/FundingProjectionQueueTrigger.cs"
+        }
+      ],
       "resources": [
         {
           "type": "queue",
           "name": "funding-projection-requests",
-          "direction": "outbound",
+          "direction": "inbound",
           "sourceFile": "src/SFA.DAS.Employer.Finance.Jobs.Functions.FundingProjection/ServiceBus/QueueConstants.cs"
         }
       ],
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.Employer.Finance.Jobs.Functions.FundingProjection/ServiceBus/QueueConstants.cs",
-          "reason": "Queue constant 'funding-projection-requests' of Service Bus is defined."
+          "reason": "QueueConstants class with queue name detected."
         },
         {
-          "sourceFile": "src/SFA.DAS.Employer.Finance.Jobs.Functions.FundingProjection/Program.cs",
-          "reason": "Registered Service Bus queue initializer."
+          "sourceFile": "src/SFA.DAS.Employer.Finance.Jobs.Functions.FundingProjection/Functions/ServiceBusTriggers/FundingProjectionQueueTrigger.cs",
+          "reason": "ServiceBusTrigger attribute on Run method detected."
         }
       ],
       "confidence": "high",
@@ -242,34 +598,37 @@
       "description": "Publishes messages to and consumes messages from"
     },
     {
-      "sourceId": "employer-finance-jobs",
+      "sourceId": "employer-finance-jobs-functions",
       "name": "Azure Service Bus",
       "kind": "message-broker",
       "classification": "third-party",
       "direction": "outbound",
-      "client": "AzureServiceBusTransport",
+      "client": null,
       "technology": "Azure Service Bus",
       "configurationKeys": [
-        "AzureWebJobsServiceBus",
-        "AzureWebJobsServiceBus:fullyQualifiedNamespace",
-        "AzureWebJobsServiceBus__fullyQualifiedNamespace"
+        "AzureWebJobsServiceBus"
       ],
       "authentication": {
-        "type": "DefaultAzureCredential",
+        "type": "Azure AD",
         "configurationKeys": []
       },
-      "operations": [
-        {
-          "method": "SEND",
-          "methodName": "ConfigureNServiceBusForSend",
-          "path": null,
-          "sourceFile": "src/SFA.DAS.Employer.Finance.Jobs.Infrastructure/Extensions/NServiceBusExtensions.cs"
-        }
-      ],
+      "operations": [],
       "resources": [
         {
           "type": "queue",
+          "name": "SFA.DAS.EmployerFinance.Jobs.Levy",
+          "direction": "outbound",
+          "sourceFile": "src/SFA.DAS.Employer.Finance.Jobs.Infrastructure/Extensions/NServiceBusExtensions.cs"
+        },
+        {
+          "type": "queue",
           "name": "SFA.DAS.EmployerFinance.Jobs.Levy-errors",
+          "direction": "outbound",
+          "sourceFile": "src/SFA.DAS.Employer.Finance.Jobs.Infrastructure/Extensions/NServiceBusExtensions.cs"
+        },
+        {
+          "type": "queue",
+          "name": "SFA.DAS.EmployerFinance.Jobs.Payments",
           "direction": "outbound",
           "sourceFile": "src/SFA.DAS.Employer.Finance.Jobs.Infrastructure/Extensions/NServiceBusExtensions.cs"
         },
@@ -283,7 +642,7 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.Employer.Finance.Jobs.Infrastructure/Extensions/NServiceBusExtensions.cs",
-          "reason": "NServiceBus is configured to use Azure Service Bus with specified endpoints."
+          "reason": "NServiceBus configured for Azure Service Bus with queues for Payments and Levy."
         }
       ],
       "confidence": "high",
@@ -291,7 +650,7 @@
       "description": "Publishes messages to and consumes messages from"
     },
     {
-      "sourceId": "employer-finance-jobs-expire-funds",
+      "sourceId": "employer-finance-jobs-functions-expire-funds",
       "name": "Application Insights",
       "kind": "telemetry",
       "classification": "third-party",
@@ -308,7 +667,7 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.Employer.Finance.Jobs.Functions.ExpireFunds/Program.cs",
-          "reason": "Configured AddApplicationInsightsTelemetryWorkerService for Application Insights telemetry."
+          "reason": "AddApplicationInsightsTelemetryWorkerService detected."
         }
       ],
       "confidence": "high",
@@ -316,7 +675,7 @@
       "description": "Sends telemetry to"
     },
     {
-      "sourceId": "employer-finance-jobs-funding-projection",
+      "sourceId": "employer-finance-jobs-functions-funding-projection",
       "name": "Application Insights",
       "kind": "telemetry",
       "classification": "third-party",
@@ -333,7 +692,7 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.Employer.Finance.Jobs.Functions.FundingProjection/Program.cs",
-          "reason": "Configured AddApplicationInsightsTelemetryWorkerService for Application Insights telemetry."
+          "reason": "AddApplicationInsightsTelemetryWorkerService detected."
         }
       ],
       "confidence": "high",
@@ -341,7 +700,7 @@
       "description": "Sends telemetry to"
     },
     {
-      "sourceId": "employer-finance-jobs-import-levy",
+      "sourceId": "employer-finance-jobs-functions-import-levy",
       "name": "Application Insights",
       "kind": "telemetry",
       "classification": "third-party",
@@ -357,8 +716,8 @@
       "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.Employer.Finance.Jobs.Functions.ImportLevy/Extensions/LoggingExtensions.cs",
-          "reason": "Configured AddApplicationInsightsTelemetryWorkerService for Application Insights telemetry."
+          "sourceFile": "src/SFA.DAS.Employer.Finance.Jobs.Functions.ImportLevy/Program.cs",
+          "reason": "AddApplicationInsightsTelemetryWorkerService detected."
         }
       ],
       "confidence": "high",
@@ -366,7 +725,7 @@
       "description": "Sends telemetry to"
     },
     {
-      "sourceId": "employer-finance-jobs",
+      "sourceId": "employer-finance-jobs-functions",
       "name": "Application Insights",
       "kind": "telemetry",
       "classification": "third-party",
@@ -382,8 +741,8 @@
       "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.Employer.Finance.Jobs.Infrastructure/SFA.DAS.Employer.Finance.Jobs.Infrastructure.csproj",
-          "reason": "Contains a reference to Microsoft.ApplicationInsights.WorkerService, indicating telemetry integration."
+          "sourceFile": "src/SFA.DAS.Employer.Finance.Jobs.Functions/SFA.DAS.Employer.Finance.Jobs.Functions.csproj",
+          "reason": "Package reference to Microsoft.ApplicationInsights.WorkerService."
         }
       ],
       "confidence": "high",
