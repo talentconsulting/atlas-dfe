@@ -11,16 +11,45 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.EmployerFeedback.Jobs/SFA.DAS.EmployerFeedback.Jobs.csproj",
-          "reason": "Azure Functions project file evidenced by <AzureFunctionsVersion> property."
+          "reason": "Azure Functions SDK indicates this is a deployable container."
         },
         {
           "sourceFile": "src/SFA.DAS.EmployerFeedback.Jobs/Program.cs",
-          "reason": "Azure Functions worker entry point evidenced by HostBuilder and ConfigureFunctionsWebApplication."
+          "reason": "Host builder in main function indicates this container is a background job."
         }
       ]
     }
   ],
   "dependencies": [
+    {
+      "sourceId": "employer-feedback-jobs",
+      "name": "Azure Table Storage Configuration",
+      "kind": "configuration-store",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "ConfigNames",
+        "ConfigurationStorageConnectionString",
+        "EnvironmentName"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.EmployerFeedback.Jobs/Extensions/AddConfigurationExtensions.cs",
+          "reason": "AddAzureTableStorage configures this dependency."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "configuration-store-azure-table-storage-configuration",
+      "description": "Reads configuration from"
+    },
     {
       "sourceId": "employer-feedback-jobs",
       "name": "Employer Feedback API",
@@ -41,7 +70,7 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.EmployerFeedback.Jobs/Program.cs",
-          "reason": "AddOuterApi method called in services configuration."
+          "reason": "AddOuterApi call indicates HTTP Api client registration."
         },
         {
           "sourceFile": "das-apim-endpoints/src/EmployerFeedback/SFA.DAS.EmployerFeedback/Application/Commands/GenerateFeedbackSummaries/GenerateFeedbackSummariesCommandHandler.cs",
@@ -90,7 +119,7 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.EmployerFeedback.Jobs/Program.cs",
-          "reason": "AddOuterApi method called in services configuration."
+          "reason": "AddOuterApi call indicates HTTP Api client registration."
         },
         {
           "sourceFile": "das-apim-endpoints/src/EmployerFeedback/SFA.DAS.EmployerFeedback/Application/Commands/SyncEmployerAccounts/SyncEmployerAccountsCommandHandler.cs",
@@ -140,7 +169,7 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.EmployerFeedback.Jobs/Program.cs",
-          "reason": "AddOuterApi method called in services configuration."
+          "reason": "AddOuterApi call indicates HTTP Api client registration."
         },
         {
           "sourceFile": "das-apim-endpoints/src/EmployerFeedback/SFA.DAS.EmployerFeedback/Application/Commands/UpsertFeedbackTransaction/UpsertFeedbackTransactionCommandHandler.cs",
@@ -190,7 +219,7 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.EmployerFeedback.Jobs/Program.cs",
-          "reason": "AddOuterApi method called in services configuration."
+          "reason": "AddOuterApi call indicates HTTP Api client registration."
         },
         {
           "sourceFile": "das-apim-endpoints/src/EmployerFeedback/SFA.DAS.EmployerFeedback.Api/AppStart/AddServiceRegistrationExtensions.cs",
@@ -231,7 +260,7 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.EmployerFeedback.Jobs/Program.cs",
-          "reason": "AddOuterApi method called in services configuration."
+          "reason": "AddOuterApi call indicates HTTP Api client registration."
         },
         {
           "sourceFile": "das-apim-endpoints/src/EmployerFeedback/SFA.DAS.EmployerFeedback.Api/AppStart/AddServiceRegistrationExtensions.cs",
@@ -274,7 +303,7 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.EmployerFeedback.Jobs/Program.cs",
-          "reason": "AddOuterApi method called in services configuration."
+          "reason": "AddOuterApi call indicates HTTP Api client registration."
         },
         {
           "sourceFile": "das-apim-endpoints/src/EmployerFeedback/SFA.DAS.EmployerFeedback/Application/Commands/SendFeedbackEmail/SendFeedbackEmailCommandHandler.cs",
@@ -297,6 +326,33 @@
       "classification": "internal",
       "targetId": "message-das-notifications",
       "targetRepo": "das-notifications"
+    },
+    {
+      "sourceId": "employer-feedback-jobs",
+      "name": "Application Insights",
+      "kind": "telemetry",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "APPLICATIONINSIGHTS_CONNECTION_STRING"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.EmployerFeedback.Jobs/Extensions/AddOpenTelemetryExtensions.cs",
+          "reason": "UseAzureMonitor configures Azure Monitor for Application Insights telemetry."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "telemetry-application-insights",
+      "description": "Sends telemetry to"
     }
   ],
   "resolution": {

@@ -5,30 +5,30 @@
   "systemName": "Employer Commitments",
   "containers": [
     {
-      "id": "employer-commitments",
+      "id": "employer-commitments-web",
       "name": "Employer Commitments",
       "type": "web",
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2.Web/Program.cs",
-          "reason": "Detected CreateWebHostBuilder and web hosting configuration indicating a web application."
+          "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2.Web/SFA.DAS.EmployerCommitmentsV2.Web.csproj",
+          "reason": "ASP.NET Core Web SDK project detected."
         },
         {
-          "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2.Web/SFA.DAS.EmployerCommitmentsV2.Web.csproj",
-          "reason": "Project file uses Microsoft.NET.Sdk.Web, confirming this is a web app."
+          "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2.Web/Program.cs",
+          "reason": "Web application entry point detected through CreateWebHostBuilder."
         }
       ]
     }
   ],
   "dependencies": [
     {
-      "sourceId": "employer-commitments",
-      "name": "Redis",
+      "sourceId": "employer-commitments-web",
+      "name": "Redis Cache",
       "kind": "cache",
-      "classification": "internal",
+      "classification": "third-party",
       "direction": "outbound",
       "client": null,
-      "technology": "Redis",
+      "technology": "StackExchange.Redis",
       "configurationKeys": [
         "ConnectionStrings"
       ],
@@ -37,37 +37,57 @@
         "configurationKeys": []
       },
       "operations": [],
-      "resources": [
-        {
-          "type": "cache",
-          "name": "Redis",
-          "direction": "outbound",
-          "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2.Web/Extensions/CacheStartupExtensions.cs"
-        }
-      ],
+      "resources": [],
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2.Web/Extensions/CacheStartupExtensions.cs",
-          "reason": "AddStackExchangeRedisCache registered with RedisConnectionString configuration."
+          "reason": "Detected use of StackExchange Redis configuration in production environment."
         }
       ],
       "confidence": "high",
-      "targetId": "cache-redis",
+      "targetId": "cache-redis-cache",
       "description": "Caches data in"
     },
     {
-      "sourceId": "employer-commitments",
+      "sourceId": "employer-commitments-web",
+      "name": "Azure Table Storage Configuration",
+      "kind": "configuration-store",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "ConfigurationStorageConnectionString"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2.Web/Extensions/ConfigurationExtensions.cs",
+          "reason": "Loaded Azure Table Storage configuration in BuildDasConfiguration."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "configuration-store-azure-table-storage-configuration",
+      "description": "Reads configuration from"
+    },
+    {
+      "sourceId": "employer-commitments-web",
       "name": "Commitments API",
       "kind": "http-api",
       "classification": "internal",
       "direction": "outbound",
       "client": "ICommitmentsV2ApiClient, IInternalApiClient, InternalApiClient",
-      "technology": null,
+      "technology": "HttpClient",
       "configurationKeys": [
         "ApprovalsApiClientConfiguration"
       ],
       "authentication": {
-        "type": "API key",
+        "type": "apim",
         "configurationKeys": [
           "ApprovalsApiClientConfiguration"
         ]
@@ -77,7 +97,11 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2/Client/ApprovalsApiClientFactory.cs",
-          "reason": "Approvals API client detected through IApprovalsApiClientFactory and URI configuration with API key authentication."
+          "reason": "Factory for creating ApprovalsApiClient using HttpClient with API configuration."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2.Web/Startup.cs",
+          "reason": "Registration of ApprovalsApiClientFactory in Startup.cs."
         },
         {
           "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals/Application/AccountLegalEntity/Queries/GetAccountLegalEntityQueryHandler.cs",
@@ -108,18 +132,18 @@
       }
     },
     {
-      "sourceId": "employer-commitments",
+      "sourceId": "employer-commitments-web",
       "name": "Employer Accounts API",
       "kind": "http-api",
       "classification": "internal",
       "direction": "outbound",
       "client": "IAccountsApiClient",
-      "technology": null,
+      "technology": "HttpClient",
       "configurationKeys": [
         "ApprovalsApiClientConfiguration"
       ],
       "authentication": {
-        "type": "API key",
+        "type": "apim",
         "configurationKeys": [
           "ApprovalsApiClientConfiguration"
         ]
@@ -129,7 +153,11 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2/Client/ApprovalsApiClientFactory.cs",
-          "reason": "Approvals API client detected through IApprovalsApiClientFactory and URI configuration with API key authentication."
+          "reason": "Factory for creating ApprovalsApiClient using HttpClient with API configuration."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2.Web/Startup.cs",
+          "reason": "Registration of ApprovalsApiClientFactory in Startup.cs."
         },
         {
           "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals/Application/Accounts/Queries/GetAccountQuery/GetAccountQueryHandler.cs",
@@ -160,18 +188,18 @@
       }
     },
     {
-      "sourceId": "employer-commitments",
+      "sourceId": "employer-commitments-web",
       "name": "Reservations API",
       "kind": "http-api",
       "classification": "internal",
       "direction": "outbound",
       "client": "IReservationApiClient",
-      "technology": null,
+      "technology": "HttpClient",
       "configurationKeys": [
         "ApprovalsApiClientConfiguration"
       ],
       "authentication": {
-        "type": "API key",
+        "type": "apim",
         "configurationKeys": [
           "ApprovalsApiClientConfiguration"
         ]
@@ -181,7 +209,11 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2/Client/ApprovalsApiClientFactory.cs",
-          "reason": "Approvals API client detected through IApprovalsApiClientFactory and URI configuration with API key authentication."
+          "reason": "Factory for creating ApprovalsApiClient using HttpClient with API configuration."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2.Web/Startup.cs",
+          "reason": "Registration of ApprovalsApiClientFactory in Startup.cs."
         },
         {
           "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals/Application/BulkUpload/Commands/BulkUploadAddAndApproveDraftApprenticeshipsCommandHandler.cs",
@@ -212,18 +244,18 @@
       }
     },
     {
-      "sourceId": "employer-commitments",
+      "sourceId": "employer-commitments-web",
       "name": "Courses API",
       "kind": "http-api",
       "classification": "internal",
       "direction": "outbound",
       "client": "ICoursesApiClient",
-      "technology": null,
+      "technology": "HttpClient",
       "configurationKeys": [
         "ApprovalsApiClientConfiguration"
       ],
       "authentication": {
-        "type": "API key",
+        "type": "apim",
         "configurationKeys": [
           "ApprovalsApiClientConfiguration"
         ]
@@ -233,7 +265,11 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2/Client/ApprovalsApiClientFactory.cs",
-          "reason": "Approvals API client detected through IApprovalsApiClientFactory and URI configuration with API key authentication."
+          "reason": "Factory for creating ApprovalsApiClient using HttpClient with API configuration."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2.Web/Startup.cs",
+          "reason": "Registration of ApprovalsApiClientFactory in Startup.cs."
         },
         {
           "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals/Application/Cohorts/Queries/GetCohortDetails/GetCohortDetailsQuery.cs",
@@ -264,18 +300,18 @@
       }
     },
     {
-      "sourceId": "employer-commitments",
+      "sourceId": "employer-commitments-web",
       "name": "Levy Transfer Matching API",
       "kind": "http-api",
       "classification": "internal",
       "direction": "outbound",
       "client": "ILevyTransferMatchingApiClient",
-      "technology": null,
+      "technology": "HttpClient",
       "configurationKeys": [
         "ApprovalsApiClientConfiguration"
       ],
       "authentication": {
-        "type": "API key",
+        "type": "apim",
         "configurationKeys": [
           "ApprovalsApiClientConfiguration"
         ]
@@ -285,7 +321,11 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2/Client/ApprovalsApiClientFactory.cs",
-          "reason": "Approvals API client detected through IApprovalsApiClientFactory and URI configuration with API key authentication."
+          "reason": "Factory for creating ApprovalsApiClient using HttpClient with API configuration."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2.Web/Startup.cs",
+          "reason": "Registration of ApprovalsApiClientFactory in Startup.cs."
         },
         {
           "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals/Application/LevyTransferMatching/Queries/GetApprovedAccountApplication/GetAcceptedEmployerAccountApplicationsQueryHandler.cs",
@@ -315,18 +355,18 @@
       }
     },
     {
-      "sourceId": "employer-commitments",
+      "sourceId": "employer-commitments-web",
       "name": "Provider Courses API",
       "kind": "http-api",
       "classification": "internal",
       "direction": "outbound",
       "client": "IProviderCoursesApiClient",
-      "technology": null,
+      "technology": "HttpClient",
       "configurationKeys": [
         "ApprovalsApiClientConfiguration"
       ],
       "authentication": {
-        "type": "API key",
+        "type": "apim",
         "configurationKeys": [
           "ApprovalsApiClientConfiguration"
         ]
@@ -336,7 +376,11 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2/Client/ApprovalsApiClientFactory.cs",
-          "reason": "Approvals API client detected through IApprovalsApiClientFactory and URI configuration with API key authentication."
+          "reason": "Factory for creating ApprovalsApiClient using HttpClient with API configuration."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2.Web/Startup.cs",
+          "reason": "Registration of ApprovalsApiClientFactory in Startup.cs."
         },
         {
           "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals/Application/Providers/Queries/GetProvidersQueryHandler.cs",
@@ -366,18 +410,18 @@
       }
     },
     {
-      "sourceId": "employer-commitments",
+      "sourceId": "employer-commitments-web",
       "name": "Provider Relationships API",
       "kind": "http-api",
       "classification": "internal",
       "direction": "outbound",
       "client": "IProviderRelationshipsApiClient",
-      "technology": null,
+      "technology": "HttpClient",
       "configurationKeys": [
         "ApprovalsApiClientConfiguration"
       ],
       "authentication": {
-        "type": "API key",
+        "type": "apim",
         "configurationKeys": [
           "ApprovalsApiClientConfiguration"
         ]
@@ -387,7 +431,11 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2/Client/ApprovalsApiClientFactory.cs",
-          "reason": "Approvals API client detected through IApprovalsApiClientFactory and URI configuration with API key authentication."
+          "reason": "Factory for creating ApprovalsApiClient using HttpClient with API configuration."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2.Web/Startup.cs",
+          "reason": "Registration of ApprovalsApiClientFactory in Startup.cs."
         },
         {
           "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals/Application/Apprentices/Queries/Apprenticeship/GetSelectNewEmployer/GetSelectNewEmployerQueryHandler.cs",
@@ -417,18 +465,18 @@
       }
     },
     {
-      "sourceId": "employer-commitments",
+      "sourceId": "employer-commitments-web",
       "name": "Learner Data API",
       "kind": "http-api",
       "classification": "internal",
       "direction": "outbound",
       "client": "IInternalApiClient",
-      "technology": null,
+      "technology": "HttpClient",
       "configurationKeys": [
         "ApprovalsApiClientConfiguration"
       ],
       "authentication": {
-        "type": "API key",
+        "type": "apim",
         "configurationKeys": [
           "ApprovalsApiClientConfiguration"
         ]
@@ -438,7 +486,11 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2/Client/ApprovalsApiClientFactory.cs",
-          "reason": "Approvals API client detected through IApprovalsApiClientFactory and URI configuration with API key authentication."
+          "reason": "Factory for creating ApprovalsApiClient using HttpClient with API configuration."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2.Web/Startup.cs",
+          "reason": "Registration of ApprovalsApiClientFactory in Startup.cs."
         },
         {
           "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals/Application/DraftApprenticeships/Commands/SyncLearnerData/SyncLearnerDataCommandHandler.cs",
@@ -469,18 +521,18 @@
       }
     },
     {
-      "sourceId": "employer-commitments",
+      "sourceId": "employer-commitments-web",
       "name": "Provider Account API",
       "kind": "http-api",
       "classification": "internal",
       "direction": "outbound",
       "client": "IProviderAccountApiClient",
-      "technology": null,
+      "technology": "HttpClient",
       "configurationKeys": [
         "ApprovalsApiClientConfiguration"
       ],
       "authentication": {
-        "type": "API key",
+        "type": "apim",
         "configurationKeys": [
           "ApprovalsApiClientConfiguration"
         ]
@@ -490,7 +542,11 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2/Client/ApprovalsApiClientFactory.cs",
-          "reason": "Approvals API client detected through IApprovalsApiClientFactory and URI configuration with API key authentication."
+          "reason": "Factory for creating ApprovalsApiClient using HttpClient with API configuration."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2.Web/Startup.cs",
+          "reason": "Registration of ApprovalsApiClientFactory in Startup.cs."
         },
         {
           "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals/Application/ProviderUsers/Commands/ProviderEmailCommandHandler.cs",
@@ -520,18 +576,18 @@
       }
     },
     {
-      "sourceId": "employer-commitments",
+      "sourceId": "employer-commitments-web",
       "name": "Provider Events API",
       "kind": "http-api",
       "classification": "internal",
       "direction": "outbound",
       "client": "IProviderPaymentEventsApiClient",
-      "technology": null,
+      "technology": "HttpClient",
       "configurationKeys": [
         "ApprovalsApiClientConfiguration"
       ],
       "authentication": {
-        "type": "API key",
+        "type": "apim",
         "configurationKeys": [
           "ApprovalsApiClientConfiguration"
         ]
@@ -541,7 +597,11 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2/Client/ApprovalsApiClientFactory.cs",
-          "reason": "Approvals API client detected through IApprovalsApiClientFactory and URI configuration with API key authentication."
+          "reason": "Factory for creating ApprovalsApiClient using HttpClient with API configuration."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2.Web/Startup.cs",
+          "reason": "Registration of ApprovalsApiClientFactory in Startup.cs."
         },
         {
           "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals/Application/CommitmentPayment/Queries/GetDataLockEvents/GetDataLockStatusesQueryHandler.cs",
@@ -571,18 +631,18 @@
       }
     },
     {
-      "sourceId": "employer-commitments",
+      "sourceId": "employer-commitments-web",
       "name": "Employer Finance API",
       "kind": "http-api",
       "classification": "internal",
       "direction": "outbound",
       "client": "IFinanceApiClient",
-      "technology": null,
+      "technology": "HttpClient",
       "configurationKeys": [
         "ApprovalsApiClientConfiguration"
       ],
       "authentication": {
-        "type": "API key",
+        "type": "apim",
         "configurationKeys": [
           "ApprovalsApiClientConfiguration"
         ]
@@ -592,7 +652,11 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2/Client/ApprovalsApiClientFactory.cs",
-          "reason": "Approvals API client detected through IApprovalsApiClientFactory and URI configuration with API key authentication."
+          "reason": "Factory for creating ApprovalsApiClient using HttpClient with API configuration."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2.Web/Startup.cs",
+          "reason": "Registration of ApprovalsApiClientFactory in Startup.cs."
         },
         {
           "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals/Application/SelectDirectTransferConnection/Queries/GetSelectDirectTransferConnectionQueryHandler.cs",
@@ -623,18 +687,18 @@
       }
     },
     {
-      "sourceId": "employer-commitments",
+      "sourceId": "employer-commitments-web",
       "name": "Apprentice Accounts API",
       "kind": "http-api",
       "classification": "internal",
       "direction": "outbound",
       "client": "IApprenticeAccountsApiClient",
-      "technology": null,
+      "technology": "HttpClient",
       "configurationKeys": [
         "ApprovalsApiClientConfiguration"
       ],
       "authentication": {
-        "type": "API key",
+        "type": "apim",
         "configurationKeys": [
           "ApprovalsApiClientConfiguration"
         ]
@@ -644,7 +708,11 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2/Client/ApprovalsApiClientFactory.cs",
-          "reason": "Approvals API client detected through IApprovalsApiClientFactory and URI configuration with API key authentication."
+          "reason": "Factory for creating ApprovalsApiClient using HttpClient with API configuration."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2.Web/Startup.cs",
+          "reason": "Registration of ApprovalsApiClientFactory in Startup.cs."
         },
         {
           "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals/Application/Apprentices/Queries/GetApprenticeQueryHandler.cs",
@@ -670,18 +738,18 @@
       }
     },
     {
-      "sourceId": "employer-commitments",
+      "sourceId": "employer-commitments-web",
       "name": "Assessors API",
       "kind": "http-api",
       "classification": "internal",
       "direction": "outbound",
       "client": "IAssessorsApiClient",
-      "technology": null,
+      "technology": "HttpClient",
       "configurationKeys": [
         "ApprovalsApiClientConfiguration"
       ],
       "authentication": {
-        "type": "API key",
+        "type": "apim",
         "configurationKeys": [
           "ApprovalsApiClientConfiguration"
         ]
@@ -691,7 +759,11 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2/Client/ApprovalsApiClientFactory.cs",
-          "reason": "Approvals API client detected through IApprovalsApiClientFactory and URI configuration with API key authentication."
+          "reason": "Factory for creating ApprovalsApiClient using HttpClient with API configuration."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2.Web/Startup.cs",
+          "reason": "Registration of ApprovalsApiClientFactory in Startup.cs."
         },
         {
           "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals/Application/Epaos/Queries/GetEpaosQueryHandler.cs",
@@ -717,18 +789,18 @@
       }
     },
     {
-      "sourceId": "employer-commitments",
+      "sourceId": "employer-commitments-web",
       "name": "Fjaa API",
       "kind": "http-api",
       "classification": "internal",
       "direction": "outbound",
       "client": "IFjaaApiClient",
-      "technology": null,
+      "technology": "HttpClient",
       "configurationKeys": [
         "ApprovalsApiClientConfiguration"
       ],
       "authentication": {
-        "type": "API key",
+        "type": "apim",
         "configurationKeys": [
           "ApprovalsApiClientConfiguration"
         ]
@@ -738,7 +810,11 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2/Client/ApprovalsApiClientFactory.cs",
-          "reason": "Approvals API client detected through IApprovalsApiClientFactory and URI configuration with API key authentication."
+          "reason": "Factory for creating ApprovalsApiClient using HttpClient with API configuration."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2.Web/Startup.cs",
+          "reason": "Registration of ApprovalsApiClientFactory in Startup.cs."
         },
         {
           "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals/Services/FjaaService.cs",
@@ -764,18 +840,18 @@
       }
     },
     {
-      "sourceId": "employer-commitments",
+      "sourceId": "employer-commitments-web",
       "name": "Collection Calendar API",
       "kind": "http-api",
       "classification": "internal",
       "direction": "outbound",
       "client": "ICollectionCalendarApiClient",
-      "technology": null,
+      "technology": "HttpClient",
       "configurationKeys": [
         "ApprovalsApiClientConfiguration"
       ],
       "authentication": {
-        "type": "API key",
+        "type": "apim",
         "configurationKeys": [
           "ApprovalsApiClientConfiguration"
         ]
@@ -785,7 +861,11 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2/Client/ApprovalsApiClientFactory.cs",
-          "reason": "Approvals API client detected through IApprovalsApiClientFactory and URI configuration with API key authentication."
+          "reason": "Factory for creating ApprovalsApiClient using HttpClient with API configuration."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2.Web/Startup.cs",
+          "reason": "Registration of ApprovalsApiClientFactory in Startup.cs."
         },
         {
           "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals/Application/Apprentices/Queries/Apprenticeship/GetManageApprenticeshipDetails/GetManageApprenticeshipDetailsQueryHandler.cs",
@@ -811,18 +891,18 @@
       }
     },
     {
-      "sourceId": "employer-commitments",
+      "sourceId": "employer-commitments-web",
       "name": "Course Types API",
       "kind": "http-api",
       "classification": "internal",
       "direction": "outbound",
       "client": "IInternalApiClient",
-      "technology": null,
+      "technology": "HttpClient",
       "configurationKeys": [
         "ApprovalsApiClientConfiguration"
       ],
       "authentication": {
-        "type": "API key",
+        "type": "apim",
         "configurationKeys": [
           "ApprovalsApiClientConfiguration"
         ]
@@ -832,7 +912,11 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2/Client/ApprovalsApiClientFactory.cs",
-          "reason": "Approvals API client detected through IApprovalsApiClientFactory and URI configuration with API key authentication."
+          "reason": "Factory for creating ApprovalsApiClient using HttpClient with API configuration."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2.Web/Startup.cs",
+          "reason": "Registration of ApprovalsApiClientFactory in Startup.cs."
         },
         {
           "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals/Services/ICourseTypesApiClient.cs",
@@ -858,18 +942,18 @@
       }
     },
     {
-      "sourceId": "employer-commitments",
+      "sourceId": "employer-commitments-web",
       "name": "Employment Check API",
       "kind": "http-api",
       "classification": "internal",
       "direction": "outbound",
       "client": "IEmploymentCheckApiClient",
-      "technology": null,
+      "technology": "HttpClient",
       "configurationKeys": [
         "ApprovalsApiClientConfiguration"
       ],
       "authentication": {
-        "type": "API key",
+        "type": "apim",
         "configurationKeys": [
           "ApprovalsApiClientConfiguration"
         ]
@@ -879,7 +963,11 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2/Client/ApprovalsApiClientFactory.cs",
-          "reason": "Approvals API client detected through IApprovalsApiClientFactory and URI configuration with API key authentication."
+          "reason": "Factory for creating ApprovalsApiClient using HttpClient with API configuration."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2.Web/Startup.cs",
+          "reason": "Registration of ApprovalsApiClientFactory in Startup.cs."
         },
         {
           "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals/Application/EmploymentChecks/Queries/GetEmploymentChecksQuery/GetEmploymentChecksQueryHandler.cs",
@@ -905,18 +993,18 @@
       }
     },
     {
-      "sourceId": "employer-commitments",
+      "sourceId": "employer-commitments-web",
       "name": "Apprentice Commitments API",
       "kind": "http-api",
       "classification": "internal",
       "direction": "outbound",
       "client": "IApprenticeCommitmentsApiClient",
-      "technology": null,
+      "technology": "HttpClient",
       "configurationKeys": [
         "ApprovalsApiClientConfiguration"
       ],
       "authentication": {
-        "type": "API key",
+        "type": "apim",
         "configurationKeys": [
           "ApprovalsApiClientConfiguration"
         ]
@@ -926,7 +1014,11 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2/Client/ApprovalsApiClientFactory.cs",
-          "reason": "Approvals API client detected through IApprovalsApiClientFactory and URI configuration with API key authentication."
+          "reason": "Factory for creating ApprovalsApiClient using HttpClient with API configuration."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2.Web/Startup.cs",
+          "reason": "Registration of ApprovalsApiClientFactory in Startup.cs."
         },
         {
           "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals.Api/AppStart/AddServiceRegistrationExtensions.cs",
@@ -949,18 +1041,18 @@
       }
     },
     {
-      "sourceId": "employer-commitments",
+      "sourceId": "employer-commitments-web",
       "name": "Employer Profiles API",
       "kind": "http-api",
       "classification": "internal",
       "direction": "outbound",
       "client": "IEmployerProfilesApiClient",
-      "technology": null,
+      "technology": "HttpClient",
       "configurationKeys": [
         "ApprovalsApiClientConfiguration"
       ],
       "authentication": {
-        "type": "API key",
+        "type": "apim",
         "configurationKeys": [
           "ApprovalsApiClientConfiguration"
         ]
@@ -970,7 +1062,11 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2/Client/ApprovalsApiClientFactory.cs",
-          "reason": "Approvals API client detected through IApprovalsApiClientFactory and URI configuration with API key authentication."
+          "reason": "Factory for creating ApprovalsApiClient using HttpClient with API configuration."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2.Web/Startup.cs",
+          "reason": "Registration of ApprovalsApiClientFactory in Startup.cs."
         },
         {
           "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals.Api/AppStart/AddServiceRegistrationExtensions.cs",
@@ -992,18 +1088,18 @@
       }
     },
     {
-      "sourceId": "employer-commitments",
+      "sourceId": "employer-commitments-web",
       "name": "Learning API",
       "kind": "http-api",
       "classification": "internal",
       "direction": "outbound",
       "client": "ILearningApiClient",
-      "technology": null,
+      "technology": "HttpClient",
       "configurationKeys": [
         "ApprovalsApiClientConfiguration"
       ],
       "authentication": {
-        "type": "API key",
+        "type": "apim",
         "configurationKeys": [
           "ApprovalsApiClientConfiguration"
         ]
@@ -1013,7 +1109,11 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2/Client/ApprovalsApiClientFactory.cs",
-          "reason": "Approvals API client detected through IApprovalsApiClientFactory and URI configuration with API key authentication."
+          "reason": "Factory for creating ApprovalsApiClient using HttpClient with API configuration."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2.Web/Startup.cs",
+          "reason": "Registration of ApprovalsApiClientFactory in Startup.cs."
         },
         {
           "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals.Api/AppStart/AddServiceRegistrationExtensions.cs",
@@ -1036,18 +1136,18 @@
       }
     },
     {
-      "sourceId": "employer-commitments",
+      "sourceId": "employer-commitments-web",
       "name": "Roatp API",
       "kind": "http-api",
       "classification": "internal",
       "direction": "outbound",
       "client": "IRoatpServiceApiClient",
-      "technology": null,
+      "technology": "HttpClient",
       "configurationKeys": [
         "ApprovalsApiClientConfiguration"
       ],
       "authentication": {
-        "type": "API key",
+        "type": "apim",
         "configurationKeys": [
           "ApprovalsApiClientConfiguration"
         ]
@@ -1057,7 +1157,11 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2/Client/ApprovalsApiClientFactory.cs",
-          "reason": "Approvals API client detected through IApprovalsApiClientFactory and URI configuration with API key authentication."
+          "reason": "Factory for creating ApprovalsApiClient using HttpClient with API configuration."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2.Web/Startup.cs",
+          "reason": "Registration of ApprovalsApiClientFactory in Startup.cs."
         },
         {
           "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals.Api/AppStart/AddServiceRegistrationExtensions.cs",
@@ -1079,18 +1183,18 @@
       }
     },
     {
-      "sourceId": "employer-commitments",
+      "sourceId": "employer-commitments-web",
       "name": "Roatp V2 API",
       "kind": "http-api",
       "classification": "internal",
       "direction": "outbound",
       "client": "IRoatpCourseManagementApiClient",
-      "technology": null,
+      "technology": "HttpClient",
       "configurationKeys": [
         "ApprovalsApiClientConfiguration"
       ],
       "authentication": {
-        "type": "API key",
+        "type": "apim",
         "configurationKeys": [
           "ApprovalsApiClientConfiguration"
         ]
@@ -1100,7 +1204,11 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2/Client/ApprovalsApiClientFactory.cs",
-          "reason": "Approvals API client detected through IApprovalsApiClientFactory and URI configuration with API key authentication."
+          "reason": "Factory for creating ApprovalsApiClient using HttpClient with API configuration."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2.Web/Startup.cs",
+          "reason": "Registration of ApprovalsApiClientFactory in Startup.cs."
         },
         {
           "sourceFile": "das-apim-endpoints/src/Approvals/SFA.DAS.Approvals.Api/AppStart/AddServiceRegistrationExtensions.cs",
@@ -1122,28 +1230,30 @@
       }
     },
     {
-      "sourceId": "employer-commitments",
+      "sourceId": "employer-commitments-web",
       "name": "Commitment Permissions",
       "kind": "http-api",
       "classification": "internal",
       "direction": "outbound",
       "client": "CommitmentPermissionsApiClient",
-      "technology": null,
+      "technology": "HttpClient",
       "configurationKeys": [
         "CommitmentPermissionsApiClientConfiguration"
       ],
       "authentication": {
-        "type": "Managed Identity",
-        "configurationKeys": [
-          "CommitmentPermissionsApiClientConfiguration"
-        ]
+        "type": "managed-identity",
+        "configurationKeys": []
       },
       "operations": [],
       "resources": [],
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2/Client/CommitmentPermissionsApiClientFactory.cs",
-          "reason": "Commitment Permissions API client detected using Managed Identity HttpClientFactory."
+          "reason": "Factory for creating CommitmentPermissionsApiClient with Managed Identity."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2.Web/Startup.cs",
+          "reason": "Registration of CommitmentPermissionsApiClientFactory in Startup.cs."
         }
       ],
       "confidence": "high",
@@ -1151,18 +1261,18 @@
       "description": "Calls the API of"
     },
     {
-      "sourceId": "employer-commitments",
+      "sourceId": "employer-commitments-web",
       "name": "Commitments",
       "kind": "http-api",
       "classification": "internal",
       "direction": "outbound",
       "client": "CommitmentsApiClient",
-      "technology": null,
+      "technology": "HttpClient",
       "configurationKeys": [
         "CommitmentsClientApiConfiguration"
       ],
       "authentication": {
-        "type": "Basic Authentication",
+        "type": "basic",
         "configurationKeys": [
           "CommitmentsClientApiConfiguration"
         ]
@@ -1172,13 +1282,71 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2/Client/CommitmentApiClientFactory.cs",
-          "reason": "Commitments API client initialized with BaseAddress and credentials, suggesting an outbound HTTP dependency."
+          "reason": "Factory for creating CommitmentsApiClient with Basic authentication."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2.Web/Startup.cs",
+          "reason": "Registration of CommitmentsApiClientFactory in Startup.cs."
         }
       ],
       "confidence": "high",
       "targetId": "http-api-commitments",
       "description": "Calls the API of",
       "targetRepo": "das-commitments"
+    },
+    {
+      "sourceId": "employer-commitments-web",
+      "name": "GOV.UK One Login",
+      "kind": "identity-provider",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "GovUkOidcConfiguration"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2.Web/ServiceRegistrations/AuthenticationServiceRegistrations.cs",
+          "reason": "Configured authentication with GOV.UK One Login via GovUkOidcConfiguration."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "identity-provider-gov-uk-one-login",
+      "description": "Authenticates with"
+    },
+    {
+      "sourceId": "employer-commitments-web",
+      "name": "Application Insights",
+      "kind": "telemetry",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "APPLICATIONINSIGHTS_CONNECTION_STRING"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.EmployerCommitmentsV2.Web/Extensions/AddOpenTelemetryExtensions.cs",
+          "reason": "Configured telemetry exporter using Azure Monitor Application Insights."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "telemetry-application-insights",
+      "description": "Sends telemetry to"
     }
   ],
   "resolution": {

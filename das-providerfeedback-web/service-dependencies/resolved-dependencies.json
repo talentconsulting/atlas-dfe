@@ -11,11 +11,11 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.ProviderFeedback.Web/Program.cs",
-          "reason": "ASP.NET Core Program.cs used to configure and run the application."
+          "reason": "ASP.NET Core application bootstrap file detected."
         },
         {
           "sourceFile": "src/SFA.DAS.ProviderFeedback.Web/SFA.DAS.ProviderFeedback.Web.csproj",
-          "reason": "Project file indicating a web application entry point."
+          "reason": "The project SDK is 'Microsoft.NET.Sdk.Web', indicating an ASP.NET Core web application."
         }
       ]
     }
@@ -23,15 +23,13 @@
   "dependencies": [
     {
       "sourceId": "provider-feedback",
-      "name": "Redis Cache",
+      "name": "Redis",
       "kind": "cache",
       "classification": "third-party",
       "direction": "outbound",
       "client": null,
-      "technology": "StackExchange.Redis",
-      "configurationKeys": [
-        "ConnectionStrings:Redis"
-      ],
+      "technology": "Redis",
+      "configurationKeys": [],
       "authentication": {
         "type": null,
         "configurationKeys": []
@@ -41,16 +39,45 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.ProviderFeedback.Web/SFA.DAS.ProviderFeedback.Web.csproj",
-          "reason": "Contains references to StackExchange.Redis and Microsoft.Extensions.Caching.StackExchangeRedis."
-        },
-        {
-          "sourceFile": "src/SFA.DAS.ProviderFeedback.Web/Program.cs",
-          "reason": "Redis setup evidenced by AddDataProtection using StackExchange.Redis."
+          "reason": "Package references to 'StackExchange.Redis', 'Microsoft.AspNetCore.DataProtection.StackExchangeRedis', and 'Microsoft.Extensions.Caching.StackExchangeRedis', indicating Redis is used as a cache provider."
         }
       ],
       "confidence": "high",
-      "targetId": "cache-redis-cache",
+      "targetId": "cache-redis",
       "description": "Caches data in"
+    },
+    {
+      "sourceId": "provider-feedback",
+      "name": "Azure Table Storage configuration",
+      "kind": "configuration-store",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "ConfigNames",
+        "ConfigurationStorageConnectionString",
+        "EnvironmentName"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.ProviderFeedback.Web/AppStart/ConfigurationExtensions.cs",
+          "reason": "AddAzureTableStorage configuration registered."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.ProviderFeedback.Web/SFA.DAS.ProviderFeedback.Web.csproj",
+          "reason": "Package reference to 'SFA.DAS.Configuration.AzureTableStorage' with configuration-loading capabilities for Azure Table Storage."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "configuration-store-azure-table-storage-configuration",
+      "description": "Reads configuration from"
     },
     {
       "sourceId": "provider-feedback",
@@ -61,25 +88,22 @@
       "client": "IApprenticeFeedbackApiClient",
       "technology": "HttpClient",
       "configurationKeys": [
-        "ProviderFeedbackOuterApi:ApiBaseUrl",
-        "ProviderFeedbackOuterApi:SubscriptionKey"
+        "ProviderFeedbackOuterApi"
       ],
       "authentication": {
-        "type": "header",
-        "configurationKeys": [
-          "ProviderFeedbackOuterApi:SubscriptionKey"
-        ]
+        "type": null,
+        "configurationKeys": []
       },
       "operations": [],
       "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.ProviderFeedback.Infrastructure/Api/ApiClient.cs",
-          "reason": "HttpClient constructed with base URL and subscription key for API calls."
+          "sourceFile": "src/SFA.DAS.ProviderFeedback.Web/AppStart/AddServiceRegistrationExtensions.cs",
+          "reason": "HttpClient registered with IApiClient."
         },
         {
-          "sourceFile": "src/SFA.DAS.ProviderFeedback.Web/AppStart/AddServiceRegistrationExtensions.cs",
-          "reason": "IApiClient registered with AddHttpClient for outbound HTTP API communication."
+          "sourceFile": "src/SFA.DAS.ProviderFeedback.Infrastructure/Api/ApiClient.cs",
+          "reason": "HttpClient usage for outbound HTTP API calls evidenced in ApiClient."
         },
         {
           "sourceFile": "das-apim-endpoints/src/ProviderFeedback/SFA.DAS.ProviderFeedback/Application/Queries/GetProviderFeedback/GetProviderFeedbackQueryHandler.cs",
@@ -101,18 +125,18 @@
         "repo": "das-apim-endpoints",
         "label": "APIM",
         "area": "ProviderFeedback",
-        "dependencyName": "Provider Feedback Outer API",
+        "dependencyName": "Provider Feedback Outer",
         "operations": [
           {
             "method": "GET",
             "methodName": "Get",
-            "path": "{GetUrl}",
+            "path": "{request.GetUrl}",
             "sourceFile": "src/SFA.DAS.ProviderFeedback.Infrastructure/Api/ApiClient.cs"
           },
           {
             "method": "POST",
             "methodName": "Post",
-            "path": "{PostUrl}",
+            "path": "{request.PostUrl}",
             "sourceFile": "src/SFA.DAS.ProviderFeedback.Infrastructure/Api/ApiClient.cs"
           }
         ],
@@ -130,25 +154,22 @@
       "client": "IEmployerFeedbackApiClient",
       "technology": "HttpClient",
       "configurationKeys": [
-        "ProviderFeedbackOuterApi:ApiBaseUrl",
-        "ProviderFeedbackOuterApi:SubscriptionKey"
+        "ProviderFeedbackOuterApi"
       ],
       "authentication": {
-        "type": "header",
-        "configurationKeys": [
-          "ProviderFeedbackOuterApi:SubscriptionKey"
-        ]
+        "type": null,
+        "configurationKeys": []
       },
       "operations": [],
       "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.ProviderFeedback.Infrastructure/Api/ApiClient.cs",
-          "reason": "HttpClient constructed with base URL and subscription key for API calls."
+          "sourceFile": "src/SFA.DAS.ProviderFeedback.Web/AppStart/AddServiceRegistrationExtensions.cs",
+          "reason": "HttpClient registered with IApiClient."
         },
         {
-          "sourceFile": "src/SFA.DAS.ProviderFeedback.Web/AppStart/AddServiceRegistrationExtensions.cs",
-          "reason": "IApiClient registered with AddHttpClient for outbound HTTP API communication."
+          "sourceFile": "src/SFA.DAS.ProviderFeedback.Infrastructure/Api/ApiClient.cs",
+          "reason": "HttpClient usage for outbound HTTP API calls evidenced in ApiClient."
         },
         {
           "sourceFile": "das-apim-endpoints/src/ProviderFeedback/SFA.DAS.ProviderFeedback/Application/Queries/GetProviderFeedback/GetProviderFeedbackQueryHandler.cs",
@@ -170,18 +191,18 @@
         "repo": "das-apim-endpoints",
         "label": "APIM",
         "area": "ProviderFeedback",
-        "dependencyName": "Provider Feedback Outer API",
+        "dependencyName": "Provider Feedback Outer",
         "operations": [
           {
             "method": "GET",
             "methodName": "Get",
-            "path": "{GetUrl}",
+            "path": "{request.GetUrl}",
             "sourceFile": "src/SFA.DAS.ProviderFeedback.Infrastructure/Api/ApiClient.cs"
           },
           {
             "method": "POST",
             "methodName": "Post",
-            "path": "{PostUrl}",
+            "path": "{request.PostUrl}",
             "sourceFile": "src/SFA.DAS.ProviderFeedback.Infrastructure/Api/ApiClient.cs"
           }
         ],
@@ -199,25 +220,22 @@
       "client": "IRoatpCourseManagementApiClient",
       "technology": "HttpClient",
       "configurationKeys": [
-        "ProviderFeedbackOuterApi:ApiBaseUrl",
-        "ProviderFeedbackOuterApi:SubscriptionKey"
+        "ProviderFeedbackOuterApi"
       ],
       "authentication": {
-        "type": "header",
-        "configurationKeys": [
-          "ProviderFeedbackOuterApi:SubscriptionKey"
-        ]
+        "type": null,
+        "configurationKeys": []
       },
       "operations": [],
       "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.ProviderFeedback.Infrastructure/Api/ApiClient.cs",
-          "reason": "HttpClient constructed with base URL and subscription key for API calls."
+          "sourceFile": "src/SFA.DAS.ProviderFeedback.Web/AppStart/AddServiceRegistrationExtensions.cs",
+          "reason": "HttpClient registered with IApiClient."
         },
         {
-          "sourceFile": "src/SFA.DAS.ProviderFeedback.Web/AppStart/AddServiceRegistrationExtensions.cs",
-          "reason": "IApiClient registered with AddHttpClient for outbound HTTP API communication."
+          "sourceFile": "src/SFA.DAS.ProviderFeedback.Infrastructure/Api/ApiClient.cs",
+          "reason": "HttpClient usage for outbound HTTP API calls evidenced in ApiClient."
         },
         {
           "sourceFile": "das-apim-endpoints/src/ProviderFeedback/SFA.DAS.ProviderFeedback.Api/AppStart/AddServiceRegistrationExtensions.cs",
@@ -231,18 +249,18 @@
         "repo": "das-apim-endpoints",
         "label": "APIM",
         "area": "ProviderFeedback",
-        "dependencyName": "Provider Feedback Outer API",
+        "dependencyName": "Provider Feedback Outer",
         "operations": [
           {
             "method": "GET",
             "methodName": "Get",
-            "path": "{GetUrl}",
+            "path": "{request.GetUrl}",
             "sourceFile": "src/SFA.DAS.ProviderFeedback.Infrastructure/Api/ApiClient.cs"
           },
           {
             "method": "POST",
             "methodName": "Post",
-            "path": "{PostUrl}",
+            "path": "{request.PostUrl}",
             "sourceFile": "src/SFA.DAS.ProviderFeedback.Infrastructure/Api/ApiClient.cs"
           }
         ],
@@ -250,6 +268,68 @@
           "ProviderFeedback"
         ]
       }
+    },
+    {
+      "sourceId": "provider-feedback",
+      "name": "DfE Sign-in",
+      "kind": "identity-provider",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "SFA.DAS.ProviderApprenticeshipService"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.ProviderFeedback.Web/Program.cs",
+          "reason": "AddAndConfigureDfESignInAuthentication registration evidenced."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.ProviderFeedback.Web/SFA.DAS.ProviderFeedback.Web.csproj",
+          "reason": "Package reference to 'SFA.DAS.DfESignIn.Auth', indicating it integrates with the DfE Sign-in identity provider."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "identity-provider-dfe-sign-in",
+      "description": "Authenticates with"
+    },
+    {
+      "sourceId": "provider-feedback",
+      "name": "Application Insights",
+      "kind": "telemetry",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "APPINSIGHTS_INSTRUMENTATIONKEY"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.ProviderFeedback.Web/Program.cs",
+          "reason": "AddApplicationInsightsTelemetry registration evidenced."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.ProviderFeedback.Web/SFA.DAS.ProviderFeedback.Web.csproj",
+          "reason": "Package reference to 'Microsoft.ApplicationInsights.AspNetCore', providing telemetry capabilities to send data to Azure Application Insights."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "telemetry-application-insights",
+      "description": "Sends telemetry to"
     }
   ],
   "resolution": {
