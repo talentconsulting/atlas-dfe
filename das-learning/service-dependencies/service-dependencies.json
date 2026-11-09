@@ -5,43 +5,24 @@
   "systemName": "Learning",
   "containers": [
     {
-      "id": "learning-api",
-      "name": "Learning",
-      "type": "api",
-      "evidence": [
-        {
-          "sourceFile": "src/Queries/GetShortCoursesForEarnings/GetShortCoursesForEarningsQueryHandler.cs",
-          "reason": "Evidence of logic for API-like query handler."
-        },
-        {
-          "sourceFile": "src/Queries/SFA.DAS.Learning.Queries.csproj",
-          "reason": "Project file indicating this is an API container."
-        },
-        {
-          "sourceFile": "src/InnerApi/Program.cs",
-          "reason": "Web application entry point detected via WebApplication.CreateBuilder"
-        }
-      ]
-    },
-    {
-      "id": "learning-command",
+      "id": "learning",
       "name": "Learning Command",
       "type": "other",
       "evidence": [
         {
           "sourceFile": "src/Command/SFA.DAS.Learning.Command.csproj",
-          "reason": "Project file with independently deployable target framework."
+          "reason": "Command project entry with no specific container type markers"
         }
       ]
     },
     {
-      "id": "learning-dataaccess",
-      "name": "Learning DataAccess",
-      "type": "other",
+      "id": "learning-api",
+      "name": "Learning",
+      "type": "api",
       "evidence": [
         {
-          "sourceFile": "src/DataAccess/SFA.DAS.Learning.DataAccess.csproj",
-          "reason": "Project file with independently deployable target framework."
+          "sourceFile": "src/InnerApi/Program.cs",
+          "reason": "Web API entry point file with ASP.NET Core application setup"
         }
       ]
     },
@@ -52,80 +33,93 @@
       "evidence": [
         {
           "sourceFile": "src/Functions/Program.cs",
-          "reason": "Azure Functions entry point detected"
+          "reason": "Azure Functions entry point file"
+        },
+        {
+          "sourceFile": "src/Functions/SFA.DAS.Learning.Functions.csproj",
+          "reason": "Azure Functions project with OutputType \"Exe\" specified."
+        },
+        {
+          "sourceFile": "src/Functions/Program.cs",
+          "reason": "Azure Functions worker application entry point detected in source code."
+        },
+        {
+          "sourceFile": "src/Functions/Program.cs",
+          "reason": "Contains entry point for Azure Functions application."
+        }
+      ]
+    },
+    {
+      "id": "learning-innerapi",
+      "name": "Learning InnerApi",
+      "type": "api",
+      "evidence": [
+        {
+          "sourceFile": "src/InnerApi/Program.cs",
+          "reason": "API project with WebApplication entry point detected in source code."
+        },
+        {
+          "sourceFile": "src/InnerApi/Program.cs",
+          "reason": "ASP.NET Core Web API project entry-point evidenced by WebApplication.CreateBuilder and UseMiddleware calls."
+        },
+        {
+          "sourceFile": "src/InnerApi/SFA.DAS.Learning.InnerApi.csproj",
+          "reason": "Web SDK project file specifies a target framework and web-specific references."
         }
       ]
     }
   ],
   "dependencies": [
     {
-      "sourceId": "learning-api",
-      "name": "Azure Table Storage",
-      "kind": "cloud-service",
-      "classification": "internal",
-      "direction": "outbound",
-      "client": null,
-      "technology": "Azure.Storage",
-      "configurationKeys": [
-        "ConfigurationStorageConnectionString"
-      ],
-      "authentication": {
-        "type": null,
-        "configurationKeys": [
-          "ConfigurationStorageConnectionString"
-        ]
-      },
-      "operations": [],
-      "resources": [],
-      "evidence": [
-        {
-          "sourceFile": "src/InnerApi/Program.cs",
-          "reason": "Azure Table Storage configuration detected via AddAzureTableStorage"
-        }
-      ],
-      "confidence": "high",
-      "targetId": "cloud-service-azure-table-storage",
-      "description": "Uses"
-    },
-    {
       "sourceId": "learning-functions",
-      "name": "Azure Table Storage",
-      "kind": "cloud-service",
-      "classification": "internal",
+      "name": "Azure Table Storage configuration",
+      "kind": "configuration-store",
+      "classification": "third-party",
       "direction": "outbound",
       "client": null,
-      "technology": "Azure.Storage",
+      "technology": "Azure Table Storage",
       "configurationKeys": [
-        "ConfigurationStorageConnectionString"
+        "ConfigNames",
+        "ConfigurationStorageConnectionString",
+        "EnvironmentName"
       ],
       "authentication": {
         "type": null,
-        "configurationKeys": [
-          "ConfigurationStorageConnectionString"
-        ]
+        "configurationKeys": []
       },
       "operations": [],
       "resources": [],
       "evidence": [
         {
           "sourceFile": "src/Functions/Startup.cs",
-          "reason": "Azure Table Storage configuration detected via AddAzureTableStorage"
+          "reason": "AddAzureTableStorage registration detected for remote configuration."
+        },
+        {
+          "sourceFile": "src/Functions/Startup.cs",
+          "reason": "AddAzureTableStorage registration for remote configuration management"
+        },
+        {
+          "sourceFile": "src/Functions/Startup.cs",
+          "reason": "AddAzureTableStorage used to bind application configuration."
         }
       ],
       "confidence": "high",
-      "targetId": "cloud-service-azure-table-storage",
-      "description": "Uses"
+      "targetId": "configuration-store-azure-table-storage-configuration",
+      "description": "Reads configuration from"
     },
     {
-      "sourceId": "learning-command",
-      "name": "Encoding Configuration",
-      "kind": "cloud-service",
-      "classification": "internal",
+      "sourceId": "learning-innerapi",
+      "name": "Azure Table Storage configuration",
+      "kind": "configuration-store",
+      "classification": "third-party",
       "direction": "outbound",
       "client": null,
-      "technology": null,
+      "technology": "Azure Table Storage",
       "configurationKeys": [
-        "SFA.DAS.Encoding"
+        "ConfigurationStorageConnectionString",
+        "EnvironmentName",
+        "SFA.DAS.Encoding",
+        "SFA.DAS.Learning"
       ],
       "authentication": {
         "type": null,
@@ -135,155 +129,143 @@
       "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/Command/ServiceCollectionExtensions.cs",
-          "reason": "Configuration for 'SFA.DAS.Encoding' section is loaded and registered."
+          "sourceFile": "src/InnerApi/Program.cs",
+          "reason": "AddAzureTableStorage registration detected for remote configuration."
+        },
+        {
+          "sourceFile": "src/InnerApi/Program.cs",
+          "reason": "AddAzureTableStorage used to bind application configuration."
         }
       ],
       "confidence": "high",
-      "targetId": "cloud-service-encoding-configuration",
-      "description": "Uses"
+      "targetId": "configuration-store-azure-table-storage-configuration",
+      "description": "Reads configuration from"
     },
     {
       "sourceId": "learning-api",
-      "name": "Learning",
+      "name": "Azure Table Storage configuration",
+      "kind": "configuration-store",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "ConfigurationStorageConnectionString"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/InnerApi/Program.cs",
+          "reason": "AddAzureTableStorage registration for remote configuration management"
+        }
+      ],
+      "confidence": "high",
+      "targetId": "configuration-store-azure-table-storage-configuration",
+      "description": "Reads configuration from"
+    },
+    {
+      "sourceId": "learning-functions",
+      "name": "Learning Sql Database",
       "kind": "database",
       "classification": "internal",
       "direction": "outbound",
-      "client": "SqlConnection",
-      "technology": "EntityFramework",
+      "client": null,
+      "technology": "Microsoft SQL Server",
       "configurationKeys": [],
       "authentication": {
         "type": null,
         "configurationKeys": []
       },
       "operations": [],
-      "resources": [
-        {
-          "type": "database",
-          "name": "LearningDataContext",
-          "direction": "outbound",
-          "sourceFile": "src/Queries/CheckApprovedApprenticeshipExists/CheckApprovedApprenticeshipExistsQueryHandler.cs"
-        },
-        {
-          "type": "database",
-          "name": "LearningDataContext",
-          "direction": "outbound",
-          "sourceFile": "src/Queries/GetApprenticeshipsByAcademicYear/GetLearningsByAcademicYearQueryHandler.cs"
-        },
-        {
-          "type": "database",
-          "name": "LearningDataContext",
-          "direction": "outbound",
-          "sourceFile": "src/Queries/GetLearnings/GetLearningsQueryHandler.cs"
-        },
-        {
-          "type": "database",
-          "name": "LearningDataContext",
-          "direction": "outbound",
-          "sourceFile": "src/Queries/GetLearningsWithEpisodes/GetLearningsWithEpisodesRequestQueryHandler.cs"
-        },
-        {
-          "type": "database",
-          "name": "LearningDataContext",
-          "direction": "outbound",
-          "sourceFile": "src/Queries/GetShortCoursesByAcademicYear/GetShortCoursesByAcademicYearQueryHandler.cs"
-        },
-        {
-          "type": "database",
-          "name": "localdb",
-          "direction": "outbound",
-          "sourceFile": "src/TestHelpers/SqlDatabase.cs"
-        },
-        {
-          "type": "database",
-          "name": null,
-          "direction": "outbound",
-          "sourceFile": "src/Queries/GetShortCoursesForEarnings/GetShortCoursesForEarningsQueryHandler.cs"
-        }
-      ],
+      "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/Queries/CheckApprovedApprenticeshipExists/CheckApprovedApprenticeshipExistsQueryHandler.cs",
-          "reason": "DbContext usage evidenced via LearningDataContext"
-        },
-        {
-          "sourceFile": "src/Queries/GetApprenticeshipsByAcademicYear/GetLearningsByAcademicYearQueryHandler.cs",
-          "reason": "DbContext usage evidenced via LearningDataContext"
-        },
-        {
-          "sourceFile": "src/Queries/GetLearnings/GetLearningsQueryHandler.cs",
-          "reason": "DbContext usage evidenced via LearningDataContext"
-        },
-        {
-          "sourceFile": "src/Queries/GetLearningsWithEpisodes/GetLearningsWithEpisodesRequestQueryHandler.cs",
-          "reason": "DbContext usage evidenced via LearningDataContext"
-        },
-        {
-          "sourceFile": "src/Queries/GetShortCoursesByAcademicYear/GetShortCoursesByAcademicYearQueryHandler.cs",
-          "reason": "DbContext usage evidenced via LearningDataContext"
-        },
-        {
           "sourceFile": "src/Queries/GetShortCoursesForEarnings/GetShortCoursesForEarningsQueryHandler.cs",
-          "reason": "DbContext used to query and retrieve data from a database."
-        },
-        {
-          "sourceFile": "src/TestHelpers/SqlDatabase.cs",
-          "reason": "SqlConnection is used to create and manage test databases in LocalDB."
+          "reason": "Database context usage in query handler."
         }
       ],
       "confidence": "high",
-      "targetId": "database-learning",
+      "targetId": "database-learning-sql-database",
       "description": "Reads from and writes to"
     },
     {
-      "sourceId": "learning-dataaccess",
-      "name": "Learning",
+      "sourceId": "learning",
+      "name": "Learning Sql Database",
       "kind": "database",
       "classification": "internal",
       "direction": "outbound",
       "client": "LearningDataContext",
       "technology": "SQL Server",
       "configurationKeys": [
-        "ApplicationSettings.DbConnectionString"
+        "DbConnectionString"
       ],
       "authentication": {
-        "type": "azure-ad-token",
+        "type": "Azure Identity",
         "configurationKeys": []
       },
       "operations": [],
-      "resources": [
-        {
-          "type": "database",
-          "name": null,
-          "direction": "outbound",
-          "sourceFile": "src/DataAccess/ServiceCollectionExtensions.cs"
-        }
-      ],
+      "resources": [],
       "evidence": [
         {
           "sourceFile": "src/DataAccess/LearningDataContext.cs",
-          "reason": "LearningDataContext class defines DbSet properties and is used as the EF DbContext."
+          "reason": "LearningDataContext implementation indicating database use"
         },
         {
           "sourceFile": "src/DataAccess/ServiceCollectionExtensions.cs",
-          "reason": "SQL Server DbContext registration cites 'ApplicationSettings.DbConnectionString'."
+          "reason": "LearningDataContext registration with SQL Server and Azure authentication"
         }
       ],
       "confidence": "high",
-      "targetId": "database-learning",
+      "targetId": "database-learning-sql-database",
       "description": "Reads from and writes to"
     },
     {
-      "sourceId": "learning-command",
+      "sourceId": "learning-innerapi",
+      "name": "Learning Sql Database",
+      "kind": "database",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "LearningDataContext",
+      "technology": "SQL Server",
+      "configurationKeys": [
+        "ConnectionStrings:ApprenticeshipLearningDatabase"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/Queries/GetShortCoursesByAcademicYear/GetShortCoursesByAcademicYearQueryHandler.cs",
+          "reason": "LearningDataContext used to query apprenticeship data in SQL Server."
+        },
+        {
+          "sourceFile": "src/Queries/GetLearnings/GetLearningsQueryHandler.cs",
+          "reason": "LearningDataContext used with Entity Framework to query ApprenticeshipLearningDbSet."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "database-learning-sql-database",
+      "description": "Reads from and writes to"
+    },
+    {
+      "sourceId": "learning",
       "name": "Learning Outer",
       "kind": "http-api",
       "classification": "internal",
       "direction": "outbound",
-      "client": "LearningOuterApiClient",
+      "client": "ILearningOuterApiClient",
       "technology": "HttpClient",
       "configurationKeys": [],
       "authentication": {
-        "type": "subscription-key",
+        "type": "unknown",
         "configurationKeys": []
       },
       "operations": [],
@@ -291,7 +273,7 @@
       "evidence": [
         {
           "sourceFile": "src/Command/ServiceCollectionExtensions.cs",
-          "reason": "Registration of LearningOuterApiClient with HTTP client construction."
+          "reason": "ILearningOuterApiClient registration and HttpClient setup for outbound calls"
         }
       ],
       "confidence": "high",
@@ -299,13 +281,146 @@
       "description": "Calls the API of"
     },
     {
-      "sourceId": "learning-functions",
-      "name": "NServiceBus",
-      "kind": "message-broker",
-      "classification": "internal",
+      "sourceId": "learning-innerapi",
+      "name": "Microsoft Entra ID",
+      "kind": "identity-provider",
+      "classification": "third-party",
       "direction": "outbound",
-      "client": "NServiceBus",
+      "client": null,
+      "technology": "Microsoft Identity Platform (Azure AD)",
+      "configurationKeys": [
+        "AzureAd"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/InnerApi/Program.cs",
+          "reason": "AddAuthentication configured for Azure Active Directory, indicating an external identity provider."
+        },
+        {
+          "sourceFile": "src/InnerApi/Program.cs",
+          "reason": "AddAuthentication configured to use Azure Active Directory authentication."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "identity-provider-microsoft-entra-id",
+      "description": "Authenticates with"
+    },
+    {
+      "sourceId": "learning-functions",
+      "name": "Microsoft Entra ID",
+      "kind": "identity-provider",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "AzureAd"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/Functions/Startup.cs",
+          "reason": "Azure AD authentication configured for the service"
+        }
+      ],
+      "confidence": "high",
+      "targetId": "identity-provider-microsoft-entra-id",
+      "description": "Authenticates with"
+    },
+    {
+      "sourceId": "learning-api",
+      "name": "Microsoft Entra ID",
+      "kind": "identity-provider",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "AzureAd"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/InnerApi/Program.cs",
+          "reason": "Azure AD authentication configured for the API"
+        }
+      ],
+      "confidence": "high",
+      "targetId": "identity-provider-microsoft-entra-id",
+      "description": "Authenticates with"
+    },
+    {
+      "sourceId": "learning-functions",
+      "name": "Azure Service Bus",
+      "kind": "message-broker",
+      "classification": "third-party",
+      "direction": "bidirectional",
+      "client": "AzureServiceBusTransport",
       "technology": "Azure Service Bus",
+      "configurationKeys": [
+        "ApplicationSettings:NServiceBusConnectionString"
+      ],
+      "authentication": {
+        "type": "DefaultAzureCredential",
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [
+        {
+          "type": "queue",
+          "name": null,
+          "direction": "inbound",
+          "sourceFile": "src/Functions/NsbCustomTrigger.cs"
+        },
+        {
+          "type": "queue",
+          "name": null,
+          "direction": "outbound",
+          "sourceFile": "src/Infrastructure/Extensions/NServiceBusExtensions.cs"
+        }
+      ],
+      "evidence": [
+        {
+          "sourceFile": "src/Infrastructure/Extensions/NServiceBusExtensions.cs",
+          "reason": "Messages published using NServiceBus transport configured for Azure Service Bus."
+        },
+        {
+          "sourceFile": "src/Functions/AppStart/NServiceBusConfiguration.cs",
+          "reason": "NServiceBus transport configured to use Azure Service Bus."
+        },
+        {
+          "sourceFile": "src/Functions/NsbCustomTrigger.cs",
+          "reason": "ServiceBusTrigger function processes messages using NServiceBus."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "message-broker-azure-service-bus",
+      "description": "Publishes messages to and consumes messages from"
+    },
+    {
+      "sourceId": "learning-functions",
+      "name": "Application Insights",
+      "kind": "telemetry",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": "Azure Monitor",
       "configurationKeys": [],
       "authentication": {
         "type": null,
@@ -316,16 +431,74 @@
       "evidence": [
         {
           "sourceFile": "src/Functions/Startup.cs",
-          "reason": "NServiceBus configuration for publish/subscribe detected via ConfigureNServiceBusForSubscribe"
+          "reason": "AddApplicationInsightsTelemetryWorkerService registers Application Insights telemetry."
         },
         {
           "sourceFile": "src/Functions/Startup.cs",
-          "reason": "NServiceBus configuration for send operations detected via ConfigureNServiceBusForSend"
+          "reason": "AddApplicationInsightsTelemetryWorkerService registration detected for telemetry."
+        },
+        {
+          "sourceFile": "src/Functions/Startup.cs",
+          "reason": "Application Insights telemetry registration for worker service"
         }
       ],
       "confidence": "high",
-      "targetId": "message-broker-nservicebus",
-      "description": "Publishes messages to and consumes messages from"
+      "targetId": "telemetry-application-insights",
+      "description": "Sends telemetry to"
+    },
+    {
+      "sourceId": "learning-innerapi",
+      "name": "Application Insights",
+      "kind": "telemetry",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": "Azure Monitor",
+      "configurationKeys": [],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/InnerApi/Program.cs",
+          "reason": "AddApplicationInsightsTelemetry registers Application Insights telemetry."
+        },
+        {
+          "sourceFile": "src/InnerApi/Program.cs",
+          "reason": "AddApplicationInsightsTelemetry registration detected for telemetry."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "telemetry-application-insights",
+      "description": "Sends telemetry to"
+    },
+    {
+      "sourceId": "learning-api",
+      "name": "Application Insights",
+      "kind": "telemetry",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/InnerApi/Program.cs",
+          "reason": "Application Insights telemetry registration for the API"
+        }
+      ],
+      "confidence": "high",
+      "targetId": "telemetry-application-insights",
+      "description": "Sends telemetry to"
     }
   ]
 }
