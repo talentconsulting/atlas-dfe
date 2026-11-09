@@ -7,11 +7,11 @@
     {
       "id": "payments",
       "name": "Payments",
-      "type": "other",
+      "type": "api",
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.Payments.Application/SFA.DAS.Payments.Application.csproj",
-          "reason": "Project file for a primary library containing shared functionality."
+          "reason": "Project file for the main Payments application identified."
         }
       ]
     }
@@ -19,39 +19,88 @@
   "dependencies": [
     {
       "sourceId": "payments",
-      "name": "SQL Server",
-      "kind": "database",
-      "classification": "unknown",
+      "name": "Azure Table Storage configuration",
+      "kind": "configuration-store",
+      "classification": "third-party",
       "direction": "outbound",
       "client": null,
-      "technology": "Entity Framework Core",
+      "technology": null,
+      "configurationKeys": [
+        "StorageConnectionString"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Payments.Application/Messaging/EndpointConfigurationFactory.cs",
+          "reason": "AzureTablePersistence is used as a configuration store for persistence."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "configuration-store-azure-table-storage-configuration",
+      "description": "Reads configuration from"
+    },
+    {
+      "sourceId": "payments",
+      "name": "Payments SQL Database",
+      "kind": "database",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": null,
+      "technology": "SQL Server",
       "configurationKeys": [],
       "authentication": {
         "type": null,
         "configurationKeys": []
       },
       "operations": [],
-      "resources": [
-        {
-          "type": "database",
-          "name": "Payments2",
-          "direction": "outbound",
-          "sourceFile": "src/SFA.DAS.Payments.Application/Repositories/PaymentsDataContext.cs"
-        }
-      ],
+      "resources": [],
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.Payments.Application/Repositories/PaymentsDataContext.cs",
-          "reason": "DbContext evidencing connection to SQL Server database."
-        },
-        {
-          "sourceFile": "src/SFA.DAS.Payments.Application/Repositories/PaymentsDataContext.cs",
-          "reason": "SQL Server connection string passed to OnConfiguring method."
+          "reason": "PaymentsDataContext establishes SQL Server connections using UseSqlServer."
         }
       ],
       "confidence": "high",
-      "targetId": "database-sql-server",
+      "targetId": "database-payments-sql-database",
       "description": "Reads from and writes to"
+    },
+    {
+      "sourceId": "payments",
+      "name": "Azure Service Bus",
+      "kind": "message-broker",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": "NServiceBus",
+      "technology": "Azure Service Bus",
+      "configurationKeys": [
+        "ServiceBusConnectionString"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": [
+          "ServiceBusConnectionString"
+        ]
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Payments.Application/Messaging/EndpointInstanceFactory.cs",
+          "reason": "Azure Service Bus transport is used for message handling."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.Payments.Application/Messaging/EndpointConfigurationFactory.cs",
+          "reason": "AzureServiceBusTransport is set up and configured as part of the NServiceBus transport layer."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "message-broker-azure-service-bus",
+      "description": "Publishes messages to and consumes messages from"
     }
   ],
   "resolution": {

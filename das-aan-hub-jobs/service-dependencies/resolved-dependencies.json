@@ -2,20 +2,16 @@
   "repository": "SkillsFundingAgency/das-aan-hub-jobs",
   "ref": "main",
   "path": "src",
-  "systemName": "Aan Hub",
+  "systemName": "AAN Hub",
   "containers": [
     {
       "id": "aan-hub-jobs",
-      "name": "Aan Hub Jobs",
+      "name": "AAN Hub",
       "type": "job",
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.AAN.Hub.Jobs/Program.cs",
-          "reason": "Azure Function worker entry point initializes the application."
-        },
-        {
-          "sourceFile": "src/SFA.DAS.AAN.Hub.Jobs/SFA.DAS.AAN.Hub.Jobs.csproj",
-          "reason": "Project file declares Azure Functions version and worker library dependencies."
+          "reason": "Azure Functions Worker entry point evidencing a job container"
         }
       ]
     }
@@ -23,55 +19,75 @@
   "dependencies": [
     {
       "sourceId": "aan-hub-jobs",
-      "name": "Aan SQL Database",
+      "name": "Azure Table Storage configuration",
+      "kind": "configuration-store",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "ConfigurationStorageConnectionString"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.AAN.Hub.Jobs/Extensions/AddConfigurationExtension.cs",
+          "reason": "AddAzureTableStorage registration evidencing external configuration store"
+        }
+      ],
+      "confidence": "high",
+      "targetId": "configuration-store-azure-table-storage-configuration",
+      "description": "Reads configuration from"
+    },
+    {
+      "sourceId": "aan-hub-jobs",
+      "name": "Aan Data",
       "kind": "database",
       "classification": "internal",
       "direction": "outbound",
-      "client": "AanDataContext",
+      "client": null,
       "technology": "SQL Server",
       "configurationKeys": [
         "SqlConnectionString"
       ],
       "authentication": {
-        "type": "Azure AD",
+        "type": "Azure Managed Identity",
         "configurationKeys": []
       },
       "operations": [],
-      "resources": [
-        {
-          "type": "database",
-          "name": "Aan SQL Database",
-          "direction": "outbound",
-          "sourceFile": "src/SFA.DAS.AAN.Hub.Data/Extensions/AddAanDataContextExtension.cs"
-        }
-      ],
+      "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.AAN.Hub.Data/AanDataContext.cs",
-          "reason": "AanDataContext evidences interaction with SQL Server database via Entity Framework Core setup."
+          "sourceFile": "src/SFA.DAS.AAN.Hub.Data/Extensions/AddAanDataContextExtension.cs",
+          "reason": "AddDbContext registering AanDataContext with SQL Server"
         },
         {
-          "sourceFile": "src/SFA.DAS.AAN.Hub.Data/Extensions/AddAanDataContextExtension.cs",
-          "reason": "AanDataContext registered as a DbContext with SQL Server provider using a connection string and optional Azure token-based authentication."
+          "sourceFile": "src/SFA.DAS.AAN.Hub.Data/AanDataContext.cs",
+          "reason": "Entity Framework DbContext evidencing a SQL Server database"
         }
       ],
       "confidence": "high",
-      "targetId": "database-aan-sql-database",
+      "targetId": "database-aan-data",
       "description": "Reads from and writes to"
     },
     {
       "sourceId": "aan-hub-jobs",
       "name": "Aan Outer",
       "kind": "http-api",
-      "classification": "internal",
+      "classification": "third-party",
       "direction": "outbound",
       "client": "IOuterApiClient",
-      "technology": "RestEase",
+      "technology": null,
       "configurationKeys": [
-        "ApplicationConfiguration:AanOuterApiConfiguration:ApiBaseUrl"
+        "ApplicationConfiguration.AanOuterApiConfiguration"
       ],
       "authentication": {
-        "type": "Azure AD",
+        "type": null,
         "configurationKeys": []
       },
       "operations": [],
@@ -79,7 +95,7 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.AAN.Hub.Jobs/HttpClientConfiguration/HttpClientConfigurationExtension.cs",
-          "reason": "IOuterApiClient registered as a RestEase client with custom HTTP handlers and configuration."
+          "reason": "HttpClient configured for IOuterApiClient"
         }
       ],
       "confidence": "high",
@@ -90,31 +106,96 @@
       "sourceId": "aan-hub-jobs",
       "name": "Apprentice Accounts",
       "kind": "http-api",
-      "classification": "internal",
+      "classification": "third-party",
       "direction": "outbound",
       "client": "IApprenticeAccountsApiClient",
-      "technology": "RestEase",
+      "technology": null,
       "configurationKeys": [
-        "ApplicationConfiguration:ApprenticeAccountsApiConfiguration:Identifier",
-        "ApplicationConfiguration:ApprenticeAccountsApiConfiguration:Url"
+        "ApplicationConfiguration.ApprenticeAccountsApiConfiguration"
       ],
       "authentication": {
-        "type": "Azure AD",
-        "configurationKeys": [
-          "ApplicationConfiguration:ApprenticeAccountsApiConfiguration:Identifier"
-        ]
+        "type": null,
+        "configurationKeys": []
       },
       "operations": [],
       "resources": [],
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.AAN.Hub.Jobs/HttpClientConfiguration/HttpClientConfigurationExtension.cs",
-          "reason": "IApprenticeAccountsApiClient registered as a RestEase client with HTTP message handler pipeline and configuration."
+          "reason": "HttpClient configured for IApprenticeAccountsApiClient"
         }
       ],
       "confidence": "high",
       "targetId": "http-api-apprentice-accounts",
       "description": "Calls the API of"
+    },
+    {
+      "sourceId": "aan-hub-jobs",
+      "name": "Azure Service Bus",
+      "kind": "message-broker",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": "Azure Service Bus",
+      "configurationKeys": [
+        "NServiceBusConfiguration.NServiceBusConnectionString"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [
+        {
+          "method": "PUBLISH",
+          "methodName": null,
+          "path": "SFA.DAS.Notifications.MessageHandlers",
+          "sourceFile": "src/SFA.DAS.AAN.Hub.Jobs/Extensions/AddNServiceBusExtension.cs"
+        }
+      ],
+      "resources": [
+        {
+          "type": "queue",
+          "name": "SFA.DAS.Notifications.MessageHandlers",
+          "direction": "outbound",
+          "sourceFile": "src/SFA.DAS.AAN.Hub.Jobs/Extensions/AddNServiceBusExtension.cs"
+        }
+      ],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.AAN.Hub.Jobs/Extensions/AddNServiceBusExtension.cs",
+          "reason": "Configured Azure Service Bus transport for NServiceBus with SendEmailCommand routing"
+        }
+      ],
+      "confidence": "high",
+      "targetId": "message-broker-azure-service-bus",
+      "description": "Publishes messages to and consumes messages from"
+    },
+    {
+      "sourceId": "aan-hub-jobs",
+      "name": "Application Insights",
+      "kind": "telemetry",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "APPLICATIONINSIGHTS_CONNECTION_STRING"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.AAN.Hub.Jobs/Extensions/AddTelemetryRegistrationExtension.cs",
+          "reason": "AddTelemetryRegistration registration evidencing Application Insights"
+        }
+      ],
+      "confidence": "high",
+      "targetId": "telemetry-application-insights",
+      "description": "Sends telemetry to"
     }
   ],
   "resolution": {

@@ -5,31 +5,33 @@
   "systemName": "Apprentice Portal",
   "containers": [
     {
-      "id": "apprentice-portal-web",
+      "id": "apprentice-portal",
       "name": "Apprentice Portal",
       "type": "web",
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.ApprenticePortal.Web/SFA.DAS.ApprenticePortal.Web.csproj",
-          "reason": "Project file declares a web SDK."
+          "sourceFile": "src/SFA.DAS.ApprenticePortal.Web/Program.cs",
+          "reason": "Main entry point of the web application is configured here."
         },
         {
-          "sourceFile": "src/SFA.DAS.ApprenticePortal.Web/Program.cs",
-          "reason": "Web application entry point evidenced by WebHost configuration."
+          "sourceFile": "src/SFA.DAS.ApprenticePortal.Web/SFA.DAS.ApprenticePortal.Web.csproj",
+          "reason": "Web SDK and project setup for the web application."
         }
       ]
     }
   ],
   "dependencies": [
     {
-      "sourceId": "apprentice-portal-web",
+      "sourceId": "apprentice-portal",
       "name": "Redis",
       "kind": "cache",
-      "classification": "internal",
+      "classification": "third-party",
       "direction": "outbound",
       "client": null,
       "technology": "StackExchange.Redis",
-      "configurationKeys": [],
+      "configurationKeys": [
+        "ConnectionStrings"
+      ],
       "authentication": {
         "type": null,
         "configurationKeys": []
@@ -38,23 +40,31 @@
       "resources": [],
       "evidence": [
         {
+          "sourceFile": "src/SFA.DAS.ApprenticePortal.Web/Startup/ApplicationStartup.cs",
+          "reason": "DataProtection is configured using ConnectionStrings which may connect to Redis."
+        },
+        {
           "sourceFile": "src/SFA.DAS.ApprenticePortal.Web/SFA.DAS.ApprenticePortal.Web.csproj",
-          "reason": "Microsoft.AspNetCore.DataProtection.StackExchangeRedis and StackExchange.Redis packages referenced, indicating use of Redis."
+          "reason": "StackExchange.Redis package is referenced for Redis cache."
         }
       ],
-      "confidence": "high",
+      "confidence": "medium",
       "targetId": "cache-redis",
       "description": "Caches data in"
     },
     {
-      "sourceId": "apprentice-portal-web",
-      "name": "Azure Table Storage Configuration",
-      "kind": "cloud-service",
-      "classification": "internal",
+      "sourceId": "apprentice-portal",
+      "name": "Azure Table Storage configuration",
+      "kind": "configuration-store",
+      "classification": "third-party",
       "direction": "outbound",
       "client": null,
-      "technology": "Azure Table Storage",
-      "configurationKeys": [],
+      "technology": null,
+      "configurationKeys": [
+        "ConfigNames",
+        "ConfigurationStorageConnectionString",
+        "EnvironmentName"
+      ],
       "authentication": {
         "type": null,
         "configurationKeys": []
@@ -63,17 +73,75 @@
       "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.ApprenticePortal.Web/Program.cs",
-          "reason": "ConfigureAzureTableConfiguration indicates outbound dependency on Azure Table Storage."
-        },
-        {
-          "sourceFile": "src/SFA.DAS.ApprenticePortal.Web/SFA.DAS.ApprenticePortal.Web.csproj",
-          "reason": "SFA.DAS.Configuration.AzureTableStorage package referenced, supporting Table Storage usage."
+          "sourceFile": "src/SFA.DAS.ApprenticePortal.Web/Startup/ConfigurationStartup.cs",
+          "reason": "AddAzureTableStorage is used to configure Azure Table Storage configuration."
         }
       ],
       "confidence": "high",
-      "targetId": "cloud-service-azure-table-storage-configuration",
-      "description": "Uses"
+      "targetId": "configuration-store-azure-table-storage-configuration",
+      "description": "Reads configuration from"
+    },
+    {
+      "sourceId": "apprentice-portal",
+      "name": "Microsoft Entra ID",
+      "kind": "identity-provider",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "ResourceEnvironmentName"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.ApprenticePortal.Authentication/ApprenticeAuthenticationStartup.cs",
+          "reason": "AddOpenIdConnect is configured for authentication using OpenID Connect protocol."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.ApprenticePortal.Web/Startup/ApplicationStartup.cs",
+          "reason": "Authentication services are set up including AddGovLoginAuthentication."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "identity-provider-microsoft-entra-id",
+      "description": "Authenticates with"
+    },
+    {
+      "sourceId": "apprentice-portal",
+      "name": "Application Insights",
+      "kind": "telemetry",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "APPLICATIONINSIGHTS_CONNECTION_STRING"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.ApprenticePortal.Web/Startup/AddTelemetryRegistrationExtension.cs",
+          "reason": "AddApplicationInsightsTelemetry and Azure Monitor with OpenTelemetry are configured."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.ApprenticePortal.Web/SFA.DAS.ApprenticePortal.Web.csproj",
+          "reason": "Microsoft.ApplicationInsights.AspNetCore package is referenced."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "telemetry-application-insights",
+      "description": "Sends telemetry to"
     }
   ],
   "resolution": {

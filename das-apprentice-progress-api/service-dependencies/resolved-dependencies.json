@@ -10,40 +10,65 @@
       "type": "api",
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.ApprenticeProgress.Api/SFA.DAS.ApprenticeProgress.Api.csproj",
-          "reason": "ASP.NET TargetFramework and SDK"
+          "sourceFile": "src/SFA.DAS.ApprenticeProgress.Api/Program.cs",
+          "reason": "ASP.NET Core WebHost configured in Program.cs"
         },
         {
-          "sourceFile": "src/SFA.DAS.ApprenticeProgress.Api/Program.cs",
-          "reason": "ASP.NET WebHost entry point"
+          "sourceFile": "src/SFA.DAS.ApprenticeProgress.Api/SFA.DAS.ApprenticeProgress.Api.csproj",
+          "reason": "Project SDK indicates a web application"
         }
       ]
     },
     {
-      "id": "apprentice-progress-functions",
-      "name": "Apprentice Progress Functions",
+      "id": "apprentice-progress-2",
+      "name": "Apprentice Progress",
       "type": "job",
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.ApprenticeProgress.Functions/SFA.DAS.ApprenticeProgress.Functions.csproj",
-          "reason": "Azure Functions project file with AzureFunctionsVersion property."
-        },
-        {
           "sourceFile": "src/SFA.DAS.ApprenticeProgress.Functions/Program.cs",
-          "reason": "Found Azure Functions Worker default configuration in HostBuilder setup."
+          "reason": "Azure Functions entry point with HostBuilder and ConfigureFunctionsWorkerDefaults."
         }
       ]
     }
   ],
   "dependencies": [
     {
+      "sourceId": "apprentice-progress-2",
+      "name": "Contentful",
+      "kind": "cloud-service",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": "ContentfulService",
+      "technology": null,
+      "configurationKeys": [],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.ApprenticeProgress.Functions/Program.cs",
+          "reason": "AddScoped<IContentfulService, ContentfulService> evidences dependency on Contentful."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.ApprenticeProgress.Infrastructure/SFA.DAS.ApprenticeProgress.Infrastructure.csproj",
+          "reason": "PackageReference to contentful.csharp indicates dependency on Contentful."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "cloud-service-contentful",
+      "description": "Uses"
+    },
+    {
       "sourceId": "apprentice-progress",
-      "name": "Azure Table Storage configuration",
+      "name": "Azure App Configuration",
       "kind": "configuration-store",
       "classification": "third-party",
       "direction": "outbound",
       "client": null,
-      "technology": null,
+      "technology": "Azure Table Storage",
       "configurationKeys": [
         "ConfigNames",
         "ConfigurationStorageConnectionString",
@@ -58,22 +83,24 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.ApprenticeProgress.Api/Startup.cs",
-          "reason": "AddAzureTableStorage configuration registration"
+          "reason": "AddAzureTableStorage configuration found in Startup.cs"
         }
       ],
       "confidence": "high",
-      "targetId": "configuration-store-azure-table-storage-configuration",
+      "targetId": "configuration-store-azure-app-configuration",
       "description": "Reads configuration from"
     },
     {
-      "sourceId": "apprentice-progress-functions",
+      "sourceId": "apprentice-progress-2",
       "name": "Azure Table Storage Configuration",
       "kind": "configuration-store",
       "classification": "third-party",
       "direction": "outbound",
       "client": null,
       "technology": null,
-      "configurationKeys": [],
+      "configurationKeys": [
+        "AzureTableStorage"
+      ],
       "authentication": {
         "type": null,
         "configurationKeys": []
@@ -83,7 +110,7 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.ApprenticeProgress.Functions/SFA.DAS.ApprenticeProgress.Functions.csproj",
-          "reason": "Package reference to SFA.DAS.Configuration.AzureTableStorage."
+          "reason": "PackageReference to SFA.DAS.Configuration.AzureTableStorage."
         }
       ],
       "confidence": "high",
@@ -92,42 +119,46 @@
     },
     {
       "sourceId": "apprentice-progress",
-      "name": "SFA.DAS.ApprenticeProgress",
+      "name": "In-Memory Database",
       "kind": "database",
       "classification": "internal",
       "direction": "outbound",
       "client": null,
-      "technology": "SqlServer",
+      "technology": "Entity Framework Core (In-Memory)",
       "configurationKeys": [
         "ApplicationSettings:SqlConnectionString"
       ],
       "authentication": {
-        "type": "Azure Managed Identity",
+        "type": null,
         "configurationKeys": []
       },
       "operations": [],
       "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.ApprenticeProgress.Api/AppStart/AddDatabaseExtension.cs",
-          "reason": "AddDbContext for ApprenticeProgressDataContext using SQL database"
+          "sourceFile": "src/SFA.DAS.ApprenticeProgress.Data/ApprenticeProgressDataContext.cs",
+          "reason": "Database context constructed with SQL Server"
         },
         {
-          "sourceFile": "src/SFA.DAS.ApprenticeProgress.Data/ApprenticeProgressDataContext.cs",
-          "reason": "DbContext with SQL Server configuration"
+          "sourceFile": "src/SFA.DAS.ApprenticeProgress.Api/AppStart/AddDatabaseExtension.cs",
+          "reason": "In-memory database configured for DEV environment"
+        },
+        {
+          "sourceFile": "src/SFA.DAS.ApprenticeProgress.Api/AppStart/AddDatabaseExtension.cs",
+          "reason": "SQL Server connection configured for non-DEV environments"
         }
       ],
       "confidence": "high",
-      "targetId": "database-sfa-das-apprenticeprogress",
+      "targetId": "database-in-memory-database",
       "description": "Reads from and writes to"
     },
     {
-      "sourceId": "apprentice-progress-functions",
-      "name": "SFA.DAS.ApprenticeProgress",
+      "sourceId": "apprentice-progress-2",
+      "name": "In-Memory Database",
       "kind": "database",
       "classification": "internal",
       "direction": "outbound",
-      "client": "DbContext",
+      "client": "ApprenticeProgressDataContext",
       "technology": "SQL Server",
       "configurationKeys": [
         "SqlConnectionString"
@@ -141,70 +172,12 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.ApprenticeProgress.Functions/Program.cs",
-          "reason": "Found AddDbContext call with SQL Server configuration."
+          "reason": "AddDbContext<ApprenticeProgressDataContext> with connection string key 'SqlConnectionString'."
         }
       ],
       "confidence": "high",
-      "targetId": "database-sfa-das-apprenticeprogress",
+      "targetId": "database-in-memory-database",
       "description": "Reads from and writes to"
-    },
-    {
-      "sourceId": "apprentice-progress",
-      "name": "Apprentice Progress API",
-      "kind": "http-api",
-      "classification": "internal",
-      "direction": "outbound",
-      "client": "IApprenticeProgressApiClient",
-      "technology": "RestEase",
-      "configurationKeys": [
-        "ApplicationConfiguration:ApprenticeProgressApiConfiguration:Url"
-      ],
-      "authentication": {
-        "type": "OAuth2",
-        "configurationKeys": [
-          "ApplicationConfiguration:ApprenticeProgressApiConfiguration:Identifier"
-        ]
-      },
-      "operations": [],
-      "resources": [],
-      "evidence": [
-        {
-          "sourceFile": "src/SFA.DAS.ApprenticeProgress.Functions/HttpClientConfiguration/HttpClientConfigurationExtension.cs",
-          "reason": "AddRestEaseClient registration for IApprenticeProgressApiClient"
-        }
-      ],
-      "confidence": "high",
-      "targetId": "http-api-apprentice-progress-api",
-      "description": "Calls the API of"
-    },
-    {
-      "sourceId": "apprentice-progress",
-      "name": "Contentful",
-      "kind": "http-api",
-      "classification": "third-party",
-      "direction": "outbound",
-      "client": "ContentfulClient",
-      "technology": "ContentfulClient",
-      "configurationKeys": [
-        "Contentful:DeliveryApiKey",
-        "Contentful:Environment",
-        "Contentful:SpaceId"
-      ],
-      "authentication": {
-        "type": null,
-        "configurationKeys": []
-      },
-      "operations": [],
-      "resources": [],
-      "evidence": [
-        {
-          "sourceFile": "src/SFA.DAS.ApprenticeProgress.Functions/HttpClientConfiguration/HttpClientConfigurationExtension.cs",
-          "reason": "ContentfulClient registration with configuration-derived keys"
-        }
-      ],
-      "confidence": "high",
-      "targetId": "http-api-contentful",
-      "description": "Calls the API of"
     },
     {
       "sourceId": "apprentice-progress",
@@ -213,7 +186,7 @@
       "classification": "third-party",
       "direction": "outbound",
       "client": null,
-      "technology": null,
+      "technology": "Microsoft Identity",
       "configurationKeys": [
         "AzureAd"
       ],
@@ -226,7 +199,7 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.ApprenticeProgress.Api/Startup.cs",
-          "reason": "AddAuthentication uses AzureAd configuration"
+          "reason": "Azure AD authentication configured in Startup.cs"
         }
       ],
       "confidence": "high",
@@ -234,58 +207,93 @@
       "description": "Authenticates with"
     },
     {
-      "sourceId": "apprentice-progress",
-      "name": "Azure Service Bus",
-      "kind": "message-broker",
+      "sourceId": "apprentice-progress-2",
+      "name": "Microsoft Entra ID",
+      "kind": "identity-provider",
       "classification": "third-party",
       "direction": "outbound",
       "client": null,
-      "technology": "Azure Service Bus",
+      "technology": null,
       "configurationKeys": [
-        "NServiceBusConnectionString"
+        "AzureActiveDirectoryConfiguration",
+        "AzureAd"
       ],
       "authentication": {
         "type": null,
-        "configurationKeys": [
-          "NServiceBusLicense"
-        ]
+        "configurationKeys": []
       },
-      "operations": [
-        {
-          "method": "SEND",
-          "methodName": null,
-          "path": "SFA.DAS.LearnerNotifications.LearnerNotificationService",
-          "sourceFile": "src/SFA.DAS.ApprenticeProgress.Functions/Extensions/AddNServiceBusExtension.cs"
-        },
-        {
-          "method": "SEND",
-          "methodName": null,
-          "path": "SFA.DAS.PushNotifications.Messages.Commands.SendNotificationCommand",
-          "sourceFile": "src/SFA.DAS.ApprenticeProgress.Functions/Extensions/AddNServiceBusExtension.cs"
-        }
-      ],
-      "resources": [
-        {
-          "type": "queue",
-          "name": "SFA.DAS.LearnerNotifications.LearnerNotificationService",
-          "direction": "outbound",
-          "sourceFile": "src/SFA.DAS.ApprenticeProgress.Functions/Extensions/AddNServiceBusExtension.cs"
-        }
-      ],
+      "operations": [],
+      "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.ApprenticeProgress.Functions/Extensions/AddNServiceBusExtension.cs",
-          "reason": "Azure Service Bus transport with routing for learner notifications"
+          "sourceFile": "src/SFA.DAS.ApprenticeProgress.Functions/SFA.DAS.ApprenticeProgress.Functions.csproj",
+          "reason": "PackageReference to Microsoft.Identity.Client, associated with Microsoft Entra ID."
         }
       ],
       "confidence": "high",
-      "targetId": "message-broker-azure-service-bus",
+      "targetId": "identity-provider-microsoft-entra-id",
+      "description": "Authenticates with"
+    },
+    {
+      "sourceId": "apprentice-progress-2",
+      "name": "NServiceBus",
+      "kind": "message-broker",
+      "classification": "third-party",
+      "direction": "bidirectional",
+      "client": null,
+      "technology": "NServiceBus",
+      "configurationKeys": [],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.ApprenticeProgress.Functions/Program.cs",
+          "reason": "AddNServiceBus method registration in Program.cs."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "message-broker-nservicebus",
       "description": "Publishes messages to and consumes messages from"
     },
     {
-      "sourceId": "apprentice-progress-functions",
-      "name": "NServiceBus",
-      "kind": "message-broker",
+      "sourceId": "apprentice-progress",
+      "name": "Application Insights",
+      "kind": "telemetry",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": "Azure Monitor",
+      "configurationKeys": [
+        "APPLICATIONINSIGHTS_CONNECTION_STRING"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.ApprenticeProgress.Api/Startup.cs",
+          "reason": "AddOpenTelemetryRegistration invoked in Startup.cs"
+        },
+        {
+          "sourceFile": "src/SFA.DAS.ApprenticeProgress.Api/AppStart/AddOpenTelemetryExtension.cs",
+          "reason": "UseAzureMonitor configured with connection string for telemetry"
+        }
+      ],
+      "confidence": "high",
+      "targetId": "telemetry-application-insights",
+      "description": "Sends telemetry to"
+    },
+    {
+      "sourceId": "apprentice-progress-2",
+      "name": "Application Insights",
+      "kind": "telemetry",
       "classification": "third-party",
       "direction": "outbound",
       "client": null,
@@ -300,37 +308,10 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.ApprenticeProgress.Functions/Program.cs",
-          "reason": "Found AddNServiceBus call in service registration."
+          "reason": "ConfigureFunctionsWorkerDefaults includes Application Insights telemetry by default in Azure Functions."
         }
       ],
       "confidence": "medium",
-      "targetId": "message-broker-nservicebus",
-      "description": "Publishes messages to and consumes messages from"
-    },
-    {
-      "sourceId": "apprentice-progress",
-      "name": "Application Insights",
-      "kind": "telemetry",
-      "classification": "third-party",
-      "direction": "outbound",
-      "client": null,
-      "technology": null,
-      "configurationKeys": [
-        "APPLICATIONINSIGHTS_CONNECTION_STRING"
-      ],
-      "authentication": {
-        "type": null,
-        "configurationKeys": []
-      },
-      "operations": [],
-      "resources": [],
-      "evidence": [
-        {
-          "sourceFile": "src/SFA.DAS.ApprenticeProgress.Api/AppStart/AddOpenTelemetryExtension.cs",
-          "reason": "UseAzureMonitor configured in AddOpenTelemetryRegistration"
-        }
-      ],
-      "confidence": "high",
       "targetId": "telemetry-application-insights",
       "description": "Sends telemetry to"
     }

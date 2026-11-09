@@ -2,102 +2,88 @@
   "repository": "SkillsFundingAgency/das-admin-roatp-web",
   "ref": "main",
   "path": "src",
-  "systemName": "SFA DAS Admin Roatp Web",
+  "systemName": "Admin Roatp",
   "containers": [
     {
-      "id": "sfa-das-admin-roatp-web",
-      "name": "SFA DAS Admin Roatp Web",
+      "id": "admin-roatp",
+      "name": "Admin Roatp",
       "type": "web",
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/Program.cs",
-          "reason": "ASP.NET Core WebApplication entry point with configuration setup and middleware registration."
+          "reason": "ASP.NET Core application entry point detected."
         },
         {
           "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/SFA.DAS.Admin.Roatp.Web.csproj",
-          "reason": "Project declares itself as a web application."
+          "reason": "Project file with Web SDK indicates a web application."
         }
       ]
     }
   ],
   "dependencies": [
     {
-      "sourceId": "sfa-das-admin-roatp-web",
-      "name": "Redis Data Protection Keys",
+      "sourceId": "admin-roatp",
+      "name": "Redis",
       "kind": "cache",
       "classification": "third-party",
       "direction": "outbound",
-      "client": "StackExchangeRedis",
-      "technology": "Redis",
+      "client": null,
+      "technology": "StackExchange.Redis",
       "configurationKeys": [
-        "ApplicationConfiguration:DataProtectionKeysDatabase",
-        "ApplicationConfiguration:RedisConnectionString"
+        "ApplicationConfiguration.DataProtectionKeysDatabase",
+        "ApplicationConfiguration.RedisConnectionString"
       ],
       "authentication": {
         "type": null,
         "configurationKeys": []
       },
       "operations": [],
-      "resources": [
-        {
-          "type": "cache",
-          "name": "ApplicationConfiguration:DataProtectionKeysDatabase",
-          "direction": "outbound",
-          "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/AppStart/AddDataProtectionExtension.cs"
-        },
-        {
-          "type": "cache",
-          "name": "ApplicationConfiguration:RedisConnectionString",
-          "direction": "outbound",
-          "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/AppStart/AddDataProtectionExtension.cs"
-        }
-      ],
+      "resources": [],
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/AppStart/AddDataProtectionExtension.cs",
-          "reason": "Redis data protection registered with ConnectionMultiplexer and persistent keys setup."
+          "reason": "Detected Redis client configuration for data protection keys."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/AppStart/AddSessionExtension.cs",
+          "reason": "Detected StackExchange Redis Cache configuration in session registration."
         }
       ],
       "confidence": "high",
-      "targetId": "cache-redis-data-protection-keys",
+      "targetId": "cache-redis",
       "description": "Caches data in"
     },
     {
-      "sourceId": "sfa-das-admin-roatp-web",
-      "name": "StackExchange Redis Cache",
-      "kind": "cache",
+      "sourceId": "admin-roatp",
+      "name": "Azure Table Storage Configuration",
+      "kind": "configuration-store",
       "classification": "third-party",
       "direction": "outbound",
-      "client": "StackExchangeRedisCache",
-      "technology": "Redis",
+      "client": null,
+      "technology": null,
       "configurationKeys": [
-        "ApplicationConfiguration:RedisConnectionString"
+        "ConfigNames",
+        "ConfigurationStorageConnectionString",
+        "EnvironmentName"
       ],
       "authentication": {
         "type": null,
         "configurationKeys": []
       },
       "operations": [],
-      "resources": [
-        {
-          "type": "cache",
-          "name": "ApplicationConfiguration:RedisConnectionString",
-          "direction": "outbound",
-          "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/AppStart/AddSessionExtension.cs"
-        }
-      ],
+      "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/AppStart/AddSessionExtension.cs",
-          "reason": "Redis cache registered using AddStackExchangeRedisCache with configuration key."
+          "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/AppStart/AddApplicationConfigurationExtension.cs",
+          "reason": "Detected AddAzureTableStorage registration."
         }
       ],
       "confidence": "high",
-      "targetId": "cache-stackexchange-redis-cache",
-      "description": "Caches data in"
+      "targetId": "configuration-store-azure-table-storage-configuration",
+      "description": "Reads configuration from"
     },
     {
-      "sourceId": "sfa-das-admin-roatp-web",
+      "sourceId": "admin-roatp",
       "name": "Roatp V2 API",
       "kind": "http-api",
       "classification": "internal",
@@ -105,20 +91,18 @@
       "client": "IRoatpCourseManagementApiClient",
       "technology": "Refit",
       "configurationKeys": [
-        "AdminRoatpOuterApiConfiguration:ApiBaseUrl"
+        "AdminRoatpOuterApiConfiguration"
       ],
       "authentication": {
-        "type": "custom",
-        "configurationKeys": [
-          "AdminRoatpOuterApiConfiguration"
-        ]
+        "type": null,
+        "configurationKeys": []
       },
       "operations": [],
       "resources": [],
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/AppStart/AddApplicationRegistrationsExtension.cs",
-          "reason": "Refit-based HTTP client IOuterApiClient registered with base address from configuration."
+          "reason": "Detected AddRefitClient registration for IOuterApiClient."
         },
         {
           "sourceFile": "das-apim-endpoints/src/AdminRoatp/SFA.DAS.AdminRoatp/Application/Commands/AddProviderAllowedCourse/AddProviderAllowedCourseCommandHandler.cs",
@@ -140,7 +124,7 @@
         "repo": "das-apim-endpoints",
         "label": "APIM",
         "area": "AdminRoatp",
-        "dependencyName": "Admin Roatp Outer API",
+        "dependencyName": "Outer",
         "operations": [],
         "areas": [
           "AdminRoatp"
@@ -148,7 +132,7 @@
       }
     },
     {
-      "sourceId": "sfa-das-admin-roatp-web",
+      "sourceId": "admin-roatp",
       "name": "Roatp API",
       "kind": "http-api",
       "classification": "internal",
@@ -156,20 +140,18 @@
       "client": "IRoatpServiceApiClient",
       "technology": "Refit",
       "configurationKeys": [
-        "AdminRoatpOuterApiConfiguration:ApiBaseUrl"
+        "AdminRoatpOuterApiConfiguration"
       ],
       "authentication": {
-        "type": "custom",
-        "configurationKeys": [
-          "AdminRoatpOuterApiConfiguration"
-        ]
+        "type": null,
+        "configurationKeys": []
       },
       "operations": [],
       "resources": [],
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/AppStart/AddApplicationRegistrationsExtension.cs",
-          "reason": "Refit-based HTTP client IOuterApiClient registered with base address from configuration."
+          "reason": "Detected AddRefitClient registration for IOuterApiClient."
         },
         {
           "sourceFile": "das-apim-endpoints/src/AdminRoatp/SFA.DAS.AdminRoatp/Application/Commands/AddProviderAllowedCourse/AddProviderAllowedCourseCommandHandler.cs",
@@ -191,7 +173,7 @@
         "repo": "das-apim-endpoints",
         "label": "APIM",
         "area": "AdminRoatp",
-        "dependencyName": "Admin Roatp Outer API",
+        "dependencyName": "Outer",
         "operations": [],
         "areas": [
           "AdminRoatp"
@@ -199,7 +181,7 @@
       }
     },
     {
-      "sourceId": "sfa-das-admin-roatp-web",
+      "sourceId": "admin-roatp",
       "name": "Apply API",
       "kind": "http-api",
       "classification": "internal",
@@ -207,20 +189,18 @@
       "client": "IApplyApiClient",
       "technology": "Refit",
       "configurationKeys": [
-        "AdminRoatpOuterApiConfiguration:ApiBaseUrl"
+        "AdminRoatpOuterApiConfiguration"
       ],
       "authentication": {
-        "type": "custom",
-        "configurationKeys": [
-          "AdminRoatpOuterApiConfiguration"
-        ]
+        "type": null,
+        "configurationKeys": []
       },
       "operations": [],
       "resources": [],
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/AppStart/AddApplicationRegistrationsExtension.cs",
-          "reason": "Refit-based HTTP client IOuterApiClient registered with base address from configuration."
+          "reason": "Detected AddRefitClient registration for IOuterApiClient."
         },
         {
           "sourceFile": "das-apim-endpoints/src/AdminRoatp/SFA.DAS.AdminRoatp/Application/Queries/GetProvidersAllowedList/GetProvidersAllowedListQueryHandler.cs",
@@ -238,12 +218,64 @@
         "repo": "das-apim-endpoints",
         "label": "APIM",
         "area": "AdminRoatp",
-        "dependencyName": "Admin Roatp Outer API",
+        "dependencyName": "Outer",
         "operations": [],
         "areas": [
           "AdminRoatp"
         ]
       }
+    },
+    {
+      "sourceId": "admin-roatp",
+      "name": "DfE Sign-in",
+      "kind": "identity-provider",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/AppStart/AddAuthenticationExtension.cs",
+          "reason": "Detected AddAndConfigureDfESignInAuthentication registration."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "identity-provider-dfe-sign-in",
+      "description": "Authenticates with"
+    },
+    {
+      "sourceId": "admin-roatp",
+      "name": "Application Insights",
+      "kind": "telemetry",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "APPLICATIONINSIGHTS_CONNECTION_STRING"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/Extensions/AddTelemetryRegistrationExtension.cs",
+          "reason": "Detected UseAzureMonitor registration with Application Insights Connection String."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "telemetry-application-insights",
+      "description": "Sends telemetry to"
     }
   ],
   "resolution": {

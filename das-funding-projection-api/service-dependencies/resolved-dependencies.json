@@ -7,40 +7,34 @@
     {
       "id": "funding-projection",
       "name": "Funding Projection",
-      "type": "other",
-      "evidence": [
-        {
-          "sourceFile": "src/FundingProjection.Domain/Services/EventService.cs",
-          "reason": "Contains business logic for sending messages, indicating it is part of the core functionality of the system."
-        }
-      ]
-    },
-    {
-      "id": "funding-projection-2",
-      "name": "Funding Projection",
       "type": "api",
       "evidence": [
         {
-          "sourceFile": "src/FundingProjection.Api/FundingProjection.Api.csproj",
-          "reason": "Project file suggests the API is an ASP.NET Core web application"
+          "sourceFile": "src/FundingProjection.Domain/Services/EventService.cs",
+          "reason": "Contains a service implementing an operation for outbound messaging."
         },
         {
           "sourceFile": "src/FundingProjection.Api/Program.cs",
-          "reason": "Sets up an API web application in Program.cs"
+          "reason": "Entry point for the Funding Projection API application."
+        },
+        {
+          "sourceFile": "src/FundingProjection.Api/FundingProjection.Api.csproj",
+          "reason": "Project file indicates this is an API application."
         }
       ]
     }
   ],
   "dependencies": [
     {
-      "sourceId": "funding-projection-2",
-      "name": "Azure Table Storage Configuration",
+      "sourceId": "funding-projection",
+      "name": "Azure App Configuration",
       "kind": "configuration-store",
       "classification": "third-party",
       "direction": "outbound",
       "client": null,
       "technology": null,
       "configurationKeys": [
+        "ConfigNames",
         "ConfigurationStorageConnectionString"
       ],
       "authentication": {
@@ -52,23 +46,23 @@
       "evidence": [
         {
           "sourceFile": "src/FundingProjection.Api/Startup.cs",
-          "reason": "AddAzureTableStorage configuration registered to load settings"
+          "reason": "AddAzureTableStorage extension method used to register Azure App Configuration."
         }
       ],
       "confidence": "high",
-      "targetId": "configuration-store-azure-table-storage-configuration",
+      "targetId": "configuration-store-azure-app-configuration",
       "description": "Reads configuration from"
     },
     {
-      "sourceId": "funding-projection-2",
+      "sourceId": "funding-projection",
       "name": "Funding Projection Database",
       "kind": "database",
       "classification": "internal",
       "direction": "outbound",
-      "client": "FundingProjectionDataContext",
+      "client": null,
       "technology": "SQL Server",
       "configurationKeys": [
-        "ConnectionStrings.SqlConnectionString"
+        "ConnectionStrings:SqlConnectionString"
       ],
       "authentication": {
         "type": null,
@@ -79,11 +73,11 @@
       "evidence": [
         {
           "sourceFile": "src/FundingProjection.Api/AppStart/AddServiceRegistrationExtension.cs",
-          "reason": "DbContext registered with SQL Server provider in AddDatabaseRegistration"
+          "reason": "SQL Server connection registered for FundingProjectionDataContext."
         },
         {
           "sourceFile": "src/FundingProjection.Data/FundingProjectionDataContext.cs",
-          "reason": "Evidence of database context class targeting SQL Server"
+          "reason": "SQL Server provider configured for EF Core context."
         }
       ],
       "confidence": "high",
@@ -91,7 +85,7 @@
       "description": "Reads from and writes to"
     },
     {
-      "sourceId": "funding-projection-2",
+      "sourceId": "funding-projection",
       "name": "Microsoft Entra ID",
       "kind": "identity-provider",
       "classification": "third-party",
@@ -110,7 +104,7 @@
       "evidence": [
         {
           "sourceFile": "src/FundingProjection.Api/Startup.cs",
-          "reason": "AddAuthentication configured with AzureAd section"
+          "reason": "AddAuthentication configured with AzureAd section."
         }
       ],
       "confidence": "high",
@@ -119,17 +113,19 @@
     },
     {
       "sourceId": "funding-projection",
-      "name": "Service Bus",
+      "name": "Azure Service Bus",
       "kind": "message-broker",
       "classification": "third-party",
       "direction": "outbound",
       "client": "ServiceBusClient",
       "technology": "Azure Service Bus",
       "configurationKeys": [
+        "QueueConstants.ServiceBusConnection",
+        "QueueConstants.ServiceBusConnection:fullyQualifiedNamespace",
         "ServiceBusConnection"
       ],
       "authentication": {
-        "type": null,
+        "type": "Azure.Identity.DefaultAzureCredential",
         "configurationKeys": []
       },
       "operations": [
@@ -145,53 +141,29 @@
           "type": "queue",
           "name": "funding-projection-requests",
           "direction": "outbound",
-          "sourceFile": "src/FundingProjection.Domain/Services/EventService.cs"
+          "sourceFile": "src/FundingProjection.Domain/Services/QueueConstants.cs"
         }
       ],
       "evidence": [
         {
           "sourceFile": "src/FundingProjection.Domain/Services/QueueConstants.cs",
-          "reason": "Defines the queue name 'funding-projection-requests'."
+          "reason": "Defines the name of the queue used by the event service."
+        },
+        {
+          "sourceFile": "src/FundingProjection.Api/AppStart/AddServiceRegistrationExtension.cs",
+          "reason": "Registering ServiceBusClient for Azure Service Bus."
         },
         {
           "sourceFile": "src/FundingProjection.Domain/Services/EventService.cs",
-          "reason": "ServiceBusClient used to send messages to a queue with constant 'funding-projection-requests'."
+          "reason": "Uses ServiceBusClient to send a message to a queue."
         }
       ],
       "confidence": "high",
-      "targetId": "message-broker-service-bus",
+      "targetId": "message-broker-azure-service-bus",
       "description": "Publishes messages to and consumes messages from"
     },
     {
-      "sourceId": "funding-projection-2",
-      "name": "Service Bus",
-      "kind": "message-broker",
-      "classification": "third-party",
-      "direction": "outbound",
-      "client": "ServiceBusClient",
-      "technology": "Azure Service Bus",
-      "configurationKeys": [
-        "QueueConstants.ServiceBusConnection",
-        "QueueConstants.ServiceBusConnection:fullyQualifiedNamespace"
-      ],
-      "authentication": {
-        "type": "Azure.Identity.DefaultAzureCredential",
-        "configurationKeys": []
-      },
-      "operations": [],
-      "resources": [],
-      "evidence": [
-        {
-          "sourceFile": "src/FundingProjection.Api/AppStart/AddServiceRegistrationExtension.cs",
-          "reason": "ServiceBusClient registered in AddServiceBusRegistration"
-        }
-      ],
-      "confidence": "high",
-      "targetId": "message-broker-service-bus",
-      "description": "Publishes messages to and consumes messages from"
-    },
-    {
-      "sourceId": "funding-projection-2",
+      "sourceId": "funding-projection",
       "name": "Application Insights",
       "kind": "telemetry",
       "classification": "third-party",
@@ -209,12 +181,8 @@
       "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/FundingProjection.Api/Startup.cs",
-          "reason": "Application Insights telemetry connection string configured"
-        },
-        {
           "sourceFile": "src/FundingProjection.Api/AppStart/AddOpenTelemetryExtensions.cs",
-          "reason": "UseAzureMonitor registered for telemetry to Application Insights"
+          "reason": "UseAzureMonitor registered for telemetry data collection."
         }
       ],
       "confidence": "high",
