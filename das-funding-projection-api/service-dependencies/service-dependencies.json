@@ -5,34 +5,68 @@
   "systemName": "Funding Projection",
   "containers": [
     {
-      "id": "funding-projection-api",
+      "id": "funding-projection",
+      "name": "Funding Projection",
+      "type": "other",
+      "evidence": [
+        {
+          "sourceFile": "src/FundingProjection.Domain/Services/EventService.cs",
+          "reason": "Contains business logic for sending messages, indicating it is part of the core functionality of the system."
+        }
+      ]
+    },
+    {
+      "id": "funding-projection-2",
       "name": "Funding Projection",
       "type": "api",
       "evidence": [
         {
-          "sourceFile": "src/FundingProjection.Api/Program.cs",
-          "reason": "Main method in a Program class; indicates an API application entry point."
-        },
-        {
           "sourceFile": "src/FundingProjection.Api/FundingProjection.Api.csproj",
-          "reason": "Project type SDK is Microsoft.NET.Sdk.Web, indicating a web or API application."
+          "reason": "Project file suggests the API is an ASP.NET Core web application"
         },
         {
-          "sourceFile": "src/FundingProjection.Api/Startup.cs",
-          "reason": "Startup class configuring an API application."
+          "sourceFile": "src/FundingProjection.Api/Program.cs",
+          "reason": "Sets up an API web application in Program.cs"
         }
       ]
     }
   ],
   "dependencies": [
     {
-      "sourceId": "funding-projection-api",
-      "name": "SQL Server",
+      "sourceId": "funding-projection-2",
+      "name": "Azure Table Storage Configuration",
+      "kind": "configuration-store",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "ConfigurationStorageConnectionString"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/FundingProjection.Api/Startup.cs",
+          "reason": "AddAzureTableStorage configuration registered to load settings"
+        }
+      ],
+      "confidence": "high",
+      "targetId": "configuration-store-azure-table-storage-configuration",
+      "description": "Reads configuration from"
+    },
+    {
+      "sourceId": "funding-projection-2",
+      "name": "Funding Projection Database",
       "kind": "database",
       "classification": "internal",
       "direction": "outbound",
       "client": "FundingProjectionDataContext",
-      "technology": "Entity Framework Core",
+      "technology": "SQL Server",
       "configurationKeys": [
         "ConnectionStrings.SqlConnectionString"
       ],
@@ -41,34 +75,95 @@
         "configurationKeys": []
       },
       "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/FundingProjection.Api/AppStart/AddServiceRegistrationExtension.cs",
+          "reason": "DbContext registered with SQL Server provider in AddDatabaseRegistration"
+        },
+        {
+          "sourceFile": "src/FundingProjection.Data/FundingProjectionDataContext.cs",
+          "reason": "Evidence of database context class targeting SQL Server"
+        }
+      ],
+      "confidence": "high",
+      "targetId": "database-funding-projection-database",
+      "description": "Reads from and writes to"
+    },
+    {
+      "sourceId": "funding-projection-2",
+      "name": "Microsoft Entra ID",
+      "kind": "identity-provider",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "AzureAd"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/FundingProjection.Api/Startup.cs",
+          "reason": "AddAuthentication configured with AzureAd section"
+        }
+      ],
+      "confidence": "high",
+      "targetId": "identity-provider-microsoft-entra-id",
+      "description": "Authenticates with"
+    },
+    {
+      "sourceId": "funding-projection",
+      "name": "Service Bus",
+      "kind": "message-broker",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": "ServiceBusClient",
+      "technology": "Azure Service Bus",
+      "configurationKeys": [
+        "ServiceBusConnection"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [
+        {
+          "method": "SEND",
+          "methodName": "HandleImportLearnersCost",
+          "path": "funding-projection-requests",
+          "sourceFile": "src/FundingProjection.Domain/Services/EventService.cs"
+        }
+      ],
       "resources": [
         {
-          "type": "database",
-          "name": "SqlConnectionString",
+          "type": "queue",
+          "name": "funding-projection-requests",
           "direction": "outbound",
-          "sourceFile": "src/FundingProjection.Api/AppStart/AddServiceRegistrationExtension.cs"
+          "sourceFile": "src/FundingProjection.Domain/Services/EventService.cs"
         }
       ],
       "evidence": [
         {
-          "sourceFile": "src/FundingProjection.Api/Startup.cs",
-          "reason": "Database-related dependency injection (IFundingProjectionDataContext and AddDbContext) is registered with SQL Server."
+          "sourceFile": "src/FundingProjection.Domain/Services/QueueConstants.cs",
+          "reason": "Defines the queue name 'funding-projection-requests'."
         },
         {
-          "sourceFile": "src/FundingProjection.Data/FundingProjectionDataContext.cs",
-          "reason": "FundingProjectionDataContext class defined with SQL Server usage."
-        },
-        {
-          "sourceFile": "src/FundingProjection.Api/AppStart/AddServiceRegistrationExtension.cs",
-          "reason": "FundingProjectionDataContext is constructed and registered with a SQL Server connection string."
+          "sourceFile": "src/FundingProjection.Domain/Services/EventService.cs",
+          "reason": "ServiceBusClient used to send messages to a queue with constant 'funding-projection-requests'."
         }
       ],
       "confidence": "high",
-      "targetId": "database-sql-server",
-      "description": "Reads from and writes to"
+      "targetId": "message-broker-service-bus",
+      "description": "Publishes messages to and consumes messages from"
     },
     {
-      "sourceId": "funding-projection-api",
+      "sourceId": "funding-projection-2",
       "name": "Service Bus",
       "kind": "message-broker",
       "classification": "third-party",
@@ -80,7 +175,7 @@
         "QueueConstants.ServiceBusConnection:fullyQualifiedNamespace"
       ],
       "authentication": {
-        "type": "DefaultAzureCredential",
+        "type": "Azure.Identity.DefaultAzureCredential",
         "configurationKeys": []
       },
       "operations": [],
@@ -88,16 +183,43 @@
       "evidence": [
         {
           "sourceFile": "src/FundingProjection.Api/AppStart/AddServiceRegistrationExtension.cs",
-          "reason": "ServiceBusClient is constructed and registered for message queuing."
-        },
-        {
-          "sourceFile": "src/FundingProjection.Domain/Services/EventService.cs",
-          "reason": "ServiceBusClient is used for sending messages."
+          "reason": "ServiceBusClient registered in AddServiceBusRegistration"
         }
       ],
       "confidence": "high",
       "targetId": "message-broker-service-bus",
       "description": "Publishes messages to and consumes messages from"
+    },
+    {
+      "sourceId": "funding-projection-2",
+      "name": "Application Insights",
+      "kind": "telemetry",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "APPLICATIONINSIGHTS_CONNECTION_STRING"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/FundingProjection.Api/Startup.cs",
+          "reason": "Application Insights telemetry connection string configured"
+        },
+        {
+          "sourceFile": "src/FundingProjection.Api/AppStart/AddOpenTelemetryExtensions.cs",
+          "reason": "UseAzureMonitor registered for telemetry to Application Insights"
+        }
+      ],
+      "confidence": "high",
+      "targetId": "telemetry-application-insights",
+      "description": "Sends telemetry to"
     }
   ]
 }
