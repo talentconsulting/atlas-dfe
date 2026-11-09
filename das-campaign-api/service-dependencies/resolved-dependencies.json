@@ -2,71 +2,114 @@
   "repository": "SkillsFundingAgency/das-campaign-api",
   "ref": "main",
   "path": "src",
-  "systemName": "Campaign",
+  "systemName": "SFA.DAS.Campaign",
   "containers": [
     {
-      "id": "campaign",
-      "name": "Campaign",
+      "id": "sfa-das-campaign",
+      "name": "SFA.DAS.Campaign",
       "type": "api",
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.Campaign.Api/Program.cs",
-          "reason": "ASP.NET Core entry point for the web application."
+          "reason": "Found web entry point via CreateWebHostBuilder method and UseStartup<Startup>."
         },
         {
           "sourceFile": "src/SFA.DAS.Campaign.Api/SFA.DAS.Campaign.Api.csproj",
-          "reason": "Project file uses `Microsoft.NET.Sdk.Web` indicating a web application."
+          "reason": "Project uses the Microsoft.NET.Sdk.Web SDK, indicating a web application."
         }
       ]
     }
   ],
   "dependencies": [
     {
-      "sourceId": "campaign",
-      "name": "SQL Server",
+      "sourceId": "sfa-das-campaign",
+      "name": "Azure Active Directory",
+      "kind": "cloud-service",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "AzureAd"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Campaign.Api/Startup.cs",
+          "reason": "AzureAd authorization configuration found in Startup class."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "cloud-service-azure-active-directory",
+      "description": "Uses"
+    },
+    {
+      "sourceId": "sfa-das-campaign",
+      "name": "Azure Table Storage",
+      "kind": "cloud-service",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "ConfigurationStorageConnectionString"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Campaign.Api/Startup.cs",
+          "reason": "Found AddAzureTableStorage configuration with storage connection string."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "cloud-service-azure-table-storage",
+      "description": "Uses"
+    },
+    {
+      "sourceId": "sfa-das-campaign",
+      "name": "SQL Database",
       "kind": "database",
       "classification": "internal",
       "direction": "outbound",
-      "client": null,
-      "technology": "Entity Framework Core",
+      "client": "SqlConnection",
+      "technology": "SQL Server",
       "configurationKeys": [
         "CampaignConfiguration.SqlConnectionString"
       ],
       "authentication": {
-        "type": "DefaultAzureCredential",
+        "type": "Azure AD Token",
         "configurationKeys": []
       },
       "operations": [],
-      "resources": [
-        {
-          "type": "database",
-          "name": null,
-          "direction": "outbound",
-          "sourceFile": "src/SFA.DAS.Campaign.Api.Data/CampaignDataContext.cs"
-        }
-      ],
+      "resources": [],
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.Campaign.Api/AppStart/AddDatabaseExtension.cs",
-          "reason": "Database registration using SQL Server configuration."
+          "reason": "Found AddDbContext for CampaignDataContext with SQL Server configuration."
         },
         {
           "sourceFile": "src/SFA.DAS.Campaign.Api.Data/CampaignDataContext.cs",
-          "reason": "Entity Framework Core DbContext configured with SQL Server."
-        },
-        {
-          "sourceFile": "src/SFA.DAS.Campaign.Api/Startup.cs",
-          "reason": "Health checks configured for SQL Server database."
+          "reason": "Found CampaignDataContext which sets up connection to SQL Database using Azure AD token."
         }
       ],
       "confidence": "high",
-      "targetId": "database-sql-server",
+      "targetId": "database-sql-database",
       "description": "Reads from and writes to"
     }
   ],
   "resolution": {
     "overlay": "dfe-overlay/apim-routing.json",
-    "apimCommit": "7c83d23270959bfc4da9e92d355f95e1f2f4d257",
+    "apimCommit": "8f86379a3c31e6e3898d77e476475c8b323f0cb0",
     "precision": "area"
   }
 }

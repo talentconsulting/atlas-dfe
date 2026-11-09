@@ -2,33 +2,33 @@
   "repository": "SkillsFundingAgency/das-admin-roatp-web",
   "ref": "main",
   "path": "src",
-  "systemName": "SFA DAS Admin Roatp",
+  "systemName": "SFA DAS Admin Roatp Web",
   "containers": [
     {
-      "id": "sfa-das-admin-roatp",
-      "name": "SFA DAS Admin Roatp",
+      "id": "sfa-das-admin-roatp-web",
+      "name": "SFA DAS Admin Roatp Web",
       "type": "web",
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/Program.cs",
-          "reason": "ASP.NET Core entry point for web application."
+          "reason": "ASP.NET Core WebApplication entry point with configuration setup and middleware registration."
         },
         {
           "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/SFA.DAS.Admin.Roatp.Web.csproj",
-          "reason": "Web SDK and target framework indicated a web project."
+          "reason": "Project declares itself as a web application."
         }
       ]
     }
   ],
   "dependencies": [
     {
-      "sourceId": "sfa-das-admin-roatp",
-      "name": "Redis (Data Protection Keys)",
+      "sourceId": "sfa-das-admin-roatp-web",
+      "name": "Redis Data Protection Keys",
       "kind": "cache",
-      "classification": "internal",
+      "classification": "third-party",
       "direction": "outbound",
-      "client": null,
-      "technology": "StackExchange.Redis",
+      "client": "StackExchangeRedis",
+      "technology": "Redis",
       "configurationKeys": [
         "ApplicationConfiguration:DataProtectionKeysDatabase",
         "ApplicationConfiguration:RedisConnectionString"
@@ -40,8 +40,14 @@
       "operations": [],
       "resources": [
         {
-          "type": "redis-instance",
-          "name": null,
+          "type": "cache",
+          "name": "ApplicationConfiguration:DataProtectionKeysDatabase",
+          "direction": "outbound",
+          "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/AppStart/AddDataProtectionExtension.cs"
+        },
+        {
+          "type": "cache",
+          "name": "ApplicationConfiguration:RedisConnectionString",
           "direction": "outbound",
           "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/AppStart/AddDataProtectionExtension.cs"
         }
@@ -49,7 +55,7 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/AppStart/AddDataProtectionExtension.cs",
-          "reason": "ConnectionMultiplexer.Connect with Redis used for data protection keys."
+          "reason": "Redis data protection registered with ConnectionMultiplexer and persistent keys setup."
         }
       ],
       "confidence": "high",
@@ -57,13 +63,13 @@
       "description": "Caches data in"
     },
     {
-      "sourceId": "sfa-das-admin-roatp",
-      "name": "Redis (Session Cache)",
+      "sourceId": "sfa-das-admin-roatp-web",
+      "name": "StackExchange Redis Cache",
       "kind": "cache",
-      "classification": "internal",
+      "classification": "third-party",
       "direction": "outbound",
-      "client": null,
-      "technology": "StackExchange.Redis",
+      "client": "StackExchangeRedisCache",
+      "technology": "Redis",
       "configurationKeys": [
         "ApplicationConfiguration:RedisConnectionString"
       ],
@@ -74,8 +80,8 @@
       "operations": [],
       "resources": [
         {
-          "type": "redis-instance",
-          "name": null,
+          "type": "cache",
+          "name": "ApplicationConfiguration:RedisConnectionString",
           "direction": "outbound",
           "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/AppStart/AddSessionExtension.cs"
         }
@@ -83,15 +89,15 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/AppStart/AddSessionExtension.cs",
-          "reason": "AddStackExchangeRedisCache indicates Redis configuration using connection string."
+          "reason": "Redis cache registered using AddStackExchangeRedisCache with configuration key."
         }
       ],
       "confidence": "high",
-      "targetId": "cache-redis-session-cache",
+      "targetId": "cache-stackexchange-redis-cache",
       "description": "Caches data in"
     },
     {
-      "sourceId": "sfa-das-admin-roatp",
+      "sourceId": "sfa-das-admin-roatp-web",
       "name": "Roatp V2 API",
       "kind": "http-api",
       "classification": "internal",
@@ -102,15 +108,17 @@
         "AdminRoatpOuterApiConfiguration:ApiBaseUrl"
       ],
       "authentication": {
-        "type": null,
-        "configurationKeys": []
+        "type": "custom",
+        "configurationKeys": [
+          "AdminRoatpOuterApiConfiguration"
+        ]
       },
       "operations": [],
       "resources": [],
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/AppStart/AddApplicationRegistrationsExtension.cs",
-          "reason": "Refit client for HTTP API with base address configured."
+          "reason": "Refit-based HTTP client IOuterApiClient registered with base address from configuration."
         },
         {
           "sourceFile": "das-apim-endpoints/src/AdminRoatp/SFA.DAS.AdminRoatp/Application/Commands/AddProviderAllowedCourse/AddProviderAllowedCourseCommandHandler.cs",
@@ -132,7 +140,7 @@
         "repo": "das-apim-endpoints",
         "label": "APIM",
         "area": "AdminRoatp",
-        "dependencyName": "Outer API",
+        "dependencyName": "Admin Roatp Outer API",
         "operations": [],
         "areas": [
           "AdminRoatp"
@@ -140,7 +148,7 @@
       }
     },
     {
-      "sourceId": "sfa-das-admin-roatp",
+      "sourceId": "sfa-das-admin-roatp-web",
       "name": "Roatp API",
       "kind": "http-api",
       "classification": "internal",
@@ -151,15 +159,17 @@
         "AdminRoatpOuterApiConfiguration:ApiBaseUrl"
       ],
       "authentication": {
-        "type": null,
-        "configurationKeys": []
+        "type": "custom",
+        "configurationKeys": [
+          "AdminRoatpOuterApiConfiguration"
+        ]
       },
       "operations": [],
       "resources": [],
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/AppStart/AddApplicationRegistrationsExtension.cs",
-          "reason": "Refit client for HTTP API with base address configured."
+          "reason": "Refit-based HTTP client IOuterApiClient registered with base address from configuration."
         },
         {
           "sourceFile": "das-apim-endpoints/src/AdminRoatp/SFA.DAS.AdminRoatp/Application/Commands/AddProviderAllowedCourse/AddProviderAllowedCourseCommandHandler.cs",
@@ -181,7 +191,7 @@
         "repo": "das-apim-endpoints",
         "label": "APIM",
         "area": "AdminRoatp",
-        "dependencyName": "Outer API",
+        "dependencyName": "Admin Roatp Outer API",
         "operations": [],
         "areas": [
           "AdminRoatp"
@@ -189,7 +199,7 @@
       }
     },
     {
-      "sourceId": "sfa-das-admin-roatp",
+      "sourceId": "sfa-das-admin-roatp-web",
       "name": "Apply API",
       "kind": "http-api",
       "classification": "internal",
@@ -200,15 +210,17 @@
         "AdminRoatpOuterApiConfiguration:ApiBaseUrl"
       ],
       "authentication": {
-        "type": null,
-        "configurationKeys": []
+        "type": "custom",
+        "configurationKeys": [
+          "AdminRoatpOuterApiConfiguration"
+        ]
       },
       "operations": [],
       "resources": [],
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/AppStart/AddApplicationRegistrationsExtension.cs",
-          "reason": "Refit client for HTTP API with base address configured."
+          "reason": "Refit-based HTTP client IOuterApiClient registered with base address from configuration."
         },
         {
           "sourceFile": "das-apim-endpoints/src/AdminRoatp/SFA.DAS.AdminRoatp/Application/Queries/GetProvidersAllowedList/GetProvidersAllowedListQueryHandler.cs",
@@ -226,7 +238,7 @@
         "repo": "das-apim-endpoints",
         "label": "APIM",
         "area": "AdminRoatp",
-        "dependencyName": "Outer API",
+        "dependencyName": "Admin Roatp Outer API",
         "operations": [],
         "areas": [
           "AdminRoatp"
@@ -236,7 +248,7 @@
   ],
   "resolution": {
     "overlay": "dfe-overlay/apim-routing.json",
-    "apimCommit": "7c83d23270959bfc4da9e92d355f95e1f2f4d257",
+    "apimCommit": "8f86379a3c31e6e3898d77e476475c8b323f0cb0",
     "precision": "area"
   }
 }
