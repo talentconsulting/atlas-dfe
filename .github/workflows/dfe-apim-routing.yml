@@ -20,10 +20,20 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # Read APIM from the branch its service-dependency scan uses, so the routes match the scanned calls.
+      # A node without "branch" scans the default branch, and an empty ref checks that out.
+      - name: Pick the das-apim-endpoints branch
+        id: apim
+        run: |
+          ref=$(jq -r '.[] | select((.["github-repo"] // "" | rtrimstr("/")) == "https://github.com/SkillsFundingAgency/das-apim-endpoints") | .["service-dependencies"].branch // empty' manifest.json)
+          echo "Using das-apim-endpoints ref: ${ref:-default branch}"
+          echo "ref=$ref" >> "$GITHUB_OUTPUT"
+
       - name: Check out das-apim-endpoints
         uses: actions/checkout@v4
         with:
           repository: SkillsFundingAgency/das-apim-endpoints
+          ref: ${{ steps.apim.outputs.ref }}
           path: .apim
           fetch-depth: 1
 
