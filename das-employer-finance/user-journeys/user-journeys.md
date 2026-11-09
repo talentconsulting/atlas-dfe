@@ -1,10 +1,10 @@
 # User journeys: SkillsFundingAgency/das-employer-finance
 
-Generated from `main/src`: 31 pages, 27 transitions, 7 journeys. 🔒 means sign-in is required. Dotted arrows return to a hub.
+Generated from `e7794faa88428dfdb66448ca9d709c1320851fd3/src`: 31 pages, 27 transitions, 10 journeys. 🔒 means sign-in is required. Dotted arrows return to a hub.
 
-## View Finance Dashboard and Transaction Reports
+## View Financial Dashboard and Transactions
 
-Lets the user review their finance dashboard, view recent transactions, and download transaction reports.
+The user views their financial dashboard and inspects account transactions or downloads transaction details.
 
 Complete the sections in any order, returning to the hub.
 
@@ -17,105 +17,139 @@ flowchart LR
   p3["TransferConnectionsIndex 🔒"] -.-> p0["FinanceIndex 🔒"]
 ```
 
-## Download Detailed Account Transactions
+## Respond to a Received Transfer Invitation
 
-Allows the user to download a detailed report of account transactions.
-
-```mermaid
-flowchart LR
-  p0["FinanceIndex 🔒"] --> p1["DownloadTransactions 🔒"]
-  p1["DownloadTransactions 🔒"] --> p2["DownloadTransactionsReportV2"]
-```
-
-## Manage Transfer Connection Invitations (Receive)
-
-Allows the user to handle received transfer connection invitations, approve or reject, and manage their status.
+The user checks outstanding invitations, responds to a transfer invitation, and completes the approval or rejection process.
 
 ```mermaid
 flowchart LR
-  p0["Outstanding 🔒"] -->|"when there is an outstanding invitation"| p1["Receive 🔒"]
-  p1["Receive 🔒"] -->|"after approving the invitation"| p2["Approved 🔒"]
+  p0["Outstanding 🔒"] -->|"if there is an outstanding invitation"| p1["Receive 🔒"]
+  p1["Receive 🔒"] -->|"when user approves the invitation"| p2["Approved 🔒"]
   p2["Approved 🔒"] --> p3["TransferConnectionsIndex 🔒"]
 ```
 
-## Manage Transfer Connection Invitations (Reject and Delete)
+## Send a New Transfer Invitation
 
-Lets the user reject received transfer connection invitations and delete them if desired.
-
-```mermaid
-flowchart LR
-  p0["Outstanding 🔒"] -->|"when there is an outstanding invitation"| p1["Receive 🔒"]
-  p1["Receive 🔒"] -->|"after rejecting the invitation"| p2["Rejected 🔒"]
-  p2["Rejected 🔒"] -->|"after confirming deletion"| p3["Deleted 🔒"]
-  p3["Deleted 🔒"] --> p4["TransferConnectionsIndex 🔒"]
-```
-
-## Delete an Existing Transfer Connection Invitation
-
-Enables the user to review a transfer connection invitation, delete it and return to the transfer connections index.
+The user starts and confirms the sending of a new transfer connection invitation.
 
 ```mermaid
 flowchart LR
-  p0["Details 🔒"] -->|"after confirming deletion"| p1["Deleted 🔒"]
-  p1["Deleted 🔒"] --> p2["TransferConnectionsIndex 🔒"]
-```
-
-## Send a Transfer Connection Invitation
-
-Lets the user initiate and send a transfer connection invitation to another employer.
-
-```mermaid
-flowchart LR
-  p0["Start 🔒"] -->|"after successfully validating the entered account ID"| p1["Send 🔒"]
-  p1["Send 🔒"] -->|"after confirming"| p2["Sent 🔒"]
+  p0["Start 🔒"] -->|"after submitting a valid receiver account ID"| p1["Send 🔒"]
+  p1["Send 🔒"] -->|"when user confirms sending invitation"| p2["Sent 🔒"]
   p2["Sent 🔒"] --> p3["TransferConnectionsIndex 🔒"]
 ```
 
-## Download Transactions Report
+## Delete or Manage an Existing Transfer Invitation
 
-Enables the user to access and download the latest transactions report for their account.
+The user views the details of a transfer invitation and chooses to delete it, with follow up.
+
+```mermaid
+flowchart LR
+  p0["Details 🔒"] -->|"when user confirms deletion"| p1["Deleted 🔒"]
+  p1["Deleted 🔒"] --> p2["TransferConnectionsIndex 🔒"]
+```
+
+## Reject an Incoming Transfer Invitation
+
+The user receives a transfer invitation, rejects it, and may delete it after rejection.
+
+```mermaid
+flowchart LR
+  p0["Outstanding 🔒"] -->|"if there is an outstanding invitation"| p1["Receive 🔒"]
+  p1["Receive 🔒"] -->|"when user rejects the invitation"| p2["Rejected 🔒"]
+  p2["Rejected 🔒"] -->|"when user confirms deletion"| p3["Deleted 🔒"]
+  p3["Deleted 🔒"] --> p4["TransferConnectionsIndex 🔒"]
+```
+
+## Download Transaction Reports
+
+The user downloads financial transaction statements for their account.
 
 ```mermaid
 flowchart LR
   p0["FinanceIndex 🔒"] --> p1["DownloadTransactions 🔒"]
   p1["DownloadTransactions 🔒"] --> p2["DownloadTransactionsReportV2"]
+```
+
+## Start a Transfer Connection Invitation
+
+The user initiates, composes, and sends a transfer connection invitation to another employer.
+
+```mermaid
+flowchart LR
+  p0["Start 🔒"] -->|"after submitting a valid receiver account ID"| p1["Send 🔒"]
+  p1["Send 🔒"] -->|"when user confirms sending invitation"| p2["Sent 🔒"]
+  p2["Sent 🔒"] --> p3["TransferConnectionsIndex 🔒"]
+```
+
+## Respond to an Outstanding Transfer Invitation
+
+The user responds to an outstanding transfer connection invitation by approving or rejecting it, and is redirected appropriately.
+
+```mermaid
+flowchart LR
+  p0["Outstanding 🔒"] -->|"if there is an outstanding invitation"| p1["Receive 🔒"]
+  p1["Receive 🔒"] -->|"when user approves the invitation"| p2["Approved 🔒"]
+  p2["Approved 🔒"] --> p3["TransferConnectionsIndex 🔒"]
+```
+
+## Reject and Delete a Transfer Invitation
+
+The user rejects a transfer connection invitation and deletes it, then is returned to the transfer connections index.
+
+```mermaid
+flowchart LR
+  p0["Outstanding 🔒"] -->|"if there is an outstanding invitation"| p1["Receive 🔒"]
+  p1["Receive 🔒"] -->|"when user rejects the invitation"| p2["Rejected 🔒"]
+  p2["Rejected 🔒"] -->|"when user confirms deletion"| p3["Deleted 🔒"]
+  p3["Deleted 🔒"] --> p4["TransferConnectionsIndex 🔒"]
+```
+
+## Delete a Transfer Invitation from Details
+
+The user reviews details of a transfer connection invitation and confirms deletion, returning to the connections index.
+
+```mermaid
+flowchart LR
+  p0["Details 🔒"] -->|"when user confirms deletion"| p1["Deleted 🔒"]
+  p1["Deleted 🔒"] --> p2["TransferConnectionsIndex 🔒"]
 ```
 
 ## Pages
 
 | Page | Route | Sign-in | Purpose |
 | --- | --- | --- | --- |
-| `AccessDenied.Index` | `error/403` | Unknown | Informs the user they do not have access to this resource. |
-| `DownloadTransactions` | `accounts/{HashedAccountId}/finance/downloadtransactions` | Yes | Lets the user choose download parameters for account transactions and retrieve a file. |
-| `DownloadTransactionsReportV2` | `reports/transactions/v2` | Unknown | Lets the user access the latest version of the transactions report. |
-| `EmployerAccountTransactions.CourseFrameworkPaymentSummary` | `accounts/{HashedAccountId}/finance/course/framework/summary` | Yes | Shows the user a summary of payments for a course framework. |
-| `EmployerAccountTransactions.CourseStandardPaymentSummary` | `accounts/{HashedAccountId}/finance/course/standard/summary` | Yes | Shows the user a summary of payments for a course standard. |
-| `EmployerAccountTransactions.ExpiredFundsDetails` | `accounts/{HashedAccountId}/finance/expiredfunds/details` | Yes | Displays details of expired funds for the account. |
-| `EmployerAccountTransactions.LevyDeclarationDetail` | `accounts/{HashedAccountId}/finance/levyDeclaration/details` | Yes | Shows detailed information about levy declarations. |
-| `EmployerAccountTransactions.ProviderPaymentSummary` | `accounts/{HashedAccountId}/finance/provider/summary` | Yes | Shows a summary of payments made to a provider. |
-| `EmployerAccountTransactions.TransferDetail` | `accounts/{HashedAccountId}/finance/transfer/details` | Yes | Displays details of individual transfer transactions. |
-| `FinanceIndex` | `accounts/{HashedAccountId}/finance` | Yes | Displays the main finance dashboard for an employer account. |
-| `Home.CookieConsent` | `service/{HashedAccountId}/cookieConsent` | Unknown | Handles cookie consent for the user. |
-| `Home.Help` | `service/help` | Unknown | Provides help and support to the user. |
-| `Home.Index` | `service` | Unknown | Redirects the user to the legacy system homepage. |
-| `Home.Privacy` | `service/{HashedAccountId}/privacy` | Unknown | Displays the privacy information page for the service. |
-| `Home.SignIn` | `service/signIn` | Yes | Redirects the user to the main entry point after signing in. |
-| `Home.SignedIn` | `service` | Yes | Shows the signed-in home page for the user. |
-| `SignOut` | `service/signOut` | Unknown | Signs the user out of the application. |
-| `TransactionsView` | `accounts/{HashedAccountId}/finance/{year}/{month}` | Yes | Displays detailed account transactions for a specific year and month. |
-| `TransferConnectionInvitations.Approved` | `accounts/{HashedAccountId}/transfers/connections/requests/{transferConnectionInvitationId}/approved` | Yes | Displays a confirmation of the approved transfer connection invitation and lets the user choose what to do next. |
-| `TransferConnectionInvitations.Deleted` | `accounts/{HashedAccountId}/transfers/connections/requests/{transferConnectionInvitationId}/deleted` | Yes | Displays confirmation that a transfer connection invitation is deleted and lets the user choose what to do next. |
-| `TransferConnectionInvitations.Details` | `accounts/{HashedAccountId}/transfers/connections/requests/{transferConnectionInvitationId}/details` | Yes | Shows the details of a transfer connection invitation and asks if the user wants to delete it. |
-| `TransferConnectionInvitations.Index` | `accounts/{HashedAccountId}/transfers/connections/requests` | Yes | Lists transfer connection requests for the account. |
-| `TransferConnectionInvitations.Outstanding` | `accounts/{HashedAccountId}/transfers/connections/requests/outstanding` | Yes | Redirects the user based on the latest pending received transfer connection invitation. |
-| `TransferConnectionInvitations.Receive` | `accounts/{HashedAccountId}/transfers/connections/requests/{transferConnectionInvitationId}/receive` | Yes | Lets the user decide whether to connect to another employer through a received transfer connection invitation. |
-| `TransferConnectionInvitations.Rejected` | `accounts/{HashedAccountId}/transfers/connections/requests/{transferConnectionInvitationId}/rejected` | Yes | Shows the rejected transfer connection invitation and asks if the user wants to delete it. |
-| `TransferConnectionInvitations.Send` | `accounts/{HashedAccountId}/transfers/connections/requests/send` | Yes | Lets the user confirm or re-enter the receiving employer's account ID for sending a transfer connection invitation. |
-| `TransferConnectionInvitations.Sent` | `accounts/{HashedAccountId}/transfers/connections/requests/{transferConnectionInvitationId}/sent` | Yes | Displays confirmation that a transfer connection invitation has been sent and lets the user choose what to do next. |
-| `TransferConnectionInvitations.Start` | `accounts/{HashedAccountId}/transfers/connections/requests/start` | Yes | Lets the user enter the receiving employer's apprenticeship account ID to start a transfer connection invitation. |
-| `TransferConnectionsIndex` | `accounts/{HashedAccountId}/transfers/connections` | Yes | Shows the index page for transfer connections within the user's account. |
-| `Transfers.FinancialBreakdown` | `accounts/{HashedAccountId}/transfers/financial-breakdown` | Yes | Indicates a financial breakdown page for transfers, but currently always redirects to a 404 error. |
-| `Transfers.Index` | `accounts/{HashedAccountId}/transfers` | Yes | Displays an overview of transfers for the specified account. |
+| `AccessDenied.Index` | `error/403` | Unknown | Informs the user that access is denied. |
+| `DownloadTransactions` | `accounts/{HashedAccountId}/finance/downloadtransactions` | Yes | Lets the user download financial transactions for this account. |
+| `DownloadTransactionsReportV2` | `reports/transactions/v2` | Unknown | Lets the user view or download the version 2 transactions report. |
+| `EmployerAccountTransactions.CourseFrameworkPaymentSummary` | `accounts/{HashedAccountId}/finance/course/framework/summary` | Yes | Shows a summary of payments for a course framework. |
+| `EmployerAccountTransactions.CourseStandardPaymentSummary` | `accounts/{HashedAccountId}/finance/course/standard/summary` | Yes | Shows a summary of payments for a course standard. |
+| `EmployerAccountTransactions.ExpiredFundsDetails` | `accounts/{HashedAccountId}/finance/expiredfunds/details` | Yes | Shows details of expired funds for this account. |
+| `EmployerAccountTransactions.LevyDeclarationDetail` | `accounts/{HashedAccountId}/finance/levyDeclaration/details` | Yes | Shows details of levy declaration transactions. |
+| `EmployerAccountTransactions.ProviderPaymentSummary` | `accounts/{HashedAccountId}/finance/provider/summary` | Yes | Shows payment summary for a training provider. |
+| `EmployerAccountTransactions.TransferDetail` | `accounts/{HashedAccountId}/finance/transfer/details` | Yes | Shows details for a transfer transaction. |
+| `FinanceIndex` | `accounts/{HashedAccountId}/finance` | Yes | Shows the financial dashboard for the selected account. |
+| `Home.CookieConsent` | `service/{HashedAccountId}/cookieConsent` | Unknown | Lets the user manage their cookie consent preferences. |
+| `Home.Help` | `service/help` | Unknown | Provides help and redirects to the help centre. |
+| `Home.Index` | `service` | Unknown | Redirects to the legacy employer account service home. |
+| `Home.Privacy` | `service/{HashedAccountId}/privacy` | Unknown | Shows privacy information for the service. |
+| `Home.SignIn` | `service/signIn` | Yes | Lets the user sign in to the service. |
+| `Home.SignedIn` | `service` | Yes | Shows the user they are signed in to the service. |
+| `SignOut` | `service/signOut` | Unknown | Lets the user sign out of the service. |
+| `TransactionsView` | `accounts/{HashedAccountId}/finance/{year}/{month}` | Yes | Shows transactions for a specific month and year for the account. |
+| `TransferConnectionInvitations.Approved` | `accounts/{HashedAccountId}/transfers/connections/requests/{transferConnectionInvitationId}/approved` | Yes | Shows that a transfer connection invitation has been approved, and lets the user choose what to do next. |
+| `TransferConnectionInvitations.Deleted` | `accounts/{HashedAccountId}/transfers/connections/requests/{transferConnectionInvitationId}/deleted` | Yes | Shows that a transfer connection invitation has been deleted, and lets the user choose what to do next. |
+| `TransferConnectionInvitations.Details` | `accounts/{HashedAccountId}/transfers/connections/requests/{transferConnectionInvitationId}/details` | Yes | Lets the user review and optionally delete a transfer connection invitation request. |
+| `TransferConnectionInvitations.Index` | `accounts/{HashedAccountId}/transfers/connections/requests` | Yes | Lists all transfer connection invitation requests for the account. |
+| `TransferConnectionInvitations.Outstanding` | `accounts/{HashedAccountId}/transfers/connections/requests/outstanding` | Yes | Checks for the latest outstanding received transfer connection invitation and redirects accordingly. |
+| `TransferConnectionInvitations.Receive` | `accounts/{HashedAccountId}/transfers/connections/requests/{transferConnectionInvitationId}/receive` | Yes | Lets the user respond to a received transfer connection invitation (approve or reject). |
+| `TransferConnectionInvitations.Rejected` | `accounts/{HashedAccountId}/transfers/connections/requests/{transferConnectionInvitationId}/rejected` | Yes | Shows that a transfer connection invitation has been rejected, and lets the user choose whether to delete it. |
+| `TransferConnectionInvitations.Send` | `accounts/{HashedAccountId}/transfers/connections/requests/send` | Yes | Lets the user confirm sending a transfer connection invitation to another employer. |
+| `TransferConnectionInvitations.Sent` | `accounts/{HashedAccountId}/transfers/connections/requests/{transferConnectionInvitationId}/sent` | Yes | Shows that a transfer connection invitation has been sent, and lets the user choose what to do next. |
+| `TransferConnectionInvitations.Start` | `accounts/{HashedAccountId}/transfers/connections/requests/start` | Yes | Lets the user start a transfer connection invitation by entering the receiver's apprenticeship account ID. |
+| `TransferConnectionsIndex` | `accounts/{HashedAccountId}/transfers/connections` | Yes | Shows transfer connections, allowances, and related information for the account. |
+| `Transfers.FinancialBreakdown` | `accounts/{HashedAccountId}/transfers/financial-breakdown` | Yes | Displays the transfers financial breakdown, but currently redirects to a 404 error. |
+| `Transfers.Index` | `accounts/{HashedAccountId}/transfers` | Yes | Shows an overview or index of transfers for the account. |
 
 ## Form fields
 
