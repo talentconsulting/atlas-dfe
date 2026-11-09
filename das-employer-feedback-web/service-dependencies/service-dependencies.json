@@ -5,30 +5,26 @@
   "systemName": "Employer Feedback",
   "containers": [
     {
-      "id": "employer-feedback-web",
+      "id": "employer-feedback",
       "name": "Employer Feedback",
       "type": "web",
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.EmployerFeedback.Web/Program.cs",
-          "reason": "ASP.NET Core web application entry point"
-        },
-        {
-          "sourceFile": "src/SFA.DAS.EmployerFeedback.Web/SFA.DAS.EmployerFeedback.Web.csproj",
-          "reason": "Project type SDK is Microsoft.NET.Sdk.Web"
+          "reason": "ASP.NET Core web application boilerplate code found."
         }
       ]
     }
   ],
   "dependencies": [
     {
-      "sourceId": "employer-feedback-web",
-      "name": "Data Protection Keys Redis",
+      "sourceId": "employer-feedback",
+      "name": "Redis",
       "kind": "cache",
-      "classification": "internal",
+      "classification": "third-party",
       "direction": "outbound",
       "client": null,
-      "technology": "StackExchange.Redis",
+      "technology": "StackExchangeRedis",
       "configurationKeys": [
         "DataProtectionKeysDatabase",
         "RedisConnectionString"
@@ -38,52 +34,15 @@
         "configurationKeys": []
       },
       "operations": [],
-      "resources": [
-        {
-          "type": "cache",
-          "name": "DataProtection-Keys",
-          "direction": "outbound",
-          "sourceFile": "src/SFA.DAS.EmployerFeedback.Web/StartupExtensions/DataProtectionStartupExtensions.cs"
-        }
-      ],
-      "evidence": [
-        {
-          "sourceFile": "src/SFA.DAS.EmployerFeedback.Web/StartupExtensions/DataProtectionStartupExtensions.cs",
-          "reason": "PersistKeysToStackExchangeRedis configuration for data protection"
-        }
-      ],
-      "confidence": "high",
-      "targetId": "cache-data-protection-keys-redis",
-      "description": "Caches data in"
-    },
-    {
-      "sourceId": "employer-feedback-web",
-      "name": "Redis",
-      "kind": "cache",
-      "classification": "third-party",
-      "direction": "outbound",
-      "client": null,
-      "technology": "StackExchange.Redis",
-      "configurationKeys": [
-        "RedisConnectionString"
-      ],
-      "authentication": {
-        "type": null,
-        "configurationKeys": []
-      },
-      "operations": [],
-      "resources": [
-        {
-          "type": "cache",
-          "name": "RedisConnectionString",
-          "direction": "outbound",
-          "sourceFile": "src/SFA.DAS.EmployerFeedback.Web/StartupExtensions/CacheStartupExtensions.cs"
-        }
-      ],
+      "resources": [],
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.EmployerFeedback.Web/StartupExtensions/CacheStartupExtensions.cs",
-          "reason": "StackExchangeRedisCache client construction with RedisConnectionString"
+          "reason": "Redis cache configured via AddStackExchangeRedisCache."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.EmployerFeedback.Web/StartupExtensions/DataProtectionStartupExtensions.cs",
+          "reason": "Redis configured for DataProtection using ConnectionMultiplexer.Connect."
         }
       ],
       "confidence": "high",
@@ -91,13 +50,96 @@
       "description": "Caches data in"
     },
     {
-      "sourceId": "employer-feedback-web",
-      "name": "Application Insights",
-      "kind": "cloud-service",
+      "sourceId": "employer-feedback",
+      "name": "Azure App Configuration",
+      "kind": "configuration-store",
       "classification": "third-party",
       "direction": "outbound",
       "client": null,
-      "technology": "Azure Application Insights",
+      "technology": null,
+      "configurationKeys": [
+        "ConfigNames",
+        "ConfigurationStorageConnectionString",
+        "EnvironmentName"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.EmployerFeedback.Web/StartupExtensions/ConfigurationExtensions.cs",
+          "reason": "Configuration loaded from Azure Table Storage using AddAzureTableStorage."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "configuration-store-azure-app-configuration",
+      "description": "Reads configuration from"
+    },
+    {
+      "sourceId": "employer-feedback",
+      "name": "Employer Feedback Outer",
+      "kind": "http-api",
+      "classification": "unknown",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "EmployerFeedbackOuterApiConfiguration"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.EmployerFeedback.Web/Startup.cs",
+          "reason": "HTTP client registered using AddOuterApi with EmployerFeedbackOuterApiConfiguration."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "http-api-employer-feedback-outer",
+      "description": "Calls the API of"
+    },
+    {
+      "sourceId": "employer-feedback",
+      "name": "Microsoft Entra ID",
+      "kind": "identity-provider",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "GovUkOidcConfiguration"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.EmployerFeedback.Web/StartupExtensions/AuthenticationExtensions.cs",
+          "reason": "GovUK.Authentication registered with GovUkOidcConfiguration section."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "identity-provider-microsoft-entra-id",
+      "description": "Authenticates with"
+    },
+    {
+      "sourceId": "employer-feedback",
+      "name": "Application Insights",
+      "kind": "telemetry",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
       "configurationKeys": [
         "APPLICATIONINSIGHTS_CONNECTION_STRING"
       ],
@@ -109,13 +151,13 @@
       "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.EmployerFeedback.Web/Startup.cs",
-          "reason": "Application Insights configuration in AddOpenTelemetryRegistration"
+          "sourceFile": "src/SFA.DAS.EmployerFeedback.Web/StartupExtensions/AddOpenTelemetryExtensions.cs",
+          "reason": "Telemetry registered using Azure Monitor via AddOpenTelemetry and UseAzureMonitor with Application Insights."
         }
       ],
-      "confidence": "medium",
-      "targetId": "cloud-service-application-insights",
-      "description": "Uses"
+      "confidence": "high",
+      "targetId": "telemetry-application-insights",
+      "description": "Sends telemetry to"
     }
   ]
 }

@@ -5,46 +5,42 @@
   "systemName": "Apprentice Accounts",
   "containers": [
     {
-      "id": "apprentice-accounts-mock-server",
-      "name": "Apprentice Accounts Mock Server",
-      "type": "other",
-      "evidence": [
-        {
-          "sourceFile": "src/SFA.DAS.ApprenticeAccounts.Web.MockServer/SFA.DAS.ApprenticeAccounts.Web.MockServer.csproj",
-          "reason": "Project SDK indicates a standalone executable."
-        },
-        {
-          "sourceFile": "src/SFA.DAS.ApprenticeAccounts.Web.MockServer/Program.cs",
-          "reason": "Standalone program for mock server detected."
-        }
-      ]
-    },
-    {
-      "id": "apprentice-accounts-web",
+      "id": "apprentice-accounts",
       "name": "Apprentice Accounts",
       "type": "web",
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.ApprenticeAccounts.Web/Program.cs",
-          "reason": "ASP.NET Core WebHost entry point detected."
-        },
+          "reason": "ASP.NET web application entry point."
+        }
+      ]
+    },
+    {
+      "id": "apprentice-accounts-mockserver",
+      "name": "Apprentice Accounts MockServer",
+      "type": "other",
+      "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.ApprenticeAccounts.Web/SFA.DAS.ApprenticeAccounts.Web.csproj",
-          "reason": "Project SDK indicates a web application."
+          "sourceFile": "src/SFA.DAS.ApprenticeAccounts.Web.MockServer/Program.cs",
+          "reason": "Standalone application entry point."
         }
       ]
     }
   ],
   "dependencies": [
     {
-      "sourceId": "apprentice-accounts-web",
-      "name": "Stack Exchange Redis",
-      "kind": "cache",
+      "sourceId": "apprentice-accounts",
+      "name": "Azure Table Storage Configuration",
+      "kind": "configuration-store",
       "classification": "third-party",
       "direction": "outbound",
       "client": null,
-      "technology": "Redis",
-      "configurationKeys": [],
+      "technology": null,
+      "configurationKeys": [
+        "ConfigNames",
+        "ConfigurationStorageConnectionString",
+        "EnvironmentName"
+      ],
       "authentication": {
         "type": null,
         "configurationKeys": []
@@ -53,13 +49,73 @@
       "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.ApprenticeAccounts.Web/SFA.DAS.ApprenticeAccounts.Web.csproj",
-          "reason": "StackExchange.Redis package reference detected."
+          "sourceFile": "src/SFA.DAS.ApprenticeAccounts.Web/Startup/ConfigurationStartup.cs",
+          "reason": "Use of AddAzureTableStorage to configure Azure Table Storage as a configuration store."
         }
       ],
       "confidence": "high",
-      "targetId": "cache-stack-exchange-redis",
-      "description": "Caches data in"
+      "targetId": "configuration-store-azure-table-storage-configuration",
+      "description": "Reads configuration from"
+    },
+    {
+      "sourceId": "apprentice-accounts",
+      "name": "Microsoft Entra ID",
+      "kind": "identity-provider",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "Authentication"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": [
+          "Authentication"
+        ]
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.ApprenticeAccounts.Web/Startup/ApplicationStartup.cs",
+          "reason": "Authentication configured for Microsoft Entra ID using AddAuthentication."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "identity-provider-microsoft-entra-id",
+      "description": "Authenticates with"
+    },
+    {
+      "sourceId": "apprentice-accounts",
+      "name": "Application Insights",
+      "kind": "telemetry",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "APPLICATIONINSIGHTS_CONNECTION_STRING"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.ApprenticeAccounts.Web/Startup/AddTelemetryRegistrationExtension.cs",
+          "reason": "AddApplicationInsightsTelemetry registered for telemetry tracking."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.ApprenticeAccounts.Web/Startup/ApplicationStartup.cs",
+          "reason": "AddApplicationInsightsTelemetry registered in application startup."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "telemetry-application-insights",
+      "description": "Sends telemetry to"
     }
   ]
 }

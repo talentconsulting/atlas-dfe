@@ -2,22 +2,28 @@
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
 LAYOUT_WITH_LEGEND()
 
-System_Boundary(sys_SkillsFundingAgency_das_pr_jobs, "PR Jobs") {
-  Container(c_pr_jobs, "PR Jobs", "Background Job")
+System_Boundary(sys_SkillsFundingAgency_das_pr_jobs, "PR") {
+  Container(c_pr_jobs, "PR", "Background Job")
 }
 
-SystemDb_Ext(d_database_pr_database, "PR Database", "SQL Server")
-System_Ext(d_http_api_commitments_v2, "Commitments V2", "HTTP")
-System_Ext(d_http_api_employer_accounts, "Employer Accounts", "HTTP")
-System_Ext(d_http_api_pas_account, "PAS Account", "HTTP")
-System_Ext(d_http_api_provider_relationships, "Provider Relationships", "HTTP")
-System_Ext(d_http_api_roatp_service, "RoATP Service", "HTTP")
+SystemDb_Ext(d_configuration_store_azure_table_storage_configuration, "Azure Table Storage configuration")
+SystemDb_Ext(d_database_provider_relationships_database, "Provider Relationships Database", "SQL Server")
+System_Ext(d_http_api_commitments_v2, "Commitments V2")
+System_Ext(d_http_api_employer_accounts, "Employer Accounts")
+System_Ext(d_http_api_pas_account, "PAS Account")
+System_Ext(d_http_api_provider_relationships, "Provider Relationships")
+System_Ext(d_http_api_roatp_service, "RoATP Service")
+SystemQueue_Ext(d_message_broker_azure_service_bus, "Azure Service Bus", "NServiceBus")
+System_Ext(d_telemetry_application_insights, "Application Insights")
 
-Rel(c_pr_jobs, d_database_pr_database, "Reads from and writes to", "SQL Server")
-Rel(c_pr_jobs, d_http_api_commitments_v2, "Calls the API of", "HTTP")
-Rel(c_pr_jobs, d_http_api_employer_accounts, "Calls the API of", "HTTP")
-Rel(c_pr_jobs, d_http_api_pas_account, "Calls the API of", "HTTP")
-Rel(c_pr_jobs, d_http_api_provider_relationships, "Calls the API of", "HTTP")
-Rel(c_pr_jobs, d_http_api_roatp_service, "Calls the API of", "HTTP")
+Rel(c_pr_jobs, d_configuration_store_azure_table_storage_configuration, "Reads configuration from")
+Rel(c_pr_jobs, d_database_provider_relationships_database, "Reads from and writes to", "SQL Server")
+Rel(c_pr_jobs, d_http_api_commitments_v2, "Calls the API of")
+Rel(c_pr_jobs, d_http_api_employer_accounts, "Calls the API of")
+Rel(c_pr_jobs, d_http_api_pas_account, "Calls the API of")
+Rel(c_pr_jobs, d_http_api_provider_relationships, "Calls the API of")
+Rel(c_pr_jobs, d_http_api_roatp_service, "Calls the API of")
+Rel(c_pr_jobs, d_message_broker_azure_service_bus, "Publishes messages to and consumes messages from", "NServiceBus")
+Rel(c_pr_jobs, d_telemetry_application_insights, "Sends telemetry to")
 
 @enduml

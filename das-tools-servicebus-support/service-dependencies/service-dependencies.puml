@@ -2,27 +2,26 @@
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
 LAYOUT_WITH_LEGEND()
 
-System_Boundary(sys_SkillsFundingAgency_das_tools_servicebus_support, "SFA.DAS.Tools.Servicebus.Support") {
-  Container(c_sfa_das_tools_servicebus_support_functions, "SFA.DAS.Tools.Servicebus.Support Functions", "Background Job")
-  Container(c_sfa_das_tools_servicebus_support_web, "SFA.DAS.Tools.Servicebus.Support", "Web Application")
-  Container(c_sfa_das_tools_servicebus_support_web_2, "SFA.DAS.Tools.Servicebus.Support Web", "Web Application")
+System_Boundary(sys_SkillsFundingAgency_das_tools_servicebus_support, "Servicebus Support") {
+  Container(c_servicebus_support_functions, "Servicebus Support Functions", "Background Job")
+  Container(c_servicebus_support_web, "Servicebus Support", "Web Application")
 }
 
 SystemDb_Ext(d_cache_redis, "Redis", "Redis")
-SystemDb_Ext(d_cache_redis_distributed_cache, "Redis Distributed Cache", "Redis")
-System_Ext(d_cloud_service_application_insights, "Application Insights")
-System_Ext(d_cloud_service_azure_active_directory, "Azure Active Directory", "Azure Active Directory")
-System_Ext(d_cloud_service_azure_table_storage_configuration, "Azure Table Storage Configuration", "Azure Table Storage")
+SystemDb_Ext(d_configuration_store_azure_table_storage_configuration, "Azure Table Storage configuration", "Azure Table Storage")
 SystemDb_Ext(d_database_cosmos_db, "Cosmos DB", "Azure Cosmos DB")
-System_Ext(d_http_api_unknown_http_api, "Unknown HTTP API")
+System_Ext(d_identity_provider_azure_managed_identity, "Azure Managed Identity", "Microsoft Entra ID (Azure Active Directory)")
+System_Ext(d_identity_provider_microsoft_entra_id, "Microsoft Entra ID")
+System_Ext(d_telemetry_application_insights, "Application Insights", "Azure Monitor")
 
-Rel(c_sfa_das_tools_servicebus_support_web_2, d_cache_redis, "Caches data in", "Redis")
-Rel(c_sfa_das_tools_servicebus_support_web, d_cache_redis_distributed_cache, "Caches data in", "Redis")
-Rel(c_sfa_das_tools_servicebus_support_web, d_cloud_service_application_insights, "Uses")
-Rel(c_sfa_das_tools_servicebus_support_functions, d_cloud_service_azure_active_directory, "Uses", "Azure Active Directory")
-Rel(c_sfa_das_tools_servicebus_support_web, d_cloud_service_azure_table_storage_configuration, "Uses", "Azure Table Storage")
-Rel(c_sfa_das_tools_servicebus_support_functions, d_database_cosmos_db, "Reads from and writes to", "Azure Cosmos DB")
-Rel(c_sfa_das_tools_servicebus_support_web_2, d_database_cosmos_db, "Reads from and writes to", "Azure Cosmos DB")
-Rel(c_sfa_das_tools_servicebus_support_functions, d_http_api_unknown_http_api, "Calls the API of")
+Rel(c_servicebus_support_web, d_cache_redis, "Caches data in", "Redis")
+Rel(c_servicebus_support_functions, d_configuration_store_azure_table_storage_configuration, "Reads configuration from", "Azure Table Storage")
+Rel(c_servicebus_support_web, d_configuration_store_azure_table_storage_configuration, "Reads configuration from", "Azure Table Storage")
+Rel(c_servicebus_support_functions, d_database_cosmos_db, "Reads from and writes to", "Azure Cosmos DB")
+Rel(c_servicebus_support_web, d_database_cosmos_db, "Reads from and writes to", "Azure Cosmos DB")
+Rel(c_servicebus_support_functions, d_identity_provider_azure_managed_identity, "Authenticates with", "Microsoft Entra ID (Azure Active Directory)")
+Rel(c_servicebus_support_web, d_identity_provider_microsoft_entra_id, "Authenticates with")
+Rel(c_servicebus_support_functions, d_telemetry_application_insights, "Sends telemetry to", "Azure Monitor")
+Rel(c_servicebus_support_web, d_telemetry_application_insights, "Sends telemetry to", "Azure Monitor")
 
 @enduml

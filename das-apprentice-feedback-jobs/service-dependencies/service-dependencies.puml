@@ -3,11 +3,19 @@
 LAYOUT_WITH_LEGEND()
 
 System_Boundary(sys_SkillsFundingAgency_das_apprentice_feedback_jobs, "Apprentice Feedback") {
-  Container(c_apprentice_feedback_jobs, "Apprentice Feedback Jobs", "Background Job")
+  Container(c_apprentice_feedback_jobs, "Apprentice Feedback", "Background Job")
 }
 
+SystemDb_Ext(d_configuration_store_azure_table_storage_configuration, "Azure Table Storage configuration")
 System_Ext(d_http_api_apprentice_feedback_outer, "Apprentice Feedback Outer", "RestEase")
+SystemQueue_Ext(d_message_broker_azure_service_bus, "Azure Service Bus", "NServiceBus")
+SystemDb_Ext(d_object_storage_azure_blob_storage, "Azure Blob Storage", "Azure Blob Storage")
+System_Ext(d_telemetry_application_insights, "Application Insights")
 
+Rel(c_apprentice_feedback_jobs, d_configuration_store_azure_table_storage_configuration, "Reads configuration from")
 Rel(c_apprentice_feedback_jobs, d_http_api_apprentice_feedback_outer, "Calls the API of", "RestEase")
+Rel(c_apprentice_feedback_jobs, d_message_broker_azure_service_bus, "Publishes messages to and consumes messages from", "NServiceBus")
+Rel(c_apprentice_feedback_jobs, d_object_storage_azure_blob_storage, "Stores objects in", "Azure Blob Storage")
+Rel(c_apprentice_feedback_jobs, d_telemetry_application_insights, "Sends telemetry to")
 
 @enduml

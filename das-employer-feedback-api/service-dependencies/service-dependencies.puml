@@ -3,15 +3,17 @@
 LAYOUT_WITH_LEGEND()
 
 System_Boundary(sys_SkillsFundingAgency_das_employer_feedback_api, "Employer Feedback") {
-  Container(c_employer_feedback_api, "Employer Feedback", "API")
+  Container(c_employer_feedback, "Employer Feedback", "API")
 }
 
-System_Ext(d_cloud_service_azure_app_configuration, "Azure App Configuration", "Azure Table Storage")
-System_Ext(d_cloud_service_azure_application_insights, "Azure Application Insights", "Azure Application Insights")
-SystemDb_Ext(d_database_employer_feedback_database, "Employer Feedback Database", "Microsoft SQL Server")
+SystemDb_Ext(d_configuration_store_azure_table_storage_configuration, "Azure Table Storage configuration")
+SystemDb_Ext(d_database_employer_feedback, "Employer Feedback", "SQL Server")
+System_Ext(d_identity_provider_microsoft_entra_id, "Microsoft Entra ID")
+System_Ext(d_telemetry_azure_app_insights, "Azure App Insights")
 
-Rel(c_employer_feedback_api, d_cloud_service_azure_app_configuration, "Uses", "Azure Table Storage")
-Rel(c_employer_feedback_api, d_cloud_service_azure_application_insights, "Uses", "Azure Application Insights")
-Rel(c_employer_feedback_api, d_database_employer_feedback_database, "Reads from and writes to", "Microsoft SQL Server")
+Rel(c_employer_feedback, d_configuration_store_azure_table_storage_configuration, "Reads configuration from")
+Rel(c_employer_feedback, d_database_employer_feedback, "Reads from and writes to", "SQL Server")
+Rel(c_employer_feedback, d_identity_provider_microsoft_entra_id, "Authenticates with")
+Rel(c_employer_feedback, d_telemetry_azure_app_insights, "Sends telemetry to")
 
 @enduml

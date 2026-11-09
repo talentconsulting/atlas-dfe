@@ -5,61 +5,118 @@
   "systemName": "Employer Feedback",
   "containers": [
     {
-      "id": "employer-feedback-api",
+      "id": "employer-feedback",
       "name": "Employer Feedback",
       "type": "api",
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.EmployerFeedback.Api/Program.cs",
-          "reason": "ASP.NET Core entry point with WebHost configuration."
+          "reason": "ASP.NET Core application entry point detected with Host.CreateDefaultBuilder."
         },
         {
           "sourceFile": "src/SFA.DAS.EmployerFeedback.Api/SFA.DAS.EmployerFeedback.Api.csproj",
-          "reason": "Project is an ASP.NET Core Web SDK application."
+          "reason": "Project SDK set to Microsoft.NET.Sdk.Web, indicating a web API."
         }
       ]
     }
   ],
   "dependencies": [
     {
-      "sourceId": "employer-feedback-api",
-      "name": "Azure App Configuration",
-      "kind": "cloud-service",
-      "classification": "internal",
+      "sourceId": "employer-feedback",
+      "name": "Azure Table Storage configuration",
+      "kind": "configuration-store",
+      "classification": "third-party",
       "direction": "outbound",
       "client": null,
-      "technology": "Azure Table Storage",
+      "technology": null,
       "configurationKeys": [
         "ConfigNames",
         "ConfigurationStorageConnectionString",
         "EnvironmentName"
       ],
       "authentication": {
-        "type": "Azure Shared Key",
-        "configurationKeys": [
-          "ConfigurationStorageConnectionString"
-        ]
+        "type": null,
+        "configurationKeys": []
       },
       "operations": [],
       "resources": [],
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.EmployerFeedback.Api/Startup.cs",
-          "reason": "Azure Table Storage used as configuration source."
+          "reason": "Remote configuration store registration using AddAzureTableStorage."
         }
       ],
       "confidence": "high",
-      "targetId": "cloud-service-azure-app-configuration",
-      "description": "Uses"
+      "targetId": "configuration-store-azure-table-storage-configuration",
+      "description": "Reads configuration from"
     },
     {
-      "sourceId": "employer-feedback-api",
-      "name": "Azure Application Insights",
-      "kind": "cloud-service",
+      "sourceId": "employer-feedback",
+      "name": "Employer Feedback",
+      "kind": "database",
       "classification": "internal",
       "direction": "outbound",
+      "client": "EmployerFeedbackDataContext",
+      "technology": "SQL Server",
+      "configurationKeys": [
+        "ApplicationSettings:DbConnectionString"
+      ],
+      "authentication": {
+        "type": "Azure AD",
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.EmployerFeedback.Data/EmployerFeedbackDataContext.cs",
+          "reason": "DbContext for SQL Server with optional Azure AD token-based authentication."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.EmployerFeedback.Api/AppStart/AddDatabaseRegistrations.cs",
+          "reason": "DbContext registered using AddDbContext and SQL Server provider."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "database-employer-feedback",
+      "description": "Reads from and writes to"
+    },
+    {
+      "sourceId": "employer-feedback",
+      "name": "Microsoft Entra ID",
+      "kind": "identity-provider",
+      "classification": "third-party",
+      "direction": "outbound",
       "client": null,
-      "technology": "Azure Application Insights",
+      "technology": null,
+      "configurationKeys": [
+        "ApplicationSettings:AzureAd:Audiences",
+        "ApplicationSettings:AzureAd:Tenant"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.EmployerFeedback.Api/Authentication/AuthenticationServiceCollectionExtensions.cs",
+          "reason": "Authentication configured with Microsoft.IdentityModel.Tokens and AddJwtBearer for Azure AD."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "identity-provider-microsoft-entra-id",
+      "description": "Authenticates with"
+    },
+    {
+      "sourceId": "employer-feedback",
+      "name": "Azure App Insights",
+      "kind": "telemetry",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
       "configurationKeys": [
         "APPLICATIONINSIGHTS_CONNECTION_STRING"
       ],
@@ -71,51 +128,13 @@
       "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.EmployerFeedback.Api/Startup.cs",
-          "reason": "Application Insights telemetry configuration using APPLICATIONINSIGHTS_CONNECTION_STRING."
+          "sourceFile": "src/SFA.DAS.EmployerFeedback.Api/AppStart/AddOpenTelemetryExtensions.cs",
+          "reason": "Telemetry registration using AddOpenTelemetry().UseAzureMonitor."
         }
       ],
       "confidence": "high",
-      "targetId": "cloud-service-azure-application-insights",
-      "description": "Uses"
-    },
-    {
-      "sourceId": "employer-feedback-api",
-      "name": "Employer Feedback Database",
-      "kind": "database",
-      "classification": "internal",
-      "direction": "outbound",
-      "client": "EmployerFeedbackDataContext",
-      "technology": "Microsoft SQL Server",
-      "configurationKeys": [
-        "ApplicationSettings:DbConnectionString"
-      ],
-      "authentication": {
-        "type": "Azure Managed Identity",
-        "configurationKeys": []
-      },
-      "operations": [],
-      "resources": [
-        {
-          "type": "database",
-          "name": "Employer Feedback Database",
-          "direction": "outbound",
-          "sourceFile": "src/SFA.DAS.EmployerFeedback.Data/EmployerFeedbackDataContext.cs"
-        }
-      ],
-      "evidence": [
-        {
-          "sourceFile": "src/SFA.DAS.EmployerFeedback.Data/EmployerFeedbackDataContext.cs",
-          "reason": "DbContext implementation for database interactions."
-        },
-        {
-          "sourceFile": "src/SFA.DAS.EmployerFeedback.Api/AppStart/AddDatabaseRegistrations.cs",
-          "reason": "DbContext registered with connection string from ApplicationSettings."
-        }
-      ],
-      "confidence": "high",
-      "targetId": "database-employer-feedback-database",
-      "description": "Reads from and writes to"
+      "targetId": "telemetry-azure-app-insights",
+      "description": "Sends telemetry to"
     }
   ]
 }

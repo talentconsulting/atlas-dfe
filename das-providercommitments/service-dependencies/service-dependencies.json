@@ -5,28 +5,17 @@
   "systemName": "Provider Commitments",
   "containers": [
     {
-      "id": "provider-commitments",
-      "name": "Provider Commitments",
-      "type": "api",
-      "evidence": [
-        {
-          "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments.csproj",
-          "reason": "Project file provides the main entry point for the Provider Commitments API."
-        }
-      ]
-    },
-    {
       "id": "provider-commitments-web",
       "name": "Provider Commitments",
       "type": "web",
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments.Web/SFA.DAS.ProviderCommitments.Web.csproj",
-          "reason": "ASP.NET Core Web SDK project."
+          "reason": "ASP.NET Core Web SDK project"
         },
         {
           "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments.Web/Program.cs",
-          "reason": "Entry point definitions and web project hosting configuration."
+          "reason": "ASP.NET Core web app entry point using CreateHostBuilder."
         }
       ]
     }
@@ -39,9 +28,10 @@
       "classification": "third-party",
       "direction": "outbound",
       "client": null,
-      "technology": "StackExchange.Redis",
+      "technology": "Redis",
       "configurationKeys": [
-        "ProviderCommitmentsConfigurationKeys.DataProtectionConnectionStrings:RedisConnectionString"
+        "ProviderCommitmentsConfigurationKeys.DataProtectionConnectionStrings",
+        "RedisConnectionString"
       ],
       "authentication": {
         "type": null,
@@ -52,7 +42,7 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments.Web/Extensions/CacheStartupExtensions.cs",
-          "reason": "StackExchange.Redis cache configuration with `AddStackExchangeRedisCache`."
+          "reason": "AddStackExchangeRedisCache with a configuration key for Redis being registered."
         }
       ],
       "confidence": "high",
@@ -60,97 +50,18 @@
       "description": "Caches data in"
     },
     {
-      "sourceId": "provider-commitments",
-      "name": "Approvals Outer",
-      "kind": "http-api",
-      "classification": "internal",
-      "direction": "outbound",
-      "client": "OuterApiClient",
-      "technology": "HttpClient",
-      "configurationKeys": [
-        "ApprovalsOuterApiConfiguration.ApiBaseUrl",
-        "ApprovalsOuterApiConfiguration.SubscriptionKey"
-      ],
-      "authentication": {
-        "type": "API key + Bearer",
-        "configurationKeys": [
-          "ApprovalsOuterApiConfiguration.SubscriptionKey"
-        ]
-      },
-      "operations": [
-        {
-          "method": "GET",
-          "methodName": "Get",
-          "path": "{request.GetUrl}",
-          "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments/Infrastructure/OuterApi/OuterApiClient.cs"
-        },
-        {
-          "method": "POST",
-          "methodName": "Post",
-          "path": "{request.PostUrl}",
-          "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments/Infrastructure/OuterApi/OuterApiClient.cs"
-        },
-        {
-          "method": "PUT",
-          "methodName": "Put",
-          "path": "{request.PutUrl}",
-          "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments/Infrastructure/OuterApi/OuterApiClient.cs"
-        }
-      ],
-      "resources": [
-        {
-          "type": "url",
-          "name": "ApprovalsOuterApiConfiguration.ApiBaseUrl",
-          "direction": "outbound",
-          "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments/Infrastructure/OuterApi/OuterApiClient.cs"
-        }
-      ],
-      "evidence": [
-        {
-          "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments/Infrastructure/OuterApi/OuterApiClient.cs",
-          "reason": "HttpClient with BaseAddress set to ApprovalsOuterApiConfiguration.ApiBaseUrl evidences outbound HTTP API dependency."
-        }
-      ],
-      "confidence": "high",
-      "targetId": "http-api-approvals-outer",
-      "description": "Calls the API of"
-    },
-    {
       "sourceId": "provider-commitments-web",
-      "name": "Approvals Outer",
-      "kind": "http-api",
-      "classification": "internal",
+      "name": "Azure Table Storage configuration",
+      "kind": "configuration-store",
+      "classification": "third-party",
       "direction": "outbound",
-      "client": "ApprovalsOuterApiClient",
-      "technology": null,
+      "client": null,
+      "technology": "Azure Table Storage",
       "configurationKeys": [
-        "ApprovalsOuterApiConfiguration:ApiBaseUrl"
+        "ConfigNames",
+        "ConfigurationStorageConnectionString",
+        "EnvironmentName"
       ],
-      "authentication": {
-        "type": "ApimHeader",
-        "configurationKeys": []
-      },
-      "operations": [],
-      "resources": [],
-      "evidence": [
-        {
-          "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments/Infrastructure/ApprovalsOuterApiHttpClientFactory.cs",
-          "reason": "Outer API client for Approvals."
-        }
-      ],
-      "confidence": "high",
-      "targetId": "http-api-approvals-outer",
-      "description": "Calls the API of"
-    },
-    {
-      "sourceId": "provider-commitments-web",
-      "name": "Commitment Permissions",
-      "kind": "http-api",
-      "classification": "internal",
-      "direction": "outbound",
-      "client": "ICommitmentPermissionsApiClient",
-      "technology": null,
-      "configurationKeys": [],
       "authentication": {
         "type": null,
         "configurationKeys": []
@@ -159,13 +70,40 @@
       "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments.Web/LocalDevRegistry/CommitmentApiClientFactory.cs",
-          "reason": "API client implementation for Commitment Permissions."
+          "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments.Web/Extensions/ConfigurationExtensions.cs",
+          "reason": "Configuration loaded from Azure Table Storage with AddAzureTableStorage."
         }
       ],
       "confidence": "high",
-      "targetId": "http-api-commitment-permissions",
-      "description": "Calls the API of"
+      "targetId": "configuration-store-azure-table-storage-configuration",
+      "description": "Reads configuration from"
+    },
+    {
+      "sourceId": "provider-commitments-web",
+      "name": "Configuration Store",
+      "kind": "configuration-store",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "SFA.DAS.Configuration.AzureTableStorage"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments.Web/Startup.cs",
+          "reason": "Azure Table Storage configuration registration"
+        }
+      ],
+      "confidence": "high",
+      "targetId": "configuration-store-configuration-store",
+      "description": "Reads configuration from"
     },
     {
       "sourceId": "provider-commitments-web",
@@ -174,9 +112,9 @@
       "classification": "internal",
       "direction": "outbound",
       "client": "ICommitmentsApiClient",
-      "technology": null,
+      "technology": "HttpClient",
       "configurationKeys": [
-        "CommitmentsClientApiConfiguration:ApiBaseUrl"
+        "CommitmentsClientApiConfiguration"
       ],
       "authentication": {
         "type": "Basic",
@@ -187,11 +125,7 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments.Web/LocalDevRegistry/CommitmentApiClientFactory.cs",
-          "reason": "API client implementation for Commitments."
-        },
-        {
-          "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments.Web/ServiceRegistrations/ApplicationServiceRegistrations.cs",
-          "reason": "API client registration for Commitments."
+          "reason": "ICommitmentsApiClient is implemented in LocalDevApiClientFactory, indicating an HTTP API dependency."
         }
       ],
       "confidence": "high",
@@ -200,37 +134,144 @@
     },
     {
       "sourceId": "provider-commitments-web",
-      "name": "Provider Apprenticeships Service Account",
+      "name": "Outer API",
       "kind": "http-api",
       "classification": "internal",
       "direction": "outbound",
-      "client": "IPasAccountApiClient",
-      "technology": null,
-      "configurationKeys": [
-        "PasAccountApiConfiguration:ApiBaseUrl",
-        "PasAccountApiConfiguration:ClientId",
-        "PasAccountApiConfiguration:ClientSecret",
-        "PasAccountApiConfiguration:Tenant"
-      ],
+      "client": "IOuterApiClient",
+      "technology": "HttpClient",
+      "configurationKeys": [],
       "authentication": {
-        "type": "OAuth",
-        "configurationKeys": [
-          "PasAccountApiConfiguration:ClientId",
-          "PasAccountApiConfiguration:ClientSecret",
-          "PasAccountApiConfiguration:Tenant"
-        ]
+        "type": null,
+        "configurationKeys": []
       },
       "operations": [],
       "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments.Web/ServiceRegistrations/ProviderApprenticeshipsApiClientServiceRegistrations.cs",
-          "reason": "API client for Provider Apprenticeships Service Account."
+          "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments.Web/ServiceRegistrations/ApplicationServiceRegistrations.cs",
+          "reason": "IOuterApiClient registered as a transient service."
         }
       ],
       "confidence": "high",
-      "targetId": "http-api-provider-apprenticeships-service-account",
+      "targetId": "http-api-outer-api",
       "description": "Calls the API of"
+    },
+    {
+      "sourceId": "provider-commitments-web",
+      "name": "PAS Account",
+      "kind": "http-api",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": "IPasAccountApiClient",
+      "technology": "HttpClient",
+      "configurationKeys": [
+        "PasAccountApiConfiguration"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments.Web/LocalDevRegistry/LocalDevPasAccountApiClientFactory.cs",
+          "reason": "IPasAccountApiClient is implemented in LocalDevPasAccountApiClientFactory, indicating an HTTP API dependency."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments.Web/ServiceRegistrations/ProviderApprenticeshipsApiClientServiceRegistrations.cs",
+          "reason": "IPasAccountApiClient registered as an outbound HTTP API client"
+        }
+      ],
+      "confidence": "high",
+      "targetId": "http-api-pas-account",
+      "description": "Calls the API of"
+    },
+    {
+      "sourceId": "provider-commitments-web",
+      "name": "DfE Sign-in",
+      "kind": "identity-provider",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "UseStubProviderAuth"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments.Web/Authentication/AuthenticationExtensions.cs",
+          "reason": "DfE Sign-in authentication configured with AddAndConfigureDfESignInAuthentication."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "identity-provider-dfe-sign-in",
+      "description": "Authenticates with"
+    },
+    {
+      "sourceId": "provider-commitments-web",
+      "name": "Microsoft Entra ID",
+      "kind": "identity-provider",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "Microsoft.AspNetCore.Authentication.JwtBearer"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments.Web/SFA.DAS.ProviderCommitments.Web.csproj",
+          "reason": "Microsoft.Azure Active Directory authentication package"
+        }
+      ],
+      "confidence": "high",
+      "targetId": "identity-provider-microsoft-entra-id",
+      "description": "Authenticates with"
+    },
+    {
+      "sourceId": "provider-commitments-web",
+      "name": "Application Insights",
+      "kind": "telemetry",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "APPLICATIONINSIGHTS_CONNECTION_STRING"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments.Web/SFA.DAS.ProviderCommitments.Web.csproj",
+          "reason": "Application Insights SDK reference"
+        },
+        {
+          "sourceFile": "src/SFA.DAS.ProviderCommitments/SFA.DAS.ProviderCommitments.Web/Exceptions/AddOpenTelemetryExtensions.cs",
+          "reason": "UseAzureMonitor registration for Application Insights telemetry with connection string."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "telemetry-application-insights",
+      "description": "Sends telemetry to"
     }
   ]
 }

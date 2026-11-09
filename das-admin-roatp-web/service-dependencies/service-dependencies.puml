@@ -2,16 +2,20 @@
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
 LAYOUT_WITH_LEGEND()
 
-System_Boundary(sys_SkillsFundingAgency_das_admin_roatp_web, "SFA DAS Admin Roatp Web") {
-  Container(c_sfa_das_admin_roatp_web, "SFA DAS Admin Roatp Web", "Web Application")
+System_Boundary(sys_SkillsFundingAgency_das_admin_roatp_web, "Admin Roatp") {
+  Container(c_admin_roatp, "Admin Roatp", "Web Application")
 }
 
-SystemDb_Ext(d_cache_redis_data_protection_keys, "Redis Data Protection Keys", "Redis")
-SystemDb_Ext(d_cache_stackexchange_redis_cache, "StackExchange Redis Cache", "Redis")
-System_Ext(d_http_api_admin_roatp_outer_api, "Admin Roatp Outer API", "Refit")
+SystemDb_Ext(d_cache_redis, "Redis", "StackExchange.Redis")
+SystemDb_Ext(d_configuration_store_azure_table_storage_configuration, "Azure Table Storage Configuration")
+System_Ext(d_http_api_outer, "Outer", "Refit")
+System_Ext(d_identity_provider_dfe_sign_in, "DfE Sign-in")
+System_Ext(d_telemetry_application_insights, "Application Insights")
 
-Rel(c_sfa_das_admin_roatp_web, d_cache_redis_data_protection_keys, "Caches data in", "Redis")
-Rel(c_sfa_das_admin_roatp_web, d_cache_stackexchange_redis_cache, "Caches data in", "Redis")
-Rel(c_sfa_das_admin_roatp_web, d_http_api_admin_roatp_outer_api, "Calls the API of", "Refit")
+Rel(c_admin_roatp, d_cache_redis, "Caches data in", "StackExchange.Redis")
+Rel(c_admin_roatp, d_configuration_store_azure_table_storage_configuration, "Reads configuration from")
+Rel(c_admin_roatp, d_http_api_outer, "Calls the API of", "Refit")
+Rel(c_admin_roatp, d_identity_provider_dfe_sign_in, "Authenticates with")
+Rel(c_admin_roatp, d_telemetry_application_insights, "Sends telemetry to")
 
 @enduml

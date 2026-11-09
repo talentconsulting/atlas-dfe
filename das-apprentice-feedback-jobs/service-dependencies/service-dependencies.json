@@ -6,16 +6,16 @@
   "containers": [
     {
       "id": "apprentice-feedback-jobs",
-      "name": "Apprentice Feedback Jobs",
+      "name": "Apprentice Feedback",
       "type": "job",
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.ApprenticeFeedback.Jobs/Program.cs",
-          "reason": "Azure Functions entry point with HostBuilder configuration."
+          "reason": "Azure Functions Worker entry point and configuration."
         },
         {
           "sourceFile": "src/SFA.DAS.ApprenticeFeedback.Jobs/SFA.DAS.ApprenticeFeedback.Jobs.csproj",
-          "reason": "Project file indicates Azure Functions app with OutputType='Exe' and <AzureFunctionsVersion>v4</AzureFunctionsVersion>."
+          "reason": "Project file indicating an Azure Functions worker role."
         }
       ]
     }
@@ -23,17 +23,46 @@
   "dependencies": [
     {
       "sourceId": "apprentice-feedback-jobs",
+      "name": "Azure Table Storage configuration",
+      "kind": "configuration-store",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "ConfigNames",
+        "ConfigurationStorageConnectionString",
+        "EnvironmentName"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.ApprenticeFeedback.Jobs/Extensions/AddConfigurationExtension.cs",
+          "reason": "AddAzureTableStorage registration to load configuration from Azure Table Storage."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "configuration-store-azure-table-storage-configuration",
+      "description": "Reads configuration from"
+    },
+    {
+      "sourceId": "apprentice-feedback-jobs",
       "name": "Apprentice Feedback Outer",
       "kind": "http-api",
       "classification": "internal",
       "direction": "outbound",
-      "client": "IApprenticeFeedbackApi",
+      "client": "RestEaseClient<IApprenticeFeedbackApi>",
       "technology": "RestEase",
       "configurationKeys": [
-        "ApprenticeFeedbackOuterApi"
+        "ApprenticeFeedbackApiConfiguration"
       ],
       "authentication": {
-        "type": "apim",
+        "type": null,
         "configurationKeys": []
       },
       "operations": [],
@@ -41,12 +70,103 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.ApprenticeFeedback.Jobs/Extensions/AddServiceRegistrationsExtension.cs",
-          "reason": "RestEase client registered for IApprenticeFeedbackApi with API base URL from ApprenticeFeedbackApiConfiguration."
+          "reason": "AddRestEaseClient registered for IApprenticeFeedbackApi."
         }
       ],
       "confidence": "high",
       "targetId": "http-api-apprentice-feedback-outer",
       "description": "Calls the API of"
+    },
+    {
+      "sourceId": "apprentice-feedback-jobs",
+      "name": "Azure Service Bus",
+      "kind": "message-broker",
+      "classification": "third-party",
+      "direction": "inbound",
+      "client": null,
+      "technology": "NServiceBus",
+      "configurationKeys": [
+        "AzureWebJobsServiceBus",
+        "AzureWebJobsStorage",
+        "NServiceBusConfiguration:License"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.ApprenticeFeedback.Jobs/Extensions/ConfigureNServiceBusExtension.cs",
+          "reason": "NServiceBus functions extension configured to handle messages from Azure Service Bus."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "message-broker-azure-service-bus",
+      "description": "Publishes messages to and consumes messages from"
+    },
+    {
+      "sourceId": "apprentice-feedback-jobs",
+      "name": "Azure Blob Storage",
+      "kind": "object-storage",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": "BlobServiceClient",
+      "technology": "Azure Blob Storage",
+      "configurationKeys": [
+        "FeedbackTargetVariantConfiguration.BlobStorageConnectionString"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.ApprenticeFeedback.Jobs/Extensions/AddServiceRegistrationsExtension.cs",
+          "reason": "BlobServiceClient constructed with a connection string from 'FeedbackTargetVariantConfiguration.BlobStorageConnectionString'."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.ApprenticeFeedback.Jobs/Helpers/FeedbackTargetVariants/FeedbackTargetVariantBlobMover.cs",
+          "reason": "BlobServiceClient used for blob operations."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.ApprenticeFeedback.Jobs/Helpers/FeedbackTargetVariants/FeedbackTargetVariantBlobProcessor.cs",
+          "reason": "BlobServiceClient used for managing blobs in the specified container."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "object-storage-azure-blob-storage",
+      "description": "Stores objects in"
+    },
+    {
+      "sourceId": "apprentice-feedback-jobs",
+      "name": "Application Insights",
+      "kind": "telemetry",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "APPLICATIONINSIGHTS_CONNECTION_STRING"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.ApprenticeFeedback.Jobs/Extensions/AddOpenTelemetryExtensions.cs",
+          "reason": "UseAzureMonitor registered to export telemetry to Azure Application Insights."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "telemetry-application-insights",
+      "description": "Sends telemetry to"
     }
   ]
 }

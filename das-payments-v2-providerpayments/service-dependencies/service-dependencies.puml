@@ -2,16 +2,20 @@
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
 LAYOUT_WITH_LEGEND()
 
-System_Boundary(sys_SkillsFundingAgency_das_payments_v2_providerpayments, "SFA.DAS.Payments.ProviderPayments") {
-  Container(c_provider_payments_application, "Provider Payments Application", "Component")
-  Container(c_provider_payments_legacy_export_service, "Provider Payments Legacy Export Service", "Background Job")
-  Container(c_provider_payments_provider_payments_service, "Provider Payments Provider Payments Service", "Background Job")
-  Container(c_sfa_das_payments_providerpayments_specs, "SFA.DAS.Payments.ProviderPayments Specs", "Component")
+System_Boundary(sys_SkillsFundingAgency_das_payments_v2_providerpayments, "ProviderPayments") {
+  Container(c_payments_provider_payments_service, "Payments Provider Payments Service", "Background Job")
+  Container(c_payments_provider_payments_specs, "Payments Provider Payments Specs", "Component")
+  Container(c_providerpayments_application, "ProviderPayments", "Component")
+  Container(c_providerpayments_legacyexportservice, "ProviderPayments LegacyExportService", "Background Job")
 }
 
-SystemDb_Ext(d_database_sql_server, "SQL Server", "EF Core")
+SystemDb_Ext(d_database_dasperiodendconnectionstring, "DasPeriodEndConnectionString", "SQL Server")
+SystemQueue_Ext(d_message_broker_dasservicebusconnectionstring, "DASServiceBusConnectionString", "Azure Service Bus")
+SystemQueue_Ext(d_message_broker_service_bus, "Service Bus", "Azure Service Bus")
 
-Rel(c_sfa_das_payments_providerpayments_specs, d_database_sql_server, "Reads from and writes to", "EF Core")
-Rel(c_provider_payments_application, d_database_sql_server, "Reads from and writes to", "SQL Server")
+Rel(c_providerpayments_application, d_database_dasperiodendconnectionstring, "Reads from and writes to", "SQL Server")
+Rel(c_payments_provider_payments_specs, d_database_dasperiodendconnectionstring, "Reads from and writes to", "SQL Server")
+Rel(c_providerpayments_application, d_message_broker_dasservicebusconnectionstring, "Publishes messages to and consumes messages from", "Azure Service Bus")
+Rel(c_payments_provider_payments_service, d_message_broker_service_bus, "Publishes messages to and consumes messages from", "Azure Service Bus")
 
 @enduml

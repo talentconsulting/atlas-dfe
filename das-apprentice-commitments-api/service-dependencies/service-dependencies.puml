@@ -3,15 +3,22 @@
 LAYOUT_WITH_LEGEND()
 
 System_Boundary(sys_SkillsFundingAgency_das_apprentice_commitments_api, "Apprentice Commitments") {
-  Container(c_apprentice_commitments, "Apprentice Commitments", "API")
+  Container(c_apprentice_commitments, "Apprentice Commitments", "Component")
+  Container(c_apprentice_commitments_2, "Apprentice Commitments", "API")
 }
 
-System_Ext(d_cloud_service_azure_table_storage, "Azure Table Storage", "Azure Table Storage")
-SystemDb_Ext(d_database_apprentice_commitments_database, "Apprentice Commitments Database", "Microsoft SQL Server")
-SystemQueue_Ext(d_message_broker_azure_service_bus, "Azure Service Bus", "Azure Service Bus")
+SystemDb_Ext(d_configuration_store_azure_table_storage_configuration, "Azure Table Storage configuration")
+SystemDb_Ext(d_database_sql_server, "SQL Server", "SQL Server")
+System_Ext(d_identity_provider_microsoft_entra_id, "Microsoft Entra ID")
+SystemQueue_Ext(d_message_broker_azure_service_bus, "Azure Service Bus")
+System_Ext(d_telemetry_application_insights, "Application Insights", "Azure Monitor")
 
-Rel(c_apprentice_commitments, d_cloud_service_azure_table_storage, "Uses", "Azure Table Storage")
-Rel(c_apprentice_commitments, d_database_apprentice_commitments_database, "Reads from and writes to", "Microsoft SQL Server")
-Rel(c_apprentice_commitments, d_message_broker_azure_service_bus, "Publishes messages to and consumes messages from", "Azure Service Bus")
+Rel(c_apprentice_commitments_2, d_configuration_store_azure_table_storage_configuration, "Reads configuration from")
+Rel(c_apprentice_commitments, d_database_sql_server, "Reads from and writes to", "SQL Server")
+Rel(c_apprentice_commitments_2, d_database_sql_server, "Reads from and writes to", "SQL Server")
+Rel(c_apprentice_commitments_2, d_identity_provider_microsoft_entra_id, "Authenticates with")
+Rel(c_apprentice_commitments_2, d_message_broker_azure_service_bus, "Publishes messages to and consumes messages from")
+Rel(c_apprentice_commitments, d_telemetry_application_insights, "Sends telemetry to", "Azure Monitor")
+Rel(c_apprentice_commitments_2, d_telemetry_application_insights, "Sends telemetry to")
 
 @enduml

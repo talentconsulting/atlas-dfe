@@ -2,8 +2,30 @@
   "repository": "SkillsFundingAgency/das-provide-feedback-employer",
   "ref": "master",
   "path": "src",
-  "systemName": "Provide Feedback Employer",
+  "systemName": "Employer Provide Feedback",
   "containers": [
+    {
+      "id": "employer-provide-feedback",
+      "name": "Employer Provide Feedback",
+      "type": "web",
+      "evidence": [
+        {
+          "sourceFile": "src/Employer/ESFA.DAS.EmployerProvideFeedback/StartupExtensions/AddServiceRegistrationExtensions.cs",
+          "reason": "IServiceCollection extension methods for a web application"
+        }
+      ]
+    },
+    {
+      "id": "employer-provide-feedback-functions-emailer",
+      "name": "Employer Provide Feedback Functions Emailer",
+      "type": "job",
+      "evidence": [
+        {
+          "sourceFile": "src/Employer/ESFA.DAS.ProvideFeedback.Employer.Functions.Emailer/Program.cs",
+          "reason": "Azure Functions worker entry point"
+        }
+      ]
+    },
     {
       "id": "provide-feedback-employer-api",
       "name": "Provide Feedback Employer",
@@ -11,26 +33,11 @@
       "evidence": [
         {
           "sourceFile": "src/Employer/ESFA.DAS.EmployerProvideFeedback.Api/Program.cs",
-          "reason": "ASP.NET Core API entry point class detected."
+          "reason": "ASP.NET Core API entry point"
         },
         {
-          "sourceFile": "src/Employer/ESFA.DAS.EmployerProvideFeedback.Api/ESFA.DAS.EmployerProvideFeedback.Api.csproj",
-          "reason": "Project SDK references ASP.NET Core Web, indicating an API container."
-        }
-      ]
-    },
-    {
-      "id": "provide-feedback-employer-functions-emailer",
-      "name": "Provide Feedback Employer Functions Emailer",
-      "type": "job",
-      "evidence": [
-        {
-          "sourceFile": "src/Employer/ESFA.DAS.ProvideFeedback.Employer.Functions.Emailer/Program.cs",
-          "reason": "Azure Functions worker configuration detected."
-        },
-        {
-          "sourceFile": "src/Employer/ESFA.DAS.ProvideFeedback.Employer.Functions.Emailer/ESFA.DAS.ProvideFeedback.Employer.Functions.Emailer.csproj",
-          "reason": "Project marked as Azure Functions job with OutputType=Exe."
+          "sourceFile": "src/Employer/ESFA.DAS.EmployerProvideFeedback.Api/Startup.cs",
+          "reason": "ASP.NET Core startup configuration"
         }
       ]
     },
@@ -40,12 +47,12 @@
       "type": "web",
       "evidence": [
         {
-          "sourceFile": "src/Employer/ESFA.DAS.EmployerProvideFeedback/Program.cs",
-          "reason": "ASP.NET Core Web entry point class detected."
+          "sourceFile": "src/Employer/ESFA.DAS.EmployerProvideFeedback/Startup.cs",
+          "reason": "ASP.NET Core startup configuration"
         },
         {
-          "sourceFile": "src/Employer/ESFA.DAS.EmployerProvideFeedback/ESFA.DAS.EmployerProvideFeedback.csproj",
-          "reason": "Project SDK references ASP.NET Core Web, indicating a web container."
+          "sourceFile": "src/Employer/ESFA.DAS.EmployerProvideFeedback/Program.cs",
+          "reason": "ASP.NET Core web entry point"
         }
       ]
     }
@@ -55,7 +62,7 @@
       "sourceId": "provide-feedback-employer-web",
       "name": "Redis Cache",
       "kind": "cache",
-      "classification": "internal",
+      "classification": "third-party",
       "direction": "outbound",
       "client": "StackExchange.Redis",
       "technology": "Redis",
@@ -67,18 +74,11 @@
         "configurationKeys": []
       },
       "operations": [],
-      "resources": [
-        {
-          "type": "cache",
-          "name": "RedisConnectionString",
-          "direction": "outbound",
-          "sourceFile": "src/Employer/ESFA.DAS.EmployerProvideFeedback/StartupExtensions/AddCacheExtensions.cs"
-        }
-      ],
+      "resources": [],
       "evidence": [
         {
           "sourceFile": "src/Employer/ESFA.DAS.EmployerProvideFeedback/StartupExtensions/AddCacheExtensions.cs",
-          "reason": "StackExchange.Redis cache configuration detected for distributed cache setup."
+          "reason": "Redis cache configured via StackExchange.Redis"
         }
       ],
       "confidence": "high",
@@ -86,15 +86,40 @@
       "description": "Caches data in"
     },
     {
-      "sourceId": "provide-feedback-employer-web",
-      "name": "Azure Monitor",
-      "kind": "cloud-service",
+      "sourceId": "employer-provide-feedback-functions-emailer",
+      "name": "Azure App Configuration",
+      "kind": "configuration-store",
       "classification": "third-party",
       "direction": "outbound",
       "client": null,
-      "technology": "Azure Monitor",
+      "technology": null,
+      "configurationKeys": [],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/Employer/ESFA.DAS.ProvideFeedback.Employer.Functions.Emailer/Program.cs",
+          "reason": "Usage of ConfigurationBuilder to load environment variables and app settings"
+        }
+      ],
+      "confidence": "high",
+      "targetId": "configuration-store-azure-app-configuration",
+      "description": "Reads configuration from"
+    },
+    {
+      "sourceId": "provide-feedback-employer-web",
+      "name": "Azure Table Storage configuration",
+      "kind": "configuration-store",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
       "configurationKeys": [
-        "APPLICATIONINSIGHTS_CONNECTION_STRING"
+        "ConfigurationStorageConnectionString"
       ],
       "authentication": {
         "type": null,
@@ -105,47 +130,36 @@
       "evidence": [
         {
           "sourceFile": "src/Employer/ESFA.DAS.EmployerProvideFeedback/Startup.cs",
-          "reason": "OpenTelemetry Azure Monitor registration detected with ApplicationInsights connection string."
+          "reason": "AddAzureTableStorage configured for remote configuration"
         }
       ],
       "confidence": "high",
-      "targetId": "cloud-service-azure-monitor",
-      "description": "Uses"
+      "targetId": "configuration-store-azure-table-storage-configuration",
+      "description": "Reads configuration from"
     },
     {
-      "sourceId": "provide-feedback-employer-functions-emailer",
+      "sourceId": "employer-provide-feedback-functions-emailer",
       "name": "Employer Email Store",
       "kind": "database",
       "classification": "internal",
       "direction": "outbound",
-      "client": "SqlConnection",
+      "client": null,
       "technology": "SQL Server",
       "configurationKeys": [
         "EmployerEmailStoreConnection"
       ],
       "authentication": {
-        "type": "azure-ad",
+        "type": "Azure AD",
         "configurationKeys": [
-          "EmployerEmailStoreConnection"
+          "ASPNETCORE_ENVIRONMENT"
         ]
       },
       "operations": [],
-      "resources": [
-        {
-          "type": "database",
-          "name": "Employer Email Store",
-          "direction": "outbound",
-          "sourceFile": "src/Employer/ESFA.DAS.ProvideFeedback.Employer.Functions.Emailer/Database/AddDatabaseExtension.cs"
-        }
-      ],
+      "resources": [],
       "evidence": [
         {
           "sourceFile": "src/Employer/ESFA.DAS.ProvideFeedback.Employer.Functions.Emailer/Database/AddDatabaseExtension.cs",
-          "reason": "Azure AD token authentication detected for SQL Server."
-        },
-        {
-          "sourceFile": "src/Employer/ESFA.DAS.ProvideFeedback.Employer.Functions.Emailer/Database/AddDatabaseExtension.cs",
-          "reason": "SqlConnection construction with configuration for EmployerEmailStoreConnection."
+          "reason": "SQL Server connection created with Azure AD credential or password"
         }
       ],
       "confidence": "high",
@@ -158,28 +172,21 @@
       "kind": "database",
       "classification": "internal",
       "direction": "outbound",
-      "client": "SqlConnection",
+      "client": null,
       "technology": "SQL Server",
       "configurationKeys": [
         "EmployerEmailStoreConnection"
       ],
       "authentication": {
-        "type": "Azure Managed Identity",
+        "type": "Azure Identity",
         "configurationKeys": []
       },
       "operations": [],
-      "resources": [
-        {
-          "type": "database",
-          "name": "EmployerEmailStoreConnection",
-          "direction": "outbound",
-          "sourceFile": "src/Employer/ESFA.DAS.EmployerProvideFeedback.Api/Configuration/StartupExtensions.cs"
-        }
-      ],
+      "resources": [],
       "evidence": [
         {
           "sourceFile": "src/Employer/ESFA.DAS.EmployerProvideFeedback.Api/Configuration/StartupExtensions.cs",
-          "reason": "Transient IDbConnection with SqlConnection for database access registered."
+          "reason": "IDbConnection with SQL Server connection string and Azure Identity support"
         }
       ],
       "confidence": "high",
@@ -192,28 +199,21 @@
       "kind": "database",
       "classification": "internal",
       "direction": "outbound",
-      "client": "SqlConnection",
+      "client": null,
       "technology": "SQL Server",
       "configurationKeys": [
         "EmployerFeedbackDatabaseConnectionString"
       ],
       "authentication": {
-        "type": "Azure Managed Identity",
+        "type": "Azure Identity",
         "configurationKeys": []
       },
       "operations": [],
-      "resources": [
-        {
-          "type": "database",
-          "name": "EmployerFeedbackDatabaseConnectionString",
-          "direction": "outbound",
-          "sourceFile": "src/Employer/ESFA.DAS.EmployerProvideFeedback/Database/AddDatabaseExtension.cs"
-        }
-      ],
+      "resources": [],
       "evidence": [
         {
           "sourceFile": "src/Employer/ESFA.DAS.EmployerProvideFeedback/Database/AddDatabaseExtension.cs",
-          "reason": "Transient IDbConnection with SqlConnection for database access registered."
+          "reason": "IDbConnection with SQL Server connection string and Azure Identity support"
         }
       ],
       "confidence": "high",
@@ -221,51 +221,201 @@
       "description": "Reads from and writes to"
     },
     {
-      "sourceId": "provide-feedback-employer-functions-emailer",
+      "sourceId": "employer-provide-feedback",
       "name": "Outer API",
       "kind": "http-api",
       "classification": "internal",
       "direction": "outbound",
-      "client": "OuterApiClient",
+      "client": "IOuterApiClient",
       "technology": "HttpClient",
-      "configurationKeys": [
-        "OuterApiConfiguration:BaseUrl"
-      ],
+      "configurationKeys": [],
       "authentication": {
-        "type": "api-key",
-        "configurationKeys": [
-          "OuterApiConfiguration:Key"
-        ]
+        "type": null,
+        "configurationKeys": []
       },
-      "operations": [
-        {
-          "method": "GET",
-          "methodName": "Get",
-          "path": "{request.GetUrl}",
-          "sourceFile": "src/Employer/ESFA.DAS.ProvideFeedback.Employer.ApplicationServices/OuterApi/OuterApiClient.cs"
-        }
-      ],
-      "resources": [
-        {
-          "type": "endpoint",
-          "name": "Outer API BaseUrl",
-          "direction": "outbound",
-          "sourceFile": "src/Employer/ESFA.DAS.ProvideFeedback.Employer.ApplicationServices/OuterApi/OuterApiClient.cs"
-        }
-      ],
+      "operations": [],
+      "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/Employer/ESFA.DAS.ProvideFeedback.Employer.ApplicationServices/OuterApi/OuterApiClient.cs",
-          "reason": "API key authentication header detected."
-        },
-        {
-          "sourceFile": "src/Employer/ESFA.DAS.ProvideFeedback.Employer.ApplicationServices/OuterApi/OuterApiClient.cs",
-          "reason": "HttpClient construction with API BaseUrl detected."
+          "sourceFile": "src/Employer/ESFA.DAS.EmployerProvideFeedback/StartupExtensions/AddServiceRegistrationExtensions.cs",
+          "reason": "HttpClient for IOuterApiClient registered with AddHttpClient"
         }
       ],
       "confidence": "high",
       "targetId": "http-api-outer-api",
       "description": "Calls the API of"
+    },
+    {
+      "sourceId": "employer-provide-feedback",
+      "name": "Microsoft Entra ID",
+      "kind": "identity-provider",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "GovUkOidcConfiguration"
+      ],
+      "authentication": {
+        "type": "OpenID Connect",
+        "configurationKeys": [
+          "GovUkOidcConfiguration"
+        ]
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/Employer/ESFA.DAS.EmployerProvideFeedback/StartupExtensions/AuthenticationExtensions.cs",
+          "reason": "GovUK OpenID Connect authentication system added with configuration"
+        }
+      ],
+      "confidence": "high",
+      "targetId": "identity-provider-microsoft-entra-id",
+      "description": "Authenticates with"
+    },
+    {
+      "sourceId": "provide-feedback-employer-api",
+      "name": "Microsoft Entra ID",
+      "kind": "identity-provider",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "AzureAd"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": [
+          "AzureAd"
+        ]
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/Employer/ESFA.DAS.EmployerProvideFeedback.Api/Configuration/StartupExtensions.cs",
+          "reason": "Azure AD authentication configured"
+        }
+      ],
+      "confidence": "high",
+      "targetId": "identity-provider-microsoft-entra-id",
+      "description": "Authenticates with"
+    },
+    {
+      "sourceId": "provide-feedback-employer-web",
+      "name": "Microsoft Entra ID",
+      "kind": "identity-provider",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "AzureAd"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": [
+          "AzureAd"
+        ]
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/Employer/ESFA.DAS.EmployerProvideFeedback/Startup.cs",
+          "reason": "Azure AD authentication configured"
+        }
+      ],
+      "confidence": "high",
+      "targetId": "identity-provider-microsoft-entra-id",
+      "description": "Authenticates with"
+    },
+    {
+      "sourceId": "employer-provide-feedback-functions-emailer",
+      "name": "Application Insights",
+      "kind": "telemetry",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "APPLICATIONINSIGHTS_CONNECTION_STRING"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/Employer/ESFA.DAS.ProvideFeedback.Employer.Functions.Emailer/Program.cs",
+          "reason": "Application Insights telemetry exporter added in DI"
+        },
+        {
+          "sourceFile": "src/Employer/ESFA.DAS.ProvideFeedback.Employer.Functions.Emailer/StartUpExtensions/ConfigurationExtensions.cs",
+          "reason": "Telemetry setup using Azure Monitor OpenTelemetry"
+        }
+      ],
+      "confidence": "high",
+      "targetId": "telemetry-application-insights",
+      "description": "Sends telemetry to"
+    },
+    {
+      "sourceId": "provide-feedback-employer-web",
+      "name": "Application Insights",
+      "kind": "telemetry",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "APPLICATIONINSIGHTS_CONNECTION_STRING"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/Employer/ESFA.DAS.EmployerProvideFeedback/StartupExtensions/AddOpenTelemetryExtensions.cs",
+          "reason": "OpenTelemetry configured with Application Insights connection string"
+        }
+      ],
+      "confidence": "high",
+      "targetId": "telemetry-application-insights",
+      "description": "Sends telemetry to"
+    },
+    {
+      "sourceId": "provide-feedback-employer-api",
+      "name": "Application Insights",
+      "kind": "telemetry",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "APPLICATIONINSIGHTS_CONNECTION_STRING"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/Employer/ESFA.DAS.EmployerProvideFeedback.Api/Configuration/StartupExtensions.cs",
+          "reason": "OpenTelemetry configured with Application Insights connection string"
+        }
+      ],
+      "confidence": "high",
+      "targetId": "telemetry-application-insights",
+      "description": "Sends telemetry to"
     }
   ]
 }

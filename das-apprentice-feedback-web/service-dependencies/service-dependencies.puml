@@ -3,14 +3,19 @@
 LAYOUT_WITH_LEGEND()
 
 System_Boundary(sys_SkillsFundingAgency_das_apprentice_feedback_web, "Apprentice Feedback") {
-  Container(c_apprentice_feedback_nservicebuslistener, "Apprentice Feedback NServiceBus Listener", "Background Job")
-  Container(c_apprentice_feedback_web, "Apprentice Feedback", "Web Application")
+  Container(c_apprentice_feedback_web, "Apprentice Feedback Web", "Web Application")
+  Container(c_apprentice_feedback_web_nservicebuslistener, "Apprentice Feedback Web NServiceBusListener", "Background Job")
 }
 
-SystemDb_Ext(d_cache_azure_redis, "Azure Redis", "StackExchange.Redis")
-SystemQueue_Ext(d_message_broker_azure_service_bus, "Azure Service Bus", "NServiceBus.Azure.Transports.WindowsAzureServiceBus")
+SystemDb_Ext(d_cache_redis, "Redis", "StackExchange.Redis")
+SystemDb_Ext(d_configuration_store_azure_table_storage_configuration, "Azure Table Storage configuration")
+SystemQueue_Ext(d_message_broker_azure_service_bus, "Azure Service Bus", "Azure Service Bus")
+System_Ext(d_telemetry_application_insights, "Application Insights")
 
-Rel(c_apprentice_feedback_web, d_cache_azure_redis, "Caches data in", "StackExchange.Redis")
-Rel(c_apprentice_feedback_nservicebuslistener, d_message_broker_azure_service_bus, "Publishes messages to and consumes messages from", "NServiceBus.Azure.Transports.WindowsAzureServiceBus")
+Rel(c_apprentice_feedback_web, d_cache_redis, "Caches data in", "StackExchange.Redis")
+Rel(c_apprentice_feedback_web, d_configuration_store_azure_table_storage_configuration, "Reads configuration from")
+Rel(c_apprentice_feedback_web, d_message_broker_azure_service_bus, "Publishes messages to and consumes messages from", "Azure Service Bus")
+Rel(c_apprentice_feedback_web_nservicebuslistener, d_message_broker_azure_service_bus, "Publishes messages to and consumes messages from", "Azure Service Bus")
+Rel(c_apprentice_feedback_web, d_telemetry_application_insights, "Sends telemetry to")
 
 @enduml

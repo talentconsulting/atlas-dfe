@@ -2,7 +2,7 @@
   "repository": "SkillsFundingAgency/das-reservations-api",
   "ref": "master",
   "path": "src",
-  "systemName": "Reservations",
+  "systemName": "SFA.DAS.Reservations",
   "containers": [
     {
       "id": "reservations",
@@ -10,34 +10,27 @@
       "type": "api",
       "evidence": [
         {
+          "sourceFile": "src/SFA.DAS.Reservations.Api/Startup.cs",
+          "reason": "ASP.NET Startup class"
+        },
+        {
           "sourceFile": "src/SFA.DAS.Reservations.Api/Program.cs",
-          "reason": "ASP.NET Core API entry point"
+          "reason": "ASP.NET WebHost entry point"
         },
         {
           "sourceFile": "src/SFA.DAS.Reservations.Api/SFA.DAS.Reservations.Api.csproj",
-          "reason": "Project SDK is Microsoft.NET.Sdk.Web"
+          "reason": "Web SDK project file"
         }
       ]
     },
     {
-      "id": "reservations-jobs",
-      "name": "Reservations Jobs",
-      "type": "job",
-      "evidence": [
-        {
-          "sourceFile": "src/SFA.DAS.Reservations.NServiceBusListener/SFA.DAS.Reservations.NServiceBusListener.csproj",
-          "reason": "Project file declares an executable output type, references NServiceBus for message handling, and appears to represent a jobs/worker container."
-        }
-      ]
-    },
-    {
-      "id": "reservations-nservicebuslistener",
-      "name": "Reservations NServiceBusListener",
+      "id": "sfa-das-reservations-nservicebuslistener",
+      "name": "SFA.DAS.Reservations NServiceBusListener",
       "type": "job",
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.Reservations.NServiceBusListener/Program.cs",
-          "reason": "Background job using HostBuilder and hosted service"
+          "reason": "Main entry point of the NServiceBus listener app"
         }
       ]
     }
@@ -45,20 +38,87 @@
   "dependencies": [
     {
       "sourceId": "reservations",
-      "name": "Azure Active Directory",
-      "kind": "cloud-service",
+      "name": "Azure Table Storage Configuration",
+      "kind": "configuration-store",
       "classification": "third-party",
       "direction": "outbound",
       "client": null,
-      "technology": "Azure AD",
+      "technology": null,
       "configurationKeys": [
-        "AzureAd"
+        "ConfigurationStorageConnectionString"
       ],
       "authentication": {
-        "type": "jwt-bearer",
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Reservations.Api/StartupExtensions/ConfigurationExtensions.cs",
+          "reason": "AddAzureTableStorage is used for remote configuration"
+        }
+      ],
+      "confidence": "high",
+      "targetId": "configuration-store-azure-table-storage-configuration",
+      "description": "Reads configuration from"
+    },
+    {
+      "sourceId": "reservations",
+      "name": "Azure SQL Database",
+      "kind": "database",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": "ReservationsDataContext",
+      "technology": "Entity Framework Core",
+      "configurationKeys": [
+        "Reservations:ConnectionString"
+      ],
+      "authentication": {
+        "type": "Managed Identity",
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Reservations.Data/ReservationsDataContext.cs",
+          "reason": "ReservationsDataContext accesses DbContext and uses UseSqlServer"
+        },
+        {
+          "sourceFile": "src/SFA.DAS.Reservations.Api/StartupExtensions/EntityFrameworkStartup.cs",
+          "reason": "ReservationsDataContext is instantiated with a SQL connection"
+        },
+        {
+          "sourceFile": "src/SFA.DAS.Reservations.Api/Startup.cs",
+          "reason": "ReservationsDataContext is registered with UseSqlServer"
+        },
+        {
+          "sourceFile": "src/SFA.DAS.Reservations.Api/AppStart/AddDatabaseExtension.cs",
+          "reason": "Usage of SqlConnection with optional managed identity"
+        }
+      ],
+      "confidence": "high",
+      "targetId": "database-azure-sql-database",
+      "description": "Reads from and writes to"
+    },
+    {
+      "sourceId": "reservations",
+      "name": "Microsoft Entra ID",
+      "kind": "identity-provider",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "AzureAd:Identifier",
+        "AzureAd:Tenant"
+      ],
+      "authentication": {
+        "type": "JWT",
         "configurationKeys": [
-          "AzureAd.Identifier",
-          "AzureAd.Tenant"
+          "AzureAd:Identifier",
+          "AzureAd:Tenant"
         ]
       },
       "operations": [],
@@ -66,123 +126,51 @@
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.Reservations.Api/Startup.cs",
-          "reason": "Azure AD configuration and JWT Bearer authentication"
+          "reason": "Microsoft Identity authentication configured with AddAuthentication and AddJwtBearer"
         }
       ],
       "confidence": "high",
-      "targetId": "cloud-service-azure-active-directory",
-      "description": "Uses"
+      "targetId": "identity-provider-microsoft-entra-id",
+      "description": "Authenticates with"
     },
     {
-      "sourceId": "reservations",
-      "name": "Azure Search",
-      "kind": "cloud-service",
-      "classification": "third-party",
-      "direction": "outbound",
-      "client": null,
-      "technology": "Azure Cognitive Search",
-      "configurationKeys": [
-        "Reservations"
-      ],
-      "authentication": {
-        "type": "api-key",
-        "configurationKeys": []
-      },
-      "operations": [],
-      "resources": [],
-      "evidence": [
-        {
-          "sourceFile": "src/SFA.DAS.Reservations.Api/Startup.cs",
-          "reason": "Azure search dependency registered"
-        },
-        {
-          "sourceFile": "src/SFA.DAS.Reservations.Data/SFA.DAS.Reservations.Data.csproj",
-          "reason": "Reference to Azure.Search.Documents package"
-        }
-      ],
-      "confidence": "high",
-      "targetId": "cloud-service-azure-search",
-      "description": "Uses"
-    },
-    {
-      "sourceId": "reservations-jobs",
-      "name": "SQL Database",
-      "kind": "database",
-      "classification": "unknown",
-      "direction": "outbound",
-      "client": null,
-      "technology": "System.Data.SqlClient",
-      "configurationKeys": [],
-      "authentication": {
-        "type": null,
-        "configurationKeys": []
-      },
-      "operations": [],
-      "resources": [],
-      "evidence": [
-        {
-          "sourceFile": "src/SFA.DAS.Reservations.NServiceBusListener/SFA.DAS.Reservations.NServiceBusListener.csproj",
-          "reason": "The project references SFA.DAS.NServiceBus.SqlServer, further evidencing interaction with a SQL database."
-        },
-        {
-          "sourceFile": "src/SFA.DAS.Reservations.NServiceBusListener/SFA.DAS.Reservations.NServiceBusListener.csproj",
-          "reason": "The project references System.Data.SqlClient, indicating dependency on a SQL-based database."
-        }
-      ],
-      "confidence": "high",
-      "targetId": "database-sql-database",
-      "description": "Reads from and writes to"
-    },
-    {
-      "sourceId": "reservations",
-      "name": "SQL Database",
-      "kind": "database",
-      "classification": "third-party",
-      "direction": "outbound",
-      "client": "SqlConnection",
-      "technology": "SQL Server",
-      "configurationKeys": [
-        "Reservations.ConnectionString"
-      ],
-      "authentication": {
-        "type": "managed-identity",
-        "configurationKeys": []
-      },
-      "operations": [],
-      "resources": [],
-      "evidence": [
-        {
-          "sourceFile": "src/SFA.DAS.Reservations.Api/AppStart/AddDatabaseExtension.cs",
-          "reason": "Managed identity usage for Azure SQL Database"
-        },
-        {
-          "sourceFile": "src/SFA.DAS.Reservations.Data/ReservationsDataContext.cs",
-          "reason": "ReservationsDataContext using SQL Server"
-        }
-      ],
-      "confidence": "high",
-      "targetId": "database-sql-database",
-      "description": "Reads from and writes to"
-    },
-    {
-      "sourceId": "reservations-jobs",
+      "sourceId": "sfa-das-reservations-nservicebuslistener",
       "name": "Azure Service Bus",
       "kind": "message-broker",
       "classification": "third-party",
-      "direction": "outbound",
-      "client": null,
-      "technology": "NServiceBus.Transport.AzureServiceBus",
-      "configurationKeys": [],
+      "direction": "bidirectional",
+      "client": "NServiceBus endpoint",
+      "technology": "Azure.Messaging.ServiceBus",
+      "configurationKeys": [
+        "EnvironmentVariables.NServiceBusConnectionString"
+      ],
       "authentication": {
-        "type": null,
-        "configurationKeys": []
+        "type": "connection-string",
+        "configurationKeys": [
+          "EnvironmentVariables.NServiceBusConnectionString"
+        ]
       },
       "operations": [],
-      "resources": [],
+      "resources": [
+        {
+          "type": "queue",
+          "name": null,
+          "direction": "inbound",
+          "sourceFile": "src/SFA.DAS.Reservations.NServiceBusListener/NServiceBusConsole.cs"
+        }
+      ],
       "evidence": [
         {
           "sourceFile": "src/SFA.DAS.Reservations.NServiceBusListener/SFA.DAS.Reservations.NServiceBusListener.csproj",
-          "reason": "The project references NServiceBus.Transport.AzureServiceBus, indicating dependency on Azure Service Bus for messaging."
+          "reason": "Azure.Messaging.ServiceBus package referenced"
+        },
+        {
+          "sourceFile": "src/SFA.DAS.Reservations.NServiceBusListener/SFA.DAS.Reservations.NServiceBusListener.csproj",
+          "reason": "NServiceBus.Transport.AzureServiceBus package referenced"
+        },
+        {
+          "sourceFile": "src/SFA.DAS.Reservations.NServiceBusListener/NServiceBusConsole.cs",
+          "reason": "UseAzureServiceBusTransport method invoked with a connection string"
         }
       ],
       "confidence": "high",
@@ -194,9 +182,47 @@
       "name": "Azure Service Bus",
       "kind": "message-broker",
       "classification": "third-party",
+      "direction": "bidirectional",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "Reservations:NServiceBusConnectionString"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [
+        {
+          "type": "queue",
+          "name": "SFA.DAS.Reservations.Api-errors",
+          "direction": "inbound",
+          "sourceFile": "src/SFA.DAS.Reservations.Api/StartupExtensions/NServiceBusStartUp.cs"
+        }
+      ],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Reservations.Api/StartupExtensions/NServiceBusStartUp.cs",
+          "reason": "Azure Service Bus transport is configured for NServiceBus"
+        },
+        {
+          "sourceFile": "src/SFA.DAS.Reservations.Api/SFA.DAS.Reservations.Api.csproj",
+          "reason": "Microsoft.Azure.ServiceBus package dependency"
+        }
+      ],
+      "confidence": "high",
+      "targetId": "message-broker-azure-service-bus",
+      "description": "Publishes messages to and consumes messages from"
+    },
+    {
+      "sourceId": "sfa-das-reservations-nservicebuslistener",
+      "name": "Application Insights",
+      "kind": "telemetry",
+      "classification": "third-party",
       "direction": "outbound",
-      "client": "ServiceBusClient",
-      "technology": "Azure Service Bus",
+      "client": null,
+      "technology": null,
       "configurationKeys": [],
       "authentication": {
         "type": null,
@@ -206,17 +232,38 @@
       "resources": [],
       "evidence": [
         {
-          "sourceFile": "src/SFA.DAS.Reservations.Infrastructure/SFA.DAS.Reservations.Infrastructure.csproj",
-          "reason": "Reference to Azure.Messaging.ServiceBus package"
-        },
+          "sourceFile": "src/SFA.DAS.Reservations.NServiceBusListener/Program.cs",
+          "reason": "Application configured with AddConsole and AddDebug for logging"
+        }
+      ],
+      "confidence": "medium",
+      "targetId": "telemetry-application-insights",
+      "description": "Sends telemetry to"
+    },
+    {
+      "sourceId": "reservations",
+      "name": "Application Insights",
+      "kind": "telemetry",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
         {
           "sourceFile": "src/SFA.DAS.Reservations.Api/Startup.cs",
-          "reason": "ServiceBus queue health check registered"
+          "reason": "AddApplicationInsightsTelemetry is used"
         }
       ],
       "confidence": "high",
-      "targetId": "message-broker-azure-service-bus",
-      "description": "Publishes messages to and consumes messages from"
+      "targetId": "telemetry-application-insights",
+      "description": "Sends telemetry to"
     }
   ]
 }

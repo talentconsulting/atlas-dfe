@@ -3,15 +3,19 @@
 LAYOUT_WITH_LEGEND()
 
 System_Boundary(sys_SkillsFundingAgency_das_payments_v2_datalocks, "Payments DataLocks") {
-  Container(c_payments_datalocks_approvals_service, "Payments DataLocks Approvals Service", "Background Job")
-  Container(c_payments_datalocks_data_lock_event_service, "Payments DataLocks Data Lock Event Service", "Background Job")
-  Container(c_payments_datalocks_data_lock_proxy_service, "Payments DataLocks Data Lock Proxy Service", "Background Job")
-  Container(c_payments_datalocks_data_lock_service, "Payments DataLocks Data Lock Service", "Background Job")
-  Container(c_payments_datalocks_data_lock_status_changed_service, "Payments DataLocks Data Lock Status Changed Service", "Background Job")
-  Container(c_payments_datalocks_domain, "Payments DataLocks Domain", "Component")
-  Container(c_payments_datalocks_messages, "Payments DataLocks Messages", "Component")
-  Container(c_payments_datalocks_messages_internal, "Payments DataLocks Messages Internal", "Component")
-  Container(c_payments_datalocks_model, "Payments DataLocks Model", "Component")
+  Container(c_payments_datalocks_application, "Payments DataLocks Application", "Component")
+  Container(c_payments_datalocks_approvalsservice, "Payments DataLocks ApprovalsService", "Background Job")
+  Container(c_payments_datalocks_datalockeventservice, "Payments DataLocks DataLockEventService", "Background Job")
+  Container(c_payments_datalocks_datalockproxyservice, "Payments DataLocks DataLockProxyService", "Background Job")
+  Container(c_payments_datalocks_datalockservice, "Payments DataLocks DataLockService", "Background Job")
+  Container(c_payments_datalocks_datalockstatuschangedservice, "Payments DataLocks DataLockStatusChangedService", "Background Job")
 }
+
+SystemQueue_Ext(d_message_broker_azure_service_bus, "Azure Service Bus", "Azure Service Bus")
+System_Ext(d_telemetry_application_insights, "Application Insights", "Application Insights")
+
+Rel(c_payments_datalocks_approvalsservice, d_message_broker_azure_service_bus, "Publishes messages to and consumes messages from", "Azure Service Bus")
+Rel(c_payments_datalocks_approvalsservice, d_telemetry_application_insights, "Sends telemetry to", "Application Insights")
+Rel(c_payments_datalocks_datalockeventservice, d_telemetry_application_insights, "Sends telemetry to", "Application Insights")
 
 @enduml

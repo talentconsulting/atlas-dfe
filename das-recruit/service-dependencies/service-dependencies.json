@@ -5,28 +5,17 @@
   "systemName": "Recruit",
   "containers": [
     {
-      "id": "recruit",
-      "name": "Recruit",
-      "type": "other",
-      "evidence": [
-        {
-          "sourceFile": "src/Shared/Recruit.Vacancies.Client/Recruit.Vacancies.Client.csproj",
-          "reason": "Project file with .NET target framework."
-        }
-      ]
-    },
-    {
       "id": "recruit-employer-web",
       "name": "Recruit Employer Web",
       "type": "web",
       "evidence": [
         {
           "sourceFile": "src/Employer/Employer.Web/Program.cs",
-          "reason": "ASP.NET Core web application entry point found with WebHost.CreateDefaultBuilder."
+          "reason": "Entry point for the web application, creating a web host."
         },
         {
           "sourceFile": "src/Employer/Employer.Web/Employer.Web.csproj",
-          "reason": "Project file with SDK: Microsoft.NET.Sdk.Web."
+          "reason": "Web SDK project file."
         }
       ]
     },
@@ -37,11 +26,22 @@
       "evidence": [
         {
           "sourceFile": "src/Provider/Provider.Web/Program.cs",
-          "reason": "ASP.NET Core web application entry point found with WebHost.CreateDefaultBuilder."
+          "reason": "Entry point for the web application, creating a web host."
         },
         {
           "sourceFile": "src/Provider/Provider.Web/Provider.Web.csproj",
-          "reason": "Project file with SDK: Microsoft.NET.Sdk.Web."
+          "reason": "Web SDK project file."
+        }
+      ]
+    },
+    {
+      "id": "recruit-vacancies-client",
+      "name": "Recruit",
+      "type": "other",
+      "evidence": [
+        {
+          "sourceFile": "src/Shared/Recruit.Vacancies.Client/Recruit.Vacancies.Client.csproj",
+          "reason": "This project contains shared library functionality and does not include an entry point to run as an independent process."
         }
       ]
     }
@@ -54,11 +54,10 @@
       "classification": "third-party",
       "direction": "outbound",
       "client": null,
-      "technology": "Azure Table Storage",
+      "technology": null,
       "configurationKeys": [
         "ConfigNames",
-        "ConfigurationStorageConnectionString",
-        "Environment"
+        "ConfigurationStorageConnectionString"
       ],
       "authentication": {
         "type": null,
@@ -69,7 +68,7 @@
       "evidence": [
         {
           "sourceFile": "src/Employer/Employer.Web/Startup.ConfigureServices.cs",
-          "reason": "AddAzureTableStorage registration found for configuration."
+          "reason": "Service registration for Azure App Configuration in AddAzureTableStorage."
         }
       ],
       "confidence": "high",
@@ -83,11 +82,10 @@
       "classification": "third-party",
       "direction": "outbound",
       "client": null,
-      "technology": "Azure Table Storage",
+      "technology": null,
       "configurationKeys": [
         "ConfigNames",
-        "ConfigurationStorageConnectionString",
-        "Environment"
+        "ConfigurationStorageConnectionString"
       ],
       "authentication": {
         "type": null,
@@ -98,7 +96,7 @@
       "evidence": [
         {
           "sourceFile": "src/Provider/Provider.Web/Startup.ConfigureServices.cs",
-          "reason": "AddAzureTableStorage registration found for configuration."
+          "reason": "Service registration for Azure App Configuration in AddAzureTableStorage."
         }
       ],
       "confidence": "high",
@@ -106,50 +104,261 @@
       "description": "Reads configuration from"
     },
     {
-      "sourceId": "recruit",
-      "name": "Outer API",
+      "sourceId": "recruit-vacancies-client",
+      "name": "Account API",
       "kind": "http-api",
-      "classification": "internal",
+      "classification": "unknown",
       "direction": "outbound",
-      "client": "OuterApiClient",
-      "technology": "HttpClient",
+      "client": "IAccountApiClient",
+      "technology": null,
       "configurationKeys": [
-        "OuterApiConfiguration:BaseUrl",
-        "OuterApiConfiguration:Key"
+        "AccountApiConfiguration"
       ],
       "authentication": {
-        "type": "subscription-key",
-        "configurationKeys": [
-          "OuterApiConfiguration:Key"
-        ]
+        "type": null,
+        "configurationKeys": []
       },
-      "operations": [
-        {
-          "method": "GET",
-          "methodName": "Get",
-          "path": "{request.GetUrl}",
-          "sourceFile": "src/Shared/Recruit.Vacancies.Client/Infrastructure/OuterApi/OuterApiClient.cs"
-        },
-        {
-          "method": "POST",
-          "methodName": "Post",
-          "path": "{request.PostUrl}",
-          "sourceFile": "src/Shared/Recruit.Vacancies.Client/Infrastructure/OuterApi/OuterApiClient.cs"
-        }
-      ],
+      "operations": [],
       "resources": [],
       "evidence": [
         {
           "sourceFile": "src/Shared/Recruit.Vacancies.Client/Ioc/ServiceCollectionExtensions.cs",
-          "reason": "Dependency injection for OuterApiClient using AddHttpClient."
-        },
+          "reason": "HttpClient registered for IAccountApiClient."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "http-api-account-api",
+      "description": "Calls the API of"
+    },
+    {
+      "sourceId": "recruit-vacancies-client",
+      "name": "Employer Vacancy",
+      "kind": "http-api",
+      "classification": "unknown",
+      "direction": "outbound",
+      "client": "IEmployerVacancyClient",
+      "technology": null,
+      "configurationKeys": [],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/Shared/Recruit.Vacancies.Client/Ioc/ServiceCollectionExtensions.cs",
+          "reason": "HttpClient registered for IEmployerVacancyClient."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "http-api-employer-vacancy",
+      "description": "Calls the API of"
+    },
+    {
+      "sourceId": "recruit-vacancies-client",
+      "name": "Get Addresses",
+      "kind": "http-api",
+      "classification": "unknown",
+      "direction": "outbound",
+      "client": "IGetAddressesClient",
+      "technology": null,
+      "configurationKeys": [],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/Shared/Recruit.Vacancies.Client/Ioc/ServiceCollectionExtensions.cs",
+          "reason": "HttpClient registered for IGetAddressesClient."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "http-api-get-addresses",
+      "description": "Calls the API of"
+    },
+    {
+      "sourceId": "recruit-vacancies-client",
+      "name": "Get Provider Status",
+      "kind": "http-api",
+      "classification": "unknown",
+      "direction": "outbound",
+      "client": "IGetProviderStatusClient",
+      "technology": null,
+      "configurationKeys": [],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/Shared/Recruit.Vacancies.Client/Ioc/ServiceCollectionExtensions.cs",
+          "reason": "HttpClient registered for IGetProviderStatusClient."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "http-api-get-provider-status",
+      "description": "Calls the API of"
+    },
+    {
+      "sourceId": "recruit-vacancies-client",
+      "name": "Locations",
+      "kind": "http-api",
+      "classification": "unknown",
+      "direction": "outbound",
+      "client": "ILocationsClient",
+      "technology": null,
+      "configurationKeys": [],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/Shared/Recruit.Vacancies.Client/Ioc/ServiceCollectionExtensions.cs",
+          "reason": "HttpClient registered for ILocationsClient."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "http-api-locations",
+      "description": "Calls the API of"
+    },
+    {
+      "sourceId": "recruit-vacancies-client",
+      "name": "Outer API",
+      "kind": "http-api",
+      "classification": "unknown",
+      "direction": "outbound",
+      "client": "IOuterApiClient",
+      "technology": null,
+      "configurationKeys": [
+        "OuterApiConfiguration"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
         {
           "sourceFile": "src/Shared/Recruit.Vacancies.Client/Infrastructure/OuterApi/OuterApiClient.cs",
-          "reason": "HTTP client configured with base address and methods for API requests."
+          "reason": "HttpClient constructed for accessing an external Outer API."
+        },
+        {
+          "sourceFile": "src/Shared/Recruit.Vacancies.Client/Ioc/ServiceCollectionExtensions.cs",
+          "reason": "HttpClient registered for IOuterApiClient."
         }
       ],
       "confidence": "high",
       "targetId": "http-api-outer-api",
+      "description": "Calls the API of"
+    },
+    {
+      "sourceId": "recruit-vacancies-client",
+      "name": "Outer API Vacancy",
+      "kind": "http-api",
+      "classification": "unknown",
+      "direction": "outbound",
+      "client": "IOuterApiVacancyClient",
+      "technology": null,
+      "configurationKeys": [],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/Shared/Recruit.Vacancies.Client/Ioc/ServiceCollectionExtensions.cs",
+          "reason": "HttpClient registered for IOuterApiVacancyClient."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "http-api-outer-api-vacancy",
+      "description": "Calls the API of"
+    },
+    {
+      "sourceId": "recruit-vacancies-client",
+      "name": "Provider Vacancy",
+      "kind": "http-api",
+      "classification": "unknown",
+      "direction": "outbound",
+      "client": "IProviderVacancyClient",
+      "technology": null,
+      "configurationKeys": [],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/Shared/Recruit.Vacancies.Client/Ioc/ServiceCollectionExtensions.cs",
+          "reason": "HttpClient registered for IProviderVacancyClient."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "http-api-provider-vacancy",
+      "description": "Calls the API of"
+    },
+    {
+      "sourceId": "recruit-vacancies-client",
+      "name": "Recruit Vacancy",
+      "kind": "http-api",
+      "classification": "unknown",
+      "direction": "outbound",
+      "client": "IRecruitVacancyClient",
+      "technology": null,
+      "configurationKeys": [],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/Shared/Recruit.Vacancies.Client/Ioc/ServiceCollectionExtensions.cs",
+          "reason": "HttpClient registered for IRecruitVacancyClient."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "http-api-recruit-vacancy",
+      "description": "Calls the API of"
+    },
+    {
+      "sourceId": "recruit-vacancies-client",
+      "name": "Reference Data",
+      "kind": "http-api",
+      "classification": "unknown",
+      "direction": "outbound",
+      "client": "IReferenceDataClient",
+      "technology": null,
+      "configurationKeys": [],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/Shared/Recruit.Vacancies.Client/Ioc/ServiceCollectionExtensions.cs",
+          "reason": "HttpClient registered for IReferenceDataClient."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "http-api-reference-data",
       "description": "Calls the API of"
     },
     {
@@ -160,9 +369,12 @@
       "direction": "outbound",
       "client": null,
       "technology": null,
-      "configurationKeys": [],
+      "configurationKeys": [
+        "Authentication",
+        "DfEOidcConfiguration"
+      ],
       "authentication": {
-        "type": "OpenID Connect",
+        "type": null,
         "configurationKeys": []
       },
       "operations": [],
@@ -170,7 +382,7 @@
       "evidence": [
         {
           "sourceFile": "src/Provider/Provider.Web/Startup.ConfigureServices.cs",
-          "reason": "AddAndConfigureDfESignInAuthentication method found with OpenID Connect configuration for DfE Sign-in."
+          "reason": "AddAndConfigureDfESignInAuthentication indicates authentication via DfE Sign-in."
         }
       ],
       "confidence": "high",
@@ -185,9 +397,11 @@
       "direction": "outbound",
       "client": null,
       "technology": null,
-      "configurationKeys": [],
+      "configurationKeys": [
+        "AzureAd"
+      ],
       "authentication": {
-        "type": "OpenID Connect",
+        "type": null,
         "configurationKeys": []
       },
       "operations": [],
@@ -195,134 +409,12 @@
       "evidence": [
         {
           "sourceFile": "src/Employer/Employer.Web/Startup.ConfigureServices.cs",
-          "reason": "AddAndConfigureGovUkAuthentication method found with OpenID Connect configuration."
-        }
-      ],
-      "confidence": "medium",
-      "targetId": "identity-provider-microsoft-entra-id",
-      "description": "Authenticates with"
-    },
-    {
-      "sourceId": "recruit",
-      "name": "Azure Storage Queue",
-      "kind": "message-broker",
-      "classification": "internal",
-      "direction": "outbound",
-      "client": "RecruitStorageQueueService",
-      "technology": null,
-      "configurationKeys": [
-        "QueueStorage"
-      ],
-      "authentication": {
-        "type": null,
-        "configurationKeys": []
-      },
-      "operations": [],
-      "resources": [
-        {
-          "type": "queue",
-          "name": "application-submitted-queue",
-          "direction": "outbound",
-          "sourceFile": "src/Shared/Recruit.Vacancies.Client/Infrastructure/StorageQueue/QueueNames.cs"
-        },
-        {
-          "type": "queue",
-          "name": "application-withdrawn-queue",
-          "direction": "outbound",
-          "sourceFile": "src/Shared/Recruit.Vacancies.Client/Infrastructure/StorageQueue/QueueNames.cs"
-        },
-        {
-          "type": "queue",
-          "name": "candidate-delete-queue",
-          "direction": "outbound",
-          "sourceFile": "src/Shared/Recruit.Vacancies.Client/Infrastructure/StorageQueue/QueueNames.cs"
-        },
-        {
-          "type": "queue",
-          "name": "communications-house-keeping-queue",
-          "direction": "outbound",
-          "sourceFile": "src/Shared/Recruit.Vacancies.Client/Infrastructure/StorageQueue/QueueNames.cs"
-        },
-        {
-          "type": "queue",
-          "name": "delete-reports-queue",
-          "direction": "outbound",
-          "sourceFile": "src/Shared/Recruit.Vacancies.Client/Infrastructure/StorageQueue/QueueNames.cs"
-        },
-        {
-          "type": "queue",
-          "name": "delete-stale-query-store-documents-queue",
-          "direction": "outbound",
-          "sourceFile": "src/Shared/Recruit.Vacancies.Client/Infrastructure/StorageQueue/QueueNames.cs"
-        },
-        {
-          "type": "queue",
-          "name": "domain-events-queue",
-          "direction": "outbound",
-          "sourceFile": "src/Shared/Recruit.Vacancies.Client/Infrastructure/StorageQueue/QueueNames.cs"
-        },
-        {
-          "type": "queue",
-          "name": "generate-all-blocked-organisations-queue",
-          "direction": "outbound",
-          "sourceFile": "src/Shared/Recruit.Vacancies.Client/Infrastructure/StorageQueue/QueueNames.cs"
-        },
-        {
-          "type": "queue",
-          "name": "generate-all-vacancy-applications-queue",
-          "direction": "outbound",
-          "sourceFile": "src/Shared/Recruit.Vacancies.Client/Infrastructure/StorageQueue/QueueNames.cs"
-        },
-        {
-          "type": "queue",
-          "name": "report-queue",
-          "direction": "outbound",
-          "sourceFile": "src/Shared/Recruit.Vacancies.Client/Infrastructure/StorageQueue/QueueNames.cs"
-        },
-        {
-          "type": "queue",
-          "name": "transfer-vacancies-from-employer-review-qa-review-queue",
-          "direction": "outbound",
-          "sourceFile": "src/Shared/Recruit.Vacancies.Client/Infrastructure/StorageQueue/QueueNames.cs"
-        },
-        {
-          "type": "queue",
-          "name": "update-employer-user-account-queue",
-          "direction": "outbound",
-          "sourceFile": "src/Shared/Recruit.Vacancies.Client/Infrastructure/StorageQueue/QueueNames.cs"
-        },
-        {
-          "type": "queue",
-          "name": "update-provider-info-queue",
-          "direction": "outbound",
-          "sourceFile": "src/Shared/Recruit.Vacancies.Client/Infrastructure/StorageQueue/QueueNames.cs"
-        },
-        {
-          "type": "queue",
-          "name": "update-providers-queue",
-          "direction": "outbound",
-          "sourceFile": "src/Shared/Recruit.Vacancies.Client/Infrastructure/StorageQueue/QueueNames.cs"
-        },
-        {
-          "type": "queue",
-          "name": "vacancy-status-queue",
-          "direction": "outbound",
-          "sourceFile": "src/Shared/Recruit.Vacancies.Client/Infrastructure/StorageQueue/QueueNames.cs"
-        }
-      ],
-      "evidence": [
-        {
-          "sourceFile": "src/Shared/Recruit.Vacancies.Client/Infrastructure/StorageQueue/QueueNames.cs",
-          "reason": "Queue name constants defined indicating outbound operations."
-        },
-        {
-          "sourceFile": "src/Shared/Recruit.Vacancies.Client/Ioc/ServiceCollectionExtensions.cs",
-          "reason": "Storage queue dependency registered with a connection string."
+          "reason": "AddAndConfigureGovUkAuthentication indicates external identity provider integration."
         }
       ],
       "confidence": "high",
-      "targetId": "message-broker-azure-storage-queue",
-      "description": "Publishes messages to and consumes messages from"
+      "targetId": "identity-provider-microsoft-entra-id",
+      "description": "Authenticates with"
     },
     {
       "sourceId": "recruit-employer-web",
@@ -331,7 +423,7 @@
       "classification": "third-party",
       "direction": "outbound",
       "client": null,
-      "technology": "Application Insights",
+      "technology": null,
       "configurationKeys": [
         "APPLICATIONINSIGHTS_CONNECTION_STRING"
       ],
@@ -343,8 +435,12 @@
       "resources": [],
       "evidence": [
         {
+          "sourceFile": "src/Employer/Employer.Web/Startup.ConfigureServices.cs",
+          "reason": "Application Insights connection string provided in AddOpenTelemetryRegistration."
+        },
+        {
           "sourceFile": "src/Employer/Employer.Web/AppStart/AddOpenTelemetryExtensions.cs",
-          "reason": "UseAzureMonitor telemetry exporter registration found in OpenTelemetry setup."
+          "reason": "UseAzureMonitor function used to integrate Application Insights telemetry."
         }
       ],
       "confidence": "high",
@@ -358,7 +454,7 @@
       "classification": "third-party",
       "direction": "outbound",
       "client": null,
-      "technology": "Application Insights",
+      "technology": null,
       "configurationKeys": [
         "APPLICATIONINSIGHTS_CONNECTION_STRING"
       ],
@@ -370,8 +466,12 @@
       "resources": [],
       "evidence": [
         {
+          "sourceFile": "src/Provider/Provider.Web/Startup.ConfigureServices.cs",
+          "reason": "Application Insights connection string provided in AddOpenTelemetryRegistration."
+        },
+        {
           "sourceFile": "src/Provider/Provider.Web/AppStart/AddOpenTelemetryExtensions.cs",
-          "reason": "UseAzureMonitor telemetry exporter registration found in OpenTelemetry setup."
+          "reason": "UseAzureMonitor function used to integrate Application Insights telemetry."
         }
       ],
       "confidence": "high",

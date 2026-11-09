@@ -2,18 +2,27 @@
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
 LAYOUT_WITH_LEGEND()
 
-System_Boundary(sys_SkillsFundingAgency_das_digital_certification_web, "Digital Certificates") {
+System_Boundary(sys_SkillsFundingAgency_das_digital_certification_web, "Digital Certification") {
   Container(c_digital_certificates, "Digital Certificates", "Web Application")
+  Container(c_digital_certification, "Digital Certification", "Web Application")
 }
 
-SystemDb_Ext(d_cache_redis_cache, "Redis Cache", "StackExchange Redis")
-System_Ext(d_cloud_service_application_insights, "Application Insights", "Azure Monitor")
-System_Ext(d_http_api_digital_certificates_outer_api, "Digital Certificates Outer API", "RestEase")
-SystemDb_Ext(d_object_storage_azure_blob_storage, "Azure Blob Storage", "Azure Storage Blobs")
+SystemDb_Ext(d_cache_redis_cache, "Redis Cache", "StackExchange.Redis")
+SystemDb_Ext(d_cache_stackexchange_redis, "StackExchange Redis", "Redis")
+SystemDb_Ext(d_configuration_store_azure_app_configuration, "Azure App Configuration")
+SystemDb_Ext(d_configuration_store_azure_table_storage_configuration, "Azure Table Storage Configuration")
+System_Ext(d_http_api_outer_api, "Outer API", "RestEase")
+System_Ext(d_identity_provider_gov_uk_one_login, "GOV UK One Login")
+SystemDb_Ext(d_object_storage_azure_blob_storage, "Azure Blob Storage", "Azure.Storage.Blobs")
+System_Ext(d_telemetry_application_insights, "Application Insights", "Azure Monitor")
 
-Rel(c_digital_certificates, d_cache_redis_cache, "Caches data in", "StackExchange Redis")
-Rel(c_digital_certificates, d_cloud_service_application_insights, "Uses", "Azure Monitor")
-Rel(c_digital_certificates, d_http_api_digital_certificates_outer_api, "Calls the API of", "RestEase")
-Rel(c_digital_certificates, d_object_storage_azure_blob_storage, "Stores objects in", "Azure Storage Blobs")
+Rel(c_digital_certificates, d_cache_redis_cache, "Caches data in", "StackExchange.Redis")
+Rel(c_digital_certification, d_cache_stackexchange_redis, "Caches data in", "Redis")
+Rel(c_digital_certificates, d_configuration_store_azure_app_configuration, "Reads configuration from")
+Rel(c_digital_certification, d_configuration_store_azure_table_storage_configuration, "Reads configuration from")
+Rel(c_digital_certificates, d_http_api_outer_api, "Calls the API of", "RestEase")
+Rel(c_digital_certificates, d_identity_provider_gov_uk_one_login, "Authenticates with")
+Rel(c_digital_certificates, d_object_storage_azure_blob_storage, "Stores objects in", "Azure.Storage.Blobs")
+Rel(c_digital_certificates, d_telemetry_application_insights, "Sends telemetry to", "Azure Monitor")
 
 @enduml
