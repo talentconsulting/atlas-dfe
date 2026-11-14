@@ -353,10 +353,15 @@ function renderDatabase(resetToolbar = true) {
   const columnCount = tables.reduce((sum, table) => sum + (table.columns?.length || 0), 0);
   if (!state.dbView) state.dbView = 'diagram';
   if (resetToolbar) {
-    toolbar.innerHTML = `${searchControl('Filter tables or columns')}<div class="segmented" role="group" aria-label="Schema view"><button data-db-view="diagram" aria-pressed="${state.dbView === 'diagram'}">Diagram</button><button data-db-view="grid" aria-pressed="${state.dbView === 'grid'}">Grid</button></div>${state.dbView === 'diagram' ? diagramControlsHtml() : ''}<span class="spacer"></span><span class="toolbar-meta">${tables.length} tables · ${columnCount} columns · ${relations} relationships</span>`;
+    toolbar.innerHTML = `${state.dbView === 'testdata' ? '' : searchControl('Filter tables or columns')}<div class="segmented" role="group" aria-label="Schema view"><button data-db-view="diagram" aria-pressed="${state.dbView === 'diagram'}">Diagram</button><button data-db-view="grid" aria-pressed="${state.dbView === 'grid'}">Grid</button><button data-db-view="testdata" aria-pressed="${state.dbView === 'testdata'}">Test data</button></div>${state.dbView === 'diagram' ? diagramControlsHtml() : ''}<span class="spacer"></span><span class="toolbar-meta">${tables.length} tables · ${columnCount} columns · ${relations} relationships</span>`;
     document.querySelectorAll('[data-db-view]').forEach((button) => { button.onclick = () => { state.dbView = button.dataset.dbView; state.filter = ''; state.selected = null; renderDatabase(true); }; });
   }
   const filtered = tables.filter((table) => `${table.schema || ''} ${table.name} ${table.columns?.map((column) => column.name).join(' ')}`.toLowerCase().includes(state.filter));
+  if (state.dbView === 'testdata') {
+    destroyCy();
+    renderTestData(tables);
+    return;
+  }
   if (state.dbView === 'diagram') {
     const { edges, isolatedCount } = databaseGraph(tables);
     renderDatabaseDiagram(filtered, edges, isolatedCount);
@@ -542,9 +547,84 @@ function tableDetailInline(table) {
 }
 
 function renderTableDetail(table) {
-  toolbar.innerHTML = '<button id="back" class="plain-button" type="button">← All tables</button>';
+  toolbar.innerHTML = '<button id="back" class="plain-button" type="button">← All tables</button><span class="spacer"></span><button id="make-test-data" class="plain-button" type="button">Create test data</button>';
   content.innerHTML = `<article class="detail standalone">${tableDetailBody(table)}</article>`;
   $('#back').addEventListener('click', () => { state.filter = ''; renderDatabase(true); });
+  $('#make-test-data').addEventListener('click', () => { state.testData = { ...(state.testData || {}), table: table.name }; state.dbView = 'testdata'; state.filter = ''; renderDatabase(true); });
+}
+
+// ---- Test data: pick a table, see what else it needs, and get an INSERT script of made-up rows ----
+
+let testDataModule;
+async function renderTestData(tables) {
+  if (!tables.length) {
+    content.innerHTML = '<div class="empty-state"><h2>No tables</h2><p>This repository has no catalogued database tables.</p></div>';
+    return;
+  }
+  testDataModule ||= await import('/testdata.js');
+  const options = state.testData = {
+    rows: 5, includeOptional: false, inferLinks: false, fillOptional: true, startId: 900001, counts: {},
+    ...(state.testData || {})
+  };
+  if (!tables.some((table) => table.name === options.table)) options.table = state.selected && tables.some((table) => table.name === state.selected) ? state.selected : alphabetical(tables, tableLabel)[0].name;
+  let plan;
+  try {
+    plan = testDataModule.planTestData(tables, options.table, options);
+  } catch (error) {
+    content.innerHTML = `<div class="empty-state"><h2>Couldn't plan test data</h2><p>${escapeHtml(error.message)}</p></div>`;
+    return;
+  }
+  const rowCounts = Object.fromEntries(plan.order.map((name) => [name, options.counts[`${options.table}:${name}`] ?? (name === plan.root ? options.rows : 1)]));
+  const sql = testDataModule.generateSql(plan, { rows: options.rows, rowCounts, startId: Number(options.startId) || 1, fillOptional: options.fillOptional, generatedAt: new Date().toISOString().slice(0, 10) });
+  const pii = plan.order.filter((name) => plan.tables.get(name).hasPii === true);
+  const reasonText = (name) => {
+    const links = plan.reasons.get(name) || [];
+    if (name === plan.root) return 'The table you picked';
+    return `Needed by ${links.map((link) => `<code>${escapeHtml(link.from)}.${escapeHtml(link.fromColumns.join(', '))}</code>${link.required ? '' : ' <span class="badge blue">optional</span>'}${link.suggested ? ' <span class="badge amber">suggested link</span>' : ''}`).join(', ')}`;
+  };
+  content.innerHTML = `<div class="testdata">
+    <section class="testdata-controls" aria-label="Test data options">
+      <label>Table<select id="td-table">${alphabetical(tables, tableLabel).map((table) => `<option value="${escapeHtml(table.name)}"${table.name === options.table ? ' selected' : ''}>${escapeHtml(tableLabel(table))}</option>`).join('')}</select></label>
+      <label>Rows<input id="td-rows" type="number" min="1" max="500" value="${escapeHtml(options.rows)}"></label>
+      <label>First ID<input id="td-start" type="number" min="1" value="${escapeHtml(options.startId)}" title="Integer keys start here, so the rows don't clash with existing ones"></label>
+      <label class="check"><input id="td-optional" type="checkbox"${options.includeOptional ? ' checked' : ''}> Also fill optional links</label>
+      <label class="check"><input id="td-infer" type="checkbox"${options.inferLinks ? ' checked' : ''}> Suggest links from column names</label>
+      <label class="check"><input id="td-fill" type="checkbox"${options.fillOptional ? ' checked' : ''}> Fill optional columns</label>
+    </section>
+    <section class="testdata-plan">
+      <h2>What gets inserted</h2>
+      <p class="muted">${plan.order.length === 1 ? `${escapeHtml(plan.root)} needs nothing else set up first.` : `${escapeHtml(plan.root)} needs ${plan.order.length - 1} other table${plan.order.length === 2 ? '' : 's'} set up first. They're inserted in this order, and each row links to the rows above it.`}</p>
+      <table class="data-table"><thead><tr><th>#</th><th>Table</th><th>Why</th><th>Rows</th></tr></thead><tbody>
+        ${plan.order.map((name, index) => `<tr><td>${index + 1}</td><td><code>${escapeHtml(tableLabel(plan.tables.get(name)))}</code>${plan.tables.get(name).hasPii === true ? ' <span class="badge danger" title="Flagged as possibly holding personal data; every value is made up">personal data</span>' : ''}</td><td>${reasonText(name)}</td><td><input class="td-count" type="number" min="1" max="500" data-table="${escapeHtml(name)}" value="${escapeHtml(rowCounts[name])}" aria-label="Rows for ${escapeHtml(name)}"></td></tr>`).join('')}
+      </tbody></table>
+      ${plan.warnings.length ? `<ul class="testdata-warnings">${plan.warnings.map((warning) => `<li>${escapeHtml(warning)}</li>`).join('')}</ul>` : ''}
+      ${pii.length ? `<p class="muted">${pii.length === 1 ? 'One table is' : `${pii.length} tables are`} flagged as possibly holding personal data. Every value here is made up: names, emails (example.com), phone numbers (the 01632 960 drama range) and postcodes (ZZ99 9ZZ).</p>` : ''}
+    </section>
+    <section class="testdata-sql">
+      <div class="testdata-sql-head"><h2>SQL Server script</h2><span class="spacer"></span><button id="td-copy" class="plain-button" type="button">Copy</button><button id="td-download" class="plain-button" type="button">Download .sql</button></div>
+      <p class="muted">Runs in one transaction. Use it against a local or test database only; change the last line to ROLLBACK to try it without keeping the rows. Business rules the code enforces (allowed status codes, date order) aren't in the schema, so check those columns.</p>
+      <pre id="td-sql">${escapeHtml(sql)}</pre>
+    </section>
+  </div>`;
+  const rerender = () => renderTestData(tables);
+  $('#td-table').addEventListener('change', (event) => { options.table = event.target.value; rerender(); });
+  $('#td-rows').addEventListener('change', (event) => { options.rows = Math.min(500, Math.max(1, Number(event.target.value) || 1)); delete options.counts[`${options.table}:${options.table}`]; rerender(); });
+  $('#td-start').addEventListener('change', (event) => { options.startId = Math.max(1, Number(event.target.value) || 1); rerender(); });
+  $('#td-optional').addEventListener('change', (event) => { options.includeOptional = event.target.checked; rerender(); });
+  $('#td-infer').addEventListener('change', (event) => { options.inferLinks = event.target.checked; rerender(); });
+  $('#td-fill').addEventListener('change', (event) => { options.fillOptional = event.target.checked; rerender(); });
+  document.querySelectorAll('.td-count').forEach((input) => input.addEventListener('change', () => { options.counts[`${options.table}:${input.dataset.table}`] = Math.min(500, Math.max(1, Number(input.value) || 1)); rerender(); }));
+  $('#td-copy').addEventListener('click', async (event) => {
+    try { await navigator.clipboard.writeText(sql); event.target.textContent = 'Copied'; } catch { event.target.textContent = 'Copy failed'; }
+    setTimeout(() => { event.target.textContent = 'Copy'; }, 1500);
+  });
+  $('#td-download').addEventListener('click', () => {
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(new Blob([sql], { type: 'application/sql' }));
+    link.download = `${state.source?.name || 'test-data'}-${plan.root}.sql`;
+    link.click();
+    setTimeout(() => URL.revokeObjectURL(link.href), 1000);
+  });
 }
 
 const TABLE_TABS = ['columns', 'relationships', 'indexes'];
