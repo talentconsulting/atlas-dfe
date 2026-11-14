@@ -358,8 +358,8 @@ function renderDatabase(resetToolbar = true) {
   }
   const filtered = tables.filter((table) => `${table.schema || ''} ${table.name} ${table.columns?.map((column) => column.name).join(' ')}`.toLowerCase().includes(state.filter));
   if (state.dbView === 'diagram') {
-    const { edges, connectedTables, isolatedCount } = databaseGraph(tables);
-    renderDatabaseDiagram(connectedTables.filter((table) => filtered.includes(table)), edges, isolatedCount);
+    const { edges, isolatedCount } = databaseGraph(tables);
+    renderDatabaseDiagram(filtered, edges, isolatedCount);
   } else {
     destroyCy();
     renderDatabaseGrid(filtered, tables);
@@ -388,8 +388,9 @@ function databaseGraph(tables) {
     });
   });
   const connectedNames = new Set(edges.flatMap((edge) => [edge.from, edge.to]));
-  const connectedTables = tables.filter((table) => connectedNames.has(table.name));
-  return { edges: edges.filter((edge) => connectedNames.has(edge.from) && connectedNames.has(edge.to)), connectedTables, isolatedCount: tables.length - connectedTables.length };
+  const knownNames = new Set(tables.map((table) => table.name));
+  const isolatedCount = tables.filter((table) => !connectedNames.has(table.name)).length;
+  return { edges: edges.filter((edge) => knownNames.has(edge.from) && knownNames.has(edge.to)), isolatedCount };
 }
 
 function orderTablesForLayout(tables, edges) {
@@ -447,12 +448,18 @@ function layoutErNodes(nodes, edges, viewWidth) {
     });
     queue.sort();
   }
+  const linked = new Set(edges.filter((edge) => byName.has(edge.from) && byName.has(edge.to) && edge.from !== edge.to).flatMap((edge) => [edge.from, edge.to]));
   const rows = new Map();
-  nodes.forEach((node) => {
+  nodes.filter((node) => linked.has(node.name)).forEach((node) => {
     const level = levels.get(node.name);
     if (!rows.has(level)) rows.set(level, []);
     rows.get(level).push(node);
   });
+  // Tables with no relationships go in wrapped rows below the connected ones.
+  const isolated = nodes.filter((node) => !linked.has(node.name)).sort((a, b) => a.name.localeCompare(b.name));
+  const perRow = Math.max(1, Math.floor(viewWidth / 340));
+  const nextLevel = rows.size ? Math.max(...rows.keys()) + 1 : 0;
+  for (let index = 0; index < isolated.length; index += perRow) rows.set(nextLevel + index / perRow, isolated.slice(index, index + perRow));
   const positions = new Map();
   const rowEntries = [...rows.entries()].sort(([a], [b]) => a - b);
   let y = 80;
@@ -472,7 +479,7 @@ function renderDatabaseDiagram(filtered, allEdges, isolatedCount) {
   const edges = allEdges.filter((edge) => filtered.some((table) => table.name === edge.from) && filtered.some((table) => table.name === edge.to));
   if (!filtered.length) {
     destroyCy();
-    content.innerHTML = '<div class="empty-state"><h2>No matching tables with relationships</h2><p>Try a different search term, or switch to Grid to see every table.</p></div>';
+    content.innerHTML = '<div class="empty-state"><h2>No matching tables</h2><p>Try a different search term.</p></div>';
     return;
   }
   const ordered = orderTablesForLayout(filtered, edges);
@@ -501,7 +508,7 @@ function renderDatabaseDiagram(filtered, allEdges, isolatedCount) {
   ];
 
   content.innerHTML = `<div class="dependency-view">
-    ${isolatedCount ? `<p class="toolbar-meta">${isolatedCount} table${isolatedCount === 1 ? '' : 's'} with no foreign keys — switch to Grid to browse them.</p>` : ''}
+    ${isolatedCount ? `<p class="toolbar-meta">${allEdges.length ? `${isolatedCount} table${isolatedCount === 1 ? '' : 's'} with no foreign keys, shown below the related tables.` : 'No foreign keys recorded between these tables.'}</p>` : ''}
     <div id="erd-cy" class="cy-container" role="group" aria-label="Database relationship diagram"></div>
     <div id="erd-detail">${selectedTable ? tableDetailInline(selectedTable) : ''}</div>
   </div>`;
