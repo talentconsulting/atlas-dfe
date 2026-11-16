@@ -316,7 +316,7 @@ async function handleApi(request, response, url) {
 }
 
 function isAppRoute(pathname) {
-  return pathname === '/' || pathname === '/landscape' || pathname === '/topics' || pathname === '/service' || pathname.startsWith('/service/');
+  return pathname === '/' || pathname === '/landscape' || pathname === '/topics' || pathname === '/test-data' || pathname === '/service' || pathname.startsWith('/service/');
 }
 
 async function serveStatic(response, pathname) {
