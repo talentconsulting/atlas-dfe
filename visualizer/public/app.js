@@ -336,16 +336,25 @@ function messageDependencies(source, messages, { dependencies = [], systemName, 
 }
 
 function searchControl(placeholder) {
-  return `<input id="search" type="search" value="${escapeHtml(state.filter)}" placeholder="${placeholder}" aria-label="${placeholder}">`;
+  // Show what was typed, capitals included, unless the filter has since been reset.
+  const text = state.filterText?.toLowerCase() === state.filter ? state.filterText : state.filter;
+  return `<input id="search" type="search" value="${escapeHtml(text)}" placeholder="${placeholder}" aria-label="${placeholder}">`;
 }
 
 function wireSearch() {
   const search = $('#search');
   if (!search) return;
   search.oninput = (event) => {
-    state.filter = event.target.value.toLowerCase();
+    const { value, selectionStart, selectionEnd } = event.target;
+    state.filterText = value;
+    state.filter = value.toLowerCase();
     renderView(false);
-    $('#search')?.focus();
+    // Some views rebuild the toolbar, replacing the box; put the focus and cursor back where they were.
+    const box = $('#search');
+    if (!box) return;
+    if (box.value !== value) box.value = value;
+    box.focus();
+    box.setSelectionRange(selectionStart, selectionEnd);
   };
 }
 
@@ -3261,7 +3270,7 @@ function wireJourneyPageLinks() {
 function renderView(resetToolbar = true) {
   if (state.view === 'database') renderDatabase(resetToolbar);
   if (state.view === 'messages') renderMessages(resetToolbar);
-  if (state.view === 'dependencies') renderDependencies();
+  if (state.view === 'dependencies') renderDependencies(resetToolbar);
   if (state.view === 'openapi') renderOpenApi(resetToolbar);
   if (state.view === 'localdev') renderLocalDev(resetToolbar);
   if (state.view === 'journeys') renderJourneys(resetToolbar);
