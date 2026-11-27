@@ -75,6 +75,11 @@ export async function loadView() {
   state.depView = 'diagram';
   state.pumlSource = null;
   state.pumlEncoded = null;
+  // A repository in the manifest that no flow has scanned yet has nothing to load.
+  if (!sourceCapabilities().some((tab) => tab.enabled)) {
+    content.innerHTML = '<div class="empty-state"><span class="empty-icon" aria-hidden="true">◇</span><h2>Nothing catalogued yet</h2><p>This repository is in the manifest, but no flow has scanned it yet.</p></div>';
+    return;
+  }
   try {
     if (state.view === 'dependencies') {
       state.data = await loadDependenciesFor(state.source);

@@ -1,0 +1,286 @@
+{
+  "repository": "SkillsFundingAgency/das-admin-roatp-web",
+  "ref": "main",
+  "path": "src",
+  "systemName": "Admin Roatp",
+  "containers": [
+    {
+      "id": "admin-roatp",
+      "name": "Admin Roatp",
+      "type": "web",
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/Program.cs",
+          "reason": "ASP.NET Core application entry point detected."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/SFA.DAS.Admin.Roatp.Web.csproj",
+          "reason": "Project file with Web SDK indicates a web application."
+        }
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "sourceId": "admin-roatp",
+      "name": "Redis",
+      "kind": "cache",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": "StackExchange.Redis",
+      "configurationKeys": [
+        "ApplicationConfiguration.DataProtectionKeysDatabase",
+        "ApplicationConfiguration.RedisConnectionString"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/AppStart/AddDataProtectionExtension.cs",
+          "reason": "Detected Redis client configuration for data protection keys."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/AppStart/AddSessionExtension.cs",
+          "reason": "Detected StackExchange Redis Cache configuration in session registration."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "cache-redis",
+      "description": "Caches data in"
+    },
+    {
+      "sourceId": "admin-roatp",
+      "name": "Azure Table Storage Configuration",
+      "kind": "configuration-store",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "ConfigNames",
+        "ConfigurationStorageConnectionString",
+        "EnvironmentName"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/AppStart/AddApplicationConfigurationExtension.cs",
+          "reason": "Detected AddAzureTableStorage registration."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "configuration-store-azure-table-storage-configuration",
+      "description": "Reads configuration from"
+    },
+    {
+      "sourceId": "admin-roatp",
+      "name": "Roatp V2 API",
+      "kind": "http-api",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "IRoatpCourseManagementApiClient",
+      "technology": "Refit",
+      "configurationKeys": [
+        "AdminRoatpOuterApiConfiguration"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/AppStart/AddApplicationRegistrationsExtension.cs",
+          "reason": "Detected AddRefitClient registration for IOuterApiClient."
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/AdminRoatp/SFA.DAS.AdminRoatp/Application/Commands/AddProviderAllowedCourse/AddProviderAllowedCourseCommandHandler.cs",
+          "reason": "AdminRoatp APIM area calls Roatp V2 API through IRoatpCourseManagementApiClient"
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/AdminRoatp/SFA.DAS.AdminRoatp/Application/Commands/AddProviderRestrictedApprenticeship/AddProviderRestrictedApprenticeshipCommandHandler.cs",
+          "reason": "AdminRoatp APIM area calls Roatp V2 API through IRoatpCourseManagementApiClient"
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/AdminRoatp/SFA.DAS.AdminRoatp/Application/Commands/AddRestrictedCourse/AddRestrictedCourseCommandHandler.cs",
+          "reason": "AdminRoatp APIM area calls Roatp V2 API through IRoatpCourseManagementApiClient"
+        }
+      ],
+      "confidence": "medium",
+      "targetId": "http-api-roatp-v2-api",
+      "description": "Calls via APIM (AdminRoatp)",
+      "via": {
+        "repo": "das-apim-endpoints",
+        "label": "APIM",
+        "area": "AdminRoatp",
+        "dependencyName": "Outer",
+        "operations": [],
+        "areas": [
+          "AdminRoatp"
+        ]
+      }
+    },
+    {
+      "sourceId": "admin-roatp",
+      "name": "Roatp API",
+      "kind": "http-api",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "IRoatpServiceApiClient",
+      "technology": "Refit",
+      "configurationKeys": [
+        "AdminRoatpOuterApiConfiguration"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/AppStart/AddApplicationRegistrationsExtension.cs",
+          "reason": "Detected AddRefitClient registration for IOuterApiClient."
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/AdminRoatp/SFA.DAS.AdminRoatp/Application/Commands/AddProviderAllowedCourse/AddProviderAllowedCourseCommandHandler.cs",
+          "reason": "AdminRoatp APIM area calls Roatp API through IRoatpServiceApiClient"
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/AdminRoatp/SFA.DAS.AdminRoatp/Application/Commands/PatchOrganisation/PatchOrganisationCommandHandler.cs",
+          "reason": "AdminRoatp APIM area calls Roatp API through IRoatpServiceApiClient"
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/AdminRoatp/SFA.DAS.AdminRoatp/Application/Commands/UpdateOrganisationCourseTypes/UpdateOrganisationCourseTypesCommandHandler.cs",
+          "reason": "AdminRoatp APIM area calls Roatp API through IRoatpServiceApiClient"
+        }
+      ],
+      "confidence": "medium",
+      "targetId": "http-api-roatp-api",
+      "description": "Calls via APIM (AdminRoatp)",
+      "via": {
+        "repo": "das-apim-endpoints",
+        "label": "APIM",
+        "area": "AdminRoatp",
+        "dependencyName": "Outer",
+        "operations": [],
+        "areas": [
+          "AdminRoatp"
+        ]
+      }
+    },
+    {
+      "sourceId": "admin-roatp",
+      "name": "Apply API",
+      "kind": "http-api",
+      "classification": "internal",
+      "direction": "outbound",
+      "client": "IApplyApiClient",
+      "technology": "Refit",
+      "configurationKeys": [
+        "AdminRoatpOuterApiConfiguration"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/AppStart/AddApplicationRegistrationsExtension.cs",
+          "reason": "Detected AddRefitClient registration for IOuterApiClient."
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/AdminRoatp/SFA.DAS.AdminRoatp/Application/Queries/GetProvidersAllowedList/GetProvidersAllowedListQueryHandler.cs",
+          "reason": "AdminRoatp APIM area calls Apply API through IApplyApiClient"
+        },
+        {
+          "sourceFile": "das-apim-endpoints/src/AdminRoatp/SFA.DAS.AdminRoatp.Api/AppStart/AddServiceRegistrationsExtension.cs",
+          "reason": "AdminRoatp APIM area calls Apply API through IApplyApiClient"
+        }
+      ],
+      "confidence": "medium",
+      "targetId": "http-api-apply-api",
+      "description": "Calls via APIM (AdminRoatp)",
+      "via": {
+        "repo": "das-apim-endpoints",
+        "label": "APIM",
+        "area": "AdminRoatp",
+        "dependencyName": "Outer",
+        "operations": [],
+        "areas": [
+          "AdminRoatp"
+        ]
+      }
+    },
+    {
+      "sourceId": "admin-roatp",
+      "name": "DfE Sign-in",
+      "kind": "identity-provider",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/AppStart/AddAuthenticationExtension.cs",
+          "reason": "Detected AddAndConfigureDfESignInAuthentication registration."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "identity-provider-dfe-sign-in",
+      "description": "Authenticates with"
+    },
+    {
+      "sourceId": "admin-roatp",
+      "name": "Application Insights",
+      "kind": "telemetry",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "APPLICATIONINSIGHTS_CONNECTION_STRING"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/Extensions/AddTelemetryRegistrationExtension.cs",
+          "reason": "Detected UseAzureMonitor registration with Application Insights Connection String."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "telemetry-application-insights",
+      "description": "Sends telemetry to"
+    }
+  ],
+  "resolution": {
+    "overlay": "dfe-overlay/apim-routing.json",
+    "apimCommit": "cb28ce9d593dcd27df01e56dfe6b143479db94ff",
+    "precision": "area"
+  }
+}

@@ -1,0 +1,165 @@
+{
+  "repository": "SkillsFundingAgency/das-admin-roatp-web",
+  "ref": "main",
+  "path": "src",
+  "systemName": "Admin Roatp",
+  "containers": [
+    {
+      "id": "admin-roatp",
+      "name": "Admin Roatp",
+      "type": "web",
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/Program.cs",
+          "reason": "ASP.NET Core application entry point detected."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/SFA.DAS.Admin.Roatp.Web.csproj",
+          "reason": "Project file with Web SDK indicates a web application."
+        }
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "sourceId": "admin-roatp",
+      "name": "Redis",
+      "kind": "cache",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": "StackExchange.Redis",
+      "configurationKeys": [
+        "ApplicationConfiguration.DataProtectionKeysDatabase",
+        "ApplicationConfiguration.RedisConnectionString"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/AppStart/AddDataProtectionExtension.cs",
+          "reason": "Detected Redis client configuration for data protection keys."
+        },
+        {
+          "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/AppStart/AddSessionExtension.cs",
+          "reason": "Detected StackExchange Redis Cache configuration in session registration."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "cache-redis",
+      "description": "Caches data in"
+    },
+    {
+      "sourceId": "admin-roatp",
+      "name": "Azure Table Storage Configuration",
+      "kind": "configuration-store",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "ConfigNames",
+        "ConfigurationStorageConnectionString",
+        "EnvironmentName"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/AppStart/AddApplicationConfigurationExtension.cs",
+          "reason": "Detected AddAzureTableStorage registration."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "configuration-store-azure-table-storage-configuration",
+      "description": "Reads configuration from"
+    },
+    {
+      "sourceId": "admin-roatp",
+      "name": "Outer",
+      "kind": "http-api",
+      "classification": "unknown",
+      "direction": "outbound",
+      "client": "IOuterApiClient",
+      "technology": "Refit",
+      "configurationKeys": [
+        "AdminRoatpOuterApiConfiguration"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/AppStart/AddApplicationRegistrationsExtension.cs",
+          "reason": "Detected AddRefitClient registration for IOuterApiClient."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "http-api-outer",
+      "description": "Calls the API of"
+    },
+    {
+      "sourceId": "admin-roatp",
+      "name": "DfE Sign-in",
+      "kind": "identity-provider",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/AppStart/AddAuthenticationExtension.cs",
+          "reason": "Detected AddAndConfigureDfESignInAuthentication registration."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "identity-provider-dfe-sign-in",
+      "description": "Authenticates with"
+    },
+    {
+      "sourceId": "admin-roatp",
+      "name": "Application Insights",
+      "kind": "telemetry",
+      "classification": "third-party",
+      "direction": "outbound",
+      "client": null,
+      "technology": null,
+      "configurationKeys": [
+        "APPLICATIONINSIGHTS_CONNECTION_STRING"
+      ],
+      "authentication": {
+        "type": null,
+        "configurationKeys": []
+      },
+      "operations": [],
+      "resources": [],
+      "evidence": [
+        {
+          "sourceFile": "src/SFA.DAS.Admin.Roatp.Web/Extensions/AddTelemetryRegistrationExtension.cs",
+          "reason": "Detected UseAzureMonitor registration with Application Insights Connection String."
+        }
+      ],
+      "confidence": "high",
+      "targetId": "telemetry-application-insights",
+      "description": "Sends telemetry to"
+    }
+  ]
+}
