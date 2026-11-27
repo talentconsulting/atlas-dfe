@@ -40,6 +40,13 @@ triggered by changes here. To rescan a repository, clear its
 `last-commit-hash-scanned` for that flow in `manifest.json` and run the flow
 again.
 
+A flow can scan a branch other than the default by giving its node a `branch`,
+with `path-to-scan` then just the folder within it (for example
+`"branch": "feature/funding-projection", "path-to-scan": "src"`). The
+`return-merged-branches.yml` workflow checks these every morning: once a branch
+is merged into the default branch, or deleted, it opens a pull request pointing
+the node back at `tree/<default branch>/<folder>` with its hash cleared.
+
 ## Catalogue viewer
 
 The `visualizer` project is a manifest-driven browser for the catalogue. It
