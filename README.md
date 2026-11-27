@@ -79,7 +79,21 @@ cd visualizer
 npm start
 ```
 
-Run the API tests with `npm test`.
+### Tests
+
+Run them from `visualizer/`:
+
+```bash
+npm install                                         # once: installs the browser test runner
+npx playwright install chromium-headless-shell      # once: the browser the browser tests use
+npm test                                            # unit and server tests
+npm run test:browser                                # browser tests: every page and tab, in a real browser
+npm run test:all                                    # both
+```
+
+All of them run against the small fixed catalogue in `visualizer/test/fixtures/catalogue` (see its README),
+not the live one, so they only fail when the viewer breaks. The **Viewer tests** workflow runs them on every
+pull request that changes the viewer.
 
 ### Code layout
 

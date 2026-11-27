@@ -1,0 +1,262 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Apprenticeship API",
+    "version": "1.0.0",
+    "description": "API for managing apprenticeships, including viewing, modifying, and managing apprenticeship details."
+  },
+  "paths": {
+    "/api/apprenticeships/{apprenticeshipId}": {
+      "get": {
+        "summary": "Retrieve details of a specific apprenticeship",
+        "parameters": [
+          {
+            "name": "apprenticeshipId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Apprenticeship details retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetApprenticeshipResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Apprenticeship not found"
+          }
+        }
+      }
+    },
+    "/api/apprenticeships": {
+      "get": {
+        "summary": "Retrieve a list of apprenticeships",
+        "parameters": [
+          {
+            "name": "AccountId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "ProviderId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "PageNumber",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "PageItemCount",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "SearchTerm",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "EmployerName",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ProviderName",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "CourseName",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Status",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/ApprenticeshipStatus"
+            }
+          },
+          {
+            "name": "StartDate",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "EndDate",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of apprenticeships retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetApprenticeshipsResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No apprenticeships found"
+          }
+        }
+      }
+    },
+    "/api/apprenticeships/filters": {
+      "get": {
+        "summary": "Retrieve filter values for apprenticeships",
+        "parameters": [
+          {
+            "name": "EmployerAccountId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "ProviderId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Filters retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetApprenticeshipFiltersResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Filters not found"
+          }
+        }
+      }
+    },
+    "/api/apprenticeships/details/editenddate": {
+      "post": {
+        "summary": "Edit end date of an apprenticeship",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EditEndDateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "End date updated successfully"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "GetApprenticeshipsResponse": {
+        "type": "object",
+        "properties": {}
+      },
+      "GetApprenticeshipResponse": {
+        "type": "object",
+        "properties": {}
+      },
+      "GetApprenticeshipFiltersResponse": {
+        "type": "object",
+        "properties": {}
+      },
+      "EditEndDateRequest": {
+        "type": "object",
+        "properties": {
+          "ApprenticeshipId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "EndDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "UserInfo": {
+            "$ref": "#/components/schemas/UserInfo"
+          }
+        },
+        "required": [
+          "ApprenticeshipId"
+        ]
+      },
+      "UserInfo": {
+        "type": "object",
+        "properties": {
+          "UserId": {
+            "type": "string"
+          },
+          "UserDisplayName": {
+            "type": "string"
+          },
+          "UserEmail": {
+            "type": "string"
+          }
+        }
+      },
+      "ApprenticeshipStatus": {
+        "type": "string",
+        "enum": [
+          "WaitingToStart",
+          "Live",
+          "Paused",
+          "Stopped",
+          "Completed",
+          "Unknown"
+        ]
+      }
+    }
+  }
+}

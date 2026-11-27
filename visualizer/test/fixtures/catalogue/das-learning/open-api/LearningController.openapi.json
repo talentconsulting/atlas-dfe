@@ -1,0 +1,574 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Learning API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/{ukprn}/apprenticeships": {
+      "post": {
+        "summary": "Creates a draft apprenticeship",
+        "operationId": "createDraftApprenticeship",
+        "parameters": [
+          {
+            "name": "ukprn",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateDraftApprenticeship"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateDraftApprenticeshipLearningCommandResult"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No content"
+          }
+        }
+      },
+      "head": {
+        "summary": "Checks whether an apprenticeship record already exists",
+        "operationId": "checkApprovedApprenticeshipExists",
+        "parameters": [
+          {
+            "name": "ukprn",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "uln",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "trainingCode",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "startDate",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "isApproved",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A matching apprenticeship record exists"
+          },
+          "404": {
+            "description": "No matching apprenticeship record exists"
+          }
+        }
+      }
+    },
+    "/{ukprn}/learnings": {
+      "get": {
+        "summary": "Gets all learnings by UKPRN",
+        "operationId": "getAllLearningsByUkprn",
+        "parameters": [
+          {
+            "name": "ukprn",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Apprenticeships retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/LearnerSummary"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/{ukprn}/academicyears/{academicYear}/learnings": {
+      "get": {
+        "summary": "Gets paginated learnings for a provider by academic year",
+        "operationId": "getLearningsByAcademicYear",
+        "parameters": [
+          {
+            "name": "ukprn",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "academicYear",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 20,
+              "maximum": 100,
+              "minimum": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetLearningsByAcademicYearResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/{ukprn}/learnings/by-keys": {
+      "post": {
+        "summary": "Get learnings by keys",
+        "operationId": "getLearningsForFm36ByKeys",
+        "parameters": [
+          {
+            "name": "ukprn",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "List of learnings containing episode and price data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/LearningWithEpisodes"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No learnings match the provided keys for the provider"
+          }
+        }
+      }
+    },
+    "/{ukprn}/{learnerKey}": {
+      "put": {
+        "summary": "Updates the details of a learner",
+        "operationId": "updateLearnerDetails",
+        "parameters": [
+          {
+            "name": "ukprn",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "learnerKey",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateLearnerRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/LearningUpdateChanges"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Removes a learner and associated learnings",
+        "operationId": "removeLearner",
+        "parameters": [
+          {
+            "name": "ukprn",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "learnerKey",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "academicYear",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RemovedLearning"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CreateDraftApprenticeship": {
+        "type": "object",
+        "properties": {
+          "AcademicYear": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Delivery": {
+            "$ref": "#/components/schemas/Delivery"
+          },
+          "Learner": {
+            "$ref": "#/components/schemas/ApprenticeshipLearnerUpdateDetails"
+          },
+          "EnglishAndMathsCourses": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EnglishAndMaths"
+            }
+          },
+          "OnProgramme": {
+            "$ref": "#/components/schemas/OnProgrammeDetails"
+          }
+        }
+      },
+      "Delivery": {
+        "type": "object",
+        "properties": {
+          "LearningType": {
+            "type": "string",
+            "enum": [
+              "Apprenticeship",
+              "FoundationApprenticeship",
+              "ApprenticeshipUnit"
+            ]
+          }
+        }
+      },
+      "ApprenticeshipLearnerUpdateDetails": {
+        "type": "object",
+        "properties": {
+          "Care": {
+            "$ref": "#/components/schemas/CareDetails"
+          },
+          "CompletionDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "LearnerRef": {
+            "type": "string"
+          }
+        }
+      },
+      "CareDetails": {
+        "type": "object",
+        "properties": {
+          "HasEHCP": {
+            "type": "boolean"
+          },
+          "IsCareLeaver": {
+            "type": "boolean"
+          },
+          "CareLeaverEmployerConsentGiven": {
+            "type": "boolean"
+          }
+        }
+      },
+      "EnglishAndMaths": {
+        "type": "object",
+        "properties": {
+          "Course": {
+            "type": "string"
+          },
+          "LearnAimRef": {
+            "type": "string"
+          },
+          "StartDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "PlannedEndDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "CompletionDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "PauseDate": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "OnProgrammeDetails": {
+        "type": "object",
+        "properties": {
+          "Costs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Cost"
+            }
+          },
+          "ExpectedEndDate": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "Cost": {
+        "type": "object",
+        "properties": {
+          "TrainingPrice": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "EpaoPrice": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "CreateDraftApprenticeshipLearningCommandResult": {
+        "type": "object"
+      },
+      "LearnerSummary": {
+        "type": "object",
+        "properties": {
+          "Uln": {
+            "type": "string"
+          },
+          "FirstName": {
+            "type": "string"
+          },
+          "LastName": {
+            "type": "string"
+          }
+        }
+      },
+      "GetLearningsByAcademicYearResponse": {
+        "type": "object",
+        "properties": {
+          "Page": {
+            "type": "integer"
+          },
+          "TotalItems": {
+            "type": "integer"
+          },
+          "PageSize": {
+            "type": "integer"
+          },
+          "Items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetLearningsByDatesResponseItem"
+            }
+          }
+        }
+      },
+      "GetLearningsByDatesResponseItem": {
+        "type": "object",
+        "properties": {
+          "Uln": {
+            "type": "string"
+          },
+          "Key": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      },
+      "LearningWithEpisodes": {
+        "type": "object",
+        "properties": {
+          "Key": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "Uln": {
+            "type": "string"
+          }
+        }
+      },
+      "UpdateLearnerRequest": {
+        "type": "object"
+      },
+      "LearningUpdateChanges": {
+        "type": "string",
+        "enum": [
+          "CompletionDate",
+          "EnglishAndMaths",
+          "OnprogrammeLearningSupport",
+          "Prices",
+          "ExpectedEndDate",
+          "Withdrawal",
+          "ReverseWithdrawal",
+          "PersonalDetails",
+          "BreakInLearningStarted",
+          "BreakInLearningRemoved",
+          "EnglishAndMathsWithdrawal",
+          "BreaksInLearningUpdated",
+          "DateOfBirthChanged",
+          "Care",
+          "EnglishAndMathsBreaksInLearningUpdated",
+          "AchievementDateChanged",
+          "Reinstated",
+          "NewApprenticeshipLearner",
+          "EnglishAndMathsLearningSupport",
+          "WithdrawalReasonChanged",
+          "ForceEarningsSync"
+        ]
+      },
+      "RemovedLearning": {
+        "type": "object",
+        "properties": {
+          "LearningKey": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "LearnerRef": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
