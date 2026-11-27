@@ -1,22 +1,11 @@
 import assert from 'node:assert/strict';
-import { readFile } from 'node:fs/promises';
 import { test } from 'node:test';
-import vm from 'node:vm';
+import { combineDependencies, namespaceServiceSegment } from '../public/js/model.js';
+import { state } from '../public/js/state.js';
+import { splitPascalCase } from '../public/js/util.js';
 
-// app.js is a browser script, so run it against a do-nothing DOM and read its functions back out.
-async function loadApp() {
-  const element = new Proxy(() => element, { get: (_, key) => (key === Symbol.toPrimitive ? () => '' : element), set: () => true });
-  const context = vm.createContext({
-    document: { querySelector: () => element, querySelectorAll: () => [] },
-    window: { addEventListener: () => {}, location: { pathname: '/' }, matchMedia: () => element },
-    history: element,
-    fetch: () => new Promise(() => {}),
-    console
-  });
-  const source = await readFile(new URL('../public/app.js', import.meta.url), 'utf8');
-  vm.runInContext(`${source}\n;globalThis.app = { state, combineDependencies, namespaceServiceSegment, splitPascalCase };`, context);
-  return context.app;
-}
+// The catalogue logic is in modules with no page output, so the tests import it directly.
+const loadApp = async () => ({ state, combineDependencies, namespaceServiceSegment, splitPascalCase });
 
 const prJobs = { id: 'das-pr-jobs', name: 'PR Jobs', repository: 'https://github.com/SkillsFundingAgency/das-pr-jobs' };
 

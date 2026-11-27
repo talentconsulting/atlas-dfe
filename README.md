@@ -81,6 +81,26 @@ npm start
 
 Run the API tests with `npm test`.
 
+### Code layout
+
+The browser code is plain JavaScript modules, loaded directly with no build step. `visualizer/public/app.js` only wires up the navigation and starts the page; everything else is in `visualizer/public/js/`:
+
+| File | What it holds |
+| --- | --- |
+| `state.js` | The shared state: the catalogue, the repository being viewed, each view's selections |
+| `dom.js` | The page elements views write into, and the `$` selector shorthand |
+| `util.js` | Small helpers: HTML escaping, name formatting, sorting, fetching JSON, GitHub links |
+| `model.js` | Catalogue logic with no page output: combining dependencies and messages, matching names to systems, building the landscape. Unit-tested in `test/app.test.mjs` |
+| `graph.js` | Shared Cytoscape diagram helpers: mounting, positions, selection, tooltips, zoom controls |
+| `plantuml.js` | Encoding PlantUML source into plantuml.com URLs |
+| `navigation.js` | Which top-level page is showing, and reading it from the address |
+| `views/source.js` | A repository's page: header, view tabs, loading each view and the shared filter box |
+| `views/database.js`, `messages.js`, `dependencies.js`, `openapi.js`, `localdev.js`, `journeys.js` | One file per repository view tab |
+| `views/home.js`, `landscape.js`, `topics.js` | The Home dashboard, System landscape and Topics pages |
+| `views/testdata.js` | The Test data page, and the Test data view on a repository's Data schema tab. The planner and SQL generator they use are in `public/testdata.js` |
+
+A new view goes in its own file under `views/`, importing what it needs from the shared modules. Keep `model.js` free of page output so it stays testable in Node.
+
 ### Configuration
 
 | Variable | Default | Purpose |
